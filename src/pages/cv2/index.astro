@@ -1,0 +1,752 @@
+---
+const base = import.meta.env.BASE_URL;
+const b = base.endsWith("/") ? base : `${base}/`;
+
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Completo - Mauricio González</title>
+    <meta name="description" content="CV completo de Mauricio González - Líder Técnico, Desarrollador Fullstack y Especialista en IA con +10 años de experiencia">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* Reset y base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9fafb;
+        }
+        
+        /* Typography */
+        .font-display {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Layout */
+        .section-padding {
+            padding: 4rem 0;
+        }
+        
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        /* Components */
+        .card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: #3b82f6;
+            border: 2px solid #3b82f6;
+        }
+        
+        .btn-outline:hover {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        /* Utility classes */
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .text-right { text-align: right; }
+        .font-bold { font-weight: 700; }
+        .font-semibold { font-weight: 600; }
+        .text-sm { font-size: 0.875rem; }
+        .text-base { font-size: 1rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-xl { font-size: 1.25rem; }
+        .text-2xl { font-size: 1.5rem; }
+        .text-3xl { font-size: 1.875rem; }
+        .text-4xl { font-size: 2.25rem; }
+        .text-5xl { font-size: 3rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mb-12 { margin-bottom: 3rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-12 { margin-top: 3rem; }
+        .ml-6 { margin-left: 1.5rem; }
+        .mr-1 { margin-right: 0.25rem; }
+        .mr-2 { margin-right: 0.5rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .p-6 { padding: 1.5rem; }
+        .p-8 { padding: 2rem; }
+        .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .px-8 { padding-left: 2rem; padding-right: 2rem; }
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .sticky { position: sticky; }
+        .top-0 { top: 0; }
+        .left-8 { left: 2rem; }
+        .bottom-0 { bottom: 0; }
+        .flex { display: flex; }
+        .inline-flex { display: inline-flex; }
+        .grid { display: grid; }
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .flex-1 { flex: 1; }
+        .flex-shrink-0 { flex-shrink: 0; }
+        .flex-col { flex-direction: column; }
+        .flex-wrap { flex-wrap: wrap; }
+        .space-x-2 > * + * { margin-left: 0.5rem; }
+        .space-x-3 > * + * { margin-left: 0.75rem; }
+        .space-x-4 > * + * { margin-left: 1rem; }
+        .space-y-1 > * + * { margin-top: 0.25rem; }
+        .space-y-2 > * + * { margin-top: 0.5rem; }
+        .space-y-3 > * + * { margin-top: 0.75rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+        .space-y-8 > * + * { margin-top: 2rem; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .gap-8 { gap: 2rem; }
+        .w-16 { width: 4rem; }
+        .w-20 { width: 5rem; }
+        .w-0\.5 { width: 0.125rem; }
+        .h-16 { height: 4rem; }
+        .h-20 { height: 5rem; }
+        .max-w-4xl { max-width: 56rem; }
+        .max-w-6xl { max-width: 72rem; }
+        .rounded-full { border-radius: 9999px; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-xl { border-radius: 0.75rem; }
+        .rounded-2xl { border-radius: 1rem; }
+        .border-t { border-top-width: 1px; }
+        .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .z-10 { z-index: 10; }
+        .z-50 { z-index: 50; }
+        
+        /* Colors */
+        .bg-white { background-color: white; }
+        .bg-gray-50 { background-color: #f9fafb; }
+        .bg-gray-500 { background-color: #6b7280; }
+        .bg-gray-600 { background-color: #4b5563; }
+        .bg-gray-800 { background-color: #1f2937; }
+        .bg-gray-900 { background-color: #111827; }
+        .bg-blue-50 { background-color: #eff6ff; }
+        .bg-blue-100 { background-color: #dbeafe; }
+        .bg-blue-200 { background-color: #bfdbfe; }
+        .bg-blue-500 { background-color: #3b82f6; }
+        .bg-blue-600 { background-color: #2563eb; }
+        .bg-orange-50 { background-color: #fff7ed; }
+        .bg-orange-100 { background-color: #fed7aa; }
+        .bg-orange-500 { background-color: #f97316; }
+        .bg-orange-600 { background-color: #ea580c; }
+        .bg-green-100 { background-color: #dcfce7; }
+        .bg-green-500 { background-color: #10b981; }
+        .bg-green-600 { background-color: #059669; }
+        .bg-green-800 { background-color: #166534; }
+        .bg-purple-100 { background-color: #f3e8ff; }
+        .bg-purple-500 { background-color: #8b5cf6; }
+        .bg-purple-600 { background-color: #7c3aed; }
+        .bg-purple-800 { background-color: #6b21a8; }
+        .text-white { color: white; }
+        .text-gray-400 { color: #9ca3af; }
+        .text-gray-500 { color: #6b7280; }
+        .text-gray-600 { color: #4b5563; }
+        .text-gray-700 { color: #374151; }
+        .text-gray-900 { color: #111827; }
+        .text-blue-100 { color: #dbeafe; }
+        .text-blue-600 { color: #2563eb; }
+        .text-blue-800 { color: #1e40af; }
+        .text-orange-600 { color: #ea580c; }
+        .text-orange-800 { color: #9a3412; }
+        .text-green-600 { color: #059669; }
+        .text-green-800 { color: #166534; }
+        .text-purple-600 { color: #7c3aed; }
+        .text-purple-800 { color: #6b21a8; }
+        .text-xs { font-size: 0.75rem; }
+        
+        /* Responsive */
+        @media (min-width: 640px) {
+            .sm\\:text-5xl { font-size: 3rem; }
+            .sm\\:flex-row { flex-direction: row; }
+        }
+        
+        @media (min-width: 768px) {
+            .md\\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .md\\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .md\\:text-left { text-align: left; }
+        }
+        
+        /* Background gradients */
+        .bg-gradient-to-br {
+            background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+        }
+        
+        .bg-gradient-to-r {
+            background-image: linear-gradient(to right, var(--tw-gradient-stops));
+        }
+        
+        .from-blue-50 {
+            --tw-gradient-from: #eff6ff;
+            --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(239, 246, 255, 0));
+        }
+        
+        .from-blue-600 {
+            --tw-gradient-from: #2563eb;
+            --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(37, 99, 235, 0));
+        }
+        
+        .to-orange-50 {
+            --tw-gradient-to: #fff7ed;
+        }
+        
+        .to-purple-50 {
+            --tw-gradient-to: #faf5ff;
+        }
+        
+        .to-purple-600 {
+            --tw-gradient-to: #7c3aed;
+        }
+        
+        /* Hover states */
+        .hover\\:bg-white:hover { background-color: white; }
+        .hover\\:text-white:hover { color: white; }
+        .hover\\:text-blue-600:hover { color: #2563eb; }
+        .transition-colors { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container-custom py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-2xl font-display font-bold gradient-text">
+                        Mauricio González
+                    </a>
+                    <span class="text-gray-500 text-sm">CV Completo</span>
+                </div>
+                <a href="/" class="btn btn-outline">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Volver al inicio
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-blue-50 to-orange-50 section-padding">
+        <div class="container-custom">
+            <div class="text-center max-w-4xl mx-auto">
+                <h1 class="text-4xl sm:text-5xl font-display font-bold text-gray-900 mb-6">
+                    Líder de Equipo & Desarrollador Fullstack
+                </h1>
+                <div class="flex flex-wrap justify-center gap-6 text-lg font-semibold text-gray-700 mb-4">
+                    <span class="bg-blue-100 px-4 py-2 rounded-full">10+ años</span>
+                    <span class="bg-green-100 px-4 py-2 rounded-full">50+ proyectos</span>
+                    <span class="bg-purple-100 px-4 py-2 rounded-full">15+ equipos liderados</span>
+                </div>
+                <p class="text-xl text-gray-600 mb-8">
+                    Especialista en escalar startups tecnológicas de 0 a producción
+                </p>
+                <div class="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
+                    <span><i class="fab fa-linkedin mr-1"></i> linkedin.com/in/mauricioglab</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Perfil Ejecutivo -->
+    <section class="section-padding bg-white">
+        <div class="container-custom">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-display font-bold text-gray-900 mb-4">
+                        🎯 Perfil Ejecutivo
+                    </h2>
+                </div>
+                <div class="card p-8">
+                    <div class="grid md:grid-cols-3 gap-8 text-center">
+                        <div>
+                            <div class="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-rocket text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-display font-bold text-gray-900 mb-2">Liderazgo de Equipo</h3>
+                            <p class="text-gray-600">Gestión de equipos, arquitectura de soluciones y mentoría de desarrolladores</p>
+                        </div>
+                        <div>
+                            <div class="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-cogs text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-display font-bold text-gray-900 mb-2">Especialista Fullstack</h3>
+                            <p class="text-gray-600">Angular, .NET, Node.js, AWS y tecnologías de vanguardia</p>
+                        </div>
+                        <div>
+                            <div class="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-display font-bold text-gray-900 mb-2">Docente Experto</h3>
+                            <p class="text-gray-600">+500 estudiantes capacitados en programación y tecnología</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline de Experiencia -->
+    <section class="section-padding bg-gray-50">
+        <div class="container-custom">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-display font-bold text-gray-900 mb-4">
+                        💼 Timeline de Experiencia
+                    </h2>
+                    <p class="text-lg text-gray-600">Logros cuantificados en cada rol</p>
+                </div>
+
+                <div class="relative">
+                    <!-- Línea vertical -->
+                    <div class="absolute left-8 top-0 bottom-0 w-0.5 bg-blue-200"></div>
+
+                <div class="space-y-8">
+                        <!-- 2024 - Presente -->
+                        <div class="relative flex items-start">
+                            <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 z-10">
+                                <span class="text-white font-bold text-sm">2024</span>
+                            </div>
+                            <div class="ml-6 flex-1">
+                                <div class="card p-6">
+                                    <h3 class="text-xl font-display font-bold text-gray-900 mb-2">
+                                        Líder de Equipo Senior - Empresa de Tecnología
+                                </h3>
+                                    <div class="grid md:grid-cols-3 gap-4 text-sm">
+                                        <div class="text-center">
+                                            <div class="text-2xl font-bold text-blue-600">40%</div>
+                                            <p class="text-gray-600">Reducción tiempo desarrollo</p>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="text-2xl font-bold text-green-600">8</div>
+                                            <p class="text-gray-600">Devs en equipo</p>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="text-2xl font-bold text-purple-600">10+</div>
+                                            <p class="text-gray-600">Sistemas migrados</p>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <!-- 2023 -->
+                        <div class="relative flex items-start">
+                            <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0 z-10">
+                                <span class="text-white font-bold text-sm">2023</span>
+                            </div>
+                            <div class="ml-6 flex-1">
+                                <div class="card p-6">
+                                    <h3 class="text-xl font-display font-bold text-gray-900 mb-2">
+                                        Desarrollador Fullstack - Empresa de Tecnología
+                                </h3>
+                                    <div class="grid md:grid-cols-3 gap-4 text-sm">
+                                        <div class="text-center">
+                                            <div class="text-2xl font-bold text-orange-600">15</div>
+                                            <p class="text-gray-600">APIs desarrolladas</p>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="text-2xl font-bold text-green-600">60%</div>
+                                            <p class="text-gray-600">Mejora performance</p>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="text-2xl font-bold text-purple-600">5</div>
+                                            <p class="text-gray-600">Proyectos cloud</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experiencia Docente -->
+    <section class="section-padding bg-white">
+        <div class="container-custom">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-display font-bold text-gray-900 mb-4">
+                        🎓 Experiencia Docente
+                    </h2>
+                    <p class="text-lg text-gray-600">Enseñando tecnología de forma práctica y efectiva</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card p-8">
+                        <div class="text-center mb-6">
+                            <div class="w-20 h-20 bg-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-chalkboard-teacher text-white text-3xl"></i>
+                            </div>
+                            <h3 class="text-xl font-display font-bold text-gray-900 mb-2">
+                                Institución Educativa
+                            </h3>
+                            <p class="text-blue-600 font-semibold">2024 - Presente</p>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-2">Carreras que dicto:</h4>
+                                <ul class="space-y-1 text-gray-600">
+                                    <li>• Técnico Sup. en Análisis de Sistemas</li>
+                                    <li>• Técnico Sup. en Análisis de Datos e IA</li>
+                                    <li>• Técnico en Desarrollo Web</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-2">Materias:</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Práctica Profesionalizante III</span>
+                                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Introducción a la Programación</span>
+                                    <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">Base de Datos</span>
+                                    <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm">Programación Web II</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-8">
+                        <div class="text-center mb-6">
+                            <div class="w-20 h-20 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-users text-white text-3xl"></i>
+                            </div>
+                            <h3 class="text-xl font-display font-bold text-gray-900 mb-2">
+                                Experiencia Docente
+                            </h3>
+                            <p class="text-green-600 font-semibold">+10 años</p>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-green-600 mb-2">+500</div>
+                                <p class="text-gray-600">Estudiantes capacitados</p>
+                                </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-blue-600 mb-2">+50</div>
+                                <p class="text-gray-600">Charla y talleres realizados</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Educación y Certificaciones -->
+    <section class="section-padding bg-gray-50">
+        <div class="container-custom">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-display font-bold text-gray-900 mb-4">
+                        📚 Educación & Certificaciones
+                    </h2>
+                    <p class="text-lg text-gray-600">Formación continua en tecnologías de vanguardia</p>
+                </div>
+
+                <!-- Certificaciones Principales -->
+                <div class="grid md:grid-cols-3 gap-8 mb-8">
+                    <div class="card p-6 text-center">
+                        <div class="w-16 h-16 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-gray-900 mb-2">Analista de Sistemas</h3>
+                        <p class="text-blue-600 font-semibold text-sm">Institución Educativa</p>
+                        <p class="text-gray-500 text-xs">2021 - 2023</p>
+                    </div>
+                    
+                    <div class="card p-6 text-center">
+                        <div class="w-16 h-16 bg-orange-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                            <i class="fab fa-python text-white text-2xl"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-gray-900 mb-2">Diplomatura Python</h3>
+                        <p class="text-orange-600 font-semibold text-sm">UTN Buenos Aires</p>
+                        <p class="text-gray-500 text-xs">En curso</p>
+                    </div>
+                    
+                    <div class="card p-6 text-center">
+                        <div class="w-16 h-16 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                            <i class="fab fa-microsoft text-white text-2xl"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-gray-900 mb-2">Diplomatura .NET</h3>
+                        <p class="text-green-600 font-semibold text-sm">UTN Buenos Aires</p>
+                        <p class="text-gray-500 text-xs">2023</p>
+                    </div>
+                </div>
+
+                <!-- Estadísticas de formación -->
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-blue-600 mb-2">4+</div>
+                        <p class="text-gray-600">Certificaciones Completadas</p>
+                            </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-green-600 mb-2">2</div>
+                        <p class="text-gray-600">En Progreso</p>
+                            </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-purple-600 mb-2">100%</div>
+                        <p class="text-gray-600">Formación Continua</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Habilidades Técnicas -->
+    <section class="section-padding bg-white">
+        <div class="container-custom">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-display font-bold text-gray-900 mb-4">
+                        🛠️ Habilidades Técnicas
+                    </h2>
+                    <p class="text-lg text-gray-600">Tecnologías que domino y uso en mis proyectos</p>
+                </div>
+
+                <!-- Stack Técnico con Años de Experiencia -->
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Frontend -->
+                    <div class="card p-6">
+                        <div class="text-center mb-6">
+                            <div class="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-laptop-code text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-display font-bold text-gray-900 mb-3">Frontend</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">Angular</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-semibold">5 años</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">React</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-semibold">4 años</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">TypeScript</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-semibold">6 años</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">JavaScript</span>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-semibold">8 años</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Backend -->
+                    <div class="card p-6">
+                        <div class="text-center mb-6">
+                            <div class="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-server text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-display font-bold text-gray-900 mb-3">Backend</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">.NET Core</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-semibold">7 años</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">Node.js</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-semibold">6 años</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">Python</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-semibold">4 años</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">Docker</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-semibold">5 años</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cloud & DevOps -->
+                    <div class="card p-6">
+                        <div class="text-center mb-6">
+                            <div class="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-cloud text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-display font-bold text-gray-900 mb-3">Cloud & DevOps</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">AWS</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold">4 años</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">SQL Server</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold">8 años</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">Git</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold">9 años</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700">Azure</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm font-semibold">3 años</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Métricas de Impacto -->
+                <div class="mt-12">
+                    <div class="card p-8 bg-gradient-to-r from-blue-50 to-purple-50">
+                        <h3 class="text-2xl font-display font-bold text-gray-900 text-center mb-8">
+                            📊 Impacto Cuantificado
+                        </h3>
+                        <div class="grid md:grid-cols-3 gap-8 text-center">
+                            <div>
+                                <div class="text-4xl font-bold text-blue-600 mb-2">+500</div>
+                                <p class="text-gray-600 font-semibold">Estudiantes formados</p>
+                            </div>
+                            <div>
+                                <div class="text-4xl font-bold text-green-600 mb-2">100%</div>
+                                <p class="text-gray-600 font-semibold">Proyectos entregados a tiempo</p>
+                            </div>
+                            <div>
+                                <div class="text-4xl font-bold text-purple-600 mb-2">8/10</div>
+                                <p class="text-gray-600 font-semibold">Startups escaladas exitosamente</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section-padding bg-gradient-to-br from-blue-600 to-purple-600 text-white">
+        <div class="container-custom">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl font-display font-bold mb-4">
+                    ¿Trabajamos juntos?
+                </h2>
+                <p class="text-xl text-blue-100 mb-8">
+                    Si necesitás un líder técnico experimentado, desarrollador fullstack o docente especializado, 
+                    estoy listo para sumar valor a tu proyecto.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="https://calendly.com/mauricio-gonzalez" class="btn btn-primary text-lg px-8 py-4" target="_blank">
+                        <i class="fas fa-calendar-alt mr-2"></i>
+                        Agenda consultoría técnica
+                    </a>
+                    <a href="https://www.linkedin.com/in/mauricioglab/" class="btn btn-outline text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-blue-600" target="_blank">
+                        <i class="fas fa-download mr-2"></i>
+                        Descarga mi caso de estudio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white">
+        <div class="container-custom py-8">
+            <div class="grid md:grid-cols-3 gap-8 mb-6">
+                <div class="text-center md:text-left">
+                    <h3 class="text-lg font-display font-bold mb-3">Servicios</h3>
+                    <div class="space-y-2">
+                        <a href="/#servicios" class="block text-gray-400 hover:text-white transition-colors">Desarrollo & Productos</a>
+                        <a href="/index_cv.html" class="block text-gray-400 hover:text-white transition-colors">Disertación</a>
+                        <a href="https://instagram.com/tu_usuario_3d" target="_blank" class="block text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram mr-1"></i> Impresión 3D
+                        </a>
+                    </div>
+                </div>
+                
+            <div class="text-center">
+                    <h3 class="text-lg font-display font-bold mb-3">Contacto</h3>
+                    <div class="space-y-2">
+                        <a href="https://www.linkedin.com/in/mauricioglab/" target="_blank" class="block text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin mr-1"></i> LinkedIn
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <h3 class="text-lg font-display font-bold mb-3">Navegación</h3>
+                    <div class="space-y-2">
+                        <a href="/" class="block text-gray-400 hover:text-white transition-colors">Inicio</a>
+                        <a href="/index_cv.html" class="block text-gray-400 hover:text-white transition-colors">CV Completo</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center border-t border-gray-800 pt-6">
+                <p class="text-gray-400 text-sm">
+                    © 2025 Mauricio González. Todos los derechos reservados.
+                </p>
+                <p class="text-gray-500 text-xs mt-2">
+                    CV optimizado para impacto profesional - Para información detallada, contactar por LinkedIn
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,812 @@
+---
+const base = import.meta.env.BASE_URL;
+const b = base.endsWith("/") ? base : `${base}/`;
+
+---
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Transformo tecnología compleja en soluciones prácticas que podés usar hoy. Consultorías, mentorías y cursos de IA y programación." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <title>Mauricio González - IA, Programación y Enseñanza</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  
+  <style>
+    /* Base styles */
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+      font-family: 'Inter', sans-serif;
+      color: #1f2937;
+      background: white;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Component styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: 0.5rem;
+      transition: all 0.2s;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      outline: none;
+      focus: outline-none;
+      focus: ring-2;
+      focus: ring-offset-2;
+    }
+    
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      focus: ring-blue-500;
+    }
+    
+    .btn-primary:hover {
+      background: #1d4ed8;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: #2563eb;
+      border: 2px solid #2563eb;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      focus: ring-blue-500;
+    }
+    
+    .btn-secondary:hover {
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      color: #2563eb;
+      border: 2px solid #2563eb;
+      focus: ring-blue-500;
+    }
+    
+    .btn-outline:hover {
+      background: #2563eb;
+      color: white;
+    }
+    
+    .section-padding {
+      padding: 4rem 0;
+    }
+    
+    @media (min-width: 1024px) {
+      .section-padding {
+        padding: 5rem 0;
+      }
+    }
+    
+    .container-custom {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    @media (min-width: 640px) {
+      .container-custom {
+        padding: 0 1.5rem;
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .container-custom {
+        padding: 0 2rem;
+      }
+    }
+    
+    .gradient-text {
+      background: linear-gradient(to right, #2563eb, #f97316);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s;
+      border: 1px solid #f3f4f6;
+    }
+    
+    .card:hover {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Animations */
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+    }
+
+    @keyframes bounceSubtle {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-bounce-subtle {
+      animation: bounceSubtle 2s infinite;
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.6s ease-out forwards;
+    }
+
+    /* Utility classes */
+    .text-center { text-align: center; }
+    .text-left { text-align: left; }
+    .text-right { text-align: right; }
+    .font-bold { font-weight: 700; }
+    .font-semibold { font-weight: 600; }
+    .font-medium { font-weight: 500; }
+    .text-sm { font-size: 0.875rem; }
+    .text-base { font-size: 1rem; }
+    .text-lg { font-size: 1.125rem; }
+    .text-xl { font-size: 1.25rem; }
+    .text-2xl { font-size: 1.5rem; }
+    .text-3xl { font-size: 1.875rem; }
+    .text-4xl { font-size: 2.25rem; }
+    .text-5xl { font-size: 3rem; }
+    .leading-tight { line-height: 1.25; }
+    .leading-relaxed { line-height: 1.625; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-3 { margin-bottom: 0.75rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .mb-8 { margin-bottom: 2rem; }
+    .mb-12 { margin-bottom: 3rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .ml-2 { margin-left: 0.5rem; }
+    .mr-2 { margin-right: 0.5rem; }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+    .p-6 { padding: 1.5rem; }
+    .p-8 { padding: 2rem; }
+    .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .px-8 { padding-left: 2rem; padding-right: 2rem; }
+    .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+    .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+    .py-20 { padding-top: 5rem; padding-bottom: 5rem; }
+    .pt-2 { padding-top: 0.5rem; }
+    .pt-6 { padding-top: 1.5rem; }
+    .relative { position: relative; }
+    .absolute { position: absolute; }
+    .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+    .overflow-hidden { overflow: hidden; }
+    .z-10 { z-index: 10; }
+    .z-20 { z-index: 20; }
+    .flex { display: flex; }
+    .inline-flex { display: inline-flex; }
+    .grid { display: grid; }
+    .items-center { align-items: center; }
+    .justify-center { justify-content: center; }
+    .justify-start { justify-content: flex-start; }
+    .space-x-4 > * + * { margin-left: 1rem; }
+    .space-y-3 > * + * { margin-top: 0.75rem; }
+    .space-y-6 > * + * { margin-top: 1.5rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-6 { gap: 1.5rem; }
+    .gap-8 { gap: 2rem; }
+    .gap-12 { gap: 3rem; }
+    .w-6 { width: 1.5rem; }
+    .w-8 { width: 2rem; }
+    .w-10 { width: 2.5rem; }
+    .w-12 { width: 3rem; }
+    .w-16 { width: 4rem; }
+    .w-48 { width: 12rem; }
+    .w-56 { width: 14rem; }
+    .w-full { width: 100%; }
+    .h-6 { height: 1.5rem; }
+    .h-8 { height: 2rem; }
+    .h-10 { height: 2.5rem; }
+    .h-12 { height: 3rem; }
+    .h-16 { height: 4rem; }
+    .h-48 { height: 12rem; }
+    .h-56 { height: 14rem; }
+    .h-full { height: 100%; }
+    .max-w-2xl { max-width: 42rem; }
+    .max-w-3xl { max-width: 48rem; }
+    .max-w-6xl { max-width: 72rem; }
+    .rounded-full { border-radius: 9999px; }
+    .rounded-lg { border-radius: 0.5rem; }
+    .rounded-xl { border-radius: 0.75rem; }
+    .rounded-2xl { border-radius: 1rem; }
+    .border-2 { border-width: 2px; }
+    .border-white { border-color: white; }
+    .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+    .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+    .object-cover { object-fit: cover; }
+    .transform { transform: translateX(0) translateY(0) rotate(0) skewX(0) skewY(0) scaleX(1) scaleY(1); }
+    .rotate-2 { transform: rotate(2deg); }
+    .transition-transform { transition-property: transform; }
+    .transition-shadow { transition-property: box-shadow; }
+    .duration-300 { transition-duration: 300ms; }
+    .duration-500 { transition-duration: 500ms; }
+    .-space-x-1 > * + * { margin-left: -0.25rem; }
+    .filter { filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow); }
+    .blur-xl { --tw-blur: blur(24px); }
+    .mix-blend-multiply { mix-blend-mode: multiply; }
+    .opacity-70 { opacity: 0.7; }
+    .opacity-60 { opacity: 0.6; }
+    .opacity-90 { opacity: 0.9; }
+
+    /* Colors */
+    .bg-white { background-color: white; }
+    .bg-gray-50 { background-color: #f9fafb; }
+    .bg-gray-900 { background-color: #111827; }
+    .bg-blue-500 { background-color: #3b82f6; }
+    .bg-blue-600 { background-color: #2563eb; }
+    .bg-green-500 { background-color: #10b981; }
+    .bg-purple-500 { background-color: #8b5cf6; }
+    .bg-yellow-500 { background-color: #eab308; }
+    .bg-orange-500 { background-color: #f97316; }
+    .bg-accent-500 { background-color: #f97316; }
+    .bg-primary-50 { background-color: #eff6ff; }
+    .bg-primary-100 { background-color: #dbeafe; }
+    .bg-primary-500 { background-color: #3b82f6; }
+    .bg-accent-100 { background-color: #fed7aa; }
+    .bg-green-100 { background-color: #dcfce7; }
+    .bg-neutral-50 { background-color: #fafafa; }
+    .text-white { color: white; }
+    .text-neutral-500 { color: #6b7280; }
+    .text-neutral-600 { color: #4b5563; }
+    .text-neutral-800 { color: #1f2937; }
+    .text-neutral-900 { color: #111827; }
+    .bg-primary-600 { background-color: #2563eb; }
+    .bg-primary-700 { background-color: #1d4ed8; }
+    .text-xs { font-size: 0.75rem; }
+    
+    /* Missing utility classes */
+    .italic { font-style: italic; }
+
+    /* Responsive */
+    @media (min-width: 640px) {
+      .sm\\:text-4xl { font-size: 2.25rem; }
+      .sm\\:text-5xl { font-size: 3rem; }
+      .sm\\:text-xl { font-size: 1.25rem; }
+      .sm\\:text-lg { font-size: 1.125rem; }
+      .sm\\:flex-row { flex-direction: row; }
+      .sm\\:w-56 { width: 14rem; }
+      .sm\\:h-56 { height: 14rem; }
+      .sm\\:text-7xl { font-size: 4.5rem; }
+    }
+
+    @media (min-width: 768px) {
+      .md\\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .md\\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .md\\:text-left { text-align: left; }
+    }
+
+    @media (min-width: 1024px) {
+      .lg\\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .lg\\:gap-12 { gap: 3rem; }
+      .lg\\:text-5xl { font-size: 3rem; }
+      .lg\\:text-left { text-align: left; }
+      .lg\\:justify-start { justify-content: flex-start; }
+      .lg\\:justify-end { justify-content: flex-end; }
+      .lg\\:mx-0 { margin-left: 0; margin-right: 0; }
+    }
+
+    /* Background gradients */
+    .bg-gradient-to-br {
+      background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+    }
+    
+    .from-neutral-50 {
+      --tw-gradient-from: #fafafa;
+      --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(250, 250, 250, 0));
+    }
+    
+    .via-white {
+      --tw-gradient-via: white;
+      --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to, rgba(255, 255, 255, 0));
+    }
+    
+    .to-primary-50 {
+      --tw-gradient-to: #eff6ff;
+    }
+
+    /* Font families */
+    .font-display {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Hover states */
+    .hover\\:rotate-0:hover {
+      transform: rotate(0deg);
+    }
+
+    .hover\\:shadow-xl:hover {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Animation delays */
+    [style*="animation-delay: 0.5s"] {
+      animation-delay: 0.5s;
+    }
+    [style*="animation-delay: 1s"] {
+      animation-delay: 1s;
+    }
+    [style*="animation-delay: 1.5s"] {
+      animation-delay: 1.5s;
+    }
+    [style*="animation-delay: 2s"] {
+      animation-delay: 2s;
+    }
+
+    /* Flex column */
+    .flex-col {
+      flex-direction: column;
+    }
+
+    /* Flex shrink */
+    .flex-shrink-0 {
+      flex-shrink: 0;
+    }
+
+    /* Inline block */
+    .inline-block {
+      display: inline-block;
+    }
+
+    /* Top positioning */
+    .-top-2 { top: -0.5rem; }
+    .-top-4 { top: -1rem; }
+    .-top-20 { top: -5rem; }
+    .-right-2 { right: -0.5rem; }
+    .-right-4 { right: -1rem; }
+    .-right-6 { right: -1.5rem; }
+    .-right-8 { right: -2rem; }
+    .-right-20 { right: -5rem; }
+    .-bottom-2 { bottom: -0.5rem; }
+    .-bottom-4 { bottom: -1rem; }
+    .-bottom-20 { bottom: -5rem; }
+    .-left-2 { left: -0.5rem; }
+    .-left-4 { left: -1rem; }
+    .-left-6 { left: -1.5rem; }
+    .-left-20 { left: -5rem; }
+    .top-1\\/2 { top: 50%; }
+    .top-1\\/4 { top: 25%; }
+    .top-10 { top: 2.5rem; }
+    .top-20 { top: 5rem; }
+    .right-10 { right: 2.5rem; }
+    .right-1\\/4 { right: 25%; }
+    .bottom-20 { bottom: 5rem; }
+    .left-10 { left: 2.5rem; }
+
+    /* Width and height for decorative elements */
+    .w-20 { width: 5rem; }
+    .w-40 { width: 10rem; }
+    .h-20 { height: 5rem; }
+    .h-40 { height: 10rem; }
+    .w-14 { width: 3.5rem; }
+    .h-14 { height: 3.5rem; }
+  </style>
+</head>
+
+<body class="font-sans text-neutral-800 bg-white antialiased">
+  <!-- Hero Section -->
+  <section id="hero" class="relative py-20 bg-gradient-to-br from-neutral-50 via-white to-primary-50 overflow-hidden">
+    <!-- Background decoration -->
+    <div class="absolute inset-0 overflow-hidden">
+      <div class="absolute -top-20 -right-20 w-40 h-40 bg-primary-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-bounce-subtle"></div>
+      <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-accent-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-bounce-subtle" style="animation-delay: 1s;"></div>
+    </div>
+    
+    <div class="container-custom relative z-10">
+      <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <!-- Content -->
+        <div class="text-center lg:text-left space-y-6">
+          <div class="space-y-3">
+            <div class="mb-3">
+              <span class="text-base sm:text-lg text-neutral-600">Hola, soy</span>
+              <h1 class="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-neutral-900 leading-tight inline-block ml-2">
+                <span class="gradient-text">Mauricio González</span> 🎯
+              </h1>
+            </div>
+            <p class="text-lg sm:text-xl text-neutral-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+              Capacito en tecnologías emergentes para que <strong>realmente las entiendas </strong> y las apliques
+            </p>
+            <p class="text-sm text-neutral-500 max-w-2xl mx-auto lg:mx-0">
+              Docente +10 años • Desarrollador fullstack • <span class="italic">"Sobreviví a la tecnología para contártelo"</span>
+            </p>
+          </div>
+          
+          <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+            <a href="https://calendly.com/mauricio-gonzalez" 
+               class="btn btn-primary text-sm px-6 py-3 shadow-lg hover:shadow-xl" 
+               target="_blank">
+              <i class="fas fa-calendar-alt mr-2"></i>
+              Charlemos de tu proyecto
+            </a>
+            <a href="#experiencia" 
+               class="btn btn-secondary text-sm px-6 py-3">
+              <i class="fas fa-microphone mr-2"></i>
+              Ver mi experiencia
+            </a>
+          </div>
+          
+          <!-- Social proof compacto -->
+          <div class="flex items-center justify-center lg:justify-start space-x-4 pt-2">
+            <div class="flex -space-x-1">
+              <div class="w-6 h-6 rounded-full bg-primary-600 border-2 border-white flex items-center justify-center text-white text-xs font-semibold">C</div>
+              <div class="w-6 h-6 rounded-full bg-accent-500 border-2 border-white flex items-center justify-center text-white text-xs font-semibold">L</div>
+              <div class="w-6 h-6 rounded-full bg-green-500 border-2 border-white flex items-center justify-center text-white text-xs font-semibold">L</div>
+            </div>
+            <span class="text-xs text-neutral-500">+50 profesionales ya aplicaron lo que enseño</span>
+          </div>
+        </div>
+        
+        <!-- Visual compacto -->
+        <div class="relative flex justify-center lg:justify-end">
+          <div class="relative">
+            <!-- Main avatar -->
+            <div class="w-48 h-48 sm:w-56 sm:h-56 rounded-2xl shadow-xl overflow-hidden transform rotate-2 hover:rotate-0 transition-transform duration-500">
+              <!-- Placeholder avatar con gradiente -->
+              <div class="w-full h-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
+                <i class="fas fa-user-circle text-6xl sm:text-7xl text-white opacity-90"></i>
+              </div>
+            </div>
+            
+            <!-- Floating elements más pequeños -->
+            <div class="absolute -top-2 -right-2 w-12 h-12 bg-accent-500 rounded-xl flex items-center justify-center shadow-lg animate-bounce-subtle">
+              <i class="fas fa-robot text-white text-sm"></i>
+            </div>
+            
+            <div class="absolute -bottom-2 -left-2 w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center shadow-lg animate-bounce-subtle" style="animation-delay: 0.5s;">
+              <i class="fas fa-code text-white text-xs"></i>
+            </div>
+            
+            <div class="absolute top-1/2 -left-6 w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center shadow-lg animate-bounce-subtle" style="animation-delay: 1s;">
+              <i class="fas fa-lightbulb text-white text-xs"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience Section -->
+  <section id="experiencia" class="section-padding bg-neutral-50 relative overflow-hidden">
+    <!-- Background decoration -->
+    <div class="absolute inset-0 overflow-hidden">
+      <div class="absolute top-20 right-10 w-20 h-20 bg-accent-100 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-bounce-subtle"></div>
+      <div class="absolute bottom-20 left-10 w-16 h-16 bg-primary-100 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-bounce-subtle" style="animation-delay: 1s;"></div>
+      <div class="absolute top-1/2 right-1/4 w-12 h-12 bg-green-100 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-bounce-subtle" style="animation-delay: 2s;"></div>
+    </div>
+    
+    <div class="container-custom relative z-10">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl sm:text-4xl font-display font-bold text-neutral-900 mb-4">
+            Mi Background
+          </h2>
+          <p class="text-lg text-neutral-600 max-w-3xl mx-auto">
+   Combino +10 años como docente con experiencia real desarrollando en Angular, C#, Python. Enseño IA práctica, no PowerPoints bonitos.         </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-6 mb-12 relative">
+          <!-- Floating decorative elements -->
+          <div class="absolute -top-4 -right-4 w-16 h-16 bg-accent-500 rounded-2xl flex items-center justify-center shadow-lg animate-bounce-subtle z-20">
+            <i class="fas fa-coffee text-white text-xl"></i>
+          </div>
+          
+          <div class="absolute -bottom-4 -left-4 w-14 h-14 bg-green-500 rounded-xl flex items-center justify-center shadow-lg animate-bounce-subtle z-20" style="animation-delay: 0.5s;">
+            <i class="fas fa-rocket text-white text-lg"></i>
+          </div>
+          
+          <div class="absolute top-1/2 -right-8 w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center shadow-lg animate-bounce-subtle z-20" style="animation-delay: 1s;">
+            <i class="fas fa-lightbulb text-white"></i>
+          </div>
+          
+          <div class="absolute top-1/4 -left-6 w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center shadow-lg animate-bounce-subtle z-20" style="animation-delay: 1.5s;">
+            <i class="fas fa-star text-white text-sm"></i>
+          </div>
+          
+          <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow text-center relative z-10">
+            <div class="w-16 h-16 bg-accent-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-graduation-cap text-white text-4xl"></i>
+            </div>
+            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">
+              🎓 Docente
+            </h3>
+            <p class="text-neutral-600 text-sm">
+              +10 años enseñando en instituciones y empresas. Especializado en hacer que la tecnología compleja sea comprensible.
+            </p>
+          </div>
+          
+          <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow text-center relative z-10">
+            <div class="w-12 h-12 bg-primary-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-code text-white text-lg"></i>
+            </div>
+            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">
+              👨‍💻 Desarrollador Fullstack Senior
+            </h3>
+            <p class="text-neutral-600 text-sm">
+              Angular, C#, Python • Analista de Sistemas. Desarrollo real, no solo teoría.
+            </p>
+          </div>
+          
+          <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow text-center relative z-10">
+            <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-robot text-white text-lg"></i>
+            </div>
+            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">
+              🤖 Especialista IA
+            </h3>
+            <p class="text-neutral-600 text-sm">
+              Prompt Engineering, n8n, automatizaciones. Enseño lo que realmente funciona en producción.
+            </p>
+          </div>
+          
+          <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow text-center relative z-10">
+            <div class="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-microphone text-white text-lg"></i>
+            </div>
+            <h3 class="text-lg font-display font-bold text-neutral-900 mb-2">
+              🎤 Disertante & Coach
+            </h3>
+            <p class="text-neutral-600 text-sm">
+              Conferencista en eventos tech, coach de equipos y mentor de profesionales. Transformando organizaciones con tecnología.
+            </p>
+          </div>
+        </div>
+        
+        <div class="text-center">
+          <a href="index_cv.html" class="btn btn-outline text-base px-8 py-4">
+            <i class="fas fa-file-alt mr-2"></i>
+            Ver CV completo
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Global Scripts -->
+  <script>
+    // Smooth scrolling
+    document.addEventListener('DOMContentLoaded', function() {
+      const links = document.querySelectorAll('a[href^="#"]');
+      
+      links.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href');
+          const targetSection = document.querySelector(targetId);
+          
+          if (targetSection) {
+            const headerOffset = 80;
+            const elementPosition = targetSection.offsetTop;
+            const offsetPosition = elementPosition - headerOffset;
+            
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+            
+            // Agregar confetti para navegación interna
+            setTimeout(() => {
+              celebrateWithConfetti();
+            }, 500);
+          }
+        });
+      });
+
+      // Scroll animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in');
+          }
+        });
+      }, observerOptions);
+      
+      // Add animation to elements
+      const animatedElements = document.querySelectorAll(
+        '.card, .section-padding > div, .bg-white'
+      );
+      
+      animatedElements.forEach(el => {
+        observer.observe(el);
+      });
+
+      // Easter egg: Konami code for extra confetti
+      let konamiCode = [];
+      const konamiSequence = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]; // ↑↑↓↓←→←→BA
+      
+      document.addEventListener('keydown', function(e) {
+        konamiCode.push(e.keyCode);
+        if (konamiCode.length > konamiSequence.length) {
+          konamiCode.shift();
+        }
+        
+        if (JSON.stringify(konamiCode) === JSON.stringify(konamiSequence)) {
+          celebrateWithConfetti(true); // Extra celebration
+          showNotification('¡Encontraste el código secreto! 🎉', 'success');
+          konamiCode = [];
+        }
+      });
+
+      // Confetti for CTA buttons
+      const ctaButtons = document.querySelectorAll('.btn-primary');
+      
+      ctaButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          // Solo agregar confetti si es un enlace externo
+          if (this.getAttribute('target') === '_blank') {
+            celebrateWithConfetti();
+            showNotification('¡Genial! Te espero en la reunión 🚀', 'success');
+          }
+        });
+      });
+
+      // Hover effects for buttons
+      const allButtons = document.querySelectorAll('.btn');
+      allButtons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-2px)';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0)';
+        });
+      });
+    });
+
+    // Confetti celebration function
+    function celebrateWithConfetti(isExtra = false) {
+      if (typeof confetti === 'undefined') {
+        console.log('🎉 Confetti would happen here!');
+        return;
+      }
+      
+      const colors = ['#3b82f6', '#f97316', '#10b981', '#ef4444', '#8b5cf6'];
+      
+      if (isExtra) {
+        // Extra special celebration
+        const duration = 3000;
+        const animationEnd = Date.now() + duration;
+        
+        (function frame() {
+          confetti({
+            particleCount: 7,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            colors: colors
+          });
+          confetti({
+            particleCount: 7,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            colors: colors
+          });
+          
+          if (Date.now() < animationEnd) {
+            requestAnimationFrame(frame);
+          }
+        }());
+      } else {
+        // Regular celebration
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: colors
+        });
+      }
+    }
+
+    // Notification system
+    function showNotification(message, type = 'info') {
+      // Remove existing notifications
+      const existingNotifications = document.querySelectorAll('.notification');
+      existingNotifications.forEach(notification => notification.remove());
+      
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `notification notification-${type}`;
+      notification.innerHTML = `
+        <div class="flex items-center space-x-3">
+          <div class="flex-shrink-0">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} text-white"></i>
+          </div>
+          <div class="text-white font-medium">${message}</div>
+        </div>
+      `;
+      
+      // Add styles
+      notification.style.cssText = `
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        z-index: 10000;
+        font-family: 'Inter', sans-serif;
+        max-width: 400px;
+        animation: slideInRight 0.3s ease, fadeOut 0.3s ease 4.7s forwards;
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Auto remove after 5 seconds
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.remove();
+        }
+      }, 5000);
+    }
+  </script>
+</body>
+</html>

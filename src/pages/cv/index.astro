@@ -1,0 +1,853 @@
+---
+const base = import.meta.env.BASE_URL;
+const b = base.endsWith("/") ? base : `${base}/`;
+---
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio de Gonzalez Mauricio - Full Stack Developer .NET + Angular">
+    <title>Gonzalez Mauricio | Full Stack Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --primary: #38bdf8; /* Sky 400 */
+            --secondary: #818cf8; /* Indigo 400 */
+            --accent: #2dd4bf; /* Teal 400 */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-main: 'Outfit', sans-serif;
+            --border-glass: 1px solid rgba(255, 255, 255, 0.1);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background Effects */
+        .background-glob {
+            position: fixed;
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: blob-bounce 10s infinite alternate ease-in-out;
+        }
+
+        .background-glob.second {
+            top: auto;
+            bottom: -10%;
+            left: auto;
+            right: -10%;
+            background: radial-gradient(circle, rgba(129, 140, 248, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
+            animation: blob-bounce 12s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes blob-bounce {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.1); }
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            text-align: center;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            border-bottom: var(--border-glass);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .logo .dot {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 80px;
+            text-align: left;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero .greeting {
+            display: block;
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .hero .dynamic-title {
+            font-size: 2rem;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+
+        .hero .highlight {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .hero-text {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 35px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn.primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+        }
+
+        .btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
+        }
+
+        .btn.secondary {
+            background: transparent;
+            border: 2px solid var(--text-muted);
+            color: var(--text-main);
+        }
+
+        .btn.secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .social-links-hero {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-links-hero a {
+            color: var(--text-muted);
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .social-links-hero a:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .skill-card {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: var(--radius);
+            border: var(--border-glass);
+            transition: transform 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-color: var(--primary);
+        }
+
+        .skill-card h3 {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .skill-card .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tags span {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Experience Timeline */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background: var(--text-muted);
+            opacity: 0.2;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+            opacity: 0; /* Hidden for animation */
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            right: -8px;
+            background: var(--bg-dark);
+            border: 3px solid var(--primary);
+            top: 20px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .timeline-item:nth-child(even)::after {
+            left: -8px;
+        }
+
+        .timeline-content {
+            padding: 25px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: var(--border-glass);
+        }
+
+        .timeline-content .date {
+            display: inline-block;
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .timeline-content h4 {
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .project-title {
+            font-weight: 600;
+            color: var(--text-main);
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        .timeline-content ul {
+            list-style-position: inside;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+
+        .timeline-content ul li {
+            margin-bottom: 5px;
+        }
+
+        .tech-stack-mini {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tech-stack-mini span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        /* Education & Docencia */
+        .education-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .education-card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: var(--radius);
+            border: var(--border-glass);
+            text-align: center;
+        }
+
+        .education-card h4 {
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .teaching-card {
+            background: rgba(129, 140, 248, 0.1);
+            border: 1px solid var(--secondary);
+            padding: 20px;
+            border-radius: var(--radius);
+            grid-column: 1 / -1;
+            text-align: center;
+        }
+
+        /* Contact */
+        .contact-section {
+            padding-bottom: 100px;
+        }
+
+        .contact-box {
+            text-align: center;
+            padding: 50px;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border-radius: 20px;
+            border: var(--border-glass);
+        }
+
+        .contact-details {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-main);
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+
+        .contact-link:hover {
+            background: var(--primary);
+            color: #0f172a;
+        }
+
+        /* Footer */
+        footer {
+            padding: 20px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            background: #020617;
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .slide-in-left.visible, .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item::after {
+                left: 21px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0%;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background: var(--bg-dark);
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: block;
+            }
+            
+            .hamburger .bar {
+                display: block;
+                width: 25px;
+                height: 3px;
+                margin: 5px auto;
+                transition: all 0.3s ease-in-out;
+                background-color: var(--text-main);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-glob"></div>
+    <div class="background-glob second"></div>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">MG<span class="dot">.</span></a>
+            <ul class="nav-links">
+                <li><a href="#about">Sobre Mí</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#experience">Experiencia</a></li>
+                <li><a href="#education">Educación</a></li>
+                <li><a href="#contact">Contacto</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section id="hero" class="hero">
+            <div class="container hero-content">
+                <span class="greeting">Hola, soy</span>
+                <h1>Gonzalez Mauricio</h1>
+                <h2 class="dynamic-title">Full Stack Developer <span class="highlight">.NET + Angular</span></h2>
+                <p class="hero-text">
+                    Transformando ideas complejas en soluciones robustas y escalables con más de 4 años de experiencia. Especializado en arquitecturas críticas y sistemas de alto rendimiento.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn primary">Contáctame</a>
+                    <a href="#experience" class="btn secondary">Ver Experiencia</a>
+                </div>
+                <div class="social-links-hero">
+                    <a href="https://www.linkedin.com/in/mauriciogdev/" target="_blank" aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </a>
+                    <a href="mailto:mauriciogcode@gmail.com" aria-label="Email">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 5.712v-11.174l4.623 5.462zm2.141-1.554l-6.235-7.375h18.942l-6.235 7.375 3.299 3.896 3.238-3.829 6.227 7.026v-14.468c0-.776-.633-1.406-1.407-1.406h-21.192c-.774 0-1.407.63-1.407 1.406v14.492l6.216-7.073 3.093 3.657 3.461-4.102z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="section">
+            <div class="container">
+                <h2 class="section-title">Habilidades Técnicas</h2>
+                <div class="skills-grid">
+                    <div class="skill-card fade-in">
+                        <h3><span class="icon">⚙️</span> Backend</h3>
+                        <div class="tags">
+                            <span>.NET Core</span>
+                            <span>C#</span>
+                            <span>ASP.NET</span>
+                            <span>Entity Framework</span>
+                            <span>Dapper</span>
+                            <span>Node.js</span>
+                            <span>NestJS</span>
+                        </div>
+                    </div>
+                    <div class="skill-card fade-in">
+                        <h3><span class="icon">🎨</span> Frontend</h3>
+                        <div class="tags">
+                            <span>Angular</span>
+                            <span>TypeScript</span>
+                            <span>JavaScript</span>
+                            <span>PrimeNG</span>
+                            <span>HTML5/CSS3</span>
+                        </div>
+                    </div>
+                    <div class="skill-card fade-in">
+                        <h3><span class="icon">☁️</span> Cloud & DevOps</h3>
+                        <div class="tags">
+                            <span>AWS (S3, Lambda)</span>
+                            <span>Docker</span>
+                            <span>Amazon ECS</span>
+                            <span>Rekognition</span>
+                            <span>CI/CD</span>
+                        </div>
+                    </div>
+                    <div class="skill-card fade-in">
+                        <h3><span class="icon">🏗️</span> Arquitectura & DB</h3>
+                        <div class="tags">
+                            <span>SQL Server</span>
+                            <span>Oracle PL/SQL</span>
+                            <span>DDD</span>
+                            <span>CQRS</span>
+                            <span>Microservicios</span>
+                            <span>REST APIs</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="section alt-bg">
+            <div class="container">
+                <h2 class="section-title">Experiencia Profesional</h2>
+                <div class="timeline">
+                    <!-- GyL Group -->
+                    <div class="timeline-item slide-in-left">
+                        <div class="timeline-content">
+                            <span class="date">01/2023 – Presente</span>
+                            <h3>Desarrollador Full Stack</h3>
+                            <h4>GyL Group</h4>
+                            <p class="project-title">Sistemas de Declaraciones Juradas (ASI)</p>
+                            <ul>
+                                <li>Formularios dinámicos y consumo de APIs externas.</li>
+                                <li>Referente técnico, code reviews y resolución de bloqueos.</li>
+                                <li>Optimización de procesamiento de 4h a 30min (250K registros).</li>
+                                <li>Migración a Angular 19.</li>
+                            </ul>
+                            <p class="project-title">Mapas de Calor & Auditorías</p>
+                            <ul>
+                                <li>Automatización de revisión de Excel a sistema interactivo.</li>
+                                <li>Generación de informes PDF/Excel server-side performantes.</li>
+                            </ul>
+                            <p class="project-title">API Billetera Virtual</p>
+                            <ul>
+                                <li>Módulo de firmantes y aprobadores con reglas complejas.</li>
+                                <li>Dockerización de microservicios para Amazon ECS.</li>
+                                <li>Arquitectura DDD, CQRS, Facade y Mediator.</li>
+                            </ul>
+                            <div class="tech-stack-mini">
+                                <span>Angular</span><span>.NET Core</span><span>Docker</span><span>AWS</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SimpleMak -->
+                    <div class="timeline-item slide-in-right">
+                        <div class="timeline-content">
+                            <span class="date">11/2022 – 02/2023</span>
+                            <h3>Desarrollador .NET</h3>
+                            <h4>SimpleMak</h4>
+                            <p>Desarrollo de módulo de Warehousing aplicando DDD y CQRS. Formularios complejos con JS Vanilla emulando reactividad.</p>
+                            <div class="tech-stack-mini">
+                                <span>ASP.NET Core</span><span>DDD</span><span>SQL Server</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- UNSAM -->
+                    <div class="timeline-item slide-in-left">
+                        <div class="timeline-content">
+                            <span class="date">11/2021 – 12/2022</span>
+                            <h3>Analista - Desarrollador</h3>
+                            <h4>Universidad Nacional de San Martín</h4>
+                            <p>Formularios web accesibles para el Ministerio de Desarrollo Social. Gestión de concesiones y resolución de bugs críticos.</p>
+                            <div class="tech-stack-mini">
+                                <span>ASP.NET MVC</span><span>Razor</span><span>Azure DevOps</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RocketBot -->
+                    <div class="timeline-item slide-in-right">
+                        <div class="timeline-content">
+                            <span class="date">07/2021 – 09/2021</span>
+                            <h3>Desarrollador C#</h3>
+                            <h4>RocketBot</h4>
+                            <p>Orchestrator de Gestión de Bots RPA. Módulo de autenticación y sistema de roles/auditoría.</p>
+                            <div class="tech-stack-mini">
+                                <span>ASP.NET Core</span><span>AngularJS</span><span>SQLite</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="education" class="section">
+            <div class="container">
+                <h2 class="section-title">Educación & Docencia</h2>
+                <div class="education-grid">
+                    <div class="card education-card fade-in-up">
+                        <h4>Analista de Sistemas de Computación</h4>
+                        <p>Instituto Cervantes | 2023</p>
+                    </div>
+                    <div class="card education-card fade-in-up">
+                        <h4>Diplomatura en Programación .NET</h4>
+                        <p>UTN | 2023</p>
+                    </div>
+                    <div class="card education-card fade-in-up">
+                        <h4>Diplomatura en Ciencia de Datos e IA</h4>
+                        <p>UTN | 2025</p>
+                    </div>
+                    <div class="card teaching-card fade-in-up">
+                        <h4>Profesor - Carreras de Tecnología</h4>
+                        <p>Instituto Cervantes | 08/2024 – Presente</p>
+                        <small>Programación Web, Bases de Datos, Apps Móviles. Stack: .NET, Angular, SQL.</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section contact-section">
+            <div class="container">
+                <div class="contact-box glass">
+                    <h2>¿Trabajamos juntos?</h2>
+                    <p>Estoy disponible para nuevos desafíos y proyectos ambiciosos.</p>
+                    <div class="contact-details">
+                        <a href="mailto:mauriciogcode@gmail.com" class="contact-link">
+                            <span class="icon">✉️</span> mauriciogcode@gmail.com
+                        </a>
+                        <a href="tel:+543515137091" class="contact-link">
+                            <span class="icon">📱</span> (+54) 3515137091
+                        </a>
+                        <a href="https://www.linkedin.com/in/mauriciogdev/" target="_blank" class="contact-link">
+                            <span class="icon">🔗</span> LinkdIn
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; 2026 Gonzalez Mauricio. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Navigation Toggle ---
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+
+            if (hamburger) {
+                hamburger.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                    hamburger.classList.toggle('active');
+                });
+            }
+
+            // Close menu when clicking a link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    hamburger.classList.remove('active');
+                });
+            });
+
+            // --- Interaction Observer for Animations ---
+            const observerOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            // Select all elements to animate
+            const hiddenElements = document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .fade-in-up');
+            hiddenElements.forEach((el) => observer.observe(el));
+
+            // --- Parallax Effect on Background Blobs ---
+            document.addEventListener('mousemove', (e) => {
+                const x = e.clientX / window.innerWidth;
+                const y = e.clientY / window.innerHeight;
+                
+                const blobs = document.querySelectorAll('.background-glob');
+                blobs.forEach((blob, index) => {
+                    const speed = (index + 1) * 20;
+                    const xOffset = (window.innerWidth / 2 - e.clientX) / speed;
+                    const yOffset = (window.innerHeight / 2 - e.clientY) / speed;
+                    
+                    // Apply a subtle translation
+                    blob.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
