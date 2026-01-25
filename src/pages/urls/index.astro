@@ -1,0 +1,43 @@
+---
+const base = import.meta.env.BASE_URL;
+const b = base.endsWith("/") ? base : `${base}/`;
+
+const urls = [
+	{ name: "Google", url: "https://google.com" },
+	{ name: "GitHub", url: "https://github.com" },
+];
+---
+
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>URLs útiles — MG Lab</title>
+		<link rel="icon" type="image/svg+xml" href={`${b}favicon.svg`} />
+		<link rel="icon" href={`${b}favicon.ico`} />
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+		/>
+	</head>
+	<body>
+		<main class="container">
+			<h1>URLs útiles</h1>
+			<ul>
+				{
+					urls.map((item) => (
+						<li>
+							<a href={item.url} target="_blank" rel="noopener noreferrer">
+								{item.name}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+			<p>
+				<small><a href={b}>← Inicio</a></small>
+			</p>
+		</main>
+	</body>
+</html>

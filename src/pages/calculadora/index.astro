@@ -1,0 +1,856 @@
+---
+const base = import.meta.env.BASE_URL;
+const b = base.endsWith("/") ? base : `${base}/`;
+
+// Calculadora de costos para impresión 3D - Aplicación Astro
+const title = "Creatopia Calc";
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <style>
+        :root {
+            --pico-primary-500: #3b82f6;
+            --pico-primary-600: #2563eb;
+            --pico-primary-700: #1d4ed8;
+        }
+        
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .result-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--pico-muted-border-color);
+            margin-bottom: 1rem;
+        }
+        
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .tab-button.active {
+            border-bottom-color: var(--pico-primary-500);
+            color: var(--pico-primary-500);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .alert-warning {
+            background-color: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #92400e;
+        }
+        
+        .alert-info {
+            background-color: #dbeafe;
+            border: 1px solid #3b82f6;
+            color: #1e40af;
+        }
+        
+        .alert-success {
+            background-color: #d1fae5;
+            border: 1px solid #10b981;
+            color: #065f46;
+        }
+        
+        .collapsible {
+            border: 1px solid var(--pico-muted-border-color);
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .collapsible-header {
+            padding: 1rem;
+            cursor: pointer;
+            background: var(--pico-card-background-color);
+            border-radius: 0.5rem 0.5rem 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .collapsible-content {
+            padding: 1rem;
+            border-top: 1px solid var(--pico-muted-border-color);
+            display: none;
+        }
+        
+        .collapsible-content.show {
+            display: block;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+        
+        .modal-content {
+            background: var(--pico-card-background-color);
+            border-radius: 0.5rem;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow: auto;
+            width: 100%;
+        }
+        
+        .modal-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--pico-muted-border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 1rem;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .test-table {
+            font-size: 0.8rem;
+            overflow-x: auto;
+        }
+        
+        .test-table table {
+            min-width: 800px;
+        }
+        
+        .price-final {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .price-persona {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .price-competencia {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .price-sin-competencia {
+            background: #fed7aa;
+            color: #9a3412;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-tabs {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                text-align: left;
+                border-bottom: 1px solid var(--pico-muted-border-color);
+                border-radius: 0;
+            }
+            
+            .tab-button.active {
+                border-bottom-color: var(--pico-primary-500);
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <!-- Header -->
+        <header style="text-align: center; margin: 2rem 0;">
+            <img src="assets/logo.jpg" alt="Creatopia Calc" style="height: 60px; border-radius: 8px;">
+            <h1>{title}</h1>
+            <p>Calculadora de costos para impresión 3D</p>
+        </header>
+
+        <!-- Formulario Principal -->
+        <section>
+            <h2>📊 Datos de Impresión</h2>
+            <div class="calculator-grid">
+                <div>
+                    <label for="horasImpresion">Horas:</label>
+                    <input type="number" id="horasImpresion" step="0.01" placeholder="0">
+                </div>
+                <div>
+                    <label for="minutosImpresion">Minutos:</label>
+                    <input type="number" id="minutosImpresion" value="0" placeholder="0">
+                </div>
+                <div>
+                    <label for="gramosFilamento">Gramos:</label>
+                    <input type="number" id="gramosFilamento" step="0.1" placeholder="0">
+                </div>
+                <div>
+                    <label for="costoFilamento">Costo ($/kg):</label>
+                    <input type="number" id="costoFilamento" step="0.01" placeholder="20000">
+                </div>
+                <div>
+                    <label for="cantidad">Cantidad (camas):</label>
+                    <input type="number" id="cantidad" value="1" min="1" placeholder="1">
+                </div>
+                <div>
+                    <label for="precioMercadoLibre">Precio ML ($) - Opcional:</label>
+                    <input type="number" id="precioMercadoLibre" value="0" step="0.01" placeholder="0">
+                </div>
+            </div>
+        </section>
+
+        <!-- Botón Calcular -->
+        <section style="text-align: center; margin: 2rem 0;">
+            <button onclick="calcular()" class="primary">🧮 Calcular</button>
+        </section>
+
+        <!-- Botones de Acción -->
+        <section>
+            <div class="calculator-grid">
+                <button onclick="toggleHistorial()" class="secondary">📋 Historial</button>
+                <button onclick="nombrarEntrada()" class="secondary">✏️ Nombrar</button>
+                <button onclick="toggleTestInterno()" class="secondary hidden" id="testButton">🧪 Test ML</button>
+                <button onclick="toggleCostosFijos()" class="secondary">⚙️ Configuración</button>
+            </div>
+        </section>
+
+        <!-- Sección de Historial -->
+        <section id="historial" class="hidden">
+            <h2>📋 Historial de Cálculos</h2>
+            <div id="historialLista"></div>
+            <button onclick="limpiarHistorial()" class="secondary" style="width: 100%; margin-top: 1rem;">Limpiar Historial</button>
+        </section>
+
+        <!-- Sección de Configuración -->
+        <section id="costosFijos" class="hidden">
+            <h2>⚙️ Configuración</h2>
+            
+            <div style="margin-bottom: 2rem;">
+                <div class="calculator-grid">
+                    <button onclick="cargarReferencias()" class="secondary">Valores Predeterminados</button>
+                    <button onclick="resetear()" class="outline">Borrar Todo</button>
+                    <button onclick="exportarJSON()" class="secondary">Exportar JSON</button>
+                </div>
+            </div>
+
+            <h3>💰 Costos Fijos</h3>
+            <div class="calculator-grid">
+                <div>
+                    <label for="precioKwh">kWh ($/kWh):</label>
+                    <input type="number" id="precioKwh" placeholder="234">
+                </div>
+                <div>
+                    <label for="consumoW">Consumo (W):</label>
+                    <input type="number" id="consumoW" placeholder="120">
+                </div>
+                <div>
+                    <label for="desgasteHoras">Vida útil (h):</label>
+                    <input type="number" id="desgasteHoras" placeholder="15000">
+                </div>
+                <div>
+                    <label for="valorImpresora">Valor imp. ($):</label>
+                    <input type="number" id="valorImpresora" placeholder="1363990">
+                </div>
+                <div>
+                    <label for="margenError">% Error:</label>
+                    <input type="number" id="margenError" value="30" placeholder="30">
+                </div>
+                <div>
+                    <label for="comisionML">Comisión ML (%):</label>
+                    <input type="number" id="comisionML" value="30" step="1" placeholder="30">
+                </div>
+            </div>
+
+            <h3>🔧 Insumos</h3>
+            <div class="calculator-grid">
+                <div>
+                    <label for="insumos">Insumos ($):</label>
+                    <input type="number" id="insumos" value="0" step="0.01" placeholder="0">
+                </div>
+            </div>
+
+            <h3>🔗 Extras Llaveros (opcional)</h3>
+            <div class="calculator-grid">
+                <div>
+                    <label for="precioCadena">Precio cadena ($/ud):</label>
+                    <input type="number" id="precioCadena" value="0" step="0.01" placeholder="0">
+                </div>
+                <div>
+                    <label for="cantidadCadenas">Cantidad cadenas:</label>
+                    <input type="number" id="cantidadCadenas" value="0" min="0" placeholder="0">
+                </div>
+            </div>
+
+            <h3>💸 Precios</h3>
+            <div class="calculator-grid">
+                <div>
+                    <label for="descuentoVentaPersona">Descuento Venta Persona (%):</label>
+                    <input type="number" id="descuentoVentaPersona" step="1" value="5" min="0" max="100" placeholder="5">
+                    <small>% menos que ML Competencia</small>
+                </div>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+                <label>
+                    <input type="checkbox" id="debugMode" onchange="toggleDebugMode()">
+                    🔧 Modo Debug
+                </label>
+                <small style="display: block; margin-top: 0.5rem;">Mostrar herramientas de desarrollo y testing</small>
+            </div>
+        </section>
+
+        <!-- Sección de Resultados -->
+        <section id="resultados" class="hidden">
+            <h2>📊 Resultados</h2>
+            <div id="detalleResultados"></div>
+        </section>
+    </main>
+
+    <script>
+        // Valores de referencia para configuración rápida
+        const REF = {
+            precioKg: 20000,
+            precioKwh: 234,
+            consumoW: 120,
+            desgasteHoras: 15000,
+            valorImpresora: 1363990,
+            margenError: 30,
+            comisionML: 30
+        };
+
+        // Variable para entrada actual
+        let entradaActual = null;
+
+        // Función para formatear números en estilo argentino
+        function formatoArgentino(numero) {
+            return numero.toLocaleString('es-AR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        // Función para redondear precios a centenas
+        function formatoPrecioFinal(numero) {
+            const redondeado = Math.round(numero / 100) * 100;
+            return redondeado.toLocaleString('es-AR', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+        }
+
+        // Función para generar alertas generales
+        function generarAlertaGeneral(precioVentaPersona, precioMLCompetencia, precioMLSinCompetencia) {
+            const precioMercadoLibre = parseFloat(document.getElementById('precioMercadoLibre').value) || 0;
+            
+            if (precioMercadoLibre === 0) {
+                return '';
+            }
+            
+            if (precioMercadoLibre < precioMLCompetencia) {
+                return `
+                    <div class="alert alert-warning">
+                        <strong>⚠️ ADVERTENCIA</strong><br>
+                        El precio de MercadoLibre (${formatoPrecioFinal(precioMercadoLibre)}) es menor que tu ML Competencia (${formatoPrecioFinal(precioMLCompetencia)}). Quizás no conviene ir por MercadoLibre.
+                    </div>
+                `;
+            } else if (precioMercadoLibre >= precioMLCompetencia && precioMercadoLibre <= precioMLSinCompetencia) {
+                const diferenciaPorcentaje = ((precioMercadoLibre - precioMLCompetencia) / precioMLCompetencia) * 100;
+                return `
+                    <div class="alert alert-info">
+                        <strong>💡 RECOMENDACIÓN</strong><br>
+                        El precio de MercadoLibre (${formatoPrecioFinal(precioMercadoLibre)}) es ${diferenciaPorcentaje.toFixed(1)}% mayor que tu ML Competencia. Debes ajustar el precio por encima del valor ML Competencia (${formatoPrecioFinal(precioMLCompetencia)}) pero no exceder el valor de MercadoLibre (${formatoPrecioFinal(precioMercadoLibre)}).
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="alert alert-success">
+                        <strong>💡 OPORTUNIDAD</strong><br>
+                        El precio de MercadoLibre (${formatoPrecioFinal(precioMercadoLibre)}) es mayor que tu ML Sin Competencia (${formatoPrecioFinal(precioMLSinCompetencia)}). Debes ajustar el precio por encima del valor ML Sin Competencia (${formatoPrecioFinal(precioMLSinCompetencia)}).
+                    </div>
+                `;
+            }
+        }
+
+        // Inicialización de la aplicación
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarDatos();
+            cargarHistorial();
+            cargarDebugMode();
+        });
+
+        // Gestión del modo debug
+        function cargarDebugMode() {
+            const debugMode = sessionStorage.getItem('debugMode') === 'true';
+            const debugCheckbox = document.getElementById('debugMode');
+            if (debugCheckbox) {
+                debugCheckbox.checked = debugMode;
+                toggleDebugMode();
+            } else {
+                const testButton = document.getElementById('testButton');
+                if (testButton) {
+                    testButton.classList.add('hidden');
+                }
+            }
+        }
+
+        function toggleDebugMode() {
+            const debugCheckbox = document.getElementById('debugMode');
+            const testButton = document.getElementById('testButton');
+            
+            if (debugCheckbox) {
+                const isDebugMode = debugCheckbox.checked;
+                sessionStorage.setItem('debugMode', isDebugMode);
+                
+                if (testButton) {
+                    if (isDebugMode) {
+                        testButton.classList.remove('hidden');
+                    } else {
+                        testButton.classList.add('hidden');
+                    }
+                }
+            }
+        }
+
+        // Funciones de historial
+        function toggleHistorial() {
+            const historial = document.getElementById('historial');
+            if (historial.classList.contains('hidden')) {
+                historial.classList.remove('hidden');
+                mostrarHistorial();
+            } else {
+                historial.classList.add('hidden');
+            }
+        }
+
+        function toggleCostosFijos() {
+            const costosFijos = document.getElementById('costosFijos');
+            if (costosFijos.classList.contains('hidden')) {
+                costosFijos.classList.remove('hidden');
+            } else {
+                costosFijos.classList.add('hidden');
+            }
+        }
+
+        // Función principal de cálculo
+        function calcular() {
+            // Obtener valores de entrada
+            const precioKg = parseFloat(document.getElementById('costoFilamento').value) || 0;
+            const precioKwh = parseFloat(document.getElementById('precioKwh').value) || 0;
+            const consumoW = parseFloat(document.getElementById('consumoW').value) || 0;
+            const desgasteHoras = parseFloat(document.getElementById('desgasteHoras').value) || 0;
+            const valorImpresora = parseFloat(document.getElementById('valorImpresora').value) || 0;
+            const margenErrorPct = (parseFloat(document.getElementById('margenError').value) || 0) / 100;
+            const comisionMLPct = (parseFloat(document.getElementById('comisionML').value) || 30) / 100;
+            
+            const horas = parseFloat(document.getElementById('horasImpresion').value) || 0;
+            const minutos = parseFloat(document.getElementById('minutosImpresion').value) || 0;
+            const tiempoTotalHoras = horas + (minutos / 60);
+            
+            const gramos = parseFloat(document.getElementById('gramosFilamento').value) || 0;
+            const insumos = parseFloat(document.getElementById('insumos').value) || 0;
+            let descuentoVentaPersona = parseFloat(document.getElementById('descuentoVentaPersona')?.value) || 5;
+            
+            const cantidad = parseFloat(document.getElementById('cantidad').value) || 1;
+            const precioCadena = parseFloat(document.getElementById('precioCadena').value) || 0;
+            const cantidadCadenas = parseFloat(document.getElementById('cantidadCadenas').value) || 0;
+
+            // Validación
+            if (precioKg === 0 || gramos === 0) {
+                alert('Ingresa precio filamento y gramos');
+                return;
+            }
+
+            // Cálculos
+            const costoMaterial = (precioKg / 1000) * gramos;
+            const costoElectricidad = ((consumoW / 1000) * precioKwh) * tiempoTotalHoras;
+            const valorDepreciable = valorImpresora * 0.7;
+            const costoDesgaste = desgasteHoras > 0 ? (valorDepreciable / desgasteHoras) * tiempoTotalHoras : 0;
+            const costoBase = costoMaterial + costoElectricidad + costoDesgaste;
+            const margenError = costoBase * margenErrorPct;
+            const costoConMargen = costoBase + margenError;
+            
+            // Calcular precios ML
+            const gananciaCompetencia = parseFloat(localStorage.getItem('gananciaCompetencia')) || 175;
+            const gananciaSinCompetencia = parseFloat(localStorage.getItem('gananciaSinCompetencia')) || 700;
+            
+            const multiplicadorCompetencia = 1 + (gananciaCompetencia / 100);
+            const costoConGananciaCompetencia = costoConMargen * multiplicadorCompetencia;
+            const totalCobrarCompetencia = costoConGananciaCompetencia + insumos;
+            const precioMLCompetencia = totalCobrarCompetencia / (1 - comisionMLPct);
+            
+            const multiplicadorSinCompetencia = 1 + (gananciaSinCompetencia / 100);
+            const costoConGananciaSinCompetencia = costoConMargen * multiplicadorSinCompetencia;
+            const totalCobrarSinCompetencia = costoConGananciaSinCompetencia + insumos;
+            const precioMLSinCompetencia = totalCobrarSinCompetencia / (1 - comisionMLPct);
+            
+            // Calcular venta a persona
+            const totalCobrar = precioMLCompetencia * (1 - descuentoVentaPersona / 100);
+            
+            // Redondear precios finales
+            const totalCobrarRedondeado = Math.round(totalCobrar / 100) * 100;
+            const precioMLCompetenciaRedondeado = Math.round(precioMLCompetencia / 100) * 100;
+            const precioMLSinCompetenciaRedondeado = Math.round(precioMLSinCompetencia / 100) * 100;
+            
+            // Calcular ganancias reales
+            const costoTotal = costoConMargen + insumos;
+            const gananciaReal = totalCobrarRedondeado - costoTotal;
+            const ingresoMLCompetencia = precioMLCompetenciaRedondeado * (1 - comisionMLPct);
+            const ingresoMLSinCompetencia = precioMLSinCompetenciaRedondeado * (1 - comisionMLPct);
+            const gananciaMLCompetencia = ingresoMLCompetencia - costoTotal;
+            const gananciaMLSinCompetencia = ingresoMLSinCompetencia - costoTotal;
+            
+            // Cálculos finales con cantidad y cadenas
+            const costoCadenas = precioCadena * cantidadCadenas;
+            const totalDirecto = (totalCobrarRedondeado * cantidad) + costoCadenas;
+            const totalMLCompetenciaFinal = (precioMLCompetenciaRedondeado * cantidad) + costoCadenas;
+            const totalMLSinCompetenciaFinal = (precioMLSinCompetenciaRedondeado * cantidad) + costoCadenas;
+
+            // Generar HTML de resultados
+            let html = `
+                <!-- Pestañas de navegación -->
+                <div class="result-tabs">
+                    <button class="tab-button active" onclick="showTab('venta-persona')">
+                        💵 Venta a Persona (-${descuentoVentaPersona}%)
+                    </button>
+                    <button class="tab-button" onclick="showTab('ml-competencia')">
+                        🛒 ML Competencia (${gananciaCompetencia}%)
+                    </button>
+                    <button class="tab-button" onclick="showTab('ml-sin-competencia')">
+                        ⭐ ML Sin Competencia (${gananciaSinCompetencia}%)
+                    </button>
+                </div>
+                
+                <!-- Contenido de pestañas -->
+                <div id="venta-persona" class="tab-content active">
+                    <div class="price-final price-persona">
+                        <h3>💵 Venta a Persona (-${descuentoVentaPersona}% sobre ML Competencia)</h3>
+                        <div>📊 Suma de Costos: $ ${Math.round(costoTotal).toLocaleString('es-AR')}</div>
+                        <div>💰 Ganancia: $ ${Math.round(gananciaReal).toLocaleString('es-AR')}</div>
+                        <div style="font-size: 1.5rem; margin-top: 1rem;">
+                            💵 Precio Final: $ ${formatoPrecioFinal(totalCobrarRedondeado)}
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="ml-competencia" class="tab-content">
+                    <div class="price-final price-competencia">
+                        <h3>🛒 ML Competencia (${gananciaCompetencia}%)</h3>
+                        <div>📊 Suma de Costos: $ ${Math.round(costoTotal).toLocaleString('es-AR')}</div>
+                        <div>💰 Ganancia: $ ${Math.round(gananciaMLCompetencia).toLocaleString('es-AR')}</div>
+                        <div style="font-size: 1.5rem; margin-top: 1rem;">
+                            💵 Precio Final: $ ${formatoPrecioFinal(precioMLCompetenciaRedondeado)}
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="ml-sin-competencia" class="tab-content">
+                    <div class="price-final price-sin-competencia">
+                        <h3>⭐ ML Sin Competencia (${gananciaSinCompetencia}%)</h3>
+                        <div>📊 Suma de Costos: $ ${Math.round(costoTotal).toLocaleString('es-AR')}</div>
+                        <div>💰 Ganancia: $ ${Math.round(gananciaMLSinCompetencia).toLocaleString('es-AR')}</div>
+                        <div style="font-size: 1.5rem; margin-top: 1rem;">
+                            💵 Precio Final: $ ${formatoPrecioFinal(precioMLSinCompetenciaRedondeado)}
+                        </div>
+                    </div>
+                </div>
+                
+                ${generarAlertaGeneral(totalCobrarRedondeado, precioMLCompetenciaRedondeado, precioMLSinCompetenciaRedondeado)}
+                
+                <!-- Desglose de costos -->
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible('detalle-costos')">
+                        <span>📊 Ver Desglose de Costos</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="collapsible-content" id="detalle-costos">
+                        <div>Material (${gramos}g): $ ${formatoArgentino(costoMaterial)}</div>
+                        <div>Electricidad (${tiempoTotalHoras.toFixed(2)}h): $ ${formatoArgentino(costoElectricidad)}</div>
+                        <div>Desgaste: $ ${formatoArgentino(costoDesgaste)}</div>
+                        <div style="font-weight: bold; margin-top: 1rem;">
+                            💰 Costo Base: $ ${formatoArgentino(costoBase)}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Margen de error -->
+                <div class="collapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible('detalle-margen')">
+                        <span>⚠️ Ver Margen de Error</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="collapsible-content" id="detalle-margen">
+                        <div>Margen de Error ${(margenErrorPct*100).toFixed(0)}%: $ ${formatoArgentino(margenError)}</div>
+                        <div style="font-weight: bold; margin-top: 1rem;">
+                            Con Margen de Error: $ ${formatoArgentino(costoConMargen)}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Agregar totales por cantidad si es necesario
+            if (cantidad > 1 || costoCadenas > 0) {
+                html += `
+                <div style="margin-top: 2rem;">
+                    <h3>📦 Totales por Cantidad</h3>
+                    <div class="test-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Concepto</th>
+                                    <th>💵 Venta a Persona</th>
+                                    <th>🛒 ML Competencia</th>
+                                    <th>⭐ ML Sin Competencia</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>📊 Cantidad</td>
+                                    <td>${cantidad} unidades</td>
+                                    <td>${cantidad} unidades</td>
+                                    <td>${cantidad} unidades</td>
+                                </tr>`;
+                
+                if (costoCadenas > 0) {
+                    html += `
+                                <tr>
+                                    <td>🔗 Cadenas</td>
+                                    <td>$ ${Math.round(costoCadenas).toLocaleString('es-AR')}</td>
+                                    <td>$ ${Math.round(costoCadenas).toLocaleString('es-AR')}</td>
+                                    <td>$ ${Math.round(costoCadenas).toLocaleString('es-AR')}</td>
+                                </tr>`;
+                }
+                
+                html += `
+                                <tr style="font-weight: bold;">
+                                    <td>💵 TOTAL FINAL</td>
+                                    <td>$ ${formatoPrecioFinal(totalDirecto)}</td>
+                                    <td>$ ${formatoPrecioFinal(totalMLCompetenciaFinal)}</td>
+                                    <td>$ ${formatoPrecioFinal(totalMLSinCompetenciaFinal)}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`;
+            }
+
+            // Mostrar resultados
+            document.getElementById('detalleResultados').innerHTML = html;
+            document.getElementById('resultados').classList.remove('hidden');
+            guardarDatos();
+        }
+
+        // Función para mostrar pestañas
+        function showTab(tabId) {
+            // Ocultar todas las pestañas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Mostrar pestaña seleccionada
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Función para toggle de collapsibles
+        function toggleCollapsible(id) {
+            const content = document.getElementById(id);
+            const header = event.target.closest('.collapsible-header');
+            const icon = header.querySelector('span:last-child');
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('show');
+                icon.textContent = '▲';
+            }
+        }
+
+        // Funciones de persistencia de datos
+        function guardarDatos() {
+            const datos = {
+                costoFilamento: document.getElementById('costoFilamento').value,
+                precioKwh: document.getElementById('precioKwh').value,
+                consumoW: document.getElementById('consumoW').value,
+                desgasteHoras: document.getElementById('desgasteHoras').value,
+                valorImpresora: document.getElementById('valorImpresora').value,
+                margenError: document.getElementById('margenError').value,
+                comisionML: document.getElementById('comisionML').value,
+                horasImpresion: document.getElementById('horasImpresion').value,
+                minutosImpresion: document.getElementById('minutosImpresion').value,
+                gramosFilamento: document.getElementById('gramosFilamento').value,
+                insumos: document.getElementById('insumos').value,
+                descuentoVentaPersona: document.getElementById('descuentoVentaPersona').value,
+                cantidad: document.getElementById('cantidad').value,
+                precioMercadoLibre: document.getElementById('precioMercadoLibre').value,
+                precioCadena: document.getElementById('precioCadena').value,
+                cantidadCadenas: document.getElementById('cantidadCadenas').value,
+            };
+            sessionStorage.setItem('calc3D', JSON.stringify(datos));
+        }
+
+        function cargarDatos() {
+            const datos = sessionStorage.getItem('calc3D');
+            if (datos) {
+                const obj = JSON.parse(datos);
+                Object.keys(obj).forEach(key => {
+                    const elemento = document.getElementById(key);
+                    if (elemento && obj[key]) {
+                        if (key === 'descuentoVentaPersona') {
+                            let valor = parseFloat(obj[key]);
+                            if (isNaN(valor) || valor < 0) valor = 5;
+                            if (valor > 50) valor = 50;
+                            elemento.value = valor;
+                        } else {
+                            elemento.value = obj[key];
+                        }
+                    }
+                });
+            } else {
+                cargarReferencias();
+                document.getElementById('descuentoVentaPersona').value = '5';
+            }
+        }
+
+        function cargarReferencias() {
+            document.getElementById('costoFilamento').value = REF.precioKg;
+            document.getElementById('precioKwh').value = REF.precioKwh;
+            document.getElementById('consumoW').value = REF.consumoW;
+            document.getElementById('desgasteHoras').value = REF.desgasteHoras;
+            document.getElementById('valorImpresora').value = REF.valorImpresora;
+            document.getElementById('margenError').value = REF.margenError;
+            document.getElementById('comisionML').value = REF.comisionML;
+            guardarDatos();
+            alert('Referencias cargadas\\nPLA: $20k/kg | kWh: $234\\nConsumo: 120W | Vida útil: 15.000h\\nImpresora: $1.363.990 | Comisión ML: 30%');
+        }
+
+        function resetear() {
+            if (confirm('¿Borrar todos los datos?')) {
+                sessionStorage.removeItem('calc3D');
+                localStorage.removeItem('historial3D');
+                location.reload();
+            }
+        }
+
+        function exportarJSON() {
+            const datos = sessionStorage.getItem('calc3D');
+            const historial = localStorage.getItem('historial3D');
+            const exportData = {
+                configuracion: datos ? JSON.parse(datos) : {},
+                historial: historial ? JSON.parse(historial) : [],
+                fecha: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `creatopia-calc-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Funciones de historial (simplificadas)
+        function cargarHistorial() {
+            if (!localStorage.getItem('historial3D')) {
+                localStorage.setItem('historial3D', '[]');
+            }
+        }
+
+        function mostrarHistorial() {
+            const historial = JSON.parse(localStorage.getItem('historial3D') || '[]');
+            const lista = document.getElementById('historialLista');
+            
+            if (historial.length === 0) {
+                lista.innerHTML = '<p>No hay cálculos guardados</p>';
+                return;
+            }
+            
+            lista.innerHTML = historial.map(item => `
+                <div style="border: 1px solid var(--pico-muted-border-color); border-radius: 0.5rem; padding: 1rem; margin: 0.5rem 0;">
+                    <strong>${item.nombre || 'Cálculo sin nombre'}</strong><br>
+                    <small>${new Date(item.fecha).toLocaleString('es-AR')}</small><br>
+                    <small>${item.entrada?.pieza?.gramosFilamento || 0}g - ${item.entrada?.pieza?.horasImpresion || 0}:${(item.entrada?.pieza?.minutosImpresion || 0).toString().padStart(2,'0')}</small>
+                    <div style="margin-top: 0.5rem;">
+                        <button onclick="cargarDesdeHistorial('${item.id}')" class="secondary" style="margin-right: 0.5rem;">Cargar</button>
+                        <button onclick="eliminarDelHistorial('${item.id}')" class="outline">Eliminar</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function limpiarHistorial() {
+            if (confirm('¿Eliminar TODO el historial?')) {
+                localStorage.setItem('historial3D', '[]');
+                mostrarHistorial();
+            }
+        }
+
+        // Funciones de test (simplificadas)
+        function toggleTestInterno() {
+            alert('Función de tests en desarrollo para la versión Astro');
+        }
+
+        function nombrarEntrada() {
+            const nombre = prompt('Nombre para este cálculo:');
+            if (nombre) {
+                // Guardar en historial con nombre
+                alert(`Cálculo guardado como: ${nombre}`);
+            }
+        }
+
+        // Funciones placeholder para compatibilidad
+        function cargarDesdeHistorial(id) {
+            alert('Función en desarrollo');
+        }
+
+        function eliminarDelHistorial(id) {
+            alert('Función en desarrollo');
+        }
+    </script>
+</body>
+</html>

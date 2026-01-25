@@ -1,0 +1,42 @@
+---
+const base = import.meta.env.BASE_URL;
+const b = base.endsWith("/") ? base : `${base}/`;
+
+const extensions = [
+	{ name: "Ejemplo", url: "https://chromewebstore.google.com/detail/example" },
+];
+---
+
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Extensiones — MG Lab</title>
+		<link rel="icon" type="image/svg+xml" href={`${b}favicon.svg`} />
+		<link rel="icon" href={`${b}favicon.ico`} />
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+		/>
+	</head>
+	<body>
+		<main class="container">
+			<h1>Extensiones</h1>
+			<ul>
+				{
+					extensions.map((ext) => (
+						<li>
+							<a href={ext.url} target="_blank" rel="noopener noreferrer">
+								{ext.name}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+			<p>
+				<small><a href={b}>← Inicio</a></small>
+			</p>
+		</main>
+	</body>
+</html>
