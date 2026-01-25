@@ -1,7 +1,4 @@
 ---
-const base = import.meta.env.BASE_URL;
-const b = base.endsWith("/") ? base : `${base}/`;
-
 // Calculadora de costos para impresión 3D - Aplicación Astro
 const title = "Creatopia Calc";
 ---
@@ -12,39 +9,126 @@ const title = "Creatopia Calc";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
     <style>
-        :root {
-            --pico-primary-500: #3b82f6;
-            --pico-primary-600: #2563eb;
-            --pico-primary-700: #1d4ed8;
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1, h2, h3 {
+            color: #333;
         }
         
         .calculator-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        input[type="number"]:focus {
+            border-color: #3b82f6;
+            outline: none;
+        }
+        
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        
+        .btn-secondary {
+            background-color: #6b7280;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: #6b7280;
+            border: 2px solid #6b7280;
+        }
+        
+        .btn-outline:hover {
+            background-color: #6b7280;
+            color: white;
+        }
+        
+        .btn-full {
+            width: 100%;
         }
         
         .result-tabs {
             display: flex;
             flex-wrap: wrap;
-            border-bottom: 1px solid var(--pico-muted-border-color);
-            margin-bottom: 1rem;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 20px;
         }
         
         .tab-button {
-            padding: 0.5rem 1rem;
-            border: none;
+            padding: 10px 15px;
             background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
             cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
+            font-weight: normal;
         }
         
         .tab-button.active {
-            border-bottom-color: var(--pico-primary-500);
-            color: var(--pico-primary-500);
+            border-bottom-color: #3b82f6;
+            color: #3b82f6;
+            font-weight: bold;
         }
         
         .tab-content {
@@ -56,9 +140,9 @@ const title = "Creatopia Calc";
         }
         
         .alert {
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin: 1rem 0;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
         }
         
         .alert-warning {
@@ -80,24 +164,28 @@ const title = "Creatopia Calc";
         }
         
         .collapsible {
-            border: 1px solid var(--pico-muted-border-color);
-            border-radius: 0.5rem;
-            margin: 1rem 0;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            margin: 15px 0;
         }
         
         .collapsible-header {
-            padding: 1rem;
+            padding: 15px;
             cursor: pointer;
-            background: var(--pico-card-background-color);
-            border-radius: 0.5rem 0.5rem 0 0;
+            background: #f9fafb;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .collapsible-header:hover {
+            background: #f3f4f6;
         }
         
         .collapsible-content {
-            padding: 1rem;
-            border-top: 1px solid var(--pico-muted-border-color);
+            padding: 15px;
+            border-top: 1px solid #e5e7eb;
             display: none;
         }
         
@@ -105,76 +193,80 @@ const title = "Creatopia Calc";
             display: block;
         }
         
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 1rem;
-        }
-        
-        .modal-content {
-            background: var(--pico-card-background-color);
-            border-radius: 0.5rem;
-            max-width: 90vw;
-            max-height: 90vh;
-            overflow: auto;
-            width: 100%;
-        }
-        
-        .modal-header {
-            padding: 1rem;
-            border-bottom: 1px solid var(--pico-muted-border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-body {
-            padding: 1rem;
-        }
-        
         .hidden {
             display: none !important;
         }
         
-        .test-table {
-            font-size: 0.8rem;
-            overflow-x: auto;
-        }
-        
-        .test-table table {
-            min-width: 800px;
-        }
-        
         .price-final {
-            font-size: 1.2rem;
-            font-weight: bold;
             text-align: center;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin: 1rem 0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 2px solid;
         }
         
         .price-persona {
             background: #d1fae5;
             color: #065f46;
+            border-color: #10b981;
         }
         
         .price-competencia {
             background: #dbeafe;
             color: #1e40af;
+            border-color: #3b82f6;
         }
         
         .price-sin-competencia {
             background: #fed7aa;
             color: #9a3412;
+            border-color: #f97316;
+        }
+        
+        .test-table {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #e5e7eb;
+        }
+        
+        th {
+            background-color: #f9fafb;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .header {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .header img {
+            height: 60px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        small {
+            color: #6b7280;
+            font-size: 0.9em;
         }
         
         @media (max-width: 768px) {
@@ -188,50 +280,54 @@ const title = "Creatopia Calc";
             
             .tab-button {
                 text-align: left;
-                border-bottom: 1px solid var(--pico-muted-border-color);
+                border-bottom: 1px solid #e5e7eb;
                 border-radius: 0;
             }
             
-            .tab-button.active {
-                border-bottom-color: var(--pico-primary-500);
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
             }
         }
     </style>
 </head>
 <body>
-    <main class="container">
+    <div class="container">
         <!-- Header -->
-        <header style="text-align: center; margin: 2rem 0;">
-            <img src="assets/logo.jpg" alt="Creatopia Calc" style="height: 60px; border-radius: 8px;">
+        <div class="header">
+            <img src="assets/logo.jpg" alt="Creatopia Calc">
             <h1>{title}</h1>
             <p>Calculadora de costos para impresión 3D</p>
-        </header>
+        </div>
 
         <!-- Formulario Principal -->
         <section>
-            <h2>📊 Datos de Impresión</h2>
+            <h2>� Datos de Impresión</h2>
             <div class="calculator-grid">
-                <div>
+                <div class="form-group">
                     <label for="horasImpresion">Horas:</label>
                     <input type="number" id="horasImpresion" step="0.01" placeholder="0">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="minutosImpresion">Minutos:</label>
                     <input type="number" id="minutosImpresion" value="0" placeholder="0">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="gramosFilamento">Gramos:</label>
                     <input type="number" id="gramosFilamento" step="0.1" placeholder="0">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="costoFilamento">Costo ($/kg):</label>
                     <input type="number" id="costoFilamento" step="0.01" placeholder="20000">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="cantidad">Cantidad (camas):</label>
                     <input type="number" id="cantidad" value="1" min="1" placeholder="1">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="precioMercadoLibre">Precio ML ($) - Opcional:</label>
                     <input type="number" id="precioMercadoLibre" value="0" step="0.01" placeholder="0">
                 </div>
@@ -239,17 +335,17 @@ const title = "Creatopia Calc";
         </section>
 
         <!-- Botón Calcular -->
-        <section style="text-align: center; margin: 2rem 0;">
-            <button onclick="calcular()" class="primary">🧮 Calcular</button>
+        <section class="text-center">
+            <button onclick="window.calcular()" class="btn-primary btn-full">🧮 Calcular</button>
         </section>
 
         <!-- Botones de Acción -->
         <section>
             <div class="calculator-grid">
-                <button onclick="toggleHistorial()" class="secondary">📋 Historial</button>
-                <button onclick="nombrarEntrada()" class="secondary">✏️ Nombrar</button>
-                <button onclick="toggleTestInterno()" class="secondary hidden" id="testButton">🧪 Test ML</button>
-                <button onclick="toggleCostosFijos()" class="secondary">⚙️ Configuración</button>
+                <button onclick="window.toggleHistorial()" class="btn-secondary">📋 Historial</button>
+                <button onclick="window.nombrarEntrada()" class="btn-secondary">✏️ Nombrar</button>
+                <button onclick="window.toggleTestInterno()" class="btn-secondary hidden" id="testButton">🧪 Test ML</button>
+                <button onclick="window.toggleCostosFijos()" class="btn-secondary">⚙️ Configuración</button>
             </div>
         </section>
 
@@ -257,44 +353,44 @@ const title = "Creatopia Calc";
         <section id="historial" class="hidden">
             <h2>📋 Historial de Cálculos</h2>
             <div id="historialLista"></div>
-            <button onclick="limpiarHistorial()" class="secondary" style="width: 100%; margin-top: 1rem;">Limpiar Historial</button>
+            <button onclick="window.limpiarHistorial()" class="btn-outline btn-full">Limpiar Historial</button>
         </section>
 
         <!-- Sección de Configuración -->
         <section id="costosFijos" class="hidden">
             <h2>⚙️ Configuración</h2>
             
-            <div style="margin-bottom: 2rem;">
+            <div style="margin-bottom: 30px;">
                 <div class="calculator-grid">
-                    <button onclick="cargarReferencias()" class="secondary">Valores Predeterminados</button>
-                    <button onclick="resetear()" class="outline">Borrar Todo</button>
-                    <button onclick="exportarJSON()" class="secondary">Exportar JSON</button>
+                    <button onclick="window.cargarReferencias()" class="btn-secondary">Valores Predeterminados</button>
+                    <button onclick="window.resetear()" class="btn-outline">Borrar Todo</button>
+                    <button onclick="window.exportarJSON()" class="btn-secondary">Exportar JSON</button>
                 </div>
             </div>
 
             <h3>💰 Costos Fijos</h3>
             <div class="calculator-grid">
-                <div>
+                <div class="form-group">
                     <label for="precioKwh">kWh ($/kWh):</label>
                     <input type="number" id="precioKwh" placeholder="234">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="consumoW">Consumo (W):</label>
                     <input type="number" id="consumoW" placeholder="120">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="desgasteHoras">Vida útil (h):</label>
                     <input type="number" id="desgasteHoras" placeholder="15000">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="valorImpresora">Valor imp. ($):</label>
                     <input type="number" id="valorImpresora" placeholder="1363990">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="margenError">% Error:</label>
                     <input type="number" id="margenError" value="30" placeholder="30">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="comisionML">Comisión ML (%):</label>
                     <input type="number" id="comisionML" value="30" step="1" placeholder="30">
                 </div>
@@ -302,7 +398,7 @@ const title = "Creatopia Calc";
 
             <h3>🔧 Insumos</h3>
             <div class="calculator-grid">
-                <div>
+                <div class="form-group">
                     <label for="insumos">Insumos ($):</label>
                     <input type="number" id="insumos" value="0" step="0.01" placeholder="0">
                 </div>
@@ -310,11 +406,11 @@ const title = "Creatopia Calc";
 
             <h3>🔗 Extras Llaveros (opcional)</h3>
             <div class="calculator-grid">
-                <div>
+                <div class="form-group">
                     <label for="precioCadena">Precio cadena ($/ud):</label>
                     <input type="number" id="precioCadena" value="0" step="0.01" placeholder="0">
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="cantidadCadenas">Cantidad cadenas:</label>
                     <input type="number" id="cantidadCadenas" value="0" min="0" placeholder="0">
                 </div>
@@ -322,19 +418,19 @@ const title = "Creatopia Calc";
 
             <h3>💸 Precios</h3>
             <div class="calculator-grid">
-                <div>
+                <div class="form-group">
                     <label for="descuentoVentaPersona">Descuento Venta Persona (%):</label>
                     <input type="number" id="descuentoVentaPersona" step="1" value="5" min="0" max="100" placeholder="5">
                     <small>% menos que ML Competencia</small>
                 </div>
             </div>
             
-            <div style="margin-top: 2rem;">
+            <div style="margin-top: 30px;">
                 <label>
-                    <input type="checkbox" id="debugMode" onchange="toggleDebugMode()">
+                    <input type="checkbox" id="debugMode" onchange="window.toggleDebugMode()">
                     🔧 Modo Debug
                 </label>
-                <small style="display: block; margin-top: 0.5rem;">Mostrar herramientas de desarrollo y testing</small>
+                <br><small>Mostrar herramientas de desarrollo y testing</small>
             </div>
         </section>
 
@@ -343,11 +439,11 @@ const title = "Creatopia Calc";
             <h2>📊 Resultados</h2>
             <div id="detalleResultados"></div>
         </section>
-    </main>
+    </div>
 
     <script>
         // Valores de referencia para configuración rápida
-        const REF = {
+        window.REF = {
             precioKg: 20000,
             precioKwh: 234,
             consumoW: 120,
@@ -358,27 +454,27 @@ const title = "Creatopia Calc";
         };
 
         // Variable para entrada actual
-        let entradaActual = null;
+        window.entradaActual = null;
 
         // Función para formatear números en estilo argentino
-        function formatoArgentino(numero) {
+        window.formatoArgentino = function(numero) {
             return numero.toLocaleString('es-AR', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
-        }
+        };
 
         // Función para redondear precios a centenas
-        function formatoPrecioFinal(numero) {
+        window.formatoPrecioFinal = function(numero) {
             const redondeado = Math.round(numero / 100) * 100;
             return redondeado.toLocaleString('es-AR', {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
             });
-        }
+        };
 
         // Función para generar alertas generales
-        function generarAlertaGeneral(precioVentaPersona, precioMLCompetencia, precioMLSinCompetencia) {
+        window.generarAlertaGeneral = function(precioVentaPersona, precioMLCompetencia, precioMLSinCompetencia) {
             const precioMercadoLibre = parseFloat(document.getElementById('precioMercadoLibre').value) || 0;
             
             if (precioMercadoLibre === 0) {
@@ -389,7 +485,7 @@ const title = "Creatopia Calc";
                 return `
                     <div class="alert alert-warning">
                         <strong>⚠️ ADVERTENCIA</strong><br>
-                        El precio de MercadoLibre (${formatoPrecioFinal(precioMercadoLibre)}) es menor que tu ML Competencia (${formatoPrecioFinal(precioMLCompetencia)}). Quizás no conviene ir por MercadoLibre.
+                        El precio de MercadoLibre ($${window.formatoPrecioFinal(precioMercadoLibre)}) es menor que tu ML Competencia ($${window.formatoPrecioFinal(precioMLCompetencia)}). Quizás no conviene ir por MercadoLibre.
                     </div>
                 `;
             } else if (precioMercadoLibre >= precioMLCompetencia && precioMercadoLibre <= precioMLSinCompetencia) {
@@ -397,28 +493,28 @@ const title = "Creatopia Calc";
                 return `
                     <div class="alert alert-info">
                         <strong>💡 RECOMENDACIÓN</strong><br>
-                        El precio de MercadoLibre (${formatoPrecioFinal(precioMercadoLibre)}) es ${diferenciaPorcentaje.toFixed(1)}% mayor que tu ML Competencia. Debes ajustar el precio por encima del valor ML Competencia (${formatoPrecioFinal(precioMLCompetencia)}) pero no exceder el valor de MercadoLibre (${formatoPrecioFinal(precioMercadoLibre)}).
+                        El precio de MercadoLibre ($${window.formatoPrecioFinal(precioMercadoLibre)}) es ${diferenciaPorcentaje.toFixed(1)}% mayor que tu ML Competencia. Debes ajustar el precio por encima del valor ML Competencia ($${window.formatoPrecioFinal(precioMLCompetencia)}) pero no exceder el valor de MercadoLibre ($${window.formatoPrecioFinal(precioMercadoLibre)}).
                     </div>
                 `;
             } else {
                 return `
                     <div class="alert alert-success">
                         <strong>💡 OPORTUNIDAD</strong><br>
-                        El precio de MercadoLibre (${formatoPrecioFinal(precioMercadoLibre)}) es mayor que tu ML Sin Competencia (${formatoPrecioFinal(precioMLSinCompetencia)}). Debes ajustar el precio por encima del valor ML Sin Competencia (${formatoPrecioFinal(precioMLSinCompetencia)}).
+                        El precio de MercadoLibre ($${window.formatoPrecioFinal(precioMercadoLibre)}) es mayor que tu ML Sin Competencia ($${window.formatoPrecioFinal(precioMLSinCompetencia)}). Debes ajustar el precio por encima del valor ML Sin Competencia ($${window.formatoPrecioFinal(precioMLSinCompetencia)}).
                     </div>
                 `;
             }
-        }
+        };
 
         // Inicialización de la aplicación
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarDatos();
-            cargarHistorial();
-            cargarDebugMode();
+        document.addEventListener('DOMContentLoaded', function() {
+            window.cargarDatos();
+            window.cargarHistorial();
+            window.cargarDebugMode();
         });
 
         // Gestión del modo debug
-        function cargarDebugMode() {
+        window.cargarDebugMode = function() {
             const debugMode = sessionStorage.getItem('debugMode') === 'true';
             const debugCheckbox = document.getElementById('debugMode');
             if (debugCheckbox) {
@@ -430,9 +526,9 @@ const title = "Creatopia Calc";
                     testButton.classList.add('hidden');
                 }
             }
-        }
+        };
 
-        function toggleDebugMode() {
+        window.toggleDebugMode = function() {
             const debugCheckbox = document.getElementById('debugMode');
             const testButton = document.getElementById('testButton');
             
@@ -448,30 +544,30 @@ const title = "Creatopia Calc";
                     }
                 }
             }
-        }
+        };
 
         // Funciones de historial
-        function toggleHistorial() {
+        window.toggleHistorial = function() {
             const historial = document.getElementById('historial');
             if (historial.classList.contains('hidden')) {
                 historial.classList.remove('hidden');
-                mostrarHistorial();
+                window.mostrarHistorial();
             } else {
                 historial.classList.add('hidden');
             }
-        }
+        };
 
-        function toggleCostosFijos() {
+        window.toggleCostosFijos = function() {
             const costosFijos = document.getElementById('costosFijos');
             if (costosFijos.classList.contains('hidden')) {
                 costosFijos.classList.remove('hidden');
             } else {
                 costosFijos.classList.add('hidden');
             }
-        }
+        };
 
         // Función principal de cálculo
-        function calcular() {
+        window.calcular = function() {
             // Obtener valores de entrada
             const precioKg = parseFloat(document.getElementById('costoFilamento').value) || 0;
             const precioKwh = parseFloat(document.getElementById('precioKwh').value) || 0;
@@ -487,7 +583,7 @@ const title = "Creatopia Calc";
             
             const gramos = parseFloat(document.getElementById('gramosFilamento').value) || 0;
             const insumos = parseFloat(document.getElementById('insumos').value) || 0;
-            let descuentoVentaPersona = parseFloat(document.getElementById('descuentoVentaPersona')?.value) || 5;
+            let descuentoVentaPersona = parseFloat(document.getElementById('descuentoVentaPersona').value) || 5;
             
             const cantidad = parseFloat(document.getElementById('cantidad').value) || 1;
             const precioCadena = parseFloat(document.getElementById('precioCadena').value) || 0;
@@ -548,13 +644,13 @@ const title = "Creatopia Calc";
             let html = `
                 <!-- Pestañas de navegación -->
                 <div class="result-tabs">
-                    <button class="tab-button active" onclick="showTab('venta-persona')">
+                    <button class="tab-button active" onclick="window.showTab('venta-persona')">
                         💵 Venta a Persona (-${descuentoVentaPersona}%)
                     </button>
-                    <button class="tab-button" onclick="showTab('ml-competencia')">
+                    <button class="tab-button" onclick="window.showTab('ml-competencia')">
                         🛒 ML Competencia (${gananciaCompetencia}%)
                     </button>
-                    <button class="tab-button" onclick="showTab('ml-sin-competencia')">
+                    <button class="tab-button" onclick="window.showTab('ml-sin-competencia')">
                         ⭐ ML Sin Competencia (${gananciaSinCompetencia}%)
                     </button>
                 </div>
@@ -563,10 +659,10 @@ const title = "Creatopia Calc";
                 <div id="venta-persona" class="tab-content active">
                     <div class="price-final price-persona">
                         <h3>💵 Venta a Persona (-${descuentoVentaPersona}% sobre ML Competencia)</h3>
-                        <div>📊 Suma de Costos: $ ${Math.round(costoTotal).toLocaleString('es-AR')}</div>
-                        <div>💰 Ganancia: $ ${Math.round(gananciaReal).toLocaleString('es-AR')}</div>
-                        <div style="font-size: 1.5rem; margin-top: 1rem;">
-                            💵 Precio Final: $ ${formatoPrecioFinal(totalCobrarRedondeado)}
+                        <div>📊 Suma de Costos: $${Math.round(costoTotal).toLocaleString('es-AR')}</div>
+                        <div>💰 Ganancia: $${Math.round(gananciaReal).toLocaleString('es-AR')}</div>
+                        <div style="font-size: 1.5rem; margin-top: 15px;">
+                            💵 Precio Final: $${formatoPrecioFinal(totalCobrarRedondeado)}
                         </div>
                     </div>
                 </div>
@@ -574,10 +670,10 @@ const title = "Creatopia Calc";
                 <div id="ml-competencia" class="tab-content">
                     <div class="price-final price-competencia">
                         <h3>🛒 ML Competencia (${gananciaCompetencia}%)</h3>
-                        <div>📊 Suma de Costos: $ ${Math.round(costoTotal).toLocaleString('es-AR')}</div>
-                        <div>💰 Ganancia: $ ${Math.round(gananciaMLCompetencia).toLocaleString('es-AR')}</div>
-                        <div style="font-size: 1.5rem; margin-top: 1rem;">
-                            💵 Precio Final: $ ${formatoPrecioFinal(precioMLCompetenciaRedondeado)}
+                        <div>📊 Suma de Costos: $${Math.round(costoTotal).toLocaleString('es-AR')}</div>
+                        <div>💰 Ganancia: $${Math.round(gananciaMLCompetencia).toLocaleString('es-AR')}</div>
+                        <div style="font-size: 1.5rem; margin-top: 15px;">
+                            💵 Precio Final: $${formatoPrecioFinal(precioMLCompetenciaRedondeado)}
                         </div>
                     </div>
                 </div>
@@ -585,42 +681,42 @@ const title = "Creatopia Calc";
                 <div id="ml-sin-competencia" class="tab-content">
                     <div class="price-final price-sin-competencia">
                         <h3>⭐ ML Sin Competencia (${gananciaSinCompetencia}%)</h3>
-                        <div>📊 Suma de Costos: $ ${Math.round(costoTotal).toLocaleString('es-AR')}</div>
-                        <div>💰 Ganancia: $ ${Math.round(gananciaMLSinCompetencia).toLocaleString('es-AR')}</div>
-                        <div style="font-size: 1.5rem; margin-top: 1rem;">
-                            💵 Precio Final: $ ${formatoPrecioFinal(precioMLSinCompetenciaRedondeado)}
+                        <div>📊 Suma de Costos: $${Math.round(costoTotal).toLocaleString('es-AR')}</div>
+                        <div>💰 Ganancia: $${Math.round(gananciaMLSinCompetencia).toLocaleString('es-AR')}</div>
+                        <div style="font-size: 1.5rem; margin-top: 15px;">
+                            💵 Precio Final: $${formatoPrecioFinal(precioMLSinCompetenciaRedondeado)}
                         </div>
                     </div>
                 </div>
                 
-                ${generarAlertaGeneral(totalCobrarRedondeado, precioMLCompetenciaRedondeado, precioMLSinCompetenciaRedondeado)}
+                ${window.generarAlertaGeneral(totalCobrarRedondeado, precioMLCompetenciaRedondeado, precioMLSinCompetenciaRedondeado)}
                 
                 <!-- Desglose de costos -->
                 <div class="collapsible">
-                    <div class="collapsible-header" onclick="toggleCollapsible('detalle-costos')">
+                    <div class="collapsible-header" onclick="window.toggleCollapsible('detalle-costos')">
                         <span>📊 Ver Desglose de Costos</span>
                         <span>▼</span>
                     </div>
                     <div class="collapsible-content" id="detalle-costos">
-                        <div>Material (${gramos}g): $ ${formatoArgentino(costoMaterial)}</div>
-                        <div>Electricidad (${tiempoTotalHoras.toFixed(2)}h): $ ${formatoArgentino(costoElectricidad)}</div>
-                        <div>Desgaste: $ ${formatoArgentino(costoDesgaste)}</div>
-                        <div style="font-weight: bold; margin-top: 1rem;">
-                            💰 Costo Base: $ ${formatoArgentino(costoBase)}
+                        <div>Material (${gramos}g): $${window.formatoArgentino(costoMaterial)}</div>
+                        <div>Electricidad (${tiempoTotalHoras.toFixed(2)}h): $${window.formatoArgentino(costoElectricidad)}</div>
+                        <div>Desgaste: $${window.formatoArgentino(costoDesgaste)}</div>
+                        <div style="font-weight: bold; margin-top: 15px;">
+                            💰 Costo Base: $${window.formatoArgentino(costoBase)}
                         </div>
                     </div>
                 </div>
                 
                 <!-- Margen de error -->
                 <div class="collapsible">
-                    <div class="collapsible-header" onclick="toggleCollapsible('detalle-margen')">
+                    <div class="collapsible-header" onclick="window.toggleCollapsible('detalle-margen')">
                         <span>⚠️ Ver Margen de Error</span>
                         <span>▼</span>
                     </div>
                     <div class="collapsible-content" id="detalle-margen">
-                        <div>Margen de Error ${(margenErrorPct*100).toFixed(0)}%: $ ${formatoArgentino(margenError)}</div>
-                        <div style="font-weight: bold; margin-top: 1rem;">
-                            Con Margen de Error: $ ${formatoArgentino(costoConMargen)}
+                        <div>Margen de Error ${(margenErrorPct*100).toFixed(0)}%: $${window.formatoArgentino(margenError)}</div>
+                        <div style="font-weight: bold; margin-top: 15px;">
+                            Con Margen de Error: $${window.formatoArgentino(costoConMargen)}
                         </div>
                     </div>
                 </div>
@@ -629,7 +725,7 @@ const title = "Creatopia Calc";
             // Agregar totales por cantidad si es necesario
             if (cantidad > 1 || costoCadenas > 0) {
                 html += `
-                <div style="margin-top: 2rem;">
+                <div style="margin-top: 30px;">
                     <h3>📦 Totales por Cantidad</h3>
                     <div class="test-table">
                         <table>
@@ -653,18 +749,18 @@ const title = "Creatopia Calc";
                     html += `
                                 <tr>
                                     <td>🔗 Cadenas</td>
-                                    <td>$ ${Math.round(costoCadenas).toLocaleString('es-AR')}</td>
-                                    <td>$ ${Math.round(costoCadenas).toLocaleString('es-AR')}</td>
-                                    <td>$ ${Math.round(costoCadenas).toLocaleString('es-AR')}</td>
+                                    <td>$${Math.round(costoCadenas).toLocaleString('es-AR')}</td>
+                                    <td>$${Math.round(costoCadenas).toLocaleString('es-AR')}</td>
+                                    <td>$${Math.round(costoCadenas).toLocaleString('es-AR')}</td>
                                 </tr>`;
                 }
                 
                 html += `
                                 <tr style="font-weight: bold;">
                                     <td>💵 TOTAL FINAL</td>
-                                    <td>$ ${formatoPrecioFinal(totalDirecto)}</td>
-                                    <td>$ ${formatoPrecioFinal(totalMLCompetenciaFinal)}</td>
-                                    <td>$ ${formatoPrecioFinal(totalMLSinCompetenciaFinal)}</td>
+                                    <td>$${window.formatoPrecioFinal(totalDirecto)}</td>
+                                    <td>$${window.formatoPrecioFinal(totalMLCompetenciaFinal)}</td>
+                                    <td>$${window.formatoPrecioFinal(totalMLSinCompetenciaFinal)}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -675,26 +771,30 @@ const title = "Creatopia Calc";
             // Mostrar resultados
             document.getElementById('detalleResultados').innerHTML = html;
             document.getElementById('resultados').classList.remove('hidden');
-            guardarDatos();
-        }
+            window.guardarDatos();
+        };
 
         // Función para mostrar pestañas
-        function showTab(tabId) {
+        window.showTab = function(tabId) {
             // Ocultar todas las pestañas
-            document.querySelectorAll('.tab-content').forEach(tab => {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-button');
+            
+            tabs.forEach(function(tab) {
                 tab.classList.remove('active');
             });
-            document.querySelectorAll('.tab-button').forEach(button => {
+            
+            buttons.forEach(function(button) {
                 button.classList.remove('active');
             });
             
             // Mostrar pestaña seleccionada
             document.getElementById(tabId).classList.add('active');
             event.target.classList.add('active');
-        }
+        };
 
         // Función para toggle de collapsibles
-        function toggleCollapsible(id) {
+        window.toggleCollapsible = function(id) {
             const content = document.getElementById(id);
             const header = event.target.closest('.collapsible-header');
             const icon = header.querySelector('span:last-child');
@@ -706,10 +806,10 @@ const title = "Creatopia Calc";
                 content.classList.add('show');
                 icon.textContent = '▲';
             }
-        }
+        };
 
         // Funciones de persistencia de datos
-        function guardarDatos() {
+        window.guardarDatos = function() {
             const datos = {
                 costoFilamento: document.getElementById('costoFilamento').value,
                 precioKwh: document.getElementById('precioKwh').value,
@@ -729,13 +829,13 @@ const title = "Creatopia Calc";
                 cantidadCadenas: document.getElementById('cantidadCadenas').value,
             };
             sessionStorage.setItem('calc3D', JSON.stringify(datos));
-        }
+        };
 
-        function cargarDatos() {
+        window.cargarDatos = function() {
             const datos = sessionStorage.getItem('calc3D');
             if (datos) {
                 const obj = JSON.parse(datos);
-                Object.keys(obj).forEach(key => {
+                Object.keys(obj).forEach(function(key) {
                     const elemento = document.getElementById(key);
                     if (elemento && obj[key]) {
                         if (key === 'descuentoVentaPersona') {
@@ -749,32 +849,32 @@ const title = "Creatopia Calc";
                     }
                 });
             } else {
-                cargarReferencias();
+                window.cargarReferencias();
                 document.getElementById('descuentoVentaPersona').value = '5';
             }
-        }
+        };
 
-        function cargarReferencias() {
-            document.getElementById('costoFilamento').value = REF.precioKg;
-            document.getElementById('precioKwh').value = REF.precioKwh;
-            document.getElementById('consumoW').value = REF.consumoW;
-            document.getElementById('desgasteHoras').value = REF.desgasteHoras;
-            document.getElementById('valorImpresora').value = REF.valorImpresora;
-            document.getElementById('margenError').value = REF.margenError;
-            document.getElementById('comisionML').value = REF.comisionML;
-            guardarDatos();
-            alert('Referencias cargadas\\nPLA: $20k/kg | kWh: $234\\nConsumo: 120W | Vida útil: 15.000h\\nImpresora: $1.363.990 | Comisión ML: 30%');
-        }
+        window.cargarReferencias = function() {
+            document.getElementById('costoFilamento').value = window.REF.precioKg;
+            document.getElementById('precioKwh').value = window.REF.precioKwh;
+            document.getElementById('consumoW').value = window.REF.consumoW;
+            document.getElementById('desgasteHoras').value = window.REF.desgasteHoras;
+            document.getElementById('valorImpresora').value = window.REF.valorImpresora;
+            document.getElementById('margenError').value = window.REF.margenError;
+            document.getElementById('comisionML').value = window.REF.comisionML;
+            window.guardarDatos();
+            alert('Referencias cargadas\nPLA: $20k/kg | kWh: $234\nConsumo: 120W | Vida útil: 15.000h\nImpresora: $1.363.990 | Comisión ML: 30%');
+        };
 
-        function resetear() {
+        window.resetear = function() {
             if (confirm('¿Borrar todos los datos?')) {
                 sessionStorage.removeItem('calc3D');
                 localStorage.removeItem('historial3D');
                 location.reload();
             }
-        }
+        };
 
-        function exportarJSON() {
+        window.exportarJSON = function() {
             const datos = sessionStorage.getItem('calc3D');
             const historial = localStorage.getItem('historial3D');
             const exportData = {
@@ -787,21 +887,21 @@ const title = "Creatopia Calc";
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `creatopia-calc-${new Date().toISOString().split('T')[0]}.json`;
+            a.download = 'creatopia-calc-' + new Date().toISOString().split('T')[0] + '.json';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-        }
+        };
 
         // Funciones de historial (simplificadas)
-        function cargarHistorial() {
+        window.cargarHistorial = function() {
             if (!localStorage.getItem('historial3D')) {
                 localStorage.setItem('historial3D', '[]');
             }
-        }
+        };
 
-        function mostrarHistorial() {
+        window.mostrarHistorial = function() {
             const historial = JSON.parse(localStorage.getItem('historial3D') || '[]');
             const lista = document.getElementById('historialLista');
             
@@ -810,47 +910,49 @@ const title = "Creatopia Calc";
                 return;
             }
             
-            lista.innerHTML = historial.map(item => `
-                <div style="border: 1px solid var(--pico-muted-border-color); border-radius: 0.5rem; padding: 1rem; margin: 0.5rem 0;">
-                    <strong>${item.nombre || 'Cálculo sin nombre'}</strong><br>
-                    <small>${new Date(item.fecha).toLocaleString('es-AR')}</small><br>
-                    <small>${item.entrada?.pieza?.gramosFilamento || 0}g - ${item.entrada?.pieza?.horasImpresion || 0}:${(item.entrada?.pieza?.minutosImpresion || 0).toString().padStart(2,'0')}</small>
-                    <div style="margin-top: 0.5rem;">
-                        <button onclick="cargarDesdeHistorial('${item.id}')" class="secondary" style="margin-right: 0.5rem;">Cargar</button>
-                        <button onclick="eliminarDelHistorial('${item.id}')" class="outline">Eliminar</button>
+            lista.innerHTML = historial.map(function(item) {
+                return `
+                    <div style="border: 1px solid #e5e7eb; border-radius: 4px; padding: 15px; margin: 10px 0;">
+                        <strong>${item.nombre || 'Cálculo sin nombre'}</strong><br>
+                        <small>${new Date(item.fecha).toLocaleString('es-AR')}</small><br>
+                        <small>${item.entrada?.pieza?.gramosFilamento || 0}g - ${item.entrada?.pieza?.horasImpresion || 0}:${(item.entrada?.pieza?.minutosImpresion || 0).toString().padStart(2,'0')}</small>
+                        <div style="margin-top: 10px;">
+                            <button onclick="window.cargarDesdeHistorial('${item.id}')" class="btn-secondary" style="margin-right: 10px;">Cargar</button>
+                            <button onclick="window.eliminarDelHistorial('${item.id}')" class="btn-outline">Eliminar</button>
+                        </div>
                     </div>
-                </div>
-            `).join('');
-        }
+                `;
+            }).join('');
+        };
 
-        function limpiarHistorial() {
+        window.limpiarHistorial = function() {
             if (confirm('¿Eliminar TODO el historial?')) {
                 localStorage.setItem('historial3D', '[]');
-                mostrarHistorial();
+                window.mostrarHistorial();
             }
-        }
+        };
 
         // Funciones de test (simplificadas)
-        function toggleTestInterno() {
+        window.toggleTestInterno = function() {
             alert('Función de tests en desarrollo para la versión Astro');
-        }
+        };
 
-        function nombrarEntrada() {
+        window.nombrarEntrada = function() {
             const nombre = prompt('Nombre para este cálculo:');
             if (nombre) {
                 // Guardar en historial con nombre
-                alert(`Cálculo guardado como: ${nombre}`);
+                alert('Cálculo guardado como: ' + nombre);
             }
-        }
+        };
 
         // Funciones placeholder para compatibilidad
-        function cargarDesdeHistorial(id) {
+        window.cargarDesdeHistorial = function(id) {
             alert('Función en desarrollo');
-        }
+        };
 
-        function eliminarDelHistorial(id) {
+        window.eliminarDelHistorial = function(id) {
             alert('Función en desarrollo');
-        }
+        };
     </script>
 </body>
 </html>
