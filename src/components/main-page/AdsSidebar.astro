@@ -1,0 +1,178 @@
+---
+const { class: className } = Astro.props;
+---
+
+<aside class:list={["ads-sidebar", className]}>
+    <slot name="weather" />
+
+    <div class="ad-box emate" aria-label="Retro Tech Advertisement">
+        <h3>TECH!!!</h3>
+        <div class="ad-image-placeholder fixed-gif-container">
+            <img
+                id="retro-gif"
+                src=""
+                alt="Animated retro technology GIF"
+                class="retro-gif"
+                loading="lazy"
+            />
+        </div>
+        <p class="ad-buy-text">WOW. BUY IT NOW!</p>
+    </div>
+
+    <div class="ad-box mars" aria-label="Movies and TV Advertisement">
+        <div class="mars-header">MOVIES & TV</div>
+        <div class="mars-content">
+            <div class="ad-image-placeholder fixed-gif-container">
+                <img
+                    id="movies-gif"
+                    src=""
+                    alt="Animated movie scene GIF"
+                    class="retro-gif"
+                    loading="lazy"
+                />
+            </div>
+            <p>Definition of <br />Entertainment</p>
+        </div>
+    </div>
+
+    <div class="ad-box power-mac" aria-label="General ADS Advertisement">
+        <div class="ad-header-alt">ADS!</div>
+        <div class="ad-content">
+            <div class="ad-image-placeholder fixed-gif-container">
+                <img
+                    id="power-mac-gif"
+                    src=""
+                    alt="Animated retro advertisement GIF"
+                    class="retro-gif"
+                    loading="lazy"
+                />
+            </div>
+            <p>Greats Products.</p>
+        </div>
+    </div>
+
+    <div class="sidebar-info-box">
+        <p>More updates coming soon!</p>
+    </div>
+</aside>
+
+<script>
+    const GIF_COLLECTIONS = {
+        "retro-gif": [
+            "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXA0NjNyb3gzYmtuamE3NnYwNnMxbGR3eTYxcDI1OXFoMTV1djc5aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1WL1H6mFOtcKmiwEqv/giphy.gif",
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXh0NDM4MDIzazE0bXRjaWs3bG11aHpobTdzODlib296Y3g4b29kdCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oEduPYHQCqxnwGeQw/giphy.gif",
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWZhbmsxYWQwaXZscGx6em14YTFsaThmazZobDdpcWxqY21nbWYxNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tJdDsobvg1XpZvwBl4/giphy.gif",
+            "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExenUxb2NxazlnaGcwYm5yMWVqYnNkbm8yczB1aTlvaXV4ZXc1M3huZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PXxYVVhSQMOmA/giphy.gif",
+        ],
+        "movies-gif": [
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjUxNnZxd2piMDU3bmxicTNsMG51NzVla3gxbnIwOXpha3hzMWpmNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1wXberbwfS4rKW8Uxo/giphy.gif",
+            "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3FrZzVueDJ1djlvdWJocnpwN2c2dXFhZ3djaWo3YmlmcTJodGM2aSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/yhK4PWI9WJ0c/giphy.gif",
+            "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjV6dHdjaXhnaHhkaDJ4eGxjNXgwcHQ2cHdwbzJjNGdsa3RuOHpzeiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Wz59qKxz2B9oQ/giphy.gif",
+            "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWV6bW42NHFtZzNoZmh3dWswZnZ4eXpqMmRqOHIyejQyOGx0MmdzZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ncve7z4oPPURO/giphy.gif",
+        ],
+        "power-mac-gif": [
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdno4am9uYXRudXkzbzNnOXJxeTZqaTk5OGRzeGc4ZWxwczhwcnk2dyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/5dyJ8y5F76o12/giphy.gif",
+            "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExamFtbzVkOHF2MHU5c2FiNTdpZzVzZWxjcmt1a240YnNkNmMwMTh4ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/5fBH6zmxIZy1sEgqxAk/giphy.gif",
+            "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExODBlaHE5a2g2YzkwMmcwdjI0N2xiZ3V0aGpnZ2l5c21yOGtkcGUyaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3VME4bNx0HOsE/giphy.gif",
+            "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZjB0Yndiamdoa3hubmgzYTNxdTl6c3U4aXdybWg5aXNkOHM5NTEzciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ALoIw3nehhOda/giphy.gif",
+            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnlzcnNnZHcwcHFqeW1kbGRhbGpiZ2dqZXBxd3hwMHg1eHhiM3A5YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Fwn1auHR2LUGI/giphy.gif",
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2FlNHVqaGRjOGk3djJxcDFkeWJzYTRlaDhzYXY4cmlyNWdlNXY5ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Qw4X3FMsVIK4egRPr9K/giphy.gif",
+        ],
+    };
+
+    function initGifs() {
+        Object.entries(GIF_COLLECTIONS).forEach(([id, urls]) => {
+            const img = document.getElementById(id) as HTMLImageElement;
+            if (img) img.src = urls[Math.floor(Math.random() * urls.length)];
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", initGifs);
+</script>
+
+<style>
+    .ads-sidebar {
+        width: 200px;
+        background-color: #003366;
+        color: #ffffff;
+        padding: 15px;
+        font-family: Arial, Helvetica, sans-serif;
+        border-left: 2px solid #000000;
+    }
+
+    .ad-box {
+        border: 2px solid #999999;
+        background-color: #ffffff;
+        text-align: center;
+        margin-bottom: 20px;
+        color: #000000;
+        overflow: hidden;
+    }
+
+    .ad-header-alt {
+        background-color: #336699;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 8px;
+    }
+
+    .ad-content {
+        padding: 15px;
+    }
+
+    .ad-image-placeholder {
+        background-color: #eeeeee;
+        border: 1px dashed #cccccc;
+        margin-bottom: 10px;
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .fixed-gif-container {
+        width: 100%;
+        height: 120px;
+        overflow: hidden;
+        background-color: #000;
+        border: 1px solid #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .retro-gif {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .ad-buy-text {
+        font-size: 14px;
+        font-weight: bold;
+        color: #cc0000;
+        margin-top: 10px;
+    }
+
+    .mars-header {
+        background-color: #ff9933;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 10px;
+    }
+
+    .mars-content {
+        padding: 15px;
+    }
+
+    .sidebar-info-box {
+        padding: 10px;
+        border: 1px solid #ffffff;
+        margin-top: 20px;
+        text-align: center;
+        font-size: 11px;
+        font-style: italic;
+    }
+</style>

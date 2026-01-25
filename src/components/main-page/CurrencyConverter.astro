@@ -1,0 +1,183 @@
+<div class="calculator-container">
+    <div class="calc-label">CURRENCY CONVERTER</div>
+    <div class="calc-display" id="calc-display-mep">MEP: $0.00</div>
+    <div class="calc-display" id="calc-display-tarjeta">TRJ: $0.00</div>
+    <div class="calc-input-wrap">
+        <input
+            type="number"
+            id="calc-input"
+            placeholder="USD AMOUNT"
+            class="calc-input"
+        />
+    </div>
+    <div class="calc-buttons">
+        <button class="calc-btn" id="calc-convert">CALC</button>
+        <button class="calc-btn btn-clear" id="calc-clear">C</button>
+    </div>
+</div>
+
+<script>
+    import { getCachedData, setCachedData } from "../../utils/cache";
+
+    const CACHE_KEY = "currency-rates";
+    const input = document.getElementById("calc-input") as HTMLInputElement;
+    const btnConvert = document.getElementById("calc-convert");
+    const btnClear = document.getElementById("calc-clear");
+    const displayMep = document.getElementById("calc-display-mep");
+    const displayTarjeta = document.getElementById("calc-display-tarjeta");
+
+    let rateMep = 0;
+    let rateTarjeta = 0;
+
+    function setDisplay(msg: string) {
+        if (displayMep) displayMep.innerText = msg;
+        if (displayTarjeta) displayTarjeta.innerText = msg;
+    }
+
+    function setReady() {
+        if (displayMep)
+            displayMep.innerText =
+                rateMep > 0 ? "MEP: READY" : "MEP: ERR 0";
+        if (displayTarjeta)
+            displayTarjeta.innerText =
+                rateTarjeta > 0 ? "TRJ: READY" : "TRJ: ERR 0";
+    }
+
+    async function fetchRates() {
+        const cached = getCachedData<{ mep: number; tarjeta: number }>(
+            CACHE_KEY,
+        );
+        if (cached?.mep > 0 && cached?.tarjeta > 0) {
+            rateMep = cached.mep;
+            rateTarjeta = cached.tarjeta;
+            setReady();
+            return;
+        }
+
+        setDisplay("LOADING...");
+        try {
+            const [resMep, resTarjeta] = await Promise.all([
+                fetch("https://dolarapi.com/v1/dolares/bolsa").then((r) =>
+                    r.json(),
+                ),
+                fetch("https://dolarapi.com/v1/dolares/tarjeta").then((r) =>
+                    r.json(),
+                ),
+            ]);
+            rateMep = resMep.venta;
+            rateTarjeta = resTarjeta.venta;
+            if (rateMep > 0 && rateTarjeta > 0)
+                setCachedData(CACHE_KEY, { mep: rateMep, tarjeta: rateTarjeta });
+            setReady();
+        } catch {
+            setDisplay("NET ERROR");
+        }
+    }
+
+    function formatARS(value: number) {
+        return new Intl.NumberFormat("es-AR", {
+            style: "currency",
+            currency: "ARS",
+        }).format(value);
+    }
+
+    function convert() {
+        if (!input || !displayMep || !displayTarjeta) return;
+        const usdAmount = parseFloat(input.value);
+        if (isNaN(usdAmount) || usdAmount <= 0) {
+            displayMep.innerText = "MEP: $0,00";
+            displayTarjeta.innerText = "TRJ: $0,00";
+            return;
+        }
+        displayMep.innerText =
+            rateMep > 0 ? "MEP: " + formatARS(usdAmount * rateMep) : "MEP: NO RATE";
+        displayTarjeta.innerText =
+            rateTarjeta > 0
+                ? "TRJ: " + formatARS(usdAmount * rateTarjeta)
+                : "TRJ: NO RATE";
+    }
+
+    if (btnConvert) btnConvert.addEventListener("click", convert);
+    if (btnClear) {
+        btnClear.addEventListener("click", () => {
+            if (input) input.value = "";
+            setReady();
+        });
+    }
+
+    fetchRates();
+</script>
+
+<style>
+    .calculator-container {
+        background-color: #777;
+        border: 3px solid #333;
+        border-radius: 5px;
+        padding: 10px;
+        box-shadow:
+            inset 2px 2px 5px rgba(0, 0, 0, 0.5),
+            2px 2px 0 #555;
+        margin-top: 20px;
+        font-family: "Courier New", Courier, monospace;
+    }
+
+    .calc-label {
+        font-size: 10px;
+        color: #fff;
+        margin-bottom: 5px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .calc-display {
+        background-color: #8fa08f;
+        border: 2px inset #555;
+        color: #222;
+        padding: 5px;
+        text-align: right;
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        min-height: 20px;
+        box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .calc-input-wrap {
+        margin-bottom: 5px;
+    }
+
+    .calc-input {
+        width: calc(100% - 10px);
+        background-color: #333;
+        color: #0f0;
+        border: 1px solid #555;
+        padding: 4px;
+        font-size: 13px;
+        font-family: "Courier New", Courier, monospace;
+    }
+
+    .calc-buttons {
+        display: flex;
+        gap: 5px;
+    }
+
+    .calc-btn {
+        flex: 1;
+        background-color: #444;
+        color: white;
+        border: 2px outset #666;
+        padding: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    .calc-btn:active {
+        border-style: inset;
+        background-color: #333;
+    }
+
+    .calc-btn.btn-clear {
+        background-color: #900;
+    }
+</style>

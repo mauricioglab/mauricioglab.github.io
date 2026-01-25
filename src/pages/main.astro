@@ -1,0 +1,260 @@
+---
+import CurrencyConverter from "../components/main-page/CurrencyConverter.astro";
+import WeatherWidget from "../components/main-page/WeatherWidget.astro";
+import ChuckFacts from "../components/main-page/ChuckFacts.astro";
+import RetroTranslator from "../components/main-page/RetroTranslator.astro";
+import AdsSidebar from "../components/main-page/AdsSidebar.astro";
+import PokemonBanner from "../components/main-page/PokemonBanner.astro";
+
+const today = new Date();
+const formattedDate = today
+	.toLocaleDateString("en-US", { month: "long", day: "numeric" })
+	.toUpperCase();
+const baseUrl = import.meta.env.BASE_URL;
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href={`${baseUrl}/favicon.svg`} />
+		<link rel="icon" href={`${baseUrl}/favicon.ico`} />
+		<meta name="viewport" content="width=device-width" />
+		<title>Bienvenido a MG Lab</title>
+	</head>
+	<body>
+		<div class="container">
+			<aside class="sidebar" aria-label="Main Navigation Sidebar">
+				<nav class="menu">
+					<a href="#productos">Product Information</a>
+					<a href="#soporte">Customer Support</a>
+					<a href="#tech">Technology & Research</a>
+					<a href="#dev">Developer World</a>
+					<a href="#grupos">Groups & Interests</a>
+					<a href="#recursos">Resources Online</a>
+					<a href="#about">About MG Lab</a>
+				</nav>
+				<hr />
+				<div class="sites-section">
+					<div class="sites-title">MG Lab Sites Worldwide</div>
+					<select aria-label="Select MG Lab regional site">
+						<option>Argentina</option>
+						<option>United States</option>
+						<option>Europe</option>
+						<option>Japan</option>
+					</select>
+				</div>
+
+				<div class="alf-section" aria-label="Fun corner with ALF">
+					<img
+						src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWd2cTd3MXdhd2UwZnlrNTBkYXI2M2JkaWpjNDh5eXVpdDR1cjdxbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LLWteC47MmBck/giphy.gif"
+						alt="ALF mascot waving"
+						class="alf-image"
+					/>
+					<div class="alf-text">ALF SAYS:<br />"Visit us!"</div>
+				</div>
+
+				<hr />
+
+				<CurrencyConverter />
+			</aside>
+
+			<main class="main-content" aria-label="Main Content Area">
+				<header class="header">
+					<div class="header-inner">
+						<h1>Welcome to MG Lab Depot</h1>
+						<div class="date" aria-label="Current date">
+							{formattedDate}
+						</div>
+					</div>
+				</header>
+
+				<div class="content-area">
+					<PokemonBanner />
+
+					<br />
+					<div class="whats-hot-header">▼ What's Hot</div>
+					<br />
+
+					<ChuckFacts />
+
+					<hr />
+
+					<RetroTranslator />
+				</div>
+
+				<footer class="footer">
+					<hr />
+					<p><a href={baseUrl}>← Volver al inicio</a></p>
+				</footer>
+			</main>
+
+			<AdsSidebar class="right-sidebar">
+				<WeatherWidget slot="weather" />
+			</AdsSidebar>
+		</div>
+
+		<style is:global>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+			body {
+				font-family: "Times New Roman", Times, serif;
+				background-color: #ffffff;
+				color: #000;
+				overflow-x: hidden;
+			}
+
+			.container {
+				display: flex;
+				width: 100%;
+				min-height: 100vh;
+			}
+
+			.sidebar {
+				flex: 0 0 165px;
+				background-color: #990000;
+				color: #ffffff;
+				padding: 10px;
+				font-family: Arial, Helvetica, sans-serif;
+			}
+
+			.menu a {
+				color: #ffffff;
+				text-decoration: none;
+				padding: 8px 5px;
+				font-size: 13px;
+				font-weight: bold;
+				display: block;
+			}
+			.menu a:hover {
+				background-color: #bb0000;
+			}
+
+			.sidebar hr {
+				border: none;
+				border-top: 2px solid #ffffff;
+				margin: 15px 0;
+			}
+			.sites-title {
+				font-size: 13px;
+				font-weight: bold;
+				margin-bottom: 8px;
+			}
+			.sites-section select {
+				width: 100%;
+				padding: 4px;
+				border: 2px inset #999;
+			}
+
+			.alf-section {
+				margin-top: 20px;
+				text-align: center;
+				padding: 10px;
+				background-color: #880000;
+				border: 2px solid #ffff00;
+			}
+			.alf-image {
+				width: 120px;
+				border: 2px solid #000;
+				margin-bottom: 8px;
+			}
+			.alf-text {
+				font-size: 12px;
+				font-weight: bold;
+				color: #ffff00;
+				line-height: 1.4;
+			}
+
+			.main-content {
+				flex: 1;
+				background-color: #ffffff;
+				display: flex;
+				flex-direction: column;
+			}
+
+			.header {
+				padding: 15px;
+				background-color: #f0f0f0;
+				border-bottom: 2px solid #000;
+			}
+
+			.header-inner {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.header h1 {
+				font-size: 36px;
+				font-weight: normal;
+				margin-left: 15px;
+			}
+
+			.date {
+				background-color: #000;
+				color: #fff;
+				padding: 5px 15px;
+				font-size: 11px;
+				font-weight: bold;
+				font-family: Arial, sans-serif;
+			}
+
+			.content-area {
+				padding: 20px;
+				flex: 1;
+			}
+
+			.whats-hot-header {
+				background-color: #ffcc00;
+				border: 2px solid #000;
+				padding: 6px 12px;
+				font-size: 13px;
+				font-weight: bold;
+				margin-bottom: 10px;
+				display: inline-block;
+			}
+
+			.footer {
+				padding: 20px;
+				text-align: center;
+				margin-top: auto;
+			}
+			a {
+				color: #00f;
+				text-decoration: underline;
+			}
+			a:hover {
+				color: #f00;
+			}
+
+			hr {
+				border: none;
+				border-top: 1px solid #ccc;
+				margin: 20px 0;
+			}
+
+			.right-sidebar {
+				flex: 0 0 200px;
+			}
+
+			@media (max-width: 992px) {
+				.container {
+					flex-direction: column;
+				}
+				.sidebar,
+				.main-content,
+				.right-sidebar {
+					width: 100%;
+					flex: none;
+					border: none;
+				}
+				.right-sidebar {
+					border-top: 2px solid #000;
+				}
+			}
+		</style>
+	</body>
+</html>

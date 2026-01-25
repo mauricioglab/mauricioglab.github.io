@@ -1,0 +1,118 @@
+---
+
+---
+
+<section class="banner-jumbo" aria-label="Featured Pocket Monster">
+    <div class="banner-icon-box" aria-hidden="true">
+        <img
+            id="pokemon-img"
+            src=""
+            alt="Pocket Monster"
+            class="pokemon-sprite"
+            style="display: none;"
+        />
+        <div id="pokemon-loader" class="loader">?</div>
+    </div>
+    <div class="banner-text">
+        <div class="banner-title">Introducing<br />Pocketmonster</div>
+        <div class="banner-subtitle">
+            Register today for a free <span id="pokemon-name">...</span>.
+        </div>
+    </div>
+</section>
+
+<script>
+    async function fetchRandomPokemon() {
+        const id = Math.floor(Math.random() * 151) + 1;
+        const nameEl = document.getElementById("pokemon-name");
+        const imgEl = document.getElementById(
+            "pokemon-img",
+        ) as HTMLImageElement;
+        const loaderEl = document.getElementById("pokemon-loader");
+
+        try {
+            const response = await fetch(
+                `https://pokeapi.co/api/v2/pokemon/${id}`,
+            );
+            const data = await response.json();
+
+            if (nameEl) nameEl.innerText = data.name.toUpperCase();
+
+            if (imgEl) {
+                const gen1Sprite =
+                    data.sprites.versions?.["generation-i"]?.["red-blue"]
+                        ?.front_default ||
+                    data.sprites.versions?.["generation-i"]?.["yellow"]
+                        ?.front_default;
+
+                imgEl.src = gen1Sprite || data.sprites.front_default || "";
+                imgEl.style.display = "block";
+                if (loaderEl) loaderEl.style.display = "none";
+            }
+        } catch (e) {
+            console.error("Error fetching Pokemon", e);
+            if (nameEl) nameEl.innerText = "MISSINGNO";
+        }
+    }
+    document.addEventListener("DOMContentLoaded", fetchRandomPokemon);
+</script>
+
+<style>
+    .banner-jumbo {
+        background-color: #6699cc;
+        border: 3px solid #003366;
+        display: flex;
+        padding: 20px;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 5px 5px 0px #003366;
+    }
+
+    .banner-icon-box {
+        background-color: #000;
+        color: #fff;
+        font-size: 60px;
+        width: 100px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #fff;
+        overflow: hidden;
+    }
+
+    .pokemon-sprite {
+        width: 90px;
+        height: 90px;
+        image-rendering: pixelated;
+    }
+
+    .loader {
+        font-family: "Courier New", Courier, monospace;
+        font-weight: bold;
+        color: #0f0;
+    }
+
+    .banner-title {
+        font-family: Arial, sans-serif;
+        font-size: 32px;
+        font-weight: bold;
+        color: #fff;
+        line-height: 1.2;
+        text-transform: uppercase;
+    }
+
+    .banner-subtitle {
+        font-family: "Times New Roman", Times, serif;
+        font-size: 18px;
+        font-style: italic;
+        color: #fff;
+        margin-top: 5px;
+    }
+
+    #pokemon-name {
+        font-weight: bold;
+        text-decoration: underline;
+        color: #ffff00;
+    }
+</style>

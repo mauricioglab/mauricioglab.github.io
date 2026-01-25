@@ -1,0 +1,153 @@
+<div
+    class="ad-box weather-box"
+    aria-label="Current Weather in Córdoba, Argentina"
+>
+    <div class="weather-header">CORDOBA WEATHER</div>
+    <div class="weather-content">
+        <div class="weather-display" id="weather-temp" aria-live="polite">
+            --°C
+        </div>
+        <div class="weather-info" id="weather-desc" aria-live="polite">
+            LOADING...
+        </div>
+        <div class="weather-icon-retro" id="weather-icon" aria-hidden="true">
+            ☁
+        </div>
+    </div>
+</div>
+
+<script>
+    import { getCachedData, setCachedData } from "../../utils/cache";
+
+    const weatherCodes: Record<number, string> = {
+        0: "CLEAR SKY",
+        1: "MAINLY CLEAR",
+        2: "PARTLY CLOUDY",
+        3: "OVERCAST",
+        45: "FOGGY",
+        48: "FOGGY",
+        51: "DRIZZLE",
+        53: "DRIZZLE",
+        55: "DRIZZLE",
+        61: "RAIN",
+        63: "RAIN",
+        65: "RAIN",
+        71: "SNOW",
+        73: "SNOW",
+        75: "SNOW",
+        80: "SHOWER",
+        81: "SHOWER",
+        82: "SHOWER",
+        95: "THUNDERSTORM",
+    };
+
+    const icons: Record<number, string> = {
+        0: "☀",
+        1: "🌤",
+        2: "⛅",
+        3: "☁",
+        45: "🌫",
+        48: "🌫",
+        51: "🌧",
+        53: "🌧",
+        55: "🌧",
+        61: "☔",
+        63: "☔",
+        65: "☔",
+        95: "⚡",
+    };
+
+    async function fetchWeather() {
+        const tempEl = document.getElementById("weather-temp");
+        const descEl = document.getElementById("weather-desc");
+        const iconEl = document.getElementById("weather-icon");
+
+        const CACHE_KEY = "weather-data";
+        const cachedWeather = getCachedData<{ temp: number; code: number }>(
+            CACHE_KEY,
+        );
+
+        if (cachedWeather) {
+            if (tempEl) tempEl.innerText = cachedWeather.temp + "°C";
+            if (descEl)
+                descEl.innerText =
+                    weatherCodes[cachedWeather.code] || "UNKNOWN";
+            if (iconEl) iconEl.innerText = icons[cachedWeather.code] || "☁";
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                "https://api.open-meteo.com/v1/forecast?latitude=-31.4135&longitude=-64.1810&current_weather=true",
+            );
+            const data = await response.json();
+
+            if (!data.current_weather) {
+                throw new Error("No current weather data");
+            }
+
+            const temp = data.current_weather.temperature;
+            const code = data.current_weather.weathercode;
+
+            setCachedData(CACHE_KEY, { temp, code });
+
+            if (tempEl) tempEl.innerText = temp + "°C";
+            if (descEl) descEl.innerText = weatherCodes[code] || "UNKNOWN";
+            if (iconEl) iconEl.innerText = icons[code] || "☁";
+        } catch (e) {
+            console.error("Weather error", e);
+            if (descEl) descEl.innerText = "OFFLINE";
+        }
+    }
+    fetchWeather();
+</script>
+
+<style>
+    .weather-box {
+        background-color: #000;
+        color: #0f0;
+        border: 2px solid #336699;
+        margin-bottom: 20px;
+        font-family: "Courier New", Courier, monospace;
+    }
+
+    .weather-header {
+        background-color: #336699;
+        color: #fff;
+        padding: 5px;
+        font-size: 11px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .weather-content {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .weather-display {
+        font-size: 24px;
+        font-weight: bold;
+        text-shadow: 0 0 5px #0f0;
+    }
+
+    .weather-info {
+        font-size: 10px;
+        margin: 5px 0;
+        text-transform: uppercase;
+    }
+
+    .weather-icon-retro {
+        font-size: 30px;
+        margin-top: 5px;
+    }
+
+    .ad-box {
+        border: 2px solid #999999;
+        background-color: #ffffff;
+        text-align: center;
+        margin-bottom: 20px;
+        color: #000000;
+        overflow: hidden;
+    }
+</style>
