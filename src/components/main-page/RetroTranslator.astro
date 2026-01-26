@@ -55,7 +55,7 @@
             const data = await response.json();
             if (data.responseData) {
                 transOutput.innerText =
-                    data.responseData.translatedText.toUpperCase();
+                    data.responseData.translatedText;
             } else {
                 transOutput.innerText = "ERROR: SYSTEM BUSY";
             }
@@ -123,7 +123,6 @@
         padding: 10px;
         font-size: 14px;
         overflow-y: auto;
-        text-transform: uppercase;
     }
 
     .trans-buttons {

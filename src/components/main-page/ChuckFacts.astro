@@ -8,23 +8,15 @@
             <h3>Chuck's Law</h3>
             <p id="chuck-fact-2">Loading legend...</p>
         </article>
-        <article class="article">
-            <h3>Deep Knowledge</h3>
-            <p id="chuck-fact-3">Extracting wisdom...</p>
-        </article>
     </div>
     <div class="chuck-column">
         <article class="article">
             <h3>Breaking Fact</h3>
-            <p id="chuck-fact-4">Loading power...</p>
+            <p id="chuck-fact-3">Loading power...</p>
         </article>
         <article class="article">
             <h3>The Roundhouse Report</h3>
-            <p id="chuck-fact-5">Loading impact...</p>
-        </article>
-        <article class="article">
-            <h3>Ultimate Truth</h3>
-            <p id="chuck-fact-6">Consulting the master...</p>
+            <p id="chuck-fact-4">Loading impact...</p>
         </article>
     </div>
 </div>
@@ -45,13 +37,13 @@
 
     async function fetchChuckFacts() {
         const cached = getCachedData<string[]>(CACHE_KEY);
-        if (cached?.length === 6) {
+        if (cached?.length === 4) {
             renderFacts(cached);
             return;
         }
 
         const results = await Promise.allSettled(
-            Array.from({ length: 6 }, () =>
+            Array.from({ length: 4 }, () =>
                 fetch(API).then((r) => r.json()).then((d) => d.value),
             ),
         );
@@ -89,11 +81,13 @@
         font-size: 15px;
         font-weight: bold;
         margin-bottom: 8px;
+        font-family: "Times New Roman", Times, serif;
     }
 
     .article p {
         font-size: 13px;
         line-height: 1.5;
+        font-family: "Times New Roman", Times, serif;
     }
 
     @media (max-width: 600px) {

@@ -1,0 +1,234 @@
+<div class="url-shortener-container">
+    <div class="url-label">URL SHORTENER</div>
+    <div class="url-input-wrap">
+        <input
+            type="text"
+            id="url-input"
+            placeholder="ENTER URL HERE..."
+            class="url-input"
+        />
+    </div>
+    <div class="url-display" id="url-output">SHORT URL WILL APPEAR HERE...</div>
+    <div class="url-buttons">
+        <button class="url-btn" id="url-shorten">SHORTEN</button>
+        <button class="url-btn btn-copy" id="url-copy">COPY</button>
+        <button class="url-btn btn-clear" id="url-clear">CLEAR</button>
+    </div>
+</div>
+
+<script>
+    const urlInput = document.getElementById("url-input") as HTMLInputElement;
+    const urlOutput = document.getElementById("url-output");
+    const btnShorten = document.getElementById("url-shorten");
+    const btnCopy = document.getElementById("url-copy");
+    const btnClear = document.getElementById("url-clear");
+
+    function isValidUrl(string: string): boolean {
+        try {
+            const url = new URL(string);
+            return url.protocol === "http:" || url.protocol === "https:";
+        } catch (_) {
+            return false;
+        }
+    }
+
+    function addProtocol(url: string): string {
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            return "https://" + url;
+        }
+        return url;
+    }
+
+    async function shortenUrl() {
+        if (!urlInput || !urlOutput) return;
+        const originalUrl = urlInput.value.trim();
+        
+        if (!originalUrl) {
+            urlOutput.innerText = "ERROR: NO URL PROVIDED";
+            return;
+        }
+
+        const fullUrl = addProtocol(originalUrl);
+        
+        if (!isValidUrl(fullUrl)) {
+            urlOutput.innerText = "ERROR: INVALID URL";
+            return;
+        }
+
+        urlOutput.innerText = "PROCESSING...";
+        
+        try {
+            // Usar is.gd API (gratuita, sin autenticación)
+            const response = await fetch(
+                `https://is.gd/create.php?format=json&url=${encodeURIComponent(fullUrl)}`
+            );
+            
+            if (!response.ok) {
+                throw new Error("API Error");
+            }
+            
+            const data = await response.json();
+            
+            if (data.shorturl) {
+                urlOutput.innerText = data.shorturl;
+                urlOutput.setAttribute("data-url", data.shorturl);
+            } else if (data.errorcode) {
+                urlOutput.innerText = `ERROR: ${data.errormessage || "FAILED"}`;
+            } else {
+                urlOutput.innerText = "ERROR: UNKNOWN";
+            }
+        } catch (e) {
+            console.error("URL shortening error", e);
+            urlOutput.innerText = "ERROR: NETWORK FAILURE";
+        }
+    }
+
+    function copyToClipboard() {
+        if (!urlOutput) return;
+        const shortUrl = urlOutput.getAttribute("data-url") || urlOutput.innerText;
+        
+        if (shortUrl.startsWith("ERROR") || shortUrl.includes("WILL APPEAR")) {
+            return;
+        }
+
+        navigator.clipboard.writeText(shortUrl).then(() => {
+            const originalText = urlOutput.innerText;
+            urlOutput.innerText = "COPIED!";
+            setTimeout(() => {
+                if (urlOutput) urlOutput.innerText = originalText;
+            }, 1000);
+        }).catch(() => {
+            urlOutput.innerText = "ERROR: COPY FAILED";
+        });
+    }
+
+    function clearAll() {
+        if (urlInput) urlInput.value = "";
+        if (urlOutput) {
+            urlOutput.innerText = "SHORT URL WILL APPEAR HERE...";
+            urlOutput.removeAttribute("data-url");
+        }
+    }
+
+    if (btnShorten) btnShorten.addEventListener("click", shortenUrl);
+    if (btnCopy) btnCopy.addEventListener("click", copyToClipboard);
+    if (btnClear) btnClear.addEventListener("click", clearAll);
+
+    // Permitir acortar con Enter
+    if (urlInput) {
+        urlInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                shortenUrl();
+            }
+        });
+    }
+</script>
+
+<style>
+    .url-shortener-container {
+        background: linear-gradient(to bottom, #c0c0c0 0%, #808080 100%);
+        border: 2px outset #c0c0c0;
+        border-radius: 3px;
+        padding: 8px;
+        box-shadow:
+            inset 1px 1px 0 rgba(255, 255, 255, 0.5),
+            inset -1px -1px 0 rgba(0, 0, 0, 0.3),
+            2px 2px 4px rgba(0, 0, 0, 0.2);
+        margin-top: 15px;
+        font-family: "MS Sans Serif", "Tahoma", sans-serif;
+    }
+
+    .url-label {
+        font-size: 9px;
+        color: #000;
+        margin-bottom: 6px;
+        text-align: center;
+        font-weight: bold;
+        text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+        letter-spacing: 0.5px;
+    }
+
+    .url-input-wrap {
+        margin-bottom: 6px;
+    }
+
+    .url-input {
+        width: 100%;
+        background-color: #fff;
+        color: #000;
+        border: 2px inset #c0c0c0;
+        padding: 4px 6px;
+        font-size: 11px;
+        font-family: "MS Sans Serif", "Tahoma", sans-serif;
+        box-sizing: border-box;
+    }
+
+    .url-input:focus {
+        outline: 1px dotted #000;
+        outline-offset: -2px;
+    }
+
+    .url-display {
+        background-color: #fff;
+        border: 2px inset #c0c0c0;
+        color: #000;
+        padding: 4px 6px;
+        text-align: left;
+        font-size: 10px;
+        font-weight: normal;
+        margin-bottom: 6px;
+        min-height: 18px;
+        word-break: break-all;
+        box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .url-buttons {
+        display: flex;
+        gap: 4px;
+    }
+
+    .url-btn {
+        flex: 1;
+        background: linear-gradient(to bottom, #ece9d8 0%, #d4d0c8 100%);
+        color: #000;
+        border: 2px outset #ece9d8;
+        padding: 4px 8px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 10px;
+        font-family: "MS Sans Serif", "Tahoma", sans-serif;
+        text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+        box-shadow: 
+            1px 1px 0 rgba(255, 255, 255, 0.5),
+            -1px -1px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .url-btn:active {
+        border-style: inset;
+        background: linear-gradient(to bottom, #d4d0c8 0%, #ece9d8 100%);
+        box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .url-btn:hover {
+        background: linear-gradient(to bottom, #f5f3e8 0%, #e8e4d8 100%);
+    }
+
+    .url-btn.btn-copy {
+        background: linear-gradient(to bottom, #d4e8f8 0%, #b8d4e8 100%);
+        border-color: #b8d4e8;
+    }
+
+    .url-btn.btn-copy:hover {
+        background: linear-gradient(to bottom, #e8f0f8 0%, #d0e4f0 100%);
+    }
+
+    .url-btn.btn-clear {
+        background: linear-gradient(to bottom, #f8d4d4 0%, #e8b8b8 100%);
+        border-color: #e8b8b8;
+        color: #800;
+    }
+
+    .url-btn.btn-clear:hover {
+        background: linear-gradient(to bottom, #f8e0e0 0%, #f0c8c8 100%);
+    }
+</style>

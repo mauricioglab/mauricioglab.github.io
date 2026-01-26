@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 Video Organizer - Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-primary': '#0a0a0a',
+                        'bg-secondary': '#141414',
+                        'bg-tertiary': '#1a1a1a',
+                        'border-primary': '#2a2a2a',
+                        'text-primary': '#ffffff',
+                        'text-secondary': '#d1d5db',
+                        'text-muted': '#9ca3af',
+                        'accent': '#6366f1',
+                        'accent-hover': '#4f46e5'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-bg-primary text-text-primary">
+    <div class="p-8">
+        <h1 class="text-2xl font-bold mb-8">🎬 Video Organizer - Test Simple</h1>
+        
+        <!-- Test Buttons -->
+        <div class="space-y-4">
+            <div class="flex gap-4">
+                <button id="test-board" class="px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded">
+                    Tablero
+                </button>
+                <button id="test-list" class="px-4 py-2 bg-bg-secondary hover:bg-bg-tertiary text-text-primary border border-border-primary rounded">
+                    Lista
+                </button>
+            </div>
+            
+            <div class="flex gap-4">
+                <input id="test-input" type="text" placeholder="Nueva categoría" class="px-3 py-2 bg-bg-tertiary text-text-primary border border-border-primary rounded">
+                <button id="test-add" class="px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded">
+                    + Agregar
+                </button>
+            </div>
+            
+            <button id="test-modal" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
+                Abrir Modal
+            </button>
+            
+            <button id="test-theme" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded">
+                🌙 Cambiar Tema
+            </button>
+        </div>
+        
+        <!-- Results -->
+        <div id="results" class="mt-8 p-4 bg-bg-secondary rounded">
+            <h3 class="text-lg font-semibold mb-2">Resultados:</h3>
+            <div id="log" class="text-sm text-text-muted"></div>
+        </div>
+        
+        <!-- Categories List -->
+        <div class="mt-8">
+            <h3 class="text-lg font-semibold mb-4">Categorías:</h3>
+            <ul id="categories-list" class="space-y-2"></ul>
+        </div>
+    </div>
+
+    <!-- Simple Modal -->
+    <div id="test-modal-overlay" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden">
+        <div class="bg-bg-secondary p-6 rounded-lg max-w-md w-full mx-4">
+            <h2 class="text-xl font-semibold mb-4">Modal de Prueba</h2>
+            <p class="text-text-muted mb-4">Este modal funciona correctamente</p>
+            <button id="close-modal" class="px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded">
+                Cerrar
+            </button>
+        </div>
+    </div>
+
+    <script>
+        console.log('🚀 Iniciando test simple...');
+        
+        // Estado simple
+        let categories = [];
+        let currentTheme = 'dark';
+        
+        // Función para log
+        function log(message) {
+            console.log(message);
+            const logDiv = document.getElementById('log');
+            if (logDiv) {
+                logDiv.innerHTML += '<div>' + new Date().toLocaleTimeString() + ': ' + message + '</div>';
+            }
+        }
+        
+        // Función para renderizar categorías
+        function renderCategories() {
+            const container = document.getElementById('categories-list');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            categories.forEach((category, index) => {
+                const li = document.createElement('li');
+                li.className = 'p-3 bg-bg-tertiary rounded flex justify-between items-center';
+                li.innerHTML = `
+                    <span>${category}</span>
+                    <button onclick="deleteCategory(${index})" class="text-red-500 hover:text-red-400">🗑️</button>
+                `;
+                container.appendChild(li);
+            });
+        }
+        
+        // Función para eliminar categoría
+        window.deleteCategory = function(index) {
+            categories.splice(index, 1);
+            renderCategories();
+            log('Categoría eliminada');
+        }
+        
+        // Función de inicialización
+        function init() {
+            log('Inicializando...');
+            
+            // Test Board Button
+            const boardBtn = document.getElementById('test-board');
+            if (boardBtn) {
+                boardBtn.addEventListener('click', function() {
+                    log('Botón Tablero clickeado');
+                    boardBtn.className = 'px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded';
+                    const listBtn = document.getElementById('test-list');
+                    if (listBtn) {
+                        listBtn.className = 'px-4 py-2 bg-bg-secondary hover:bg-bg-tertiary text-text-primary border border-border-primary rounded';
+                    }
+                });
+                log('✅ Board button listener agregado');
+            } else {
+                log('❌ Board button no encontrado');
+            }
+            
+            // Test List Button
+            const listBtn = document.getElementById('test-list');
+            if (listBtn) {
+                listBtn.addEventListener('click', function() {
+                    log('Botón Lista clickeado');
+                    listBtn.className = 'px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded';
+                    const boardBtn = document.getElementById('test-board');
+                    if (boardBtn) {
+                        boardBtn.className = 'px-4 py-2 bg-bg-secondary hover:bg-bg-tertiary text-text-primary border border-border-primary rounded';
+                    }
+                });
+                log('✅ List button listener agregado');
+            } else {
+                log('❌ List button no encontrado');
+            }
+            
+            // Test Add Button
+            const addBtn = document.getElementById('test-add');
+            const input = document.getElementById('test-input');
+            if (addBtn && input) {
+                addBtn.addEventListener('click', function() {
+                    const value = input.value.trim();
+                    if (value) {
+                        categories.push(value);
+                        input.value = '';
+                        renderCategories();
+                        log('Categoría agregada: ' + value);
+                    } else {
+                        log('Input vacío');
+                    }
+                });
+                
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        addBtn.click();
+                    }
+                });
+                
+                log('✅ Add button y input listeners agregados');
+            } else {
+                log('❌ Add button o input no encontrados');
+            }
+            
+            // Test Modal
+            const modalBtn = document.getElementById('test-modal');
+            const modalOverlay = document.getElementById('test-modal-overlay');
+            const closeModal = document.getElementById('close-modal');
+            
+            if (modalBtn && modalOverlay && closeModal) {
+                modalBtn.addEventListener('click', function() {
+                    log('Abriendo modal');
+                    modalOverlay.classList.remove('hidden');
+                });
+                
+                closeModal.addEventListener('click', function() {
+                    log('Cerrando modal');
+                    modalOverlay.classList.add('hidden');
+                });
+                
+                modalOverlay.addEventListener('click', function(e) {
+                    if (e.target === modalOverlay) {
+                        log('Cerrando modal (click fuera)');
+                        modalOverlay.classList.add('hidden');
+                    }
+                });
+                
+                log('✅ Modal listeners agregados');
+            } else {
+                log('❌ Modal elements no encontrados');
+            }
+            
+            // Test Theme
+            const themeBtn = document.getElementById('test-theme');
+            if (themeBtn) {
+                themeBtn.addEventListener('click', function() {
+                    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    log('Tema cambiado a: ' + currentTheme);
+                    
+                    if (currentTheme === 'light') {
+                        document.body.className = 'min-h-screen bg-gray-100 text-gray-900';
+                        themeBtn.textContent = '☀️ Cambiar Tema';
+                    } else {
+                        document.body.className = 'min-h-screen bg-bg-primary text-text-primary';
+                        themeBtn.textContent = '🌙 Cambiar Tema';
+                    }
+                });
+                log('✅ Theme button listener agregado');
+            } else {
+                log('❌ Theme button no encontrado');
+            }
+            
+            log('✅ Inicialización completa');
+        }
+        
+        // Inicializar cuando el DOM esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+            log('DOM loading - listener agregado');
+        } else {
+            init();
+            log('DOM ya listo - inicializando directamente');
+        }
+    </script>
+</body>
+</html>

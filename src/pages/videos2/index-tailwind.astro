@@ -1,0 +1,1046 @@
+---
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+---
+
+<BaseTailwind 
+    title="🎬 Video Organizer"
+    description="Organizador de videos de YouTube y Udemy"
+>
+    <style>
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* Theme switching */
+        [data-theme="light"] {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #e8e8e8;
+            --bg-tertiary: #d8d8d8;
+            --border-primary: #d0d0d0;
+            --text-primary: #2a2a2a;
+            --text-secondary: #374151;
+            --text-muted: #6b7280;
+        }
+        
+        [data-theme="light"] .bg-bg-primary { background-color: #f5f5f5; }
+        [data-theme="light"] .bg-bg-secondary { background-color: #e8e8e8; }
+        [data-theme="light"] .bg-bg-tertiary { background-color: #d8d8d8; }
+        [data-theme="light"] .border-border-primary { border-color: #d0d0d0; }
+        [data-theme="light"] .text-text-primary { color: #2a2a2a; }
+        [data-theme="light"] .text-text-secondary { color: #374151; }
+        [data-theme="light"] .text-text-muted { color: #6b7280; }
+        [data-theme="light"] .placeholder-text-muted::placeholder { color: #6b7280; }
+    </style>
+
+    <div class="min-h-screen flex flex-col bg-bg-primary text-text-primary transition-all duration-300" data-theme="dark">
+        <!-- Header -->
+        <header class="bg-bg-secondary border-b border-border-primary px-6 py-3 flex items-center justify-between transition-all duration-300">
+            <div class="flex items-center gap-4">
+                <h1 class="text-xl font-semibold text-text-primary">🎬 Video Organizer</h1>
+                <div class="w-px h-6 bg-border-primary"></div>
+                <div class="flex gap-1 bg-bg-tertiary p-1 rounded-lg">
+                    <button id="board-view-btn" class="px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200 bg-accent text-white shadow-md">
+                        Tablero
+                    </button>
+                    <button id="list-view-btn" class="px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200 bg-transparent text-text-muted hover:text-text-primary">
+                        Lista
+                    </button>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <input 
+                        type="text" 
+                        id="search-input" 
+                        class="w-50 px-3 py-2 text-sm border border-border-primary rounded-lg bg-bg-tertiary text-text-primary placeholder-text-muted focus:outline-none focus:border-accent transition-all duration-200"
+                        placeholder="Buscar videos..."
+                    >
+                </div>
+                <button id="add-video-btn" class="px-4 py-2 text-sm font-medium bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors duration-200">
+                    + Agregar Video
+                </button>
+                <button id="export-btn" class="px-4 py-2 text-sm font-medium bg-bg-tertiary hover:bg-border-primary text-text-primary border border-border-primary rounded-lg transition-colors duration-200" title="Exportar">
+                    📥
+                </button>
+                <button id="import-btn" class="px-4 py-2 text-sm font-medium bg-bg-tertiary hover:bg-border-primary text-text-primary border border-border-primary rounded-lg transition-colors duration-200" title="Importar">
+                    📤
+                </button>
+                <div class="w-px h-6 bg-border-primary"></div>
+                <button id="theme-toggle" class="px-4 py-2 text-sm font-medium bg-bg-tertiary hover:bg-border-primary text-text-primary border border-border-primary rounded-lg transition-colors duration-200" title="Cambiar tema">
+                    🌙
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Layout -->
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Sidebar -->
+            <aside class="w-70 bg-bg-secondary border-r border-border-primary flex flex-col transition-all duration-300">
+                <div class="p-4 border-b border-border-primary">
+                    <div class="flex gap-2">
+                        <input 
+                            type="text" 
+                            id="category-input" 
+                            class="flex-1 px-3 py-2 text-sm border border-border-primary rounded-lg bg-bg-tertiary text-text-primary placeholder-text-muted focus:outline-none focus:border-accent"
+                            placeholder="Nueva categoría"
+                        >
+                        <button id="add-category-btn" class="px-4 py-2 text-sm font-medium bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors duration-200">
+                            +
+                        </button>
+                    </div>
+                </div>
+                <div class="flex-1 overflow-y-auto p-4">
+                    <h2 class="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-3">Categorías</h2>
+                    <ul id="categories-list" class="flex flex-col gap-2">
+                        <!-- Categorías se cargan dinámicamente -->
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="flex-1 p-6 overflow-y-auto">
+                <!-- Board View -->
+                <div id="board-view" class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4 items-start">
+                    <!-- Columnas de categorías se cargan dinámicamente -->
+                </div>
+
+                <!-- List View -->
+                <div id="list-view" class="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4 hidden">
+                    <!-- Videos en lista se cargan dinámicamente -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="flex flex-col items-center justify-center py-15 px-5 text-center hidden">
+                    <div class="text-6xl mb-4 opacity-50">📁</div>
+                    <h3 class="text-xl font-semibold text-text-primary mb-2">No hay categorías</h3>
+                    <p class="text-sm text-text-muted mb-6">Crea una categoría para empezar a organizar tus videos</p>
+                    <button id="create-first-category" class="px-4 py-2 text-sm font-medium bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors duration-200">
+                        Crear primera categoría
+                    </button>
+                </div>
+            </main>
+        </div>
+
+        <!-- Modal para agregar video -->
+        <div id="add-video-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-5 hidden">
+            <div class="bg-bg-secondary rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl">
+                <div class="flex justify-between items-center p-5 border-b border-border-primary">
+                    <h2 class="text-xl font-semibold text-text-primary">Agregar Video</h2>
+                    <button id="close-video-modal" class="w-8 h-8 flex items-center justify-center text-2xl text-text-muted hover:bg-bg-tertiary hover:text-text-primary rounded transition-all duration-200">
+                        ×
+                    </button>
+                </div>
+                <form id="add-video-form">
+                    <div class="p-5 space-y-5">
+                        <div>
+                            <label class="block text-sm font-medium text-text-primary mb-2">URL del Video (YouTube o Udemy)</label>
+                            <input 
+                                type="text" 
+                                id="video-url" 
+                                class="w-full px-3 py-2.5 text-sm border border-border-primary rounded-lg bg-bg-tertiary text-text-primary placeholder-text-muted focus:outline-none focus:border-accent transition-all duration-200"
+                                placeholder="https://www.youtube.com/watch?v=..."
+                            >
+                            <div id="url-error" class="text-error text-xs mt-1 px-2 py-1 bg-error/10 border border-error rounded hidden"></div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-text-primary mb-2">Categoría</label>
+                            <select id="video-category" class="w-full px-3 py-2.5 text-sm border border-border-primary rounded-lg bg-bg-tertiary text-text-primary focus:outline-none focus:border-accent transition-all duration-200">
+                                <option value="">Selecciona una categoría</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-text-primary mb-2">Comentarios (opcional)</label>
+                            <textarea 
+                                id="video-comments" 
+                                class="w-full px-3 py-2.5 text-sm border border-border-primary rounded-lg bg-bg-tertiary text-text-primary placeholder-text-muted focus:outline-none focus:border-accent transition-all duration-200 resize-vertical min-h-[100px]"
+                                placeholder="Notas personales sobre este video..."
+                            ></textarea>
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-3 p-5 border-t border-border-primary">
+                        <button type="button" id="cancel-video" class="px-4 py-2 text-sm font-medium bg-bg-tertiary hover:bg-border-primary text-text-primary border border-border-primary rounded-lg transition-colors duration-200">
+                            Cancelar
+                        </button>
+                        <button type="submit" id="save-video" class="px-4 py-2 text-sm font-medium bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors duration-200">
+                            Agregar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Video Player -->
+        <div id="video-player" class="fixed inset-0 bg-black/95 z-[2000] flex hidden">
+            <div class="flex-1 flex flex-col p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 id="player-title" class="text-2xl font-semibold text-white"></h2>
+                    <button id="close-player" class="w-8 h-8 flex items-center justify-center text-2xl text-text-muted hover:bg-bg-tertiary hover:text-text-primary rounded transition-all duration-200">
+                        ×
+                    </button>
+                </div>
+                <div class="flex-1 flex flex-col gap-6">
+                    <div class="flex-1 min-h-0 player-video">
+                        <iframe id="player-iframe" class="w-full h-full border-none rounded-lg" allowfullscreen></iframe>
+                    </div>
+                    <div id="player-comments" class="text-xs text-text-muted italic hidden"></div>
+                </div>
+            </div>
+            <div class="w-80 bg-gray-900/90 p-6 overflow-y-auto border-l border-border-primary">
+                <div class="mb-8">
+                    <h3 class="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-3">Todos los Videos</h3>
+                    <div id="player-video-list">
+                        <!-- Lista de videos se carga dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🎬 Video Organizer - Starting initialization...');
+        
+        // Constantes y configuración
+        const STORAGE_KEY = 'video-organizer-data';
+        const YOUTUBE_REGEX = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+        const YOUTUBE_PLAYLIST_REGEX = /(?:youtube\.com\/playlist\?list=|youtube\.com\/.*[?&]list=)([a-zA-Z0-9_-]+)/;
+        const UDEMY_REGEX = /udemy\.com\/course\/[^\/]+\/learn\/lecture\/(\d+)/;
+
+        // Estado de la aplicación
+        let appState = {
+            categories: [],
+            currentView: 'board',
+            selectedVideo: null,
+            currentTheme: 'dark',
+            searchQuery: ''
+        };
+
+        // Utilidades
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        function saveToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+                console.log('Data saved to storage');
+            } catch (error) {
+                console.error('Error saving to storage:', error);
+            }
+        }
+
+        function loadFromStorage() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) {
+                    const data = JSON.parse(stored);
+                    appState = { ...appState, ...data };
+                    console.log('Data loaded from storage:', appState);
+                }
+            } catch (error) {
+                console.error('Error loading from storage:', error);
+            }
+        }
+
+        function validateVideoUrl(url) {
+            if (!url || typeof url !== 'string') return null;
+
+            const playlistMatch = url.match(YOUTUBE_PLAYLIST_REGEX);
+            if (playlistMatch && playlistMatch[1]) {
+                return {
+                    platform: 'youtube-playlist',
+                    playlistId: playlistMatch[1]
+                };
+            }
+
+            const youtubeMatch = url.match(YOUTUBE_REGEX);
+            if (youtubeMatch && youtubeMatch[1]) {
+                return {
+                    platform: 'youtube',
+                    videoId: youtubeMatch[1]
+                };
+            }
+
+            const udemyMatch = url.match(UDEMY_REGEX);
+            if (udemyMatch && udemyMatch[1]) {
+                return {
+                    platform: 'udemy',
+                    videoId: udemyMatch[1]
+                };
+            }
+
+            return null;
+        }
+
+        function getEmbedUrl(url, platform, videoId) {
+            if (platform === 'youtube') {
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+            if (platform === 'udemy') {
+                return url; // Udemy requiere autenticación
+            }
+            return null;
+        }
+
+        function getThumbnailUrl(videoId, platform) {
+            if (platform === 'youtube' && videoId) {
+                return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+            }
+            return null;
+        }
+
+        async function fetchVideoTitle(url, platform) {
+            try {
+                if (platform === 'youtube') {
+                    const oembedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`;
+                    const response = await fetch(oembedUrl);
+                    if (response.ok) {
+                        const data = await response.json();
+                        return data.title || 'Video de YouTube';
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching video title:', error);
+            }
+            
+            if (platform === 'youtube') return 'Video de YouTube';
+            if (platform === 'udemy') return 'Video de Udemy';
+            return 'Video';
+        }
+
+        async function createVideoObject(url, comments = '') {
+            const validation = validateVideoUrl(url);
+            if (!validation) {
+                throw new Error('URL de video no válida');
+            }
+
+            const { platform, videoId, playlistId } = validation;
+            const title = await fetchVideoTitle(url, platform);
+            const thumbnail = getThumbnailUrl(videoId || '', platform);
+
+            return {
+                id: generateId(),
+                url,
+                platform: platform === 'youtube-playlist' ? 'youtube' : platform,
+                videoId: videoId || '',
+                playlistId,
+                isPlaylist: platform === 'youtube-playlist',
+                title,
+                thumbnail,
+                comments,
+                createdAt: Date.now()
+            };
+        }
+
+        // Funciones de renderizado
+        function renderCategories() {
+            const container = document.getElementById('categories-list');
+            if (!container) return;
+            
+            container.innerHTML = '';
+
+            const emptyState = document.getElementById('empty-state');
+            const boardView = document.getElementById('board-view');
+            const listView = document.getElementById('list-view');
+
+            if (appState.categories.length === 0) {
+                if (emptyState) emptyState.classList.remove('hidden');
+                if (boardView) boardView.classList.add('hidden');
+                if (listView) listView.classList.add('hidden');
+                return;
+            }
+
+            if (emptyState) emptyState.classList.add('hidden');
+            if (appState.currentView === 'board') {
+                if (boardView) boardView.classList.remove('hidden');
+                if (listView) listView.classList.add('hidden');
+            } else {
+                if (boardView) boardView.classList.add('hidden');
+                if (listView) listView.classList.remove('hidden');
+            }
+
+            appState.categories.forEach(category => {
+                const li = document.createElement('li');
+                li.className = 'p-3 bg-bg-tertiary rounded-lg flex justify-between items-center cursor-pointer transition-all duration-200 hover:bg-border-primary';
+                li.innerHTML = `
+                    <div>
+                        <div class="font-medium text-text-primary mb-1">${category.name}</div>
+                        <div class="text-xs text-text-muted">${category.videos.length} videos</div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="editCategory('${category.id}')" title="Editar" class="text-base opacity-60 hover:opacity-100 transition-opacity duration-200">✏️</button>
+                        <button onclick="deleteCategory('${category.id}')" title="Eliminar" class="text-base opacity-60 hover:opacity-100 transition-opacity duration-200">🗑️</button>
+                    </div>
+                `;
+                container.appendChild(li);
+            });
+
+            // Actualizar select de categorías en el modal
+            updateCategorySelect();
+        }
+
+        function updateCategorySelect() {
+            const select = document.getElementById('video-category');
+            if (!select) return;
+            
+            select.innerHTML = '<option value="">Selecciona una categoría</option>';
+            
+            appState.categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.name;
+                select.appendChild(option);
+            });
+        }
+
+        function renderBoardView() {
+            const container = document.getElementById('board-view');
+            if (!container) return;
+            
+            container.innerHTML = '';
+
+            const filteredCategories = getFilteredCategories();
+
+            filteredCategories.forEach(category => {
+                const column = document.createElement('div');
+                column.className = 'bg-bg-secondary rounded-lg p-4 min-w-[280px]';
+                column.innerHTML = `
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-base font-semibold text-text-primary">${category.name}</h3>
+                        <button onclick="addVideoToCategory('${category.id}')" class="px-2 py-1 text-xs font-medium bg-accent hover:bg-accent-hover text-white rounded transition-colors duration-200">+</button>
+                    </div>
+                    <div class="flex flex-col gap-3" id="videos-${category.id}">
+                        ${category.videos.map(video => renderVideoCard(video)).join('')}
+                    </div>
+                `;
+                container.appendChild(column);
+            });
+        }
+
+        function renderListView() {
+            const container = document.getElementById('list-view');
+            if (!container) return;
+            
+            container.innerHTML = '';
+
+            const allVideos = appState.categories.flatMap(cat => 
+                cat.videos.map(video => ({ ...video, categoryName: cat.name }))
+            );
+
+            const filteredVideos = getFilteredVideos(allVideos);
+
+            filteredVideos.forEach(video => {
+                const card = document.createElement('div');
+                card.innerHTML = renderVideoCard(video, true);
+                const firstChild = card.firstElementChild;
+                if (firstChild) {
+                    container.appendChild(firstChild);
+                }
+            });
+        }
+
+        function renderVideoCard(video, showCategory = false) {
+            const thumbnailHtml = video.thumbnail 
+                ? `<img src="${video.thumbnail}" alt="${video.title}" onerror="this.style.display='none'" class="absolute top-0 left-0 w-full h-full object-cover">`
+                : `<div class="absolute top-0 left-0 w-full h-full flex items-center justify-center text-text-muted text-2xl">
+                     ${video.isPlaylist ? '📋' : '🎬'}
+                   </div>`;
+
+            return `
+                <div class="bg-bg-tertiary rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl" onclick="playVideo('${video.id}')">
+                    <div class="relative w-full pt-[56.25%] bg-bg-primary overflow-hidden group">
+                        ${thumbnailHtml}
+                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            <button class="bg-accent text-white border-none px-4 py-2 rounded-md font-medium cursor-pointer">▶ Reproducir</button>
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <h4 class="text-sm font-medium text-text-primary mb-2 line-clamp-2">${video.title}</h4>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs px-2 py-1 rounded font-medium ${video.platform === 'youtube' ? 'bg-red-500/10 text-red-500' : 'bg-black/10 text-text-primary'}">
+                                ${video.platform === 'youtube' ? 'YouTube' : 'Udemy'}
+                                ${video.isPlaylist ? ' Playlist' : ''}
+                            </span>
+                            <div class="flex gap-2">
+                                <button onclick="event.stopPropagation(); editVideo('${video.id}')" title="Editar" class="text-sm opacity-60 hover:opacity-100 transition-opacity duration-200">✏️</button>
+                                <button onclick="event.stopPropagation(); deleteVideo('${video.id}')" title="Eliminar" class="text-sm opacity-60 hover:opacity-100 transition-opacity duration-200">🗑️</button>
+                            </div>
+                        </div>
+                        ${showCategory ? `<div class="text-xs text-text-muted mt-1">${video.categoryName}</div>` : ''}
+                        ${video.comments ? `<div class="text-xs text-text-muted mt-2 italic">${video.comments}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function getFilteredCategories() {
+            if (!appState.searchQuery) return appState.categories;
+            
+            return appState.categories.filter(category => {
+                const categoryMatch = category.name.toLowerCase().includes(appState.searchQuery.toLowerCase());
+                const videoMatch = category.videos.some(video => 
+                    video.title.toLowerCase().includes(appState.searchQuery.toLowerCase()) ||
+                    (video.comments && video.comments.toLowerCase().includes(appState.searchQuery.toLowerCase()))
+                );
+                return categoryMatch || videoMatch;
+            }).map(category => ({
+                ...category,
+                videos: category.videos.filter(video =>
+                    video.title.toLowerCase().includes(appState.searchQuery.toLowerCase()) ||
+                    (video.comments && video.comments.toLowerCase().includes(appState.searchQuery.toLowerCase()))
+                )
+            }));
+        }
+
+        function getFilteredVideos(videos) {
+            if (!appState.searchQuery) return videos;
+            
+            return videos.filter(video =>
+                video.title.toLowerCase().includes(appState.searchQuery.toLowerCase()) ||
+                (video.comments && video.comments.toLowerCase().includes(appState.searchQuery.toLowerCase())) ||
+                (video.categoryName && video.categoryName.toLowerCase().includes(appState.searchQuery.toLowerCase()))
+            );
+        }
+
+        // Funciones de la aplicación
+        function addCategory() {
+            console.log('Adding category...');
+            const categoryInput = document.getElementById('category-input');
+            if (!categoryInput) return;
+            
+            const name = categoryInput.value.trim();
+            if (!name) return;
+
+            const newCategory = {
+                id: generateId(),
+                name,
+                videos: []
+            };
+
+            appState.categories.push(newCategory);
+            categoryInput.value = '';
+            saveToStorage();
+            render();
+            console.log('Category added:', newCategory);
+        }
+
+        function deleteCategory(categoryId) {
+            if (!confirm('¿Eliminar esta categoría y todos sus videos?')) return;
+            
+            appState.categories = appState.categories.filter(cat => cat.id !== categoryId);
+            saveToStorage();
+            render();
+        }
+
+        function editCategory(categoryId) {
+            const category = appState.categories.find(cat => cat.id === categoryId);
+            if (!category) return;
+
+            const newName = prompt('Nuevo nombre de la categoría:', category.name);
+            if (newName && newName.trim()) {
+                category.name = newName.trim();
+                saveToStorage();
+                render();
+            }
+        }
+
+        function showAddVideoModal(categoryId = null) {
+            console.log('Showing add video modal...');
+            const modal = document.getElementById('add-video-modal');
+            const categorySelect = document.getElementById('video-category');
+            const videoUrl = document.getElementById('video-url');
+            
+            if (!modal) return;
+            
+            modal.classList.remove('hidden');
+            if (categoryId && categorySelect) {
+                categorySelect.value = categoryId;
+            }
+            if (videoUrl) videoUrl.focus();
+        }
+
+        function hideAddVideoModal() {
+            const modal = document.getElementById('add-video-modal');
+            const form = document.getElementById('add-video-form');
+            const urlError = document.getElementById('url-error');
+            
+            if (modal) modal.classList.add('hidden');
+            if (form) form.reset();
+            if (urlError) urlError.classList.add('hidden');
+        }
+
+        async function addVideo() {
+            const videoUrl = document.getElementById('video-url');
+            const videoCategory = document.getElementById('video-category');
+            const videoComments = document.getElementById('video-comments');
+            const saveBtn = document.getElementById('save-video');
+            
+            if (!videoUrl || !videoCategory || !videoComments || !saveBtn) return;
+
+            const url = videoUrl.value.trim();
+            const categoryId = videoCategory.value;
+            const comments = videoComments.value.trim();
+
+            if (!url) {
+                showError('Por favor ingresa una URL');
+                return;
+            }
+
+            if (!validateVideoUrl(url)) {
+                showError('URL no válida. Debe ser de YouTube o Udemy.');
+                return;
+            }
+
+            if (!categoryId) {
+                showError('Por favor selecciona una categoría');
+                return;
+            }
+
+            try {
+                saveBtn.textContent = 'Agregando...';
+                saveBtn.disabled = true;
+
+                const videoData = await createVideoObject(url, comments);
+                const category = appState.categories.find(cat => cat.id === categoryId);
+                
+                if (category) {
+                    category.videos.push(videoData);
+                    saveToStorage();
+                    render();
+                    hideAddVideoModal();
+                }
+            } catch (error) {
+                showError(error.message || 'Error al agregar el video');
+            } finally {
+                saveBtn.textContent = 'Agregar';
+                saveBtn.disabled = false;
+            }
+        }
+
+        function showError(message) {
+            const urlError = document.getElementById('url-error');
+            if (!urlError) return;
+            
+            urlError.textContent = message;
+            urlError.classList.remove('hidden');
+        }
+
+        function deleteVideo(videoId) {
+            if (!confirm('¿Eliminar este video?')) return;
+
+            appState.categories.forEach(category => {
+                category.videos = category.videos.filter(video => video.id !== videoId);
+            });
+
+            saveToStorage();
+            render();
+        }
+
+        function editVideo(videoId) {
+            const video = findVideoById(videoId);
+            if (!video) return;
+
+            const newComments = prompt('Comentarios:', video.comments || '');
+            if (newComments !== null) {
+                video.comments = newComments.trim();
+                saveToStorage();
+                render();
+            }
+        }
+
+        function findVideoById(videoId) {
+            for (const category of appState.categories) {
+                const video = category.videos.find(v => v.id === videoId);
+                if (video) return video;
+            }
+            return null;
+        }
+
+        function playVideo(videoId) {
+            const video = findVideoById(videoId);
+            if (!video) return;
+
+            const playerTitle = document.getElementById('player-title');
+            const playerIframe = document.getElementById('player-iframe');
+            const playerComments = document.getElementById('player-comments');
+            const videoPlayer = document.getElementById('video-player');
+            
+            if (!playerTitle || !playerIframe || !videoPlayer) return;
+
+            appState.selectedVideo = video;
+            playerTitle.textContent = video.title;
+            
+            const embedUrl = getEmbedUrl(video.url, video.platform, video.videoId);
+            if (embedUrl && video.platform === 'youtube') {
+                playerIframe.src = embedUrl;
+                playerIframe.style.display = 'block';
+            } else {
+                playerIframe.src = '';
+                playerIframe.style.display = 'none';
+                // Para Udemy, mostrar enlace
+                const playerVideo = document.querySelector('.player-video');
+                if (playerVideo) {
+                    playerVideo.innerHTML = `
+                        <div class="flex items-center justify-center h-full bg-black text-white text-center p-5">
+                            <div>
+                                <p class="mb-4">Los videos de Udemy requieren autenticación</p>
+                                <a href="${video.url}" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm font-medium bg-accent hover:bg-accent-hover text-white rounded-lg transition-colors duration-200">Abrir en Udemy</a>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            if (video.comments && playerComments) {
+                playerComments.textContent = video.comments;
+                playerComments.classList.remove('hidden');
+            } else if (playerComments) {
+                playerComments.classList.add('hidden');
+            }
+
+            renderPlayerVideoList();
+            videoPlayer.classList.remove('hidden');
+        }
+
+        function renderPlayerVideoList() {
+            const container = document.getElementById('player-video-list');
+            if (!container) return;
+            
+            container.innerHTML = '';
+
+            const allVideos = appState.categories.flatMap(cat => 
+                cat.videos.map(video => ({ ...video, categoryName: cat.name }))
+            );
+
+            allVideos.forEach(video => {
+                const item = document.createElement('div');
+                item.className = `p-3 bg-white/5 rounded-lg mb-2 cursor-pointer transition-all duration-200 hover:bg-white/10 ${video.id === appState.selectedVideo?.id ? 'bg-accent text-white' : ''}`;
+                item.onclick = () => playVideo(video.id);
+                item.innerHTML = `
+                    <div class="text-sm font-medium mb-1">${video.title}</div>
+                    <div class="text-xs opacity-70">${video.categoryName}</div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function closeVideoPlayer() {
+            const videoPlayer = document.getElementById('video-player');
+            const playerIframe = document.getElementById('player-iframe');
+            
+            if (videoPlayer) videoPlayer.classList.add('hidden');
+            if (playerIframe) playerIframe.src = '';
+            appState.selectedVideo = null;
+        }
+
+        function toggleTheme() {
+            console.log('Toggling theme...');
+            appState.currentTheme = appState.currentTheme === 'dark' ? 'light' : 'dark';
+            const themeContainer = document.querySelector('[data-theme]');
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            if (themeContainer) themeContainer.setAttribute('data-theme', appState.currentTheme);
+            if (themeToggle) {
+                themeToggle.textContent = appState.currentTheme === 'dark' ? '☀️' : '🌙';
+                themeToggle.title = appState.currentTheme === 'dark' ? 'Modo claro' : 'Modo oscuro';
+            }
+            saveToStorage();
+        }
+
+        function setView(view) {
+            console.log('Setting view to:', view);
+            appState.currentView = view;
+            
+            const boardBtn = document.getElementById('board-view-btn');
+            const listBtn = document.getElementById('list-view-btn');
+            
+            if (boardBtn && listBtn) {
+                if (view === 'board') {
+                    boardBtn.className = 'px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200 bg-accent text-white shadow-md';
+                    listBtn.className = 'px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200 bg-transparent text-text-muted hover:text-text-primary';
+                } else {
+                    listBtn.className = 'px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200 bg-accent text-white shadow-md';
+                    boardBtn.className = 'px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200 bg-transparent text-text-muted hover:text-text-primary';
+                }
+            }
+            
+            saveToStorage();
+            render();
+        }
+
+        function handleSearch() {
+            const searchInput = document.getElementById('search-input');
+            if (!searchInput) return;
+            
+            appState.searchQuery = searchInput.value.trim();
+            render();
+        }
+
+        function exportData() {
+            try {
+                const dataStr = JSON.stringify(appState, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'video-organizer-backup.json';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                alert('Error al exportar datos: ' + error.message);
+            }
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const target = e.target;
+                const file = target.files && target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const result = e.target && e.target.result;
+                        if (typeof result === 'string') {
+                            const data = JSON.parse(result);
+                            if (data.categories && Array.isArray(data.categories)) {
+                                if (confirm('¿Importar estos datos? Se reemplazarán los datos actuales.')) {
+                                    appState = { ...appState, ...data };
+                                    saveToStorage();
+                                    render();
+                                    alert('Datos importados correctamente');
+                                }
+                            } else {
+                                alert('Formato de archivo inválido');
+                            }
+                        }
+                    } catch (error) {
+                        alert('Error al importar: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function render() {
+            renderCategories();
+            if (appState.currentView === 'board') {
+                renderBoardView();
+            } else {
+                renderListView();
+            }
+        }
+
+        // Funciones globales para eventos onclick
+        window.addVideoToCategory = (categoryId) => showAddVideoModal(categoryId);
+        window.editCategory = editCategory;
+        window.deleteCategory = deleteCategory;
+        window.deleteVideo = deleteVideo;
+        window.editVideo = editVideo;
+        window.playVideo = playVideo;
+
+        // Inicialización y Event Listeners
+        function setupEventListeners() {
+            console.log('Setting up event listeners...');
+            
+            // Botones de vista
+            const boardBtn = document.getElementById('board-view-btn');
+            const listBtn = document.getElementById('list-view-btn');
+            
+            if (boardBtn) {
+                boardBtn.addEventListener('click', () => {
+                    console.log('Board view clicked');
+                    setView('board');
+                });
+                console.log('Board button listener added');
+            }
+            
+            if (listBtn) {
+                listBtn.addEventListener('click', () => {
+                    console.log('List view clicked');
+                    setView('list');
+                });
+                console.log('List button listener added');
+            }
+            
+            // Categorías
+            const addCategoryBtn = document.getElementById('add-category-btn');
+            const categoryInput = document.getElementById('category-input');
+            
+            if (addCategoryBtn) {
+                addCategoryBtn.addEventListener('click', () => {
+                    console.log('Add category clicked');
+                    addCategory();
+                });
+                console.log('Add category button listener added');
+            }
+            
+            if (categoryInput) {
+                categoryInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        console.log('Enter pressed in category input');
+                        addCategory();
+                    }
+                });
+                console.log('Category input listener added');
+            }
+            
+            // Videos
+            const addVideoBtn = document.getElementById('add-video-btn');
+            if (addVideoBtn) {
+                addVideoBtn.addEventListener('click', () => {
+                    console.log('Add video clicked');
+                    showAddVideoModal();
+                });
+                console.log('Add video button listener added');
+            }
+            
+            // Modal de video
+            const closeVideoModal = document.getElementById('close-video-modal');
+            const cancelVideo = document.getElementById('cancel-video');
+            const addVideoForm = document.getElementById('add-video-form');
+            
+            if (closeVideoModal) {
+                closeVideoModal.addEventListener('click', hideAddVideoModal);
+            }
+            
+            if (cancelVideo) {
+                cancelVideo.addEventListener('click', hideAddVideoModal);
+            }
+            
+            if (addVideoForm) {
+                addVideoForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    addVideo();
+                });
+            }
+            
+            // Búsqueda
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearch);
+            }
+            
+            // Tema
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    console.log('Theme toggle clicked');
+                    toggleTheme();
+                });
+                console.log('Theme toggle listener added');
+            }
+            
+            // Importar/Exportar
+            const exportBtn = document.getElementById('export-btn');
+            const importBtn = document.getElementById('import-btn');
+            
+            if (exportBtn) {
+                exportBtn.addEventListener('click', exportData);
+            }
+            
+            if (importBtn) {
+                importBtn.addEventListener('click', importData);
+            }
+            
+            // Player
+            const closePlayer = document.getElementById('close-player');
+            if (closePlayer) {
+                closePlayer.addEventListener('click', closeVideoPlayer);
+            }
+            
+            // Primera categoría
+            const createFirstCategory = document.getElementById('create-first-category');
+            if (createFirstCategory) {
+                createFirstCategory.addEventListener('click', () => {
+                    const categoryInput = document.getElementById('category-input');
+                    if (categoryInput) categoryInput.focus();
+                });
+            }
+
+            // Cerrar modales con Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    const addVideoModal = document.getElementById('add-video-modal');
+                    const videoPlayer = document.getElementById('video-player');
+                    
+                    if (addVideoModal && !addVideoModal.classList.contains('hidden')) {
+                        hideAddVideoModal();
+                    }
+                    if (videoPlayer && !videoPlayer.classList.contains('hidden')) {
+                        closeVideoPlayer();
+                    }
+                }
+            });
+
+            // Cerrar modales clickeando fuera
+            const addVideoModal = document.getElementById('add-video-modal');
+            const videoPlayer = document.getElementById('video-player');
+            
+            if (addVideoModal) {
+                addVideoModal.addEventListener('click', (e) => {
+                    if (e.target === addVideoModal) {
+                        hideAddVideoModal();
+                    }
+                });
+            }
+
+            if (videoPlayer) {
+                videoPlayer.addEventListener('click', (e) => {
+                    if (e.target === videoPlayer) {
+                        closeVideoPlayer();
+                    }
+                });
+            }
+            
+            console.log('All event listeners setup complete');
+        }
+
+        function init() {
+            console.log('Initializing Video Organizer...');
+            
+            loadFromStorage();
+            
+            const themeContainer = document.querySelector('[data-theme]');
+            const themeToggle = document.getElementById('theme-toggle');
+            const boardBtn = document.getElementById('board-view-btn');
+            const listBtn = document.getElementById('list-view-btn');
+            
+            if (themeContainer) themeContainer.setAttribute('data-theme', appState.currentTheme);
+            if (themeToggle) {
+                themeToggle.textContent = appState.currentTheme === 'dark' ? '☀️' : '🌙';
+                themeToggle.title = appState.currentTheme === 'dark' ? 'Modo claro' : 'Modo oscuro';
+            }
+            
+            if (boardBtn && listBtn) {
+                if (appState.currentView === 'board') {
+                    boardBtn.className = 'px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200 bg-accent text-white shadow-md';
+                    listBtn.className = 'px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200 bg-transparent text-text-muted hover:text-text-primary';
+                } else {
+                    listBtn.className = 'px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200 bg-accent text-white shadow-md';
+                    boardBtn.className = 'px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200 bg-transparent text-text-muted hover:text-text-primary';
+                }
+            }
+            
+            setupEventListeners();
+            render();
+            
+            console.log('✅ Video Organizer initialized successfully');
+        }
+
+        // Iniciar la aplicación cuando el DOM esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</BaseTailwind>

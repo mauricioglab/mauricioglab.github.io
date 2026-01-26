@@ -5,12 +5,29 @@ import ChuckFacts from "../components/main-page/ChuckFacts.astro";
 import RetroTranslator from "../components/main-page/RetroTranslator.astro";
 import AdsSidebar from "../components/main-page/AdsSidebar.astro";
 import PokemonBanner from "../components/main-page/PokemonBanner.astro";
+import URLShortener from "../components/main-page/URLShortener.astro";
+import WantedPoster from "../components/main-page/WantedPoster.astro";
 
 const today = new Date();
 const formattedDate = today
 	.toLocaleDateString("en-US", { month: "long", day: "numeric" })
 	.toUpperCase();
 const baseUrl = import.meta.env.BASE_URL;
+const b = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+
+// Obtener todas las páginas dinámicamente
+const glob = import.meta.glob("./**/*.astro");
+const keys = Object.keys(glob).filter((k) => k !== "./index.astro" && k !== "./main.astro");
+
+function pathToRoute(key: string): { segment: string; name: string; url: string } {
+	const raw = key.replace(/^\.\//, "").replace(/\.astro$/, "");
+	const segment = raw.endsWith("/index") ? raw.slice(0, -6) : raw;
+	const url = `${b}${segment}/`;
+	const name = segment.charAt(0).toUpperCase() + segment.slice(1);
+	return { segment, name, url };
+}
+
+const pages = keys.map(pathToRoute).sort((a, b) => a.segment.localeCompare(b.segment));
 ---
 
 <!doctype html>
@@ -26,24 +43,13 @@ const baseUrl = import.meta.env.BASE_URL;
 		<div class="container">
 			<aside class="sidebar" aria-label="Main Navigation Sidebar">
 				<nav class="menu">
-					<a href="#productos">Product Information</a>
-					<a href="#soporte">Customer Support</a>
-					<a href="#tech">Technology & Research</a>
-					<a href="#dev">Developer World</a>
-					<a href="#grupos">Groups & Interests</a>
-					<a href="#recursos">Resources Online</a>
-					<a href="#about">About MG Lab</a>
+					{
+						pages.map((p) => (
+							<a href={p.url}>{p.name}</a>
+						))
+					}
 				</nav>
 				<hr />
-				<div class="sites-section">
-					<div class="sites-title">MG Lab Sites Worldwide</div>
-					<select aria-label="Select MG Lab regional site">
-						<option>Argentina</option>
-						<option>United States</option>
-						<option>Europe</option>
-						<option>Japan</option>
-					</select>
-				</div>
 
 				<div class="alf-section" aria-label="Fun corner with ALF">
 					<img
@@ -57,12 +63,28 @@ const baseUrl = import.meta.env.BASE_URL;
 				<hr />
 
 				<CurrencyConverter />
+
+				<hr />
+
+				<WantedPoster />
 			</aside>
 
 			<main class="main-content" aria-label="Main Content Area">
 				<header class="header">
 					<div class="header-inner">
 						<h1>Welcome to MG Lab Depot</h1>
+						<div class="search-container">
+							<form action="https://www.google.com/search" method="get" target="_blank" class="search-form">
+								<input
+									type="text"
+									name="q"
+									placeholder="Search Google..."
+									class="search-input"
+									aria-label="Search Google"
+								/>
+								<button type="submit" class="search-btn">GO</button>
+							</form>
+						</div>
 						<div class="date" aria-label="Current date">
 							{formattedDate}
 						</div>
@@ -80,7 +102,14 @@ const baseUrl = import.meta.env.BASE_URL;
 
 					<hr />
 
-					<RetroTranslator />
+					<div class="translator-shortener-container">
+						<div class="translator-wrapper">
+							<RetroTranslator />
+						</div>
+						<div class="shortener-wrapper">
+							<URLShortener />
+						</div>
+					</div>
 				</div>
 
 				<footer class="footer">
@@ -155,11 +184,17 @@ const baseUrl = import.meta.env.BASE_URL;
 				padding: 10px;
 				background-color: #880000;
 				border: 2px solid #ffff00;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
 			}
 			.alf-image {
 				width: 120px;
 				border: 2px solid #000;
 				margin-bottom: 8px;
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
 			}
 			.alf-text {
 				font-size: 12px;
@@ -185,12 +220,56 @@ const baseUrl = import.meta.env.BASE_URL;
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
+				gap: 15px;
 			}
 
 			.header h1 {
 				font-size: 36px;
 				font-weight: normal;
 				margin-left: 15px;
+				font-family: "Times New Roman", Times, serif;
+			}
+
+			.search-container {
+				flex: 1;
+				max-width: 300px;
+			}
+
+			.search-form {
+				display: flex;
+				gap: 4px;
+			}
+
+			.search-input {
+				flex: 1;
+				padding: 4px 8px;
+				border: 2px inset #c0c0c0;
+				background-color: #fff;
+				color: #000;
+				font-size: 11px;
+				font-family: Arial, sans-serif;
+			}
+
+			.search-input:focus {
+				outline: 1px dotted #000;
+				outline-offset: -2px;
+			}
+
+			.search-btn {
+				padding: 4px 12px;
+				background: linear-gradient(to bottom, #ece9d8 0%, #d4d0c8 100%);
+				border: 2px outset #ece9d8;
+				color: #000;
+				font-size: 10px;
+				font-weight: bold;
+				font-family: "MS Sans Serif", "Tahoma", sans-serif;
+				cursor: pointer;
+				text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+			}
+
+			.search-btn:active {
+				border-style: inset;
+				background: linear-gradient(to bottom, #d4d0c8 0%, #ece9d8 100%);
 			}
 
 			.date {
@@ -215,6 +294,41 @@ const baseUrl = import.meta.env.BASE_URL;
 				font-weight: bold;
 				margin-bottom: 10px;
 				display: inline-block;
+			}
+
+			.translator-shortener-container {
+				display: flex;
+				gap: 20px;
+				align-items: flex-start;
+			}
+
+			.translator-wrapper {
+				flex: 1;
+			}
+
+			.shortener-wrapper {
+				flex: 0 0 200px;
+			}
+
+			@media (max-width: 768px) {
+				.translator-shortener-container {
+					flex-direction: column;
+				}
+
+				.shortener-wrapper {
+					flex: 1;
+					width: 100%;
+				}
+
+				.header-inner {
+					flex-wrap: wrap;
+				}
+
+				.search-container {
+					max-width: 100%;
+					order: 3;
+					width: 100%;
+				}
 			}
 
 			.footer {
