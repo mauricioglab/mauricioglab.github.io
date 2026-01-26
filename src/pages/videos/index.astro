@@ -226,6 +226,14 @@ export const prerender = true;
         function generateId() {
             return Date.now().toString(36) + Math.random().toString(36).substr(2);
         }
+        
+        // Función auxiliar para escapar HTML (seguridad y rendimiento)
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = String(text);
+            return div.innerHTML;
+        }
 
         function saveToStorage() {
             try {
@@ -424,36 +432,64 @@ export const prerender = true;
                     
                     const entries = doc.getElementsByTagName('entry');
                     const items = [];
+                    const entriesLength = entries.length;
                     
-                    for (let i = 0; i < entries.length; i++) {
-                        const entry = entries[i];
-                        let videoId = '';
-                        let title = 'Sin título';
-                        
-                        for (const el of entry.children) {
-                            const local = (el.localName || el.tagName || '').toLowerCase();
-                            if (local === 'videoid' || (el.tagName && el.tagName.endsWith('videoId'))) {
-                                videoId = (el.textContent || '').trim();
+                    // Optimización: procesar en batch para no bloquear el UI
+                    const processBatch = (start, batchSize = 50) => {
+                        const end = Math.min(start + batchSize, entriesLength);
+                        for (let i = start; i < end; i++) {
+                            const entry = entries[i];
+                            
+                            // Usar querySelector para acceso directo más rápido
+                            let videoId = '';
+                            let title = 'Sin título';
+                            
+                            // Buscar videoId directamente (más eficiente que iterar children)
+                            const videoIdEl = entry.querySelector('yt\\:videoId, videoId, [localName="videoId"]');
+                            if (videoIdEl) {
+                                videoId = (videoIdEl.textContent || '').trim();
                             }
-                            if (local === 'title') {
-                                title = (el.textContent || '').trim() || title;
+                            
+                            // Si no encontramos videoId, intentar desde el elemento id
+                            if (!videoId) {
+                                const idEl = entry.querySelector('id');
+                                if (idEl) {
+                                    const idVal = (idEl.textContent || '').trim();
+                                    const m = idVal.match(/yt:video:(.{11})$/);
+                                    if (m) videoId = m[1];
+                                }
                             }
+                            
+                            // Si aún no hay videoId, saltar este entry
+                            if (!videoId) continue;
+                            
+                            // Buscar título directamente
+                            const titleEl = entry.querySelector('title');
+                            if (titleEl) {
+                                title = (titleEl.textContent || '').trim() || title;
+                            }
+                            
+                            items.push({
+                                videoId,
+                                title,
+                                thumbnail: getThumbnailUrl(videoId, 'youtube')
+                            });
                         }
                         
-                        if (!videoId && entry.getElementsByTagName('id').length) {
-                            const idEl = entry.getElementsByTagName('id')[0];
-                            const idVal = (idEl?.textContent || '').trim();
-                            const m = idVal.match(/yt:video:(.{11})$/);
-                            if (m) videoId = m[1];
+                        return end;
+                    };
+                    
+                    // Procesar en batches para no bloquear el UI en listas grandes
+                    if (entriesLength > 100) {
+                        let currentIndex = 0;
+                        while (currentIndex < entriesLength) {
+                            currentIndex = processBatch(currentIndex, 50);
+                            // Pequeña pausa para permitir que el navegador procese otros eventos
+                            await new Promise(resolve => setTimeout(resolve, 0));
                         }
-                        
-                        if (!videoId) continue;
-                        
-                        items.push({
-                            videoId,
-                            title,
-                            thumbnail: getThumbnailUrl(videoId, 'youtube')
-                        });
+                    } else {
+                        // Para listas pequeñas, procesar todo de una vez
+                        processBatch(0, entriesLength);
                     }
                     
                     // Guardar en cache solo si obtuvimos items
@@ -514,28 +550,64 @@ export const prerender = true;
         function renderPlaylistModalList(items) {
             const container = elements.playlistModalList;
             if (!container) return;
-            container.innerHTML = '';
-            (items || []).forEach((it) => {
+            
+            const itemsList = items || [];
+            if (itemsList.length === 0) {
+                container.innerHTML = '';
+                showPlaylistModalState('list');
+                return;
+            }
+            
+            // Optimización: usar DocumentFragment para reducir reflows
+            const fragment = document.createDocumentFragment();
+            
+            // Para listas grandes, usar virtualización o renderizado en batch
+            const renderItem = (it) => {
                 const card = document.createElement('div');
                 card.className = 'bg-bg-tertiary rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg group flex gap-3 p-2';
-                card.onclick = () => {
-                    closePlaylistModal();
-                    playPlaylistItem(it.videoId, it.title, it.thumbnail);
-                };
+                
+                // Usar dataset para almacenar datos en lugar de closure
+                card.dataset.videoId = it.videoId;
+                card.dataset.videoTitle = it.title || '';
+                card.dataset.videoThumbnail = it.thumbnail || '';
+                
+                // Delegación de eventos en el contenedor en lugar de onclick individual
                 const thumb = it.thumbnail
-                    ? `<img src="${it.thumbnail}" alt="" class="w-24 h-[54px] object-cover rounded flex-shrink-0" onerror="this.style.display='none'">`
+                    ? `<img src="${it.thumbnail}" alt="" class="w-24 h-[54px] object-cover rounded flex-shrink-0" loading="lazy" onerror="this.style.display='none'">`
                     : '<div class="w-24 h-[54px] bg-bg-primary rounded flex-shrink-0 flex items-center justify-center text-text-muted text-2xl">🎬</div>';
+                
                 card.innerHTML = `
                     ${thumb}
                     <div class="flex-1 min-w-0 flex flex-col justify-center">
-                        <div class="text-sm font-medium text-text-primary line-clamp-2">${it.title}</div>
+                        <div class="text-sm font-medium text-text-primary line-clamp-2">${escapeHtml(it.title || 'Sin título')}</div>
                     </div>
                     <div class="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
                         <span class="text-accent text-lg">▶</span>
                     </div>
                 `;
-                container.appendChild(card);
-            });
+                
+                fragment.appendChild(card);
+            };
+            
+            // Renderizar todos los items
+            itemsList.forEach(renderItem);
+            
+            // Limpiar y agregar todo de una vez (reduce reflows)
+            container.innerHTML = '';
+            container.appendChild(fragment);
+            
+            // Delegación de eventos: un solo listener en el contenedor
+            container.addEventListener('click', (e) => {
+                const card = e.target.closest('[data-video-id]');
+                if (card) {
+                    const videoId = card.dataset.videoId;
+                    const title = card.dataset.videoTitle;
+                    const thumbnail = card.dataset.videoThumbnail;
+                    closePlaylistModal();
+                    playPlaylistItem(videoId, title, thumbnail);
+                }
+            }, { once: false });
+            
             showPlaylistModalState('list');
         }
 
@@ -746,15 +818,18 @@ export const prerender = true;
                 column.dataset.dropCategory = category.id;
                 column.innerHTML = `
                     <div class="flex justify-between items-center mb-4 shrink-0">
-                        <h3 class="text-base font-semibold text-text-primary">${category.name}</h3>
-                        <button type="button" onclick="addVideoToCategory('${category.id}')" class="px-2 py-1 rounded-lg text-xs font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover">+</button>
+                        <h3 class="text-base font-semibold text-text-primary">${escapeHtml(category.name)}</h3>
+                        <button type="button" data-action="add-video" data-category-id="${escapeHtml(category.id)}" class="px-2 py-1 rounded-lg text-xs font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover">+</button>
                     </div>
-                    <div class="flex flex-col gap-3 board-videos board-videos-scroll min-h-0 overflow-y-auto max-h-[calc(2*320px+0.75rem)] pr-4" id="videos-${category.id}" data-drop-category="${category.id}">
+                    <div class="flex flex-col gap-3 board-videos board-videos-scroll min-h-0 overflow-y-auto max-h-[calc(2*320px+0.75rem)] pr-4" id="videos-${escapeHtml(category.id)}" data-drop-category="${escapeHtml(category.id)}">
                         ${category.videos.map((video, i) => renderVideoCard(video, false, category.id, i)).join('')}
                     </div>
                 `;
                 container.appendChild(column);
             });
+            
+            // Delegación de eventos para todas las tarjetas de video (mejor rendimiento)
+            setupVideoCardEventDelegation(container);
         }
 
         function renderListView() {
@@ -769,23 +844,70 @@ export const prerender = true;
                 section.className = 'list-category-section border border-border-primary rounded-lg overflow-hidden bg-bg-secondary';
                 section.dataset.categoryId = category.id;
                 section.dataset.dropCategory = category.id;
-                section.dataset.categoryIndex = String(appState.categories.findIndex(c => c.id === category.id));
+                const categoryIndex = appState.categories.findIndex(c => c.id === category.id);
+                section.dataset.categoryIndex = String(categoryIndex);
                 const chevron = expanded ? '▼' : '▶';
                 section.innerHTML = `
-                    <div class="list-category-header flex items-center justify-between gap-3 px-4 py-3 bg-bg-tertiary cursor-pointer hover:bg-border-primary transition-colors border-b border-border-primary" onclick="toggleCategoryExpanded('${category.id}')">
+                    <div class="list-category-header flex items-center justify-between gap-3 px-4 py-3 bg-bg-tertiary cursor-pointer hover:bg-border-primary transition-colors border-b border-border-primary" data-action="toggle-category" data-category-id="${escapeHtml(category.id)}">
                         <div class="flex items-center gap-2">
                             <span class="text-text-muted text-sm">${chevron}</span>
-                            <h3 class="text-base font-semibold text-text-primary">${category.name}</h3>
+                            <h3 class="text-base font-semibold text-text-primary">${escapeHtml(category.name)}</h3>
                             <span class="text-xs text-text-muted">(${category.videos.length})</span>
                         </div>
-                        <button onclick="event.stopPropagation(); addVideoToCategory('${category.id}')" class="px-2 py-1 rounded-lg text-xs font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover">+</button>
+                        <button data-action="add-video" data-category-id="${escapeHtml(category.id)}" class="px-2 py-1 rounded-lg text-xs font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover">+</button>
                     </div>
-                    <div class="list-category-videos p-4 ${expanded ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3" data-drop-category="${category.id}">
+                    <div class="list-category-videos p-4 ${expanded ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3" data-drop-category="${escapeHtml(category.id)}">
                         ${category.videos.map((video, i) => renderVideoCard({ ...video, categoryName: category.name }, true, category.id, i)).join('')}
                     </div>
                 `;
                 container.appendChild(section);
             });
+            
+            // Delegación de eventos para todas las tarjetas de video (mejor rendimiento)
+            setupVideoCardEventDelegation(container);
+        }
+        
+        // Función para configurar delegación de eventos en tarjetas de video
+        function setupVideoCardEventDelegation(container) {
+            // Remover listeners anteriores si existen
+            const existingHandler = container._videoCardHandler;
+            if (existingHandler) {
+                container.removeEventListener('click', existingHandler);
+            }
+            
+            // Nuevo handler con delegación de eventos
+            const handler = (e) => {
+                const target = e.target;
+                const action = target.dataset.action || target.closest('[data-action]')?.dataset.action;
+                const videoId = target.dataset.videoId || target.closest('[data-video-id]')?.dataset.videoId;
+                const categoryId = target.dataset.categoryId || target.closest('[data-category-id]')?.dataset.categoryId;
+                
+                e.stopPropagation();
+                
+                if (action === 'select') {
+                    if (videoId) toggleVideoSelection(videoId, e);
+                } else if (action === 'play') {
+                    if (videoId) handleVideoCardClick(videoId);
+                } else if (action === 'edit') {
+                    if (videoId) editVideo(videoId);
+                } else if (action === 'delete') {
+                    if (videoId) deleteVideo(videoId);
+                } else if (action === 'add-video') {
+                    if (categoryId) addVideoToCategory(categoryId);
+                } else if (action === 'toggle-category') {
+                    if (categoryId) toggleCategoryExpanded(categoryId);
+                } else if (target.closest('.video-card[data-video-id]')) {
+                    // Click en la tarjeta misma (no en botones)
+                    const card = target.closest('.video-card[data-video-id]');
+                    if (card && !target.closest('button, input')) {
+                        const vidId = card.dataset.videoId;
+                        if (vidId) handleVideoCardClick(vidId);
+                    }
+                }
+            };
+            
+            container.addEventListener('click', handler);
+            container._videoCardHandler = handler; // Guardar referencia para poder removerlo después
         }
 
         function handleVideoCardClick(videoId) {
@@ -808,45 +930,47 @@ export const prerender = true;
 
         function renderVideoCard(video, showCategory = false, categoryId = '', videoIndex = -1) {
             const thumb = getPlaylistCardThumbnail(video);
+            // Optimización: lazy loading para imágenes
             const thumbnailHtml = thumb
-                ? `<img src="${thumb}" alt="${video.title}" class="absolute top-0 left-0 w-full h-full object-cover" onerror="this.style.display='none'">`
+                ? `<img src="${escapeHtml(thumb)}" alt="${escapeHtml(video.title || '')}" class="absolute top-0 left-0 w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.style.display='none'">`
                 : `<div class="absolute inset-0 flex items-center justify-center text-text-muted">
                      ${video.isPlaylist ? '📋' : '🎬'}
                    </div>`;
 
             const platformBg = video.platform === 'youtube' ? 'bg-red-500/10 text-red-500' : 'bg-black/10 text-text-primary';
             const checked = isVideoSelected(video.id) ? ' checked' : '';
-            const dataAttrs = categoryId ? ` data-video-id="${video.id}" data-category-id="${categoryId}" data-video-index="${videoIndex}"` : '';
+            const dataAttrs = categoryId ? ` data-video-id="${escapeHtml(video.id)}" data-category-id="${escapeHtml(categoryId)}" data-video-index="${videoIndex}"` : '';
             const dragHandle = categoryId ? '<span class="video-drag-handle cursor-grab active:cursor-grabbing text-text-muted opacity-60 hover:opacity-100 shrink-0 self-center" title="Arrastrar">⋮⋮</span>' : '';
+            const selectedClass = isVideoSelected(video.id) ? 'ring-2 ring-accent' : '';
 
             return `
-                <div class="video-card shrink-0 bg-bg-tertiary rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg group border-2 border-transparent ${isVideoSelected(video.id) ? 'ring-2 ring-accent' : ''}"
-                    onclick="handleVideoCardClick('${video.id}')" draggable="true"${dataAttrs}>
+                <div class="video-card shrink-0 bg-bg-tertiary rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg group border-2 border-transparent ${selectedClass}"
+                    data-video-id="${escapeHtml(video.id)}" draggable="true"${dataAttrs}>
                     <div class="relative w-full pt-[56.25%] bg-bg-primary overflow-hidden">
                         ${thumbnailHtml}
-                        <div class="absolute top-2 left-2 z-10" onclick="event.stopPropagation(); toggleVideoSelection('${video.id}', event)">
-                            <input type="checkbox" class="video-checkbox w-4 h-4 rounded cursor-pointer" ${checked} onclick="event.stopPropagation(); toggleVideoSelection('${video.id}', event)">
+                        <div class="absolute top-2 left-2 z-10" data-action="select">
+                            <input type="checkbox" class="video-checkbox w-4 h-4 rounded cursor-pointer" ${checked} data-action="select">
                         </div>
                         <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                            <button type="button" class="bg-accent text-white border-none px-4 py-2 rounded-md font-medium cursor-pointer">▶ Reproducir</button>
+                            <button type="button" class="bg-accent text-white border-none px-4 py-2 rounded-md font-medium cursor-pointer" data-action="play">▶ Reproducir</button>
                         </div>
                     </div>
                     <div class="p-3 flex gap-2 items-start">
                         ${dragHandle}
                         <div class="flex-1 min-w-0">
-                            <h4 class="text-sm font-medium text-text-primary mb-2 line-clamp-2">${video.title}</h4>
+                            <h4 class="text-sm font-medium text-text-primary mb-2 line-clamp-2">${escapeHtml(video.title || 'Sin título')}</h4>
                             <div class="flex justify-between items-center flex-wrap gap-1">
                                 <span class="text-xs px-2 py-1 rounded font-medium ${platformBg}">
                                     ${video.platform === 'youtube' ? 'YouTube' : 'Udemy'}
                                     ${video.isPlaylist ? ' Playlist' : ''}
                                 </span>
                                 <div class="flex gap-2">
-                                    <button type="button" onclick="event.stopPropagation(); editVideo('${video.id}')" class="bg-transparent border-none cursor-pointer text-sm opacity-60 transition-opacity duration-200 hover:opacity-100" title="Editar">✏️</button>
-                                    <button type="button" onclick="event.stopPropagation(); deleteVideo('${video.id}')" class="bg-transparent border-none cursor-pointer text-sm opacity-60 transition-opacity duration-200 hover:opacity-100" title="Eliminar">🗑️</button>
+                                    <button type="button" data-action="edit" data-video-id="${escapeHtml(video.id)}" class="bg-transparent border-none cursor-pointer text-sm opacity-60 transition-opacity duration-200 hover:opacity-100" title="Editar">✏️</button>
+                                    <button type="button" data-action="delete" data-video-id="${escapeHtml(video.id)}" class="bg-transparent border-none cursor-pointer text-sm opacity-60 transition-opacity duration-200 hover:opacity-100" title="Eliminar">🗑️</button>
                                 </div>
                             </div>
-                            ${showCategory ? `<div class="text-xs text-text-muted mt-1">${video.categoryName}</div>` : ''}
-                            ${video.comments ? `<div class="text-xs text-text-muted mt-2 italic">${video.comments}</div>` : ''}
+                            ${showCategory && video.categoryName ? `<div class="text-xs text-text-muted mt-1">${escapeHtml(video.categoryName)}</div>` : ''}
+                            ${video.comments ? `<div class="text-xs text-text-muted mt-2 italic">${escapeHtml(video.comments)}</div>` : ''}
                         </div>
                     </div>
                 </div>
@@ -856,18 +980,21 @@ export const prerender = true;
         function getFilteredCategories() {
             if (!appState.searchQuery) return appState.categories;
             
+            // Optimización: cachear query en lowercase una sola vez
+            const queryLower = appState.searchQuery.toLowerCase();
+            
             return appState.categories.filter(category => {
-                const categoryMatch = category.name.toLowerCase().includes(appState.searchQuery.toLowerCase());
+                const categoryMatch = category.name.toLowerCase().includes(queryLower);
                 const videoMatch = category.videos.some(video => 
-                    video.title.toLowerCase().includes(appState.searchQuery.toLowerCase()) ||
-                    (video.comments && video.comments.toLowerCase().includes(appState.searchQuery.toLowerCase()))
+                    (video.title && video.title.toLowerCase().includes(queryLower)) ||
+                    (video.comments && video.comments.toLowerCase().includes(queryLower))
                 );
                 return categoryMatch || videoMatch;
             }).map(category => ({
                 ...category,
                 videos: category.videos.filter(video =>
-                    video.title.toLowerCase().includes(appState.searchQuery.toLowerCase()) ||
-                    (video.comments && video.comments.toLowerCase().includes(appState.searchQuery.toLowerCase()))
+                    (video.title && video.title.toLowerCase().includes(queryLower)) ||
+                    (video.comments && video.comments.toLowerCase().includes(queryLower))
                 )
             }));
         }
