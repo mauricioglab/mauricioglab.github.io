@@ -102,6 +102,30 @@ export const prerender = true;
         </div>
     </div>
 
+    <!-- Modal Lista de videos (playlist) -->
+    <div id="playlist-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-[1500] p-5 hidden">
+        <div class="bg-bg-secondary rounded-xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center p-5 border-b border-border-primary shrink-0">
+                <h2 id="playlist-modal-title" class="text-xl font-semibold text-text-primary truncate pr-4"></h2>
+                <button id="close-playlist-modal" class="bg-transparent border-none text-2xl text-text-muted cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-all duration-200 hover:bg-bg-tertiary hover:text-text-primary shrink-0">×</button>
+            </div>
+            <div id="playlist-modal-body" class="flex-1 overflow-y-auto p-5">
+                <div id="playlist-modal-loading" class="flex flex-col items-center justify-center py-12 text-text-muted hidden">
+                    <div class="animate-pulse text-4xl mb-4">⏳</div>
+                    <p class="text-sm">Cargando videos...</p>
+                </div>
+                <div id="playlist-modal-error" class="flex flex-col items-center justify-center py-12 text-center hidden">
+                    <div class="text-4xl mb-4 opacity-60">⚠️</div>
+                    <p id="playlist-modal-error-msg" class="text-sm text-text-primary mb-4"></p>
+                    <a id="playlist-modal-open-yt" href="#" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover hidden">Abrir en YouTube</a>
+                </div>
+                <div id="playlist-modal-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 hidden">
+                    <!-- Videos de la lista se cargan dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Video Player -->
     <div id="video-player" class="fixed inset-0 bg-black/95 z-[2000] flex flex-col md:flex-row hidden">
         <div class="flex-1 flex flex-col p-4 md:p-6">
@@ -129,6 +153,7 @@ export const prerender = true;
     <script is:inline>
         // Constantes y configuración
         const STORAGE_KEY = 'video-organizer-data';
+        const PLAYLIST_CACHE_KEY = 'video-organizer-playlist-cache';
         const YOUTUBE_REGEX = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
         const YOUTUBE_PLAYLIST_REGEX = /(?:youtube\.com\/playlist\?list=|youtube\.com\/.*[?&]list=)([a-zA-Z0-9_-]+)/;
         const UDEMY_REGEX = /udemy\.com\/course\/[^\/]+\/learn\/lecture\/(\d+)/;
@@ -141,6 +166,9 @@ export const prerender = true;
             currentTheme: 'dark',
             searchQuery: ''
         };
+
+        // Cache de listas: { [playlistId]: { items: { videoId, title, thumbnail }[], fetchedAt } }
+        let playlistCache = {};
 
         // Elementos del DOM
         const elements = {
@@ -172,7 +200,15 @@ export const prerender = true;
             playerComments: document.getElementById('player-comments'),
             closePlayer: document.getElementById('close-player'),
             playerVideoList: document.getElementById('player-video-list'),
-            createFirstCategory: document.getElementById('create-first-category')
+            createFirstCategory: document.getElementById('create-first-category'),
+            playlistModal: document.getElementById('playlist-modal'),
+            playlistModalTitle: document.getElementById('playlist-modal-title'),
+            closePlaylistModal: document.getElementById('close-playlist-modal'),
+            playlistModalLoading: document.getElementById('playlist-modal-loading'),
+            playlistModalError: document.getElementById('playlist-modal-error'),
+            playlistModalErrorMsg: document.getElementById('playlist-modal-error-msg'),
+            playlistModalOpenYt: document.getElementById('playlist-modal-open-yt'),
+            playlistModalList: document.getElementById('playlist-modal-list')
         };
 
         // Utilidades
@@ -197,6 +233,25 @@ export const prerender = true;
                 }
             } catch (error) {
                 console.error('Error loading from storage:', error);
+            }
+        }
+
+        function loadPlaylistCache() {
+            try {
+                const stored = localStorage.getItem(PLAYLIST_CACHE_KEY);
+                if (stored) {
+                    playlistCache = JSON.parse(stored);
+                }
+            } catch (error) {
+                console.error('Error loading playlist cache:', error);
+            }
+        }
+
+        function savePlaylistCache() {
+            try {
+                localStorage.setItem(PLAYLIST_CACHE_KEY, JSON.stringify(playlistCache));
+            } catch (error) {
+                console.error('Error saving playlist cache:', error);
             }
         }
 
@@ -288,6 +343,179 @@ export const prerender = true;
                 comments,
                 createdAt: Date.now()
             };
+        }
+
+        async function fetchPlaylistItems(playlistId) {
+            const rssUrl = `https://www.youtube.com/feeds/videos.xml?playlist_id=${encodeURIComponent(playlistId)}`;
+            const corsProxy = 'https://api.allorigins.win/raw?url=';
+            const res = await fetch(corsProxy + encodeURIComponent(rssUrl));
+            if (!res.ok) {
+                throw new Error(`No se pudo cargar la lista (${res.status}). La playlist debe ser pública.`);
+            }
+            const xml = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(xml, 'text/xml');
+            const entries = doc.getElementsByTagName('entry');
+            const items = [];
+            for (let i = 0; i < entries.length; i++) {
+                const entry = entries[i];
+                let videoId = '';
+                let title = 'Sin título';
+                for (const el of entry.children) {
+                    const local = (el.localName || el.tagName || '').toLowerCase();
+                    if (local === 'videoid' || (el.tagName && el.tagName.endsWith('videoId'))) {
+                        videoId = (el.textContent || '').trim();
+                    }
+                    if (local === 'title') {
+                        title = (el.textContent || '').trim() || title;
+                    }
+                }
+                if (!videoId && entry.getElementsByTagName('id').length) {
+                    const idEl = entry.getElementsByTagName('id')[0];
+                    const idVal = (idEl?.textContent || '').trim();
+                    const m = idVal.match(/yt:video:(.{11})$/);
+                    if (m) videoId = m[1];
+                }
+                if (!videoId) continue;
+                items.push({
+                    videoId,
+                    title,
+                    thumbnail: getThumbnailUrl(videoId, 'youtube')
+                });
+            }
+            playlistCache[playlistId] = { items, fetchedAt: Date.now() };
+            savePlaylistCache();
+            return items;
+        }
+
+        function showPlaylistModalState(state) {
+            const loading = elements.playlistModalLoading;
+            const err = elements.playlistModalError;
+            const list = elements.playlistModalList;
+            if (!loading || !err || !list) return;
+            loading.classList.add('hidden');
+            err.classList.add('hidden');
+            list.classList.add('hidden');
+            if (state === 'loading') loading.classList.remove('hidden');
+            else if (state === 'error') err.classList.remove('hidden');
+            else if (state === 'list') list.classList.remove('hidden');
+        }
+
+        function showPlaylistModalError(msg, youtubeUrl) {
+            showPlaylistModalState('error');
+            if (elements.playlistModalErrorMsg) elements.playlistModalErrorMsg.textContent = msg || 'Error al cargar la lista';
+            const link = elements.playlistModalOpenYt;
+            if (link) {
+                if (youtubeUrl) {
+                    link.href = youtubeUrl;
+                    link.classList.remove('hidden');
+                } else {
+                    link.classList.add('hidden');
+                }
+            }
+        }
+
+        function renderPlaylistModalList(items) {
+            const container = elements.playlistModalList;
+            if (!container) return;
+            container.innerHTML = '';
+            (items || []).forEach((it) => {
+                const card = document.createElement('div');
+                card.className = 'bg-bg-tertiary rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg group flex gap-3 p-2';
+                card.onclick = () => {
+                    closePlaylistModal();
+                    playPlaylistItem(it.videoId, it.title, it.thumbnail);
+                };
+                const thumb = it.thumbnail
+                    ? `<img src="${it.thumbnail}" alt="" class="w-24 h-[54px] object-cover rounded flex-shrink-0" onerror="this.style.display='none'">`
+                    : '<div class="w-24 h-[54px] bg-bg-primary rounded flex-shrink-0 flex items-center justify-center text-text-muted text-2xl">🎬</div>';
+                card.innerHTML = `
+                    ${thumb}
+                    <div class="flex-1 min-w-0 flex flex-col justify-center">
+                        <div class="text-sm font-medium text-text-primary line-clamp-2">${it.title}</div>
+                    </div>
+                    <div class="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span class="text-accent text-lg">▶</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            showPlaylistModalState('list');
+        }
+
+        async function openPlaylistModal(video) {
+            if (!video?.isPlaylist || !video?.playlistId) return;
+            if (!elements.playlistModal || !elements.playlistModalTitle) return;
+
+            const playlistId = video.playlistId;
+            const title = video.title || 'Lista de reproducción';
+            const youtubeUrl = video.url || `https://www.youtube.com/playlist?list=${playlistId}`;
+
+            elements.playlistModalTitle.textContent = title;
+            elements.playlistModal.classList.remove('hidden');
+
+            const cached = playlistCache[playlistId];
+            if (cached?.items?.length) {
+                updatePlaylistThumbnailIfMissing(video.id, cached.items);
+                renderPlaylistModalList(cached.items);
+                return;
+            }
+
+            showPlaylistModalState('loading');
+            try {
+                const items = await fetchPlaylistItems(playlistId);
+                if (items.length === 0) {
+                    showPlaylistModalError('Esta lista no tiene videos visibles.', youtubeUrl);
+                    return;
+                }
+                updatePlaylistThumbnailIfMissing(video.id, items);
+                renderPlaylistModalList(items);
+            } catch (e) {
+                const msg = (e && e.message) || 'Error al cargar los videos de la lista.';
+                showPlaylistModalError(msg, youtubeUrl);
+            }
+        }
+
+        function updatePlaylistThumbnailIfMissing(videoId, items) {
+            const v = findVideoById(videoId);
+            if (!v || !v.isPlaylist || v.thumbnail || !items?.length) return;
+            v.thumbnail = items[0].thumbnail;
+            saveToStorage();
+            render();
+        }
+
+        function closePlaylistModal() {
+            if (elements.playlistModal) {
+                elements.playlistModal.classList.add('hidden');
+            }
+        }
+
+        function playPlaylistItem(videoId, title, thumbnail) {
+            const virtual = {
+                platform: 'youtube',
+                videoId,
+                title: title || 'Video',
+                thumbnail: thumbnail || getThumbnailUrl(videoId, 'youtube'),
+                url: `https://www.youtube.com/watch?v=${videoId}`,
+                _fromPlaylist: true
+            };
+            appState.selectedVideo = virtual;
+            if (elements.playerTitle) elements.playerTitle.textContent = virtual.title;
+            const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            if (elements.playerIframe) {
+                elements.playerIframe.src = embedUrl;
+                elements.playerIframe.style.display = '';
+            }
+            const flexMin = document.querySelector('#video-player .flex-1.min-h-0');
+            if (flexMin && !flexMin.contains(elements.playerIframe)) {
+                flexMin.innerHTML = '';
+                flexMin.appendChild(elements.playerIframe);
+            }
+            if (elements.playerComments) {
+                elements.playerComments.classList.add('hidden');
+            }
+            renderPlayerVideoList();
+            if (elements.videoPlayer) elements.videoPlayer.classList.remove('hidden');
         }
 
         // Funciones de renderizado
@@ -382,9 +610,28 @@ export const prerender = true;
             });
         }
 
+        function handleVideoCardClick(videoId) {
+            const video = findVideoById(videoId);
+            if (!video) return;
+            if (video.isPlaylist) {
+                openPlaylistModal(video);
+            } else {
+                playVideo(videoId);
+            }
+        }
+
+        function getPlaylistCardThumbnail(video) {
+            if (video.thumbnail) return video.thumbnail;
+            if (video.isPlaylist && video.playlistId && playlistCache[video.playlistId]?.items?.[0]?.thumbnail) {
+                return playlistCache[video.playlistId].items[0].thumbnail;
+            }
+            return null;
+        }
+
         function renderVideoCard(video, showCategory = false) {
-            const thumbnailHtml = video.thumbnail 
-                ? `<img src="${video.thumbnail}" alt="${video.title}" class="absolute top-0 left-0 w-full h-full object-cover" onerror="this.style.display='none'">`
+            const thumb = getPlaylistCardThumbnail(video);
+            const thumbnailHtml = thumb
+                ? `<img src="${thumb}" alt="${video.title}" class="absolute top-0 left-0 w-full h-full object-cover" onerror="this.style.display='none'">`
                 : `<div class="absolute inset-0 flex items-center justify-center text-text-muted">
                      ${video.isPlaylist ? '📋' : '🎬'}
                    </div>`;
@@ -392,7 +639,7 @@ export const prerender = true;
             const platformBg = video.platform === 'youtube' ? 'bg-red-500/10 text-red-500' : 'bg-black/10 text-text-primary';
             
             return `
-                <div class="bg-bg-tertiary rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg group" onclick="playVideo('${video.id}')">
+                <div class="bg-bg-tertiary rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg group" onclick="handleVideoCardClick('${video.id}')">
                     <div class="relative w-full pt-[56.25%] bg-bg-primary overflow-hidden">
                         ${thumbnailHtml}
                         <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -540,8 +787,14 @@ export const prerender = true;
 
                 const videoData = await createVideoObject(url, comments);
                 const category = appState.categories.find(cat => cat.id === categoryId);
-                
+
                 if (category) {
+                    if (videoData.isPlaylist && videoData.playlistId) {
+                        try {
+                            const items = await fetchPlaylistItems(videoData.playlistId);
+                            if (items.length) videoData.thumbnail = items[0].thumbnail;
+                        } catch (e) { /* dejar thumbnail null */ }
+                    }
                     category.videos.push(videoData);
                     saveToStorage();
                     render();
@@ -763,6 +1016,7 @@ export const prerender = true;
         window.deleteVideo = deleteVideo;
         window.editVideo = editVideo;
         window.playVideo = playVideo;
+        window.handleVideoCardClick = handleVideoCardClick;
 
         // Función para registrar event listeners
         function setupEventListeners() {
@@ -818,12 +1072,23 @@ export const prerender = true;
                     }
                 });
             }
+            if (elements.closePlaylistModal) {
+                elements.closePlaylistModal.addEventListener('click', closePlaylistModal);
+            }
+            if (elements.playlistModal) {
+                elements.playlistModal.addEventListener('click', (e) => {
+                    if (e.target === elements.playlistModal) closePlaylistModal();
+                });
+            }
 
             // Cerrar modales con Escape
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     if (elements.addVideoModal && !elements.addVideoModal.classList.contains('hidden')) {
                         hideAddVideoModal();
+                    }
+                    if (elements.playlistModal && !elements.playlistModal.classList.contains('hidden')) {
+                        closePlaylistModal();
                     }
                     if (elements.videoPlayer && !elements.videoPlayer.classList.contains('hidden')) {
                         closeVideoPlayer();
@@ -883,6 +1148,7 @@ export const prerender = true;
             elements.categoriesList = document.getElementById('categories-list');
 
             loadFromStorage();
+            loadPlaylistCache();
             document.body.setAttribute('data-theme', appState.currentTheme);
             if (elements.themeToggle) {
                 elements.themeToggle.textContent = appState.currentTheme === 'dark' ? '☀️' : '🌙';
