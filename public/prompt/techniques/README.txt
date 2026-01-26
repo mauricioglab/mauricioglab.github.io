@@ -1,0 +1,1 @@
+Solo se deben usar los archivos tecnicaN-*.js para las técnicas en la app. Los demás pueden eliminarse.

@@ -1,0 +1,130 @@
+/* Light theme variables */
+:root,
+[data-bs-theme="light"] {
+  --bs-body-bg: #ffffff;
+  --bs-body-color: #212529;
+  --bs-secondary-bg: #f8f9fa;
+  --bs-tertiary-bg: #e9ecef;
+  --bs-border-color: #dee2e6;
+  --bs-primary-bg-subtle: #cfe2ff;
+  --bs-primary-text-emphasis: #0a58ca;
+  --bs-secondary-color: #6c757d;
+  --bs-heading-color: #0b2545;
+  --bs-warning-bg-subtle: #fff3cd;
+  --bs-warning-text-emphasis: #664d03;
+  --bs-warning-border-subtle: #ffecb5;
+}
+
+[data-bs-theme="dark"] {
+  --bs-body-bg: #1e1e26;
+  --bs-body-color: #d1d1e0;
+  --bs-secondary-bg: #252533;
+  --bs-tertiary-bg: #2d2d3d;
+  --bs-border-color: #3e3e4f;
+  --bs-primary-bg-subtle: #2d325a;
+  --bs-primary-text-emphasis: #8fb1ff;
+  --bs-secondary-color: #9ea4b0;
+  --bs-heading-color: #ffffff;
+  --bs-warning-bg-subtle: #664d03;
+  --bs-warning-text-emphasis: #ffc107;
+  --bs-warning-border-subtle: #856404;
+}
+
+[data-bs-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #3e3e4f;
+}
+
+[data-bs-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: #4e4e5f;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+/* Sidebar item styling - border-left handled by Tailwind border-l-[3px] */
+
+.item-group.collapsed .item-group-content {
+  display: none;
+}
+
+.item-group.collapsed i.toggle-icon {
+  transform: rotate(-90deg);
+}
+
+/* All main content styling now handled by Tailwind classes */
+
+/* Teleprompter Marquee Animation */
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+
+@keyframes marqueeEffect {
+  0% {
+    transform: translateX(100%);
+    font-family: 'DotGothic16', sans-serif;
+    color: #ffd700;
+  }
+
+  20%,
+  80% {
+    transform: translateX(0);
+    font-family: 'DotGothic16', sans-serif;
+    color: #ffd700;
+  }
+
+  100% {
+    transform: translateX(-100%);
+    font-family: 'DotGothic16', sans-serif;
+    color: #ffd700;
+  }
+}
+
+.title-animate {
+  animation: marqueeEffect 5s linear;
+  /* White-space, display, width handled by Tailwind: whitespace-nowrap block w-full */
+}
+
+/* Teleprompter Animation for content */
+@keyframes teleprompterScroll {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.teleprompter-active {
+  animation: teleprompterScroll 0.8s ease-out forwards;
+}
+
+/* All component styling now handled by Tailwind classes */
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d0d0d0;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Responsive design handled by Tailwind classes */

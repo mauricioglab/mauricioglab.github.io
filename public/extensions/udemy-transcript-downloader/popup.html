@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Udemy Transcript Downloader</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 320px;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f7f9fa;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      background: #5624d0;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: 18px;
+      color: #1c1d1f;
+      margin-bottom: 8px;
+    }
+
+    .version {
+      font-size: 12px;
+      color: #6a6f73;
+    }
+
+    .content {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .info {
+      font-size: 14px;
+      color: #1c1d1f;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .steps {
+      list-style: none;
+      counter-reset: step-counter;
+    }
+
+    .steps li {
+      counter-increment: step-counter;
+      margin-bottom: 12px;
+      padding-left: 28px;
+      position: relative;
+      font-size: 13px;
+      color: #1c1d1f;
+      line-height: 1.5;
+    }
+
+    .steps li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 20px;
+      height: 20px;
+      background: #5624d0;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #6a6f73;
+    }
+
+    .status {
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .status.active {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+
+    .status.inactive {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="icon">📝</div>
+    <h1>Udemy Transcript Downloader</h1>
+  </div>
+
+  <div id="status" class="status"></div>
+
+  <div class="content">
+    <p class="info">
+      Descarga transcripciones de videos de Udemy.
+    </p>
+    
+    <ol class="steps">
+      <li>Abre un video de Udemy</li>
+      <li>Click en "Descargar Transcripción"</li>
+      <li>Listo</li>
+    </ol>
+  </div>
+
+  <div class="footer">
+    <p>Solo funciona en videos con transcripción</p>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
+

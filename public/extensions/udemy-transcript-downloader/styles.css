@@ -1,0 +1,44 @@
+.udemy-download-transcript-btn {
+  margin-left: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  cursor: pointer !important;
+}
+
+.udemy-download-transcript-btn:hover {
+  opacity: 0.9 !important;
+}
+
+.udemy-download-transcript-btn:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
+.udemy-transcript-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 16px 24px;
+  border-radius: 8px;
+  background: #1c1d1f;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 999999;
+  opacity: 0;
+  transform: translateX(400px);
+  transition: all 0.3s ease;
+}
+
+.udemy-transcript-notification.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.udemy-transcript-success { background: #198754; }
+.udemy-transcript-error { background: #dc3545; }
+.udemy-transcript-info { background: #0d6efd; }
+

@@ -1,14 +1,17 @@
 ---
 // Calculadora de costos para impresión 3D - Aplicación Astro
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+import logoImage from './logo.jpg';
 const title = "Creatopia Calc";
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title}</title>
+<BaseTailwind 
+    title={title}
+    description="Calculadora de costos para impresión 3D"
+    lang="es"
+>
+    <div class="container">
     <style>
         * {
             box-sizing: border-box;
@@ -293,19 +296,16 @@ const title = "Creatopia Calc";
             }
         }
     </style>
-</head>
-<body>
-    <div class="container">
         <!-- Header -->
         <div class="header">
-            <img src="assets/logo.jpg" alt="Creatopia Calc">
+            <img src={logoImage.src} alt="Creatopia Calc">
             <h1>{title}</h1>
             <p>Calculadora de costos para impresión 3D</p>
         </div>
 
         <!-- Formulario Principal -->
         <section>
-            <h2>� Datos de Impresión</h2>
+            <h2>Datos de Impresión</h2>
             <div class="calculator-grid">
                 <div class="form-group">
                     <label for="horasImpresion">Horas:</label>
@@ -443,7 +443,7 @@ const title = "Creatopia Calc";
 
     <script>
         // Valores de referencia para configuración rápida
-        window.REF = {
+     /*   window.REF = {
             precioKg: 20000,
             precioKwh: 234,
             consumoW: 120,
@@ -673,7 +673,7 @@ const title = "Creatopia Calc";
                         <div>📊 Suma de Costos: $${Math.round(costoTotal).toLocaleString('es-AR')}</div>
                         <div>💰 Ganancia: $${Math.round(gananciaMLCompetencia).toLocaleString('es-AR')}</div>
                         <div style="font-size: 1.5rem; margin-top: 15px;">
-                            💵 Precio Final: $${formatoPrecioFinal(precioMLCompetenciaRedondeado)}
+                            💵 Precio Final: $${window.formatoPrecioFinal(precioMLCompetenciaRedondeado)}
                         </div>
                     </div>
                 </div>
@@ -684,7 +684,7 @@ const title = "Creatopia Calc";
                         <div>📊 Suma de Costos: $${Math.round(costoTotal).toLocaleString('es-AR')}</div>
                         <div>💰 Ganancia: $${Math.round(gananciaMLSinCompetencia).toLocaleString('es-AR')}</div>
                         <div style="font-size: 1.5rem; margin-top: 15px;">
-                            💵 Precio Final: $${formatoPrecioFinal(precioMLSinCompetenciaRedondeado)}
+                            💵 Precio Final: $${window.formatoPrecioFinal(precioMLSinCompetenciaRedondeado)}
                         </div>
                     </div>
                 </div>
@@ -693,7 +693,7 @@ const title = "Creatopia Calc";
                 
                 <!-- Desglose de costos -->
                 <div class="collapsible">
-                    <div class="collapsible-header" onclick="window.toggleCollapsible('detalle-costos')">
+                    <div class="collapsible-header" onclick="window.toggleCollapsible('detalle-costos', this)">
                         <span>📊 Ver Desglose de Costos</span>
                         <span>▼</span>
                     </div>
@@ -709,7 +709,7 @@ const title = "Creatopia Calc";
                 
                 <!-- Margen de error -->
                 <div class="collapsible">
-                    <div class="collapsible-header" onclick="window.toggleCollapsible('detalle-margen')">
+                    <div class="collapsible-header" onclick="window.toggleCollapsible('detalle-margen', this)">
                         <span>⚠️ Ver Margen de Error</span>
                         <span>▼</span>
                     </div>
@@ -775,7 +775,7 @@ const title = "Creatopia Calc";
         };
 
         // Función para mostrar pestañas
-        window.showTab = function(tabId) {
+        window.showTab = function(tabId, eventElement) {
             // Ocultar todas las pestañas
             const tabs = document.querySelectorAll('.tab-content');
             const buttons = document.querySelectorAll('.tab-button');
@@ -790,21 +790,24 @@ const title = "Creatopia Calc";
             
             // Mostrar pestaña seleccionada
             document.getElementById(tabId).classList.add('active');
-            event.target.classList.add('active');
+            if (eventElement) {
+                eventElement.classList.add('active');
+            }
         };
 
         // Función para toggle de collapsibles
-        window.toggleCollapsible = function(id) {
+        window.toggleCollapsible = function(id, eventElement) {
             const content = document.getElementById(id);
-            const header = event.target.closest('.collapsible-header');
+            const header = eventElement ? eventElement.closest('.collapsible-header') : document.querySelector('.collapsible-header');
+            if (!header) return;
             const icon = header.querySelector('span:last-child');
             
             if (content.classList.contains('show')) {
                 content.classList.remove('show');
-                icon.textContent = '▼';
+                if (icon) icon.textContent = '▼';
             } else {
                 content.classList.add('show');
-                icon.textContent = '▲';
+                if (icon) icon.textContent = '▲';
             }
         };
 
@@ -915,7 +918,7 @@ const title = "Creatopia Calc";
                     <div style="border: 1px solid #e5e7eb; border-radius: 4px; padding: 15px; margin: 10px 0;">
                         <strong>${item.nombre || 'Cálculo sin nombre'}</strong><br>
                         <small>${new Date(item.fecha).toLocaleString('es-AR')}</small><br>
-                        <small>${item.entrada?.pieza?.gramosFilamento || 0}g - ${item.entrada?.pieza?.horasImpresion || 0}:${(item.entrada?.pieza?.minutosImpresion || 0).toString().padStart(2,'0')}</small>
+                        <small>${item.datos?.entrada?.pieza?.gramosFilamento || 0}g - ${item.datos?.entrada?.pieza?.horasImpresion || 0}:${(item.datos?.entrada?.pieza?.minutosImpresion || 0).toString().padStart(2,'0')}</small>
                         <div style="margin-top: 10px;">
                             <button onclick="window.cargarDesdeHistorial('${item.id}')" class="btn-secondary" style="margin-right: 10px;">Cargar</button>
                             <button onclick="window.eliminarDelHistorial('${item.id}')" class="btn-outline">Eliminar</button>
@@ -945,14 +948,70 @@ const title = "Creatopia Calc";
             }
         };
 
-        // Funciones placeholder para compatibilidad
+        // Funciones de historial completas
         window.cargarDesdeHistorial = function(id) {
-            alert('Función en desarrollo');
+            const historial = JSON.parse(localStorage.getItem('historial3D') || '[]');
+            const item = historial.find(h => h.id === id);
+            
+            if (!item) {
+                alert('No se encontró el cálculo en el historial');
+                return;
+            }
+            
+            const entrada = item.datos.entrada;
+            
+            // Cargar costos fijos
+            if (entrada.costosFijos) {
+                document.getElementById('costoFilamento').value = entrada.costosFijos.precioKg || '';
+                document.getElementById('precioKwh').value = entrada.costosFijos.precioKwh || '';
+                document.getElementById('consumoW').value = entrada.costosFijos.consumoW || '';
+                document.getElementById('desgasteHoras').value = entrada.costosFijos.desgasteHoras || '';
+                document.getElementById('valorImpresora').value = entrada.costosFijos.valorImpresora || '';
+                document.getElementById('margenError').value = entrada.costosFijos.margenError || '';
+                document.getElementById('comisionML').value = entrada.costosFijos.comisionML || '';
+            }
+            
+            // Cargar datos de pieza
+            if (entrada.pieza) {
+                document.getElementById('horasImpresion').value = entrada.pieza.horasImpresion || '';
+                document.getElementById('minutosImpresion').value = entrada.pieza.minutosImpresion || '';
+                document.getElementById('gramosFilamento').value = entrada.pieza.gramosFilamento || '';
+            }
+            
+            // Cargar datos de producción
+            if (entrada.produccion) {
+                document.getElementById('cantidad').value = entrada.produccion.cantidad || 1;
+            }
+            
+            // Cargar extras
+            if (entrada.extras) {
+                document.getElementById('insumos').value = entrada.extras.insumos || 0;
+                document.getElementById('precioCadena').value = entrada.extras.precioCadena || 0;
+                document.getElementById('cantidadCadenas').value = entrada.extras.cantidadCadenas || 0;
+            }
+            
+            // Cargar descuento si existe
+            if (entrada.descuentoVentaPersona !== undefined) {
+                document.getElementById('descuentoVentaPersona').value = entrada.descuentoVentaPersona || 5;
+            }
+            
+            window.guardarDatos();
+            alert('Datos cargados del historial');
+            if (!document.getElementById('historial').classList.contains('hidden')) {
+                window.toggleHistorial();
+            }
+            window.calcular();
         };
 
         window.eliminarDelHistorial = function(id) {
-            alert('Función en desarrollo');
-        };
+            if (!confirm('¿Eliminar este cálculo del historial?')) return;
+            
+            let historial = JSON.parse(localStorage.getItem('historial3D') || '[]');
+            historial = historial.filter(h => h.id !== id);
+            localStorage.setItem('historial3D', JSON.stringify(historial));
+            window.mostrarHistorial();
+        };*/
     </script>
-</body>
-</html>
+    <script is:inline src="/calculadora/script.js"></script>
+    </div>
+</BaseTailwind>

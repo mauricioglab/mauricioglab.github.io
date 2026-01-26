@@ -1,60 +1,64 @@
 ---
+import BaseTailwind from '../layouts/BaseTailwind.astro';
+
 const base = import.meta.env.BASE_URL;
 const b = base.endsWith("/") ? base : `${base}/`;
-
 const glob = import.meta.glob("./**/*.astro");
 const keys = Object.keys(glob).filter((k) => k !== "./index.astro");
 
 function pathToRoute(key: string): { segment: string; name: string; url: string } {
-	const raw = key.replace(/^\.\//, "").replace(/\.astro$/, "");
-	const segment = raw.endsWith("/index") ? raw.slice(0, -6) : raw;
-	const name = segment.charAt(0).toUpperCase() + segment.slice(1);
-	const url = `${b}${segment}/`;
-	return { segment, name, url };
+    const raw = key.replace(/^\.\//, "").replace(/\.astro$/, "");
+    const segment = raw.endsWith("/index") ? raw.slice(0, -6) : raw;
+    const url = `${b}${segment}/`;
+    const name = segment.charAt(0).toUpperCase() + segment.slice(1);
+    return { segment, name, url };
 }
 
 const pages = keys.map(pathToRoute).sort((a, b) => a.segment.localeCompare(b.segment));
 ---
 
-<!DOCTYPE html>
-<html lang="es">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>MG Lab</title>
-		<link rel="icon" type="image/svg+xml" href={`${b}favicon.svg`} />
-		<link rel="icon" href={`${b}favicon.ico`} />
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-		/>
-	</head>
-	<body>
-		<main class="container">
-			<h1>MG Lab</h1>
-			<p>Páginas del sitio.</p>
-			<figure>
-				<table>
-					<thead>
-						<tr>
-							<th>Página</th>
-							<th>Link</th>
-						</tr>
-					</thead>
-					<tbody>
-						{
-							pages.map((p) => (
-								<tr>
-									<td>{p.name}</td>
-									<td>
-										<a href={p.url}>Ir →</a>
-									</td>
-								</tr>
-							))
-						}
-					</tbody>
-				</table>
-			</figure>
-		</main>
-	</body>
-</html>
+<BaseTailwind title="MG Lab" description="Herramientas">
+	<main class="h-[calc(100vh-112px)] flex bg-white overflow-hidden">        
+        <div class="w-1/2 flex items-center justify-center relative">
+            <div class="w-full max-w-md px-8">
+                <table class="w-full">
+                    <tbody class="space-y-2">
+                        {pages.map((p) => (
+                            <tr class="border-b border-stone-200 hover:bg-stone-50 transition-colors duration-300">
+                                <td class="py-4 px-6 text-stone-700 font-light">
+                                    {p.name}
+                                </td>
+                                <td class="py-4 px-6 ">
+                                    <a 
+                                        href={p.url}
+                                        class="text-stone-500 hover:text-stone-900 transition-colors duration-300 text-sm"
+                                    >
+                                        Ir →
+                                    </a>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="w-px bg-stone-200"></div>
+        <div class="w-1/2 flex items-center justify-center relative">
+            <div class="text-center space-y-6">
+                <div class="text-8xl opacity-30">
+                    
+                </div>
+                <p class="text-stone-500 text-lg font-light tracking-wide italic">
+                    "Hola..."
+                </p>
+            </div>
+        </div>
+        
+    </main>
+</BaseTailwind>
+
+<style>
+    tbody tr:not(:last-child) {
+        margin-bottom: 0.5rem;
+    }
+</style>

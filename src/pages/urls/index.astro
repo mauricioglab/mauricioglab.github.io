@@ -1,4 +1,6 @@
 ---
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+
 const base = import.meta.env.BASE_URL;
 const b = base.endsWith("/") ? base : `${base}/`;
 
@@ -8,36 +10,22 @@ const urls = [
 ];
 ---
 
-<!DOCTYPE html>
-<html lang="es">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>URLs útiles — MG Lab</title>
-		<link rel="icon" type="image/svg+xml" href={`${b}favicon.svg`} />
-		<link rel="icon" href={`${b}favicon.ico`} />
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-		/>
-	</head>
-	<body>
-		<main class="container">
-			<h1>URLs útiles</h1>
-			<ul>
-				{
-					urls.map((item) => (
-						<li>
-							<a href={item.url} target="_blank" rel="noopener noreferrer">
-								{item.name}
-							</a>
-						</li>
-					))
-				}
-			</ul>
-			<p>
-				<small><a href={b}>← Inicio</a></small>
-			</p>
-		</main>
-	</body>
-</html>
+<BaseTailwind title="URLs útiles — MG Lab" description="URLs útiles">
+	<div class="max-w-4xl mx-auto px-4 py-8">
+		<h1 class="text-3xl font-bold mb-6">URLs útiles</h1>
+		<ul class="space-y-2 mb-6">
+			{
+				urls.map((item) => (
+					<li>
+						<a href={item.url} target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 hover:underline">
+							{item.name}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+		<p>
+			<small><a href={b} class="text-gray-600 hover:text-gray-800">← Inicio</a></small>
+		</p>
+	</div>
+</BaseTailwind>

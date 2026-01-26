@@ -1,0 +1,1 @@
+Solo se deben usar los archivos estrategiaN-*.js para las estrategias en la app. Los demás pueden eliminarse.
