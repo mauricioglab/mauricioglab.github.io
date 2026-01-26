@@ -8,7 +8,7 @@ export const prerender = true;
     title="🎬 Video Organizer"
     description="Organizador de videos de YouTube y Udemy"
 >
-    <div class="min-h-screen flex flex-col" data-theme="dark">
+    <div id="video-organizer-root" class="min-h-screen flex flex-col" data-theme="dark">
     <!-- Header -->
     <header class="bg-bg-secondary border-b border-border-primary px-4 md:px-6 py-3 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-0 transition-all duration-300">
         <div class="flex items-center gap-3 md:gap-4">
@@ -20,6 +20,11 @@ export const prerender = true;
             </div>
         </div>
         <div class="flex items-center gap-2 md:gap-3 flex-wrap">
+            <div id="selection-actions" class="hidden flex items-center gap-2">
+                <span id="selection-count" class="text-sm text-text-muted"></span>
+                <button id="delete-selected-btn" class="px-3 py-2 rounded-lg text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-red-600 text-white hover:bg-red-700">Eliminar seleccionados</button>
+                <button id="clear-selection-btn" class="px-3 py-2 rounded-lg text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-bg-tertiary text-text-primary border border-border-primary hover:bg-border-primary">Cancelar</button>
+            </div>
             <div class="relative">
                 <input type="text" id="search-input" class="px-3 py-2 border border-border-primary rounded-lg bg-bg-tertiary text-text-primary text-sm w-[150px] md:w-[200px] transition-all duration-200 focus:outline-none focus:border-accent" placeholder="Buscar videos...">
             </div>
@@ -56,9 +61,9 @@ export const prerender = true;
                 <!-- Columnas de categorías se cargan dinámicamente -->
             </div>
 
-            <!-- List View -->
-            <div id="list-view" class="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4 hidden">
-                <!-- Videos en lista se cargan dinámicamente -->
+            <!-- List View (categorías desplegables) -->
+            <div id="list-view" class="flex flex-col gap-4 hidden">
+                <!-- Secciones por categoría se cargan dinámicamente -->
             </div>
 
             <!-- Empty State -->
@@ -164,7 +169,9 @@ export const prerender = true;
             currentView: 'board',
             selectedVideo: null,
             currentTheme: 'dark',
-            searchQuery: ''
+            searchQuery: '',
+            expandedCategories: {},
+            selectedVideoIds: []
         };
 
         // Cache de listas: { [playlistId]: { items: { videoId, title, thumbnail }[], fetchedAt } }
@@ -208,7 +215,11 @@ export const prerender = true;
             playlistModalError: document.getElementById('playlist-modal-error'),
             playlistModalErrorMsg: document.getElementById('playlist-modal-error-msg'),
             playlistModalOpenYt: document.getElementById('playlist-modal-open-yt'),
-            playlistModalList: document.getElementById('playlist-modal-list')
+            playlistModalList: document.getElementById('playlist-modal-list'),
+            selectionActions: document.getElementById('selection-actions'),
+            selectionCount: document.getElementById('selection-count'),
+            deleteSelectedBtn: document.getElementById('delete-selected-btn'),
+            clearSelectionBtn: document.getElementById('clear-selection-btn')
         };
 
         // Utilidades
@@ -218,7 +229,8 @@ export const prerender = true;
 
         function saveToStorage() {
             try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+                const toSave = { ...appState, selectedVideoIds: [] };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
             } catch (error) {
                 console.error('Error saving to storage:', error);
             }
@@ -230,6 +242,10 @@ export const prerender = true;
                 if (stored) {
                     const data = JSON.parse(stored);
                     appState = { ...appState, ...data };
+                    appState.selectedVideoIds = [];
+                    if (!appState.expandedCategories || typeof appState.expandedCategories !== 'object') {
+                        appState.expandedCategories = {};
+                    }
                 }
             } catch (error) {
                 console.error('Error loading from storage:', error);
@@ -539,17 +555,21 @@ export const prerender = true;
                 elements.listView.classList.remove('hidden');
             }
 
-            appState.categories.forEach(category => {
+            appState.categories.forEach((category, idx) => {
                 const li = document.createElement('li');
-                li.className = 'p-3 bg-bg-tertiary rounded-lg flex justify-between items-center cursor-pointer transition-all duration-200 hover:bg-border-primary';
+                li.className = 'p-3 bg-bg-tertiary rounded-lg flex justify-between items-center gap-2 transition-all duration-200 hover:bg-border-primary border border-transparent border-dashed category-draggable';
+                li.draggable = true;
+                li.dataset.categoryId = category.id;
+                li.dataset.categoryIndex = String(idx);
                 li.innerHTML = `
-                    <div>
+                    <span class="cursor-grab active:cursor-grabbing text-text-muted shrink-0" title="Arrastrar para reordenar">⋮⋮</span>
+                    <div class="flex-1 min-w-0">
                         <div class="font-medium text-text-primary mb-1">${category.name}</div>
                         <div class="text-xs text-text-muted">${category.videos.length} videos</div>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="editCategory('${category.id}')" class="bg-transparent border-none cursor-pointer text-base p-1 opacity-60 transition-opacity duration-200 hover:opacity-100" title="Editar">✏️</button>
-                        <button onclick="deleteCategory('${category.id}')" class="bg-transparent border-none cursor-pointer text-base p-1 opacity-60 transition-opacity duration-200 hover:opacity-100" title="Eliminar">🗑️</button>
+                    <div class="flex gap-2 shrink-0">
+                        <button onclick="event.stopPropagation(); editCategory('${category.id}')" class="bg-transparent border-none cursor-pointer text-base p-1 opacity-60 transition-opacity duration-200 hover:opacity-100" title="Editar">✏️</button>
+                        <button onclick="event.stopPropagation(); deleteCategory('${category.id}')" class="bg-transparent border-none cursor-pointer text-base p-1 opacity-60 transition-opacity duration-200 hover:opacity-100" title="Eliminar">🗑️</button>
                     </div>
                 `;
                 container.appendChild(li);
@@ -571,6 +591,68 @@ export const prerender = true;
             });
         }
 
+        function isCategoryExpanded(categoryId) {
+            if (appState.expandedCategories.hasOwnProperty(categoryId)) {
+                return !!appState.expandedCategories[categoryId];
+            }
+            return true;
+        }
+
+        function toggleCategoryExpanded(categoryId) {
+            appState.expandedCategories[categoryId] = !isCategoryExpanded(categoryId);
+            saveToStorage();
+            render();
+        }
+
+        function toggleVideoSelection(videoId, e) {
+            if (e) e.stopPropagation();
+            const idx = appState.selectedVideoIds.indexOf(videoId);
+            if (idx >= 0) {
+                appState.selectedVideoIds.splice(idx, 1);
+            } else {
+                appState.selectedVideoIds.push(videoId);
+            }
+            updateSelectionUI();
+            render();
+        }
+
+        function isVideoSelected(videoId) {
+            return appState.selectedVideoIds.includes(videoId);
+        }
+
+        function clearSelection() {
+            appState.selectedVideoIds = [];
+            updateSelectionUI();
+            render();
+        }
+
+        function deleteSelectedVideos() {
+            if (!appState.selectedVideoIds.length) return;
+            if (!confirm(`¿Eliminar ${appState.selectedVideoIds.length} video(s) seleccionado(s)?`)) return;
+            appState.categories.forEach(cat => {
+                cat.videos = cat.videos.filter(v => !appState.selectedVideoIds.includes(v.id));
+            });
+            appState.selectedVideoIds = [];
+            saveToStorage();
+            updateSelectionUI();
+            render();
+        }
+
+        function updateSelectionUI() {
+            const n = appState.selectedVideoIds.length;
+            const bar = elements.selectionActions;
+            const count = elements.selectionCount;
+            const delBtn = elements.deleteSelectedBtn;
+            if (!bar || !count || !delBtn) return;
+            if (n > 0) {
+                bar.classList.remove('hidden');
+                count.textContent = n + ' seleccionado' + (n !== 1 ? 's' : '');
+                delBtn.textContent = 'Eliminar seleccionados';
+            } else {
+                bar.classList.add('hidden');
+            }
+        }
+
         function renderBoardView() {
             const container = elements.boardView;
             container.innerHTML = '';
@@ -579,14 +661,16 @@ export const prerender = true;
 
             filteredCategories.forEach(category => {
                 const column = document.createElement('div');
-                column.className = 'bg-bg-secondary rounded-lg p-4 min-w-[280px]';
+                column.className = 'bg-bg-secondary rounded-lg p-4 min-w-[280px] flex flex-col board-column';
+                column.dataset.categoryId = category.id;
+                column.dataset.dropCategory = category.id;
                 column.innerHTML = `
-                    <div class="flex justify-between items-center mb-4">
+                    <div class="flex justify-between items-center mb-4 shrink-0">
                         <h3 class="text-base font-semibold text-text-primary">${category.name}</h3>
-                        <button onclick="addVideoToCategory('${category.id}')" class="px-2 py-1 rounded-lg text-xs font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover">+</button>
+                        <button type="button" onclick="addVideoToCategory('${category.id}')" class="px-2 py-1 rounded-lg text-xs font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover">+</button>
                     </div>
-                    <div class="flex flex-col gap-3" id="videos-${category.id}">
-                        ${category.videos.map(video => renderVideoCard(video)).join('')}
+                    <div class="flex flex-col gap-3 board-videos board-videos-scroll min-h-0 overflow-y-auto max-h-[calc(2*320px+0.75rem)] pr-4" id="videos-${category.id}" data-drop-category="${category.id}">
+                        ${category.videos.map((video, i) => renderVideoCard(video, false, category.id, i)).join('')}
                     </div>
                 `;
                 container.appendChild(column);
@@ -597,16 +681,30 @@ export const prerender = true;
             const container = elements.listView;
             container.innerHTML = '';
 
-            const allVideos = appState.categories.flatMap(cat => 
-                cat.videos.map(video => ({ ...video, categoryName: cat.name }))
-            );
+            const filteredCategories = getFilteredCategories();
 
-            const filteredVideos = getFilteredVideos(allVideos);
-
-            filteredVideos.forEach(video => {
-                const card = document.createElement('div');
-                card.innerHTML = renderVideoCard(video, true);
-                container.appendChild(card.firstElementChild);
+            filteredCategories.forEach(category => {
+                const expanded = isCategoryExpanded(category.id);
+                const section = document.createElement('div');
+                section.className = 'list-category-section border border-border-primary rounded-lg overflow-hidden bg-bg-secondary';
+                section.dataset.categoryId = category.id;
+                section.dataset.dropCategory = category.id;
+                section.dataset.categoryIndex = String(appState.categories.findIndex(c => c.id === category.id));
+                const chevron = expanded ? '▼' : '▶';
+                section.innerHTML = `
+                    <div class="list-category-header flex items-center justify-between gap-3 px-4 py-3 bg-bg-tertiary cursor-pointer hover:bg-border-primary transition-colors border-b border-border-primary" onclick="toggleCategoryExpanded('${category.id}')">
+                        <div class="flex items-center gap-2">
+                            <span class="text-text-muted text-sm">${chevron}</span>
+                            <h3 class="text-base font-semibold text-text-primary">${category.name}</h3>
+                            <span class="text-xs text-text-muted">(${category.videos.length})</span>
+                        </div>
+                        <button onclick="event.stopPropagation(); addVideoToCategory('${category.id}')" class="px-2 py-1 rounded-lg text-xs font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover">+</button>
+                    </div>
+                    <div class="list-category-videos p-4 ${expanded ? '' : 'hidden'} grid grid-cols-1 md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3" data-drop-category="${category.id}">
+                        ${category.videos.map((video, i) => renderVideoCard({ ...video, categoryName: category.name }, true, category.id, i)).join('')}
+                    </div>
+                `;
+                container.appendChild(section);
             });
         }
 
@@ -628,7 +726,7 @@ export const prerender = true;
             return null;
         }
 
-        function renderVideoCard(video, showCategory = false) {
+        function renderVideoCard(video, showCategory = false, categoryId = '', videoIndex = -1) {
             const thumb = getPlaylistCardThumbnail(video);
             const thumbnailHtml = thumb
                 ? `<img src="${thumb}" alt="${video.title}" class="absolute top-0 left-0 w-full h-full object-cover" onerror="this.style.display='none'">`
@@ -637,29 +735,39 @@ export const prerender = true;
                    </div>`;
 
             const platformBg = video.platform === 'youtube' ? 'bg-red-500/10 text-red-500' : 'bg-black/10 text-text-primary';
-            
+            const checked = isVideoSelected(video.id) ? ' checked' : '';
+            const dataAttrs = categoryId ? ` data-video-id="${video.id}" data-category-id="${categoryId}" data-video-index="${videoIndex}"` : '';
+            const dragHandle = categoryId ? '<span class="video-drag-handle cursor-grab active:cursor-grabbing text-text-muted opacity-60 hover:opacity-100 shrink-0 self-center" title="Arrastrar">⋮⋮</span>' : '';
+
             return `
-                <div class="bg-bg-tertiary rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg group" onclick="handleVideoCardClick('${video.id}')">
+                <div class="video-card shrink-0 bg-bg-tertiary rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg group border-2 border-transparent ${isVideoSelected(video.id) ? 'ring-2 ring-accent' : ''}"
+                    onclick="handleVideoCardClick('${video.id}')" draggable="true"${dataAttrs}>
                     <div class="relative w-full pt-[56.25%] bg-bg-primary overflow-hidden">
                         ${thumbnailHtml}
+                        <div class="absolute top-2 left-2 z-10" onclick="event.stopPropagation(); toggleVideoSelection('${video.id}', event)">
+                            <input type="checkbox" class="video-checkbox w-4 h-4 rounded cursor-pointer" ${checked} onclick="event.stopPropagation(); toggleVideoSelection('${video.id}', event)">
+                        </div>
                         <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                            <button class="bg-accent text-white border-none px-4 py-2 rounded-md font-medium cursor-pointer">▶ Reproducir</button>
+                            <button type="button" class="bg-accent text-white border-none px-4 py-2 rounded-md font-medium cursor-pointer">▶ Reproducir</button>
                         </div>
                     </div>
-                    <div class="p-3">
-                        <h4 class="text-sm font-medium text-text-primary mb-2 line-clamp-2">${video.title}</h4>
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs px-2 py-1 rounded font-medium ${platformBg}">
-                                ${video.platform === 'youtube' ? 'YouTube' : 'Udemy'}
-                                ${video.isPlaylist ? ' Playlist' : ''}
-                            </span>
-                            <div class="flex gap-2">
-                                <button onclick="event.stopPropagation(); editVideo('${video.id}')" class="bg-transparent border-none cursor-pointer text-sm opacity-60 transition-opacity duration-200 hover:opacity-100" title="Editar">✏️</button>
-                                <button onclick="event.stopPropagation(); deleteVideo('${video.id}')" class="bg-transparent border-none cursor-pointer text-sm opacity-60 transition-opacity duration-200 hover:opacity-100" title="Eliminar">🗑️</button>
+                    <div class="p-3 flex gap-2 items-start">
+                        ${dragHandle}
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-sm font-medium text-text-primary mb-2 line-clamp-2">${video.title}</h4>
+                            <div class="flex justify-between items-center flex-wrap gap-1">
+                                <span class="text-xs px-2 py-1 rounded font-medium ${platformBg}">
+                                    ${video.platform === 'youtube' ? 'YouTube' : 'Udemy'}
+                                    ${video.isPlaylist ? ' Playlist' : ''}
+                                </span>
+                                <div class="flex gap-2">
+                                    <button type="button" onclick="event.stopPropagation(); editVideo('${video.id}')" class="bg-transparent border-none cursor-pointer text-sm opacity-60 transition-opacity duration-200 hover:opacity-100" title="Editar">✏️</button>
+                                    <button type="button" onclick="event.stopPropagation(); deleteVideo('${video.id}')" class="bg-transparent border-none cursor-pointer text-sm opacity-60 transition-opacity duration-200 hover:opacity-100" title="Eliminar">🗑️</button>
+                                </div>
                             </div>
+                            ${showCategory ? `<div class="text-xs text-text-muted mt-1">${video.categoryName}</div>` : ''}
+                            ${video.comments ? `<div class="text-xs text-text-muted mt-2 italic">${video.comments}</div>` : ''}
                         </div>
-                        ${showCategory ? `<div class="text-xs text-text-muted mt-1">${video.categoryName}</div>` : ''}
-                        ${video.comments ? `<div class="text-xs text-text-muted mt-2 italic">${video.comments}</div>` : ''}
                     </div>
                 </div>
             `;
@@ -823,6 +931,7 @@ export const prerender = true;
             appState.categories.forEach(category => {
                 category.videos = category.videos.filter(video => video.id !== videoId);
             });
+            appState.selectedVideoIds = appState.selectedVideoIds.filter(id => id !== videoId);
 
             saveToStorage();
             render();
@@ -913,13 +1022,22 @@ export const prerender = true;
             appState.selectedVideo = null;
         }
 
-        function toggleTheme() {
-            appState.currentTheme = appState.currentTheme === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-theme', appState.currentTheme);
+        function getThemeRoot() {
+            return document.getElementById('video-organizer-root');
+        }
+
+        function applyTheme() {
+            const root = getThemeRoot();
+            if (root) root.setAttribute('data-theme', appState.currentTheme);
             if (elements.themeToggle) {
                 elements.themeToggle.textContent = appState.currentTheme === 'dark' ? '☀️' : '🌙';
                 elements.themeToggle.title = appState.currentTheme === 'dark' ? 'Modo claro' : 'Modo oscuro';
             }
+        }
+
+        function toggleTheme() {
+            appState.currentTheme = appState.currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme();
             saveToStorage();
         }
 
@@ -1007,6 +1125,119 @@ export const prerender = true;
             } else {
                 renderListView();
             }
+            updateSelectionUI();
+        }
+
+        function setupDragDrop() {
+            let draggedCategoryId = null;
+            let draggedVideoId = null;
+            let draggedFromCategoryId = null;
+
+            document.addEventListener('dragstart', (e) => {
+                const li = e.target.closest('.category-draggable');
+                if (li) {
+                    draggedCategoryId = li.dataset.categoryId;
+                    e.dataTransfer.setData('text/plain', 'category:' + draggedCategoryId);
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('application/json', JSON.stringify({ type: 'category', id: draggedCategoryId }));
+                    return;
+                }
+                const card = e.target.closest('.video-card');
+                if (card && card.dataset.videoId) {
+                    if (e.target.closest('button, input, .video-checkbox')) return;
+                    draggedVideoId = card.dataset.videoId;
+                    draggedFromCategoryId = card.dataset.categoryId;
+                    e.dataTransfer.setData('text/plain', 'video:' + draggedVideoId);
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('application/json', JSON.stringify({ type: 'video', videoId: draggedVideoId, categoryId: draggedFromCategoryId }));
+                }
+            });
+
+            document.addEventListener('dragover', (e) => {
+                if (e.target.closest('.category-draggable') && draggedCategoryId) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                }
+                if ((e.target.closest('.video-card') || e.target.closest('[data-drop-category]')) && draggedVideoId) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                }
+            });
+
+            document.addEventListener('drop', (e) => {
+                const catLi = e.target.closest('.category-draggable');
+                if (catLi && draggedCategoryId) {
+                    e.preventDefault();
+                    const targetId = catLi.dataset.categoryId;
+                    if (targetId === draggedCategoryId) {
+                        draggedCategoryId = null;
+                        return;
+                    }
+                    const fromIdx = appState.categories.findIndex(c => c.id === draggedCategoryId);
+                    const toIdx = appState.categories.findIndex(c => c.id === targetId);
+                    if (fromIdx < 0 || toIdx < 0) { draggedCategoryId = null; return; }
+                    const [removed] = appState.categories.splice(fromIdx, 1);
+                    appState.categories.splice(toIdx, 0, removed);
+                    saveToStorage();
+                    render();
+                    draggedCategoryId = null;
+                    return;
+                }
+
+                const videoCard = e.target.closest('.video-card');
+                const dropZone = e.target.closest('[data-drop-category]');
+                if ((videoCard || dropZone) && draggedVideoId) {
+                    e.preventDefault();
+                    if (videoCard && videoCard.dataset.videoId === draggedVideoId) {
+                        draggedVideoId = null;
+                        draggedFromCategoryId = null;
+                        return;
+                    }
+                    let targetCategoryId, insertIndex;
+                    if (videoCard && videoCard.dataset.categoryId) {
+                        targetCategoryId = videoCard.dataset.categoryId;
+                        insertIndex = parseInt(videoCard.dataset.videoIndex, 10);
+                        if (isNaN(insertIndex)) insertIndex = 0;
+                    } else if (dropZone) {
+                        targetCategoryId = dropZone.dataset.dropCategory;
+                        insertIndex = -1;
+                    }
+                    if (!targetCategoryId) { draggedVideoId = null; draggedFromCategoryId = null; return; }
+
+                    let video = null;
+                    let fromCat = null;
+                    for (const c of appState.categories) {
+                        const v = c.videos.find(x => x.id === draggedVideoId);
+                        if (v) { video = v; fromCat = c; break; }
+                    }
+                    if (!video || !fromCat) { draggedVideoId = null; draggedFromCategoryId = null; return; }
+
+                    if (fromCat.id === targetCategoryId && insertIndex >= 0) {
+                        const fromIdx = fromCat.videos.findIndex(x => x.id === draggedVideoId);
+                        if (fromIdx < 0) { draggedVideoId = null; return; }
+                        fromCat.videos.splice(fromIdx, 1);
+                        let insertAt = insertIndex;
+                        if (fromIdx < insertIndex) insertAt--;
+                        fromCat.videos.splice(Math.max(0, insertAt), 0, video);
+                    } else {
+                        fromCat.videos = fromCat.videos.filter(x => x.id !== draggedVideoId);
+                        const toCat = appState.categories.find(c => c.id === targetCategoryId);
+                        if (!toCat) { draggedVideoId = null; return; }
+                        if (insertIndex < 0) toCat.videos.push(video);
+                        else toCat.videos.splice(Math.min(insertIndex, toCat.videos.length), 0, video);
+                    }
+                    saveToStorage();
+                    render();
+                    draggedVideoId = null;
+                    draggedFromCategoryId = null;
+                }
+            });
+
+            document.addEventListener('dragend', () => {
+                draggedCategoryId = null;
+                draggedVideoId = null;
+                draggedFromCategoryId = null;
+            });
         }
 
         // Funciones globales para eventos onclick
@@ -1017,6 +1248,8 @@ export const prerender = true;
         window.editVideo = editVideo;
         window.playVideo = playVideo;
         window.handleVideoCardClick = handleVideoCardClick;
+        window.toggleCategoryExpanded = toggleCategoryExpanded;
+        window.toggleVideoSelection = toggleVideoSelection;
 
         // Función para registrar event listeners
         function setupEventListeners() {
@@ -1061,6 +1294,12 @@ export const prerender = true;
             }
             if (elements.importBtn) {
                 elements.importBtn.addEventListener('click', importData);
+            }
+            if (elements.deleteSelectedBtn) {
+                elements.deleteSelectedBtn.addEventListener('click', deleteSelectedVideos);
+            }
+            if (elements.clearSelectionBtn) {
+                elements.clearSelectionBtn.addEventListener('click', clearSelection);
             }
             if (elements.closePlayer) {
                 elements.closePlayer.addEventListener('click', closeVideoPlayer);
@@ -1146,14 +1385,14 @@ export const prerender = true;
             elements.listView = document.getElementById('list-view');
             elements.emptyState = document.getElementById('empty-state');
             elements.categoriesList = document.getElementById('categories-list');
+            elements.selectionActions = document.getElementById('selection-actions');
+            elements.selectionCount = document.getElementById('selection-count');
+            elements.deleteSelectedBtn = document.getElementById('delete-selected-btn');
+            elements.clearSelectionBtn = document.getElementById('clear-selection-btn');
 
             loadFromStorage();
             loadPlaylistCache();
-            document.body.setAttribute('data-theme', appState.currentTheme);
-            if (elements.themeToggle) {
-                elements.themeToggle.textContent = appState.currentTheme === 'dark' ? '☀️' : '🌙';
-                elements.themeToggle.title = appState.currentTheme === 'dark' ? 'Modo claro' : 'Modo oscuro';
-            }
+            applyTheme();
             // Inicializar clases de botones de vista
             if (appState.currentView === 'board') {
                 if (elements.boardViewBtn) {
@@ -1171,9 +1410,8 @@ export const prerender = true;
                 }
             }
             
-            // Configurar event listeners
             setupEventListeners();
-            
+            setupDragDrop();
             render();
         }
 
@@ -1186,4 +1424,61 @@ export const prerender = true;
         }
     </script>
     </div>
+
+    <style is:global>
+        .board-videos-scroll {
+            scrollbar-gutter: stable;
+        }
+        .board-videos-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .board-videos-scroll::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 4px;
+            margin-block: 4px;
+        }
+        .board-videos-scroll::-webkit-scrollbar-thumb {
+            background: #2a2a2a;
+            border-radius: 4px;
+        }
+        .board-videos-scroll::-webkit-scrollbar-thumb:hover {
+            background: #6366f1;
+        }
+        .board-videos-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #2a2a2a #1a1a1a;
+        }
+        #video-organizer-root[data-theme="light"] .board-videos-scroll::-webkit-scrollbar-track {
+            background: #e5e7eb;
+        }
+        #video-organizer-root[data-theme="light"] .board-videos-scroll::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+        }
+        #video-organizer-root[data-theme="light"] .board-videos-scroll::-webkit-scrollbar-thumb:hover {
+            background: #6366f1;
+        }
+        #video-organizer-root[data-theme="light"] .board-videos-scroll {
+            scrollbar-color: #d1d5db #e5e7eb;
+        }
+
+        /* Modo claro: overrides de colores */
+        #video-organizer-root[data-theme="light"] {
+            background-color: #f5f5f5;
+        }
+        #video-organizer-root[data-theme="light"] .bg-bg-primary { background-color: #f5f5f5 !important; }
+        #video-organizer-root[data-theme="light"] .bg-bg-secondary { background-color: #ffffff !important; }
+        #video-organizer-root[data-theme="light"] .bg-bg-tertiary { background-color: #f3f4f6 !important; }
+        #video-organizer-root[data-theme="light"] .border-border-primary { border-color: #e5e7eb !important; }
+        #video-organizer-root[data-theme="light"] .text-text-primary { color: #111827 !important; }
+        #video-organizer-root[data-theme="light"] .text-text-secondary { color: #374151 !important; }
+        #video-organizer-root[data-theme="light"] .text-text-muted { color: #6b7280 !important; }
+        #video-organizer-root[data-theme="light"] .hover\:bg-border-primary:hover { background-color: #e5e7eb !important; }
+        #video-organizer-root[data-theme="light"] .hover\:bg-bg-tertiary:hover { background-color: #e5e7eb !important; }
+        #video-organizer-root[data-theme="light"] .hover\:text-text-primary:hover { color: #111827 !important; }
+        #video-organizer-root[data-theme="light"] .focus\:border-accent:focus { border-color: #6366f1 !important; }
+        #video-organizer-root[data-theme="light"] .bg-black\/90 { background-color: rgba(17, 24, 39, 0.95) !important; }
+        #video-organizer-root[data-theme="light"] .bg-black\/70 { background-color: rgba(0, 0, 0, 0.5) !important; }
+        #video-organizer-root[data-theme="light"] .bg-black\/95 { background-color: rgba(0, 0, 0, 0.85) !important; }
+        #video-organizer-root[data-theme="light"] .bg-black\/50 { background-color: rgba(0, 0, 0, 0.4) !important; }
+    </style>
 </BaseTailwind>
