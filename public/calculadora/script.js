@@ -1534,4 +1534,25 @@ if (typeof document !== 'undefined') {
     });
 }
 
+// Exponer funciones en window para que estén disponibles desde el HTML
+if (typeof window !== 'undefined') {
+    window.calcular = calcular;
+    window.toggleHistorial = toggleHistorial;
+    window.nombrarEntrada = nombrarEntrada;
+    window.toggleTestInterno = toggleTestInterno;
+    window.toggleCostosFijos = toggleCostosFijos;
+    window.limpiarHistorial = limpiarHistorial;
+    window.cargarReferencias = cargarReferencias;
+    window.resetear = resetear;
+    window.exportarJSON = exportarJSON;
+    window.showTab = showTab;
+    window.toggleCollapsible = toggleCollapsible;
+    window.cargarDesdeHistorial = cargarDesdeHistorial;
+    window.eliminarDelHistorial = eliminarDelHistorial;
+    window.guardarDatos = guardarDatos;
+    window.cargarDatos = cargarDatos;
+    window.formatoArgentino = formatoArgentino;
+    window.formatoPrecioFinal = formatoPrecioFinal;
+    window.generarAlertaGeneral = generarAlertaGeneral;
+}
 

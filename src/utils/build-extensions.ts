@@ -7,28 +7,6 @@ import { fileURLToPath } from 'url';
 const extensionsDir = './public/extensions';
 const outputDir = './public/downloads';
 
-// Archivos que NO deben incluirse en el ZIP
-const EXCLUDE_PATTERNS = [
-    '.git',
-    '.gitignore',
-    'node_modules',
-    '.DS_Store',
-    'Thumbs.db',
-    '*.map',
-    '*.log',
-    '.env',
-    '.vscode',
-    '.idea',
-    'README.md',      // Opcional: excluir README
-    'package-lock.json', // Opcional: excluir si no es necesario
-];
-
-// Extensiones que ya están comprimidas (no mejorarán con más compresión)
-const ALREADY_COMPRESSED = [
-    '.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg',
-    '.mp4', '.mp3', '.woff', '.woff2', '.ttf',
-    '.zip', '.gz', '.br'
-];
 
 interface ExtensionInfo {
     name: string;
@@ -59,25 +37,6 @@ async function getExtensionInfo(extPath: string): Promise<ExtensionInfo | null> 
     }
 }
 
-function shouldExclude(filename: string): boolean {
-    return EXCLUDE_PATTERNS.some(pattern => {
-        if (pattern.startsWith('*')) {
-            return filename.endsWith(pattern.slice(1));
-        }
-        return filename.includes(pattern);
-    });
-}
-
-function getCompressionLevel(filename: string): number {
-    const ext = extname(filename).toLowerCase();
-    // No comprimir archivos ya comprimidos (ahorra tiempo y no mejora ratio)
-    if (ALREADY_COMPRESSED.includes(ext)) {
-        return 0; // Store (sin compresión)
-    }
-    // Máxima compresión para texto, código, JSON
-    return 9;
-}
-
 async function zipExtension(
     folderName: string, 
     sourcePath: string, 
@@ -100,8 +59,8 @@ async function zipExtension(
             resolve(totalBytes);
         });
         
-        archive.on('error', (err) => reject(err));
-        archive.on('warning', (err) => {
+        archive.on('error', (err: Error) => reject(err));
+        archive.on('warning', (err: Error & { code?: string }) => {
             if (err.code === 'ENOENT') {
                 console.warn('Warning:', err);
             } else {
@@ -111,18 +70,8 @@ async function zipExtension(
 
         archive.pipe(output);
 
-        // Agregar archivos con compresión selectiva
-        archive.glob('**/*', {
-            cwd: sourcePath,
-            ignore: EXCLUDE_PATTERNS,
-            dot: false // No incluir archivos ocultos
-        }, {
-            // Función para ajustar compresión por archivo
-            store: (file: any) => {
-                const level = getCompressionLevel(file.name);
-                return { level };
-            }
-        });
+        // Agregar directorio completo (archiver maneja la compresión automáticamente)
+        archive.directory(sourcePath, false);
 
         archive.finalize();
     });

@@ -442,8 +442,38 @@ const baseUrl = import.meta.env.BASE_URL;
     </div>
 
     <script>
+        // Declarar tipos para propiedades dinámicas en window
+        declare global {
+            interface Window {
+                REF: { precioKg: number; precioKwh: number; consumoW: number; desgasteHoras: number; valorImpresora: number; margenError: number; comisionML: number };
+                entradaActual: any;
+                formatoArgentino: (numero: number) => string;
+                formatoPrecioFinal: (numero: number) => string;
+                generarAlertaGeneral: (precioVentaPersona: number, precioMLCompetencia: number, precioMLSinCompetencia: number) => string;
+                cargarDatos: () => void;
+                cargarHistorial: () => void;
+                cargarDebugMode: () => void;
+                toggleDebugMode: () => void;
+                toggleHistorial: () => void;
+                toggleCostosFijos: () => void;
+                calcular: () => void;
+                showTab: (tabId: string) => void;
+                toggleCollapsible: (id: string, eventElement?: HTMLElement) => void;
+                guardarDatos: () => void;
+                cargarReferencias: () => void;
+                resetear: () => void;
+                exportarJSON: () => void;
+                mostrarHistorial: () => void;
+                limpiarHistorial: () => void;
+                toggleTestInterno: () => void;
+                nombrarEntrada: () => void;
+                cargarDesdeHistorial: (id: string) => void;
+                eliminarDelHistorial: (id: string) => void;
+            }
+        }
+        
         // Valores de referencia para configuración rápida
-     /*   window.REF = {
+        window.REF = {
             precioKg: 20000,
             precioKwh: 234,
             consumoW: 120,
@@ -457,7 +487,7 @@ const baseUrl = import.meta.env.BASE_URL;
         window.entradaActual = null;
 
         // Función para formatear números en estilo argentino
-        window.formatoArgentino = function(numero) {
+        window.formatoArgentino = function(numero: number) {
             return numero.toLocaleString('es-AR', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
@@ -465,7 +495,7 @@ const baseUrl = import.meta.env.BASE_URL;
         };
 
         // Función para redondear precios a centenas
-        window.formatoPrecioFinal = function(numero) {
+        window.formatoPrecioFinal = function(numero: number) {
             const redondeado = Math.round(numero / 100) * 100;
             return redondeado.toLocaleString('es-AR', {
                 minimumFractionDigits: 0,
@@ -474,8 +504,8 @@ const baseUrl = import.meta.env.BASE_URL;
         };
 
         // Función para generar alertas generales
-        window.generarAlertaGeneral = function(precioVentaPersona, precioMLCompetencia, precioMLSinCompetencia) {
-            const precioMercadoLibre = parseFloat(document.getElementById('precioMercadoLibre').value) || 0;
+        window.generarAlertaGeneral = function(precioVentaPersona: number, precioMLCompetencia: number, precioMLSinCompetencia: number) {
+            const precioMercadoLibre = parseFloat((document.getElementById('precioMercadoLibre') as HTMLInputElement)?.value || '0') || 0;
             
             if (precioMercadoLibre === 0) {
                 return '';
@@ -516,10 +546,10 @@ const baseUrl = import.meta.env.BASE_URL;
         // Gestión del modo debug
         window.cargarDebugMode = function() {
             const debugMode = sessionStorage.getItem('debugMode') === 'true';
-            const debugCheckbox = document.getElementById('debugMode');
+            const debugCheckbox = document.getElementById('debugMode') as HTMLInputElement;
             if (debugCheckbox) {
                 debugCheckbox.checked = debugMode;
-                toggleDebugMode();
+                window.toggleDebugMode();
             } else {
                 const testButton = document.getElementById('testButton');
                 if (testButton) {
@@ -529,12 +559,12 @@ const baseUrl = import.meta.env.BASE_URL;
         };
 
         window.toggleDebugMode = function() {
-            const debugCheckbox = document.getElementById('debugMode');
+            const debugCheckbox = document.getElementById('debugMode') as HTMLInputElement;
             const testButton = document.getElementById('testButton');
             
             if (debugCheckbox) {
                 const isDebugMode = debugCheckbox.checked;
-                sessionStorage.setItem('debugMode', isDebugMode);
+                sessionStorage.setItem('debugMode', String(isDebugMode));
                 
                 if (testButton) {
                     if (isDebugMode) {
@@ -549,6 +579,7 @@ const baseUrl = import.meta.env.BASE_URL;
         // Funciones de historial
         window.toggleHistorial = function() {
             const historial = document.getElementById('historial');
+            if (!historial) return;
             if (historial.classList.contains('hidden')) {
                 historial.classList.remove('hidden');
                 window.mostrarHistorial();
@@ -559,6 +590,7 @@ const baseUrl = import.meta.env.BASE_URL;
 
         window.toggleCostosFijos = function() {
             const costosFijos = document.getElementById('costosFijos');
+            if (!costosFijos) return;
             if (costosFijos.classList.contains('hidden')) {
                 costosFijos.classList.remove('hidden');
             } else {
@@ -569,25 +601,25 @@ const baseUrl = import.meta.env.BASE_URL;
         // Función principal de cálculo
         window.calcular = function() {
             // Obtener valores de entrada
-            const precioKg = parseFloat(document.getElementById('costoFilamento').value) || 0;
-            const precioKwh = parseFloat(document.getElementById('precioKwh').value) || 0;
-            const consumoW = parseFloat(document.getElementById('consumoW').value) || 0;
-            const desgasteHoras = parseFloat(document.getElementById('desgasteHoras').value) || 0;
-            const valorImpresora = parseFloat(document.getElementById('valorImpresora').value) || 0;
-            const margenErrorPct = (parseFloat(document.getElementById('margenError').value) || 0) / 100;
-            const comisionMLPct = (parseFloat(document.getElementById('comisionML').value) || 30) / 100;
+            const precioKg = parseFloat((document.getElementById('costoFilamento') as HTMLInputElement)?.value || '0') || 0;
+            const precioKwh = parseFloat((document.getElementById('precioKwh') as HTMLInputElement)?.value || '0') || 0;
+            const consumoW = parseFloat((document.getElementById('consumoW') as HTMLInputElement)?.value || '0') || 0;
+            const desgasteHoras = parseFloat((document.getElementById('desgasteHoras') as HTMLInputElement)?.value || '0') || 0;
+            const valorImpresora = parseFloat((document.getElementById('valorImpresora') as HTMLInputElement)?.value || '0') || 0;
+            const margenErrorPct = (parseFloat((document.getElementById('margenError') as HTMLInputElement)?.value || '0') || 0) / 100;
+            const comisionMLPct = (parseFloat((document.getElementById('comisionML') as HTMLInputElement)?.value || '30') || 30) / 100;
             
-            const horas = parseFloat(document.getElementById('horasImpresion').value) || 0;
-            const minutos = parseFloat(document.getElementById('minutosImpresion').value) || 0;
+            const horas = parseFloat((document.getElementById('horasImpresion') as HTMLInputElement)?.value || '0') || 0;
+            const minutos = parseFloat((document.getElementById('minutosImpresion') as HTMLInputElement)?.value || '0') || 0;
             const tiempoTotalHoras = horas + (minutos / 60);
             
-            const gramos = parseFloat(document.getElementById('gramosFilamento').value) || 0;
-            const insumos = parseFloat(document.getElementById('insumos').value) || 0;
-            let descuentoVentaPersona = parseFloat(document.getElementById('descuentoVentaPersona').value) || 5;
+            const gramos = parseFloat((document.getElementById('gramosFilamento') as HTMLInputElement)?.value || '0') || 0;
+            const insumos = parseFloat((document.getElementById('insumos') as HTMLInputElement)?.value || '0') || 0;
+            let descuentoVentaPersona = parseFloat((document.getElementById('descuentoVentaPersona') as HTMLInputElement)?.value || '5') || 5;
             
-            const cantidad = parseFloat(document.getElementById('cantidad').value) || 1;
-            const precioCadena = parseFloat(document.getElementById('precioCadena').value) || 0;
-            const cantidadCadenas = parseFloat(document.getElementById('cantidadCadenas').value) || 0;
+            const cantidad = parseFloat((document.getElementById('cantidad') as HTMLInputElement)?.value || '1') || 1;
+            const precioCadena = parseFloat((document.getElementById('precioCadena') as HTMLInputElement)?.value || '0') || 0;
+            const cantidadCadenas = parseFloat((document.getElementById('cantidadCadenas') as HTMLInputElement)?.value || '0') || 0;
 
             // Validación
             if (precioKg === 0 || gramos === 0) {
@@ -605,8 +637,8 @@ const baseUrl = import.meta.env.BASE_URL;
             const costoConMargen = costoBase + margenError;
             
             // Calcular precios ML
-            const gananciaCompetencia = parseFloat(localStorage.getItem('gananciaCompetencia')) || 175;
-            const gananciaSinCompetencia = parseFloat(localStorage.getItem('gananciaSinCompetencia')) || 700;
+            const gananciaCompetencia = parseFloat(localStorage.getItem('gananciaCompetencia') || '175') || 175;
+            const gananciaSinCompetencia = parseFloat(localStorage.getItem('gananciaSinCompetencia') || '700') || 700;
             
             const multiplicadorCompetencia = 1 + (gananciaCompetencia / 100);
             const costoConGananciaCompetencia = costoConMargen * multiplicadorCompetencia;
@@ -644,13 +676,13 @@ const baseUrl = import.meta.env.BASE_URL;
             let html = `
                 <!-- Pestañas de navegación -->
                 <div class="result-tabs">
-                    <button class="tab-button active" onclick="window.showTab('venta-persona')">
+                    <button class="tab-button active" onclick="window.showTab('venta-persona', this)">
                         💵 Venta a Persona (-${descuentoVentaPersona}%)
                     </button>
-                    <button class="tab-button" onclick="window.showTab('ml-competencia')">
+                    <button class="tab-button" onclick="window.showTab('ml-competencia', this)">
                         🛒 ML Competencia (${gananciaCompetencia}%)
                     </button>
-                    <button class="tab-button" onclick="window.showTab('ml-sin-competencia')">
+                    <button class="tab-button" onclick="window.showTab('ml-sin-competencia', this)">
                         ⭐ ML Sin Competencia (${gananciaSinCompetencia}%)
                     </button>
                 </div>
@@ -662,7 +694,7 @@ const baseUrl = import.meta.env.BASE_URL;
                         <div>📊 Suma de Costos: $${Math.round(costoTotal).toLocaleString('es-AR')}</div>
                         <div>💰 Ganancia: $${Math.round(gananciaReal).toLocaleString('es-AR')}</div>
                         <div style="font-size: 1.5rem; margin-top: 15px;">
-                            💵 Precio Final: $${formatoPrecioFinal(totalCobrarRedondeado)}
+                            💵 Precio Final: $${window.formatoPrecioFinal(totalCobrarRedondeado)}
                         </div>
                     </div>
                 </div>
@@ -769,13 +801,15 @@ const baseUrl = import.meta.env.BASE_URL;
             }
 
             // Mostrar resultados
-            document.getElementById('detalleResultados').innerHTML = html;
-            document.getElementById('resultados').classList.remove('hidden');
+            const detalleResultados = document.getElementById('detalleResultados');
+            const resultados = document.getElementById('resultados');
+            if (detalleResultados) detalleResultados.innerHTML = html;
+            if (resultados) resultados.classList.remove('hidden');
             window.guardarDatos();
         };
 
         // Función para mostrar pestañas
-        window.showTab = function(tabId, eventElement) {
+        window.showTab = function(tabId: string, buttonElement?: HTMLElement) {
             // Ocultar todas las pestañas
             const tabs = document.querySelectorAll('.tab-content');
             const buttons = document.querySelectorAll('.tab-button');
@@ -789,16 +823,37 @@ const baseUrl = import.meta.env.BASE_URL;
             });
             
             // Mostrar pestaña seleccionada
-            document.getElementById(tabId).classList.add('active');
-            if (eventElement) {
-                eventElement.classList.add('active');
+            const selectedTab = document.getElementById(tabId);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+            
+            // Activar el botón correspondiente
+            if (buttonElement) {
+                buttonElement.classList.add('active');
+            } else {
+                // Buscar el botón por su onclick
+                buttons.forEach(function(button) {
+                    const onclick = button.getAttribute('onclick');
+                    if (onclick && onclick.includes(tabId)) {
+                        button.classList.add('active');
+                    }
+                });
             }
         };
 
         // Función para toggle de collapsibles
-        window.toggleCollapsible = function(id, eventElement) {
+        window.toggleCollapsible = function(id: string, eventElement?: HTMLElement) {
             const content = document.getElementById(id);
-            const header = eventElement ? eventElement.closest('.collapsible-header') : document.querySelector('.collapsible-header');
+            if (!content) return;
+            
+            let header = null;
+            if (eventElement) {
+                header = eventElement.closest ? eventElement.closest('.collapsible-header') : eventElement.parentElement;
+            } else {
+                header = content.previousElementSibling;
+            }
+            
             if (!header) return;
             const icon = header.querySelector('span:last-child');
             
@@ -813,23 +868,24 @@ const baseUrl = import.meta.env.BASE_URL;
 
         // Funciones de persistencia de datos
         window.guardarDatos = function() {
+            const getValue = (id: string) => (document.getElementById(id) as HTMLInputElement)?.value || '';
             const datos = {
-                costoFilamento: document.getElementById('costoFilamento').value,
-                precioKwh: document.getElementById('precioKwh').value,
-                consumoW: document.getElementById('consumoW').value,
-                desgasteHoras: document.getElementById('desgasteHoras').value,
-                valorImpresora: document.getElementById('valorImpresora').value,
-                margenError: document.getElementById('margenError').value,
-                comisionML: document.getElementById('comisionML').value,
-                horasImpresion: document.getElementById('horasImpresion').value,
-                minutosImpresion: document.getElementById('minutosImpresion').value,
-                gramosFilamento: document.getElementById('gramosFilamento').value,
-                insumos: document.getElementById('insumos').value,
-                descuentoVentaPersona: document.getElementById('descuentoVentaPersona').value,
-                cantidad: document.getElementById('cantidad').value,
-                precioMercadoLibre: document.getElementById('precioMercadoLibre').value,
-                precioCadena: document.getElementById('precioCadena').value,
-                cantidadCadenas: document.getElementById('cantidadCadenas').value,
+                costoFilamento: getValue('costoFilamento'),
+                precioKwh: getValue('precioKwh'),
+                consumoW: getValue('consumoW'),
+                desgasteHoras: getValue('desgasteHoras'),
+                valorImpresora: getValue('valorImpresora'),
+                margenError: getValue('margenError'),
+                comisionML: getValue('comisionML'),
+                horasImpresion: getValue('horasImpresion'),
+                minutosImpresion: getValue('minutosImpresion'),
+                gramosFilamento: getValue('gramosFilamento'),
+                insumos: getValue('insumos'),
+                descuentoVentaPersona: getValue('descuentoVentaPersona'),
+                cantidad: getValue('cantidad'),
+                precioMercadoLibre: getValue('precioMercadoLibre'),
+                precioCadena: getValue('precioCadena'),
+                cantidadCadenas: getValue('cantidadCadenas'),
             };
             sessionStorage.setItem('calc3D', JSON.stringify(datos));
         };
@@ -839,13 +895,13 @@ const baseUrl = import.meta.env.BASE_URL;
             if (datos) {
                 const obj = JSON.parse(datos);
                 Object.keys(obj).forEach(function(key) {
-                    const elemento = document.getElementById(key);
+                    const elemento = document.getElementById(key) as HTMLInputElement;
                     if (elemento && obj[key]) {
                         if (key === 'descuentoVentaPersona') {
                             let valor = parseFloat(obj[key]);
                             if (isNaN(valor) || valor < 0) valor = 5;
                             if (valor > 50) valor = 50;
-                            elemento.value = valor;
+                            elemento.value = String(valor);
                         } else {
                             elemento.value = obj[key];
                         }
@@ -853,18 +909,23 @@ const baseUrl = import.meta.env.BASE_URL;
                 });
             } else {
                 window.cargarReferencias();
-                document.getElementById('descuentoVentaPersona').value = '5';
+                const descInput = document.getElementById('descuentoVentaPersona') as HTMLInputElement;
+                if (descInput) descInput.value = '5';
             }
         };
 
         window.cargarReferencias = function() {
-            document.getElementById('costoFilamento').value = window.REF.precioKg;
-            document.getElementById('precioKwh').value = window.REF.precioKwh;
-            document.getElementById('consumoW').value = window.REF.consumoW;
-            document.getElementById('desgasteHoras').value = window.REF.desgasteHoras;
-            document.getElementById('valorImpresora').value = window.REF.valorImpresora;
-            document.getElementById('margenError').value = window.REF.margenError;
-            document.getElementById('comisionML').value = window.REF.comisionML;
+            const setValue = (id: string, value: number) => {
+                const el = document.getElementById(id) as HTMLInputElement;
+                if (el) el.value = String(value);
+            };
+            setValue('costoFilamento', window.REF.precioKg);
+            setValue('precioKwh', window.REF.precioKwh);
+            setValue('consumoW', window.REF.consumoW);
+            setValue('desgasteHoras', window.REF.desgasteHoras);
+            setValue('valorImpresora', window.REF.valorImpresora);
+            setValue('margenError', window.REF.margenError);
+            setValue('comisionML', window.REF.comisionML);
             window.guardarDatos();
             alert('Referencias cargadas\nPLA: $20k/kg | kWh: $234\nConsumo: 120W | Vida útil: 15.000h\nImpresora: $1.363.990 | Comisión ML: 30%');
         };
@@ -907,13 +968,14 @@ const baseUrl = import.meta.env.BASE_URL;
         window.mostrarHistorial = function() {
             const historial = JSON.parse(localStorage.getItem('historial3D') || '[]');
             const lista = document.getElementById('historialLista');
+            if (!lista) return;
             
             if (historial.length === 0) {
                 lista.innerHTML = '<p>No hay cálculos guardados</p>';
                 return;
             }
             
-            lista.innerHTML = historial.map(function(item) {
+            lista.innerHTML = historial.map(function(item: any) {
                 return `
                     <div style="border: 1px solid #e5e7eb; border-radius: 4px; padding: 15px; margin: 10px 0;">
                         <strong>${item.nombre || 'Cálculo sin nombre'}</strong><br>
@@ -949,9 +1011,9 @@ const baseUrl = import.meta.env.BASE_URL;
         };
 
         // Funciones de historial completas
-        window.cargarDesdeHistorial = function(id) {
+        window.cargarDesdeHistorial = function(id: string) {
             const historial = JSON.parse(localStorage.getItem('historial3D') || '[]');
-            const item = historial.find(h => h.id === id);
+            const item = historial.find((h: any) => h.id === id);
             
             if (!item) {
                 alert('No se encontró el cálculo en el historial');
@@ -959,59 +1021,63 @@ const baseUrl = import.meta.env.BASE_URL;
             }
             
             const entrada = item.datos.entrada;
+            const setValue = (id: string, value: any) => {
+                const el = document.getElementById(id) as HTMLInputElement;
+                if (el) el.value = String(value || '');
+            };
             
             // Cargar costos fijos
             if (entrada.costosFijos) {
-                document.getElementById('costoFilamento').value = entrada.costosFijos.precioKg || '';
-                document.getElementById('precioKwh').value = entrada.costosFijos.precioKwh || '';
-                document.getElementById('consumoW').value = entrada.costosFijos.consumoW || '';
-                document.getElementById('desgasteHoras').value = entrada.costosFijos.desgasteHoras || '';
-                document.getElementById('valorImpresora').value = entrada.costosFijos.valorImpresora || '';
-                document.getElementById('margenError').value = entrada.costosFijos.margenError || '';
-                document.getElementById('comisionML').value = entrada.costosFijos.comisionML || '';
+                setValue('costoFilamento', entrada.costosFijos.precioKg);
+                setValue('precioKwh', entrada.costosFijos.precioKwh);
+                setValue('consumoW', entrada.costosFijos.consumoW);
+                setValue('desgasteHoras', entrada.costosFijos.desgasteHoras);
+                setValue('valorImpresora', entrada.costosFijos.valorImpresora);
+                setValue('margenError', entrada.costosFijos.margenError);
+                setValue('comisionML', entrada.costosFijos.comisionML);
             }
             
             // Cargar datos de pieza
             if (entrada.pieza) {
-                document.getElementById('horasImpresion').value = entrada.pieza.horasImpresion || '';
-                document.getElementById('minutosImpresion').value = entrada.pieza.minutosImpresion || '';
-                document.getElementById('gramosFilamento').value = entrada.pieza.gramosFilamento || '';
+                setValue('horasImpresion', entrada.pieza.horasImpresion);
+                setValue('minutosImpresion', entrada.pieza.minutosImpresion);
+                setValue('gramosFilamento', entrada.pieza.gramosFilamento);
             }
             
             // Cargar datos de producción
             if (entrada.produccion) {
-                document.getElementById('cantidad').value = entrada.produccion.cantidad || 1;
+                setValue('cantidad', entrada.produccion.cantidad || 1);
             }
             
             // Cargar extras
             if (entrada.extras) {
-                document.getElementById('insumos').value = entrada.extras.insumos || 0;
-                document.getElementById('precioCadena').value = entrada.extras.precioCadena || 0;
-                document.getElementById('cantidadCadenas').value = entrada.extras.cantidadCadenas || 0;
+                setValue('insumos', entrada.extras.insumos || 0);
+                setValue('precioCadena', entrada.extras.precioCadena || 0);
+                setValue('cantidadCadenas', entrada.extras.cantidadCadenas || 0);
             }
             
             // Cargar descuento si existe
             if (entrada.descuentoVentaPersona !== undefined) {
-                document.getElementById('descuentoVentaPersona').value = entrada.descuentoVentaPersona || 5;
+                setValue('descuentoVentaPersona', entrada.descuentoVentaPersona || 5);
             }
             
             window.guardarDatos();
             alert('Datos cargados del historial');
-            if (!document.getElementById('historial').classList.contains('hidden')) {
+            const historialEl = document.getElementById('historial');
+            if (historialEl && !historialEl.classList.contains('hidden')) {
                 window.toggleHistorial();
             }
             window.calcular();
         };
 
-        window.eliminarDelHistorial = function(id) {
+        window.eliminarDelHistorial = function(id: string) {
             if (!confirm('¿Eliminar este cálculo del historial?')) return;
             
             let historial = JSON.parse(localStorage.getItem('historial3D') || '[]');
-            historial = historial.filter(h => h.id !== id);
+            historial = historial.filter((h: any) => h.id !== id);
             localStorage.setItem('historial3D', JSON.stringify(historial));
             window.mostrarHistorial();
-        };*/
+        };
     </script>
-    <script is:inline src="/calculadora/script.js"></script>
     </div>
 </BaseTailwind>
