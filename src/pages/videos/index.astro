@@ -363,45 +363,125 @@ export const prerender = true;
 
         async function fetchPlaylistItems(playlistId) {
             const rssUrl = `https://www.youtube.com/feeds/videos.xml?playlist_id=${encodeURIComponent(playlistId)}`;
-            const corsProxy = 'https://api.allorigins.win/raw?url=';
-            const res = await fetch(corsProxy + encodeURIComponent(rssUrl));
-            if (!res.ok) {
-                throw new Error(`No se pudo cargar la lista (${res.status}). La playlist debe ser pública.`);
-            }
-            const xml = await res.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(xml, 'text/xml');
-            const entries = doc.getElementsByTagName('entry');
-            const items = [];
-            for (let i = 0; i < entries.length; i++) {
-                const entry = entries[i];
-                let videoId = '';
-                let title = 'Sin título';
-                for (const el of entry.children) {
-                    const local = (el.localName || el.tagName || '').toLowerCase();
-                    if (local === 'videoid' || (el.tagName && el.tagName.endsWith('videoId'))) {
-                        videoId = (el.textContent || '').trim();
+            
+            // Lista de funciones que generan URLs de proxy CORS con fallback
+            // Ordenados por confiabilidad
+            const proxyBuilders = [
+                (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+                (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+                (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+                (url) => `https://thingproxy.freeboard.io/fetch/${url}`
+            ];
+            
+            let lastError = null;
+            
+            // Intentar con cada proxy hasta que uno funcione
+            for (let i = 0; i < proxyBuilders.length; i++) {
+                const buildProxyUrl = proxyBuilders[i];
+                try {
+                    const proxyUrl = buildProxyUrl(rssUrl);
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 segundos timeout
+                    
+                    const res = await fetch(proxyUrl, {
+                        signal: controller.signal,
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/xml, text/xml, application/rss+xml, */*'
+                        },
+                        mode: 'cors'
+                    });
+                    
+                    clearTimeout(timeoutId);
+                    
+                    if (!res.ok) {
+                        // Si es un error 4xx o 5xx, continuar con el siguiente proxy
+                        if (res.status >= 400) {
+                            throw new Error(`HTTP ${res.status}`);
+                        }
                     }
-                    if (local === 'title') {
-                        title = (el.textContent || '').trim() || title;
+                    
+                    const xml = await res.text();
+                    
+                    // Verificar que sea XML válido
+                    if (!xml || xml.trim().length === 0) {
+                        throw new Error('Respuesta vacía del proxy');
                     }
+                    
+                    // Verificar que no sea una página de error HTML
+                    if (xml.trim().toLowerCase().startsWith('<!doctype') || xml.trim().toLowerCase().startsWith('<html')) {
+                        throw new Error('El proxy devolvió HTML en lugar de XML');
+                    }
+                    
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(xml, 'text/xml');
+                    
+                    // Verificar errores de parsing
+                    const parseError = doc.querySelector('parsererror');
+                    if (parseError) {
+                        throw new Error('Error al parsear XML');
+                    }
+                    
+                    const entries = doc.getElementsByTagName('entry');
+                    const items = [];
+                    
+                    for (let i = 0; i < entries.length; i++) {
+                        const entry = entries[i];
+                        let videoId = '';
+                        let title = 'Sin título';
+                        
+                        for (const el of entry.children) {
+                            const local = (el.localName || el.tagName || '').toLowerCase();
+                            if (local === 'videoid' || (el.tagName && el.tagName.endsWith('videoId'))) {
+                                videoId = (el.textContent || '').trim();
+                            }
+                            if (local === 'title') {
+                                title = (el.textContent || '').trim() || title;
+                            }
+                        }
+                        
+                        if (!videoId && entry.getElementsByTagName('id').length) {
+                            const idEl = entry.getElementsByTagName('id')[0];
+                            const idVal = (idEl?.textContent || '').trim();
+                            const m = idVal.match(/yt:video:(.{11})$/);
+                            if (m) videoId = m[1];
+                        }
+                        
+                        if (!videoId) continue;
+                        
+                        items.push({
+                            videoId,
+                            title,
+                            thumbnail: getThumbnailUrl(videoId, 'youtube')
+                        });
+                    }
+                    
+                    // Guardar en cache solo si obtuvimos items
+                    if (items.length > 0) {
+                        playlistCache[playlistId] = { items, fetchedAt: Date.now() };
+                        savePlaylistCache();
+                    }
+                    
+                    return items;
+                } catch (error) {
+                    lastError = error;
+                    // Solo loggear en consola si no es el último intento
+                    if (i < proxyBuilders.length - 1) {
+                        console.warn(`Proxy ${i + 1} falló, intentando siguiente...`, error.name);
+                    }
+                    // Continuar con el siguiente proxy
+                    continue;
                 }
-                if (!videoId && entry.getElementsByTagName('id').length) {
-                    const idEl = entry.getElementsByTagName('id')[0];
-                    const idVal = (idEl?.textContent || '').trim();
-                    const m = idVal.match(/yt:video:(.{11})$/);
-                    if (m) videoId = m[1];
-                }
-                if (!videoId) continue;
-                items.push({
-                    videoId,
-                    title,
-                    thumbnail: getThumbnailUrl(videoId, 'youtube')
-                });
             }
-            playlistCache[playlistId] = { items, fetchedAt: Date.now() };
-            savePlaylistCache();
-            return items;
+            
+            // Si todos los proxies fallaron
+            const errorMsg = lastError?.name === 'AbortError' || lastError?.message?.includes('aborted')
+                ? 'Tiempo de espera agotado. Verifica que la playlist sea pública y accesible.'
+                : lastError?.message?.includes('CORS') || lastError?.message?.includes('blocked')
+                ? 'Error de CORS. Intenta más tarde o verifica que la playlist sea pública.'
+                : 'No se pudo cargar la lista. Verifica que la playlist sea pública y accesible.';
+            
+            throw new Error(errorMsg);
         }
 
         function showPlaylistModalState(state) {
