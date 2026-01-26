@@ -3,6 +3,8 @@
 import BaseTailwind from '../../layouts/BaseTailwind.astro';
 import extensionsData from '../../utils/build-extensions';
 
+export const prerender = true;
+
 console.log('Extensions data:', extensionsData); // Debug
 ---
 <BaseTailwind title="Extensiones Chrome" description="Mis extensiones">

@@ -1,10 +1,10 @@
 // framework-completo.js
-const frameworkCompletoInstrucciones = `🏗️ Usar la **fórmula completa** para estructurar el prompt:
-🎭 **Rol**: "Eres un experto en [X]".
-📦 **Resultado**: "Debes crear [Y]".
-🎯 **Objetivo**: "El propósito es [Z]".
-🌐 **Contexto**: "Para [quién], [qué], [dónde], [por qué]".
-🚫 **Restricciones**: "Debe tener [tono], [longitud], [formato]".
+const frameworkCompletoInstrucciones = `Usar la **fórmula completa** para estructurar el prompt:
+**Rol**: "Eres un experto en [X]".
+**Resultado**: "Debes crear [Y]".
+**Objetivo**: "El propósito es [Z]".
+**Contexto**: "Para [quién], [qué], [dónde], [por qué]".
+**Restricciones**: "Debe tener [tono], [longitud], [formato]".
 
 Ejemplo:
 - Base: "Consejos para cuidar un gato"

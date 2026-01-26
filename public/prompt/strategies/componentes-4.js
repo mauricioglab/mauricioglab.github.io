@@ -1,9 +1,9 @@
 // componentes-4.js
-const componentes4Instrucciones = `🚀 Asegurarse de que el prompt contenga los 4 elementos clave:
-1️⃣ **Instrucciones**: Qué debe hacer el modelo.
-2️⃣ **Contexto**: Información que ayuda a entender el entorno.
-3️⃣ **Datos de entrada**: Información que el modelo debe usar.
-4️⃣ **Indicador de salida**: Señal de que debe comenzar a responder.
+const componentes4Instrucciones = `Asegurarse de que el prompt contenga los 4 elementos clave:
+1. **Instrucciones**: Qué debe hacer el modelo.
+2. **Contexto**: Información que ayuda a entender el entorno.
+3. **Datos de entrada**: Información que el modelo debe usar.
+4. **Indicador de salida**: Señal de que debe comenzar a responder.
 
 Ejemplo:
 - Base: "Consejos para cuidar un gato"

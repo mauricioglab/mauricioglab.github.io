@@ -1,864 +1,124 @@
 ---
 import BaseTailwind from '../../layouts/BaseTailwind.astro';
+
+export const prerender = true;
 ---
 
 <BaseTailwind 
     title="🎬 Video Organizer"
     description="Organizador de videos de YouTube y Udemy"
 >
-    <div class="app-container" data-theme="dark">
-    <!-- <style>
-        /* Reset y variables CSS */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            /* Colores tema oscuro */
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #141414;
-            --bg-tertiary: #1a1a1a;
-            --border-primary: #2a2a2a;
-            --text-primary: #ffffff;
-            --text-secondary: #d1d5db;
-            --text-muted: #9ca3af;
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --error: #ef4444;
-        }
-
-        [data-theme="light"] {
-            /* Colores tema claro */
-            --bg-primary: #f5f5f5;
-            --bg-secondary: #e8e8e8;
-            --bg-tertiary: #d8d8d8;
-            --border-primary: #d0d0d0;
-            --text-primary: #2a2a2a;
-            --text-secondary: #374151;
-            --text-muted: #6b7280;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-        }
-
-        /* Layout principal */
-        .app-container {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .header {
-            background-color: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-primary);
-            padding: 12px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.3s ease;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .header-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .header-divider {
-            width: 1px;
-            height: 24px;
-            background-color: var(--border-primary);
-        }
-
-        .view-toggle {
-            display: flex;
-            gap: 4px;
-            background-color: var(--bg-tertiary);
-            padding: 4px;
-            border-radius: 8px;
-        }
-
-        .view-toggle button {
-            padding: 6px 16px;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: transparent;
-            color: var(--text-muted);
-        }
-
-        .view-toggle button.active {
-            background-color: var(--accent);
-            color: white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .view-toggle button:hover:not(.active) {
-            color: var(--text-primary);
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .search-container {
-            position: relative;
-        }
-
-        .search-input {
-            padding: 8px 12px;
-            border: 1px solid var(--border-primary);
-            border-radius: 8px;
-            background-color: var(--bg-tertiary);
-            color: var(--text-primary);
-            font-size: 14px;
-            width: 200px;
-            transition: all 0.2s ease;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary {
-            background-color: var(--accent);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--accent-hover);
-        }
-
-        .btn-secondary {
-            background-color: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-primary);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--border-primary);
-        }
-
-        .main-layout {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .sidebar {
-            width: 280px;
-            background-color: var(--bg-secondary);
-            border-right: 1px solid var(--border-primary);
-            display: flex;
-            flex-direction: column;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar-header {
-            padding: 16px;
-            border-bottom: 1px solid var(--border-primary);
-        }
-
-        .category-form {
-            display: flex;
-            gap: 8px;
-        }
-
-        .category-input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid var(--border-primary);
-            border-radius: 8px;
-            background-color: var(--bg-tertiary);
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-
-        .category-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .sidebar-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-        }
-
-        .sidebar-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .categories-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .category-item {
-            padding: 12px;
-            background-color: var(--bg-tertiary);
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .category-item:hover {
-            background-color: var(--border-primary);
-        }
-
-        .category-name {
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .category-count {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .category-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .category-actions button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            padding: 4px;
-            opacity: 0.6;
-            transition: opacity 0.2s ease;
-        }
-
-        .category-actions button:hover {
-            opacity: 1;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
-        }
-
-        .board-view {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-            align-items: start;
-        }
-
-        .category-column {
-            background-color: var(--bg-secondary);
-            border-radius: 8px;
-            padding: 16px;
-            min-width: 280px;
-        }
-
-        .column-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .column-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .videos-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .video-card {
-            background-color: var(--bg-tertiary);
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .video-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .video-thumbnail {
-            position: relative;
-            width: 100%;
-            padding-top: 56.25%;
-            background-color: var(--bg-primary);
-            overflow: hidden;
-        }
-
-        .video-thumbnail img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .video-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .video-card:hover .video-overlay {
-            opacity: 1;
-        }
-
-        .play-button {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        .video-info {
-            padding: 12px;
-        }
-
-        .video-title {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .video-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .video-platform {
-            font-size: 12px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 500;
-        }
-
-        .platform-youtube {
-            background-color: rgba(255, 0, 0, 0.1);
-            color: #ff0000;
-        }
-
-        .platform-udemy {
-            background-color: rgba(0, 0, 0, 0.1);
-            color: var(--text-primary);
-        }
-
-        .video-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .video-actions button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            opacity: 0.6;
-            transition: opacity 0.2s ease;
-        }
-
-        .video-actions button:hover {
-            opacity: 1;
-        }
-
-        .video-comments {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 8px;
-            font-style: italic;
-        }
-
-        .list-view {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
-        }
-
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 60px 20px;
-            text-align: center;
-        }
-
-        .empty-state-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-
-        .empty-state-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-
-        .empty-state-description {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-
-        .modal {
-            background-color: var(--bg-secondary);
-            border-radius: 12px;
-            width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid var(--border-primary);
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 0;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-        }
-
-        .modal-close:hover {
-            background-color: var(--bg-tertiary);
-            color: var(--text-primary);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            padding: 0 20px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-
-        .form-input,
-        .form-select,
-        .form-textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border-primary);
-            border-radius: 8px;
-            background-color: var(--bg-tertiary);
-            color: var(--text-primary);
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-
-        .form-input:focus,
-        .form-select:focus,
-        .form-textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-            padding: 20px;
-            border-top: 1px solid var(--border-primary);
-        }
-
-        .video-player {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 2000;
-            display: flex;
-        }
-
-        .player-main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 24px;
-        }
-
-        .player-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .player-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: white;
-        }
-
-        .player-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .player-video {
-            flex: 1;
-            min-height: 0;
-        }
-
-        .player-video iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 8px;
-        }
-
-        .player-sidebar {
-            width: 320px;
-            background: rgba(20, 20, 20, 0.9);
-            padding: 24px;
-            overflow-y: auto;
-            border-left: 1px solid var(--border-primary);
-        }
-
-        .sidebar-section {
-            margin-bottom: 32px;
-        }
-
-        .video-list-item {
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .video-list-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .video-list-item.active {
-            background: var(--accent);
-            color: white;
-        }
-
-        .video-list-title {
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        .video-list-category {
-            font-size: 12px;
-            opacity: 0.7;
-        }
-
-        /* Utilidades */
-        .hidden {
-            display: none !important;
-        }
-
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        .error-message {
-            color: var(--error);
-            font-size: 12px;
-            margin-top: 4px;
-            padding: 4px 8px;
-            background-color: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--error);
-            border-radius: 4px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header {
-                padding: 12px 16px;
-            }
-            
-            .header-left {
-                gap: 12px;
-            }
-            
-            .header-right {
-                gap: 8px;
-            }
-            
-            .search-input {
-                width: 150px;
-            }
-            
-            .sidebar {
-                width: 240px;
-            }
-            
-            .main-content {
-                padding: 16px;
-            }
-            
-            .category-column {
-                min-width: 280px;
-            }
-            
-            .list-view {
-                grid-template-columns: 1fr;
-            }
-            
-            .player-sidebar {
-                width: 280px;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .main-layout {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                height: 200px;
-            }
-            
-            .sidebar-content {
-                padding: 12px;
-            }
-            
-            .video-player {
-                flex-direction: column;
-            }
-            
-            .player-sidebar {
-                width: 100%;
-                height: 200px;
-            }
-        }
-    </style> -->
+    <div class="min-h-screen flex flex-col" data-theme="dark">
     <!-- Header -->
-    <header class="header">
-        <div class="header-left">
-            <h1 class="header-title">🎬 Video Organizer</h1>
-            <div class="header-divider"></div>
-            <div class="view-toggle">
-                <button id="board-view-btn" class="active">Tablero</button>
-                <button id="list-view-btn">Lista</button>
+    <header class="bg-bg-secondary border-b border-border-primary px-4 md:px-6 py-3 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-0 transition-all duration-300">
+        <div class="flex items-center gap-3 md:gap-4">
+            <h1 class="text-lg md:text-xl font-semibold text-text-primary">🎬 Video Organizer</h1>
+            <div class="w-px h-6 bg-border-primary hidden md:block"></div>
+            <div class="flex gap-1 bg-bg-tertiary p-1 rounded-lg">
+                <button id="board-view-btn" class="px-3 md:px-4 py-1.5 rounded-md text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-transparent text-text-muted hover:text-text-primary active:bg-accent active:text-white active:shadow-sm">Tablero</button>
+                <button id="list-view-btn" class="px-3 md:px-4 py-1.5 rounded-md text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-transparent text-text-muted hover:text-text-primary active:bg-accent active:text-white active:shadow-sm">Lista</button>
             </div>
         </div>
-        <div class="header-right">
-            <div class="search-container">
-                <input type="text" id="search-input" class="search-input" placeholder="Buscar videos...">
+        <div class="flex items-center gap-2 md:gap-3 flex-wrap">
+            <div class="relative">
+                <input type="text" id="search-input" class="px-3 py-2 border border-border-primary rounded-lg bg-bg-tertiary text-text-primary text-sm w-[150px] md:w-[200px] transition-all duration-200 focus:outline-none focus:border-accent" placeholder="Buscar videos...">
             </div>
-            <button id="add-video-btn" class="btn btn-primary">+ Agregar Video</button>
-            <button id="export-btn" class="btn btn-secondary" title="Exportar">📥</button>
-            <button id="import-btn" class="btn btn-secondary" title="Importar">📤</button>
-            <div class="header-divider"></div>
-            <button id="theme-toggle" class="btn btn-secondary" title="Cambiar tema">🌙</button>
+            <button id="add-video-btn" class="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover">+ Agregar Video</button>
+            <button id="export-btn" class="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-bg-tertiary text-text-primary border border-border-primary hover:bg-border-primary" title="Exportar">📥</button>
+            <button id="import-btn" class="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-bg-tertiary text-text-primary border border-border-primary hover:bg-border-primary" title="Importar">📤</button>
+            <div class="w-px h-6 bg-border-primary hidden md:block"></div>
+            <button id="theme-toggle" class="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-bg-tertiary text-text-primary border border-border-primary hover:bg-border-primary" title="Cambiar tema">🌙</button>
         </div>
     </header>
 
     <!-- Main Layout -->
-    <div class="main-layout">
+    <div class="flex flex-col md:flex-row flex-1 overflow-hidden">
         <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="category-form">
-                    <input type="text" id="category-input" class="category-input" placeholder="Nueva categoría">
-                    <button id="add-category-btn" class="btn btn-primary">+</button>
+        <aside class="w-full md:w-70 bg-bg-secondary border-r border-border-primary flex flex-col transition-all duration-300 md:h-auto h-[200px]">
+            <div class="p-3 md:p-4 border-b border-border-primary">
+                <div class="flex gap-2">
+                    <input type="text" id="category-input" class="flex-1 px-3 py-2 border border-border-primary rounded-lg bg-bg-tertiary text-text-primary text-sm focus:outline-none focus:border-accent" placeholder="Nueva categoría">
+                    <button id="add-category-btn" class="px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover">+</button>
                 </div>
             </div>
-            <div class="sidebar-content">
-                <h2 class="sidebar-title">Categorías</h2>
-                <ul id="categories-list" class="categories-list">
+            <div class="flex-1 overflow-y-auto p-3 md:p-4">
+                <h2 class="text-sm font-semibold text-text-secondary mb-3 uppercase tracking-wider">Categorías</h2>
+                <ul id="categories-list" class="flex flex-col gap-2 list-none">
                     <!-- Categorías se cargan dinámicamente -->
                 </ul>
             </div>
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <main class="flex-1 p-4 md:p-6 overflow-y-auto">
             <!-- Board View -->
-            <div id="board-view" class="board-view">
+            <div id="board-view" class="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4 items-start">
                 <!-- Columnas de categorías se cargan dinámicamente -->
             </div>
 
             <!-- List View -->
-            <div id="list-view" class="list-view hidden">
+            <div id="list-view" class="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4 hidden">
                 <!-- Videos en lista se cargan dinámicamente -->
             </div>
 
             <!-- Empty State -->
-            <div id="empty-state" class="empty-state hidden">
-                <div class="empty-state-icon">📁</div>
-                <h3 class="empty-state-title">No hay categorías</h3>
-                <p class="empty-state-description">Crea una categoría para empezar a organizar tus videos</p>
-                <button id="create-first-category" class="btn btn-primary">Crear primera categoría</button>
+            <div id="empty-state" class="flex flex-col items-center justify-center py-[60px] px-5 text-center hidden">
+                <div class="text-[64px] mb-4 opacity-50">📁</div>
+                <h3 class="text-xl font-semibold text-text-primary mb-2">No hay categorías</h3>
+                <p class="text-sm text-text-muted mb-6">Crea una categoría para empezar a organizar tus videos</p>
+                <button id="create-first-category" class="px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover">Crear primera categoría</button>
             </div>
         </main>
     </div>
 
     <!-- Modal para agregar video -->
-    <div id="add-video-modal" class="modal-overlay hidden">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Agregar Video</h2>
-                <button id="close-video-modal" class="modal-close">×</button>
+    <div id="add-video-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-[1000] p-5 hidden">
+        <div class="bg-bg-secondary rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div class="flex justify-between items-center p-5 border-b border-border-primary">
+                <h2 class="text-xl font-semibold text-text-primary">Agregar Video</h2>
+                <button id="close-video-modal" class="bg-transparent border-none text-2xl text-text-muted cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-all duration-200 hover:bg-bg-tertiary hover:text-text-primary">×</button>
             </div>
             <form id="add-video-form">
-                <div class="form-group">
-                    <label class="form-label">URL del Video (YouTube o Udemy)</label>
-                    <input type="text" id="video-url" class="form-input" placeholder="https://www.youtube.com/watch?v=...">
-                    <div id="url-error" class="error-message hidden"></div>
+                <div class="mb-5 px-5">
+                    <label class="block text-sm font-medium text-text-primary mb-2">URL del Video (YouTube o Udemy)</label>
+                    <input type="text" id="video-url" class="w-full px-3 py-2.5 border border-border-primary rounded-lg bg-bg-tertiary text-text-primary text-sm transition-all duration-200 focus:outline-none focus:border-accent" placeholder="https://www.youtube.com/watch?v=...">
+                    <div id="url-error" class="text-error text-xs mt-1 px-2 py-1 bg-error/10 border border-error rounded hidden"></div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Categoría</label>
-                    <select id="video-category" class="form-select">
+                <div class="mb-5 px-5">
+                    <label class="block text-sm font-medium text-text-primary mb-2">Categoría</label>
+                    <select id="video-category" class="w-full px-3 py-2.5 border border-border-primary rounded-lg bg-bg-tertiary text-text-primary text-sm transition-all duration-200 focus:outline-none focus:border-accent">
                         <option value="">Selecciona una categoría</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Comentarios (opcional)</label>
-                    <textarea id="video-comments" class="form-textarea" placeholder="Notas personales sobre este video..."></textarea>
+                <div class="mb-5 px-5">
+                    <label class="block text-sm font-medium text-text-primary mb-2">Comentarios (opcional)</label>
+                    <textarea id="video-comments" class="w-full px-3 py-2.5 border border-border-primary rounded-lg bg-bg-tertiary text-text-primary text-sm transition-all duration-200 focus:outline-none focus:border-accent resize-y min-h-[100px]" placeholder="Notas personales sobre este video..."></textarea>
                 </div>
-                <div class="form-actions">
-                    <button type="button" id="cancel-video" class="btn btn-secondary">Cancelar</button>
-                    <button type="submit" id="save-video" class="btn btn-primary">Agregar</button>
+                <div class="flex justify-end gap-3 p-5 border-t border-border-primary">
+                    <button type="button" id="cancel-video" class="px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 bg-bg-tertiary text-text-primary border border-border-primary hover:bg-border-primary">Cancelar</button>
+                    <button type="submit" id="save-video" class="px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover">Agregar</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Video Player -->
-    <div id="video-player" class="video-player hidden">
-        <div class="player-main">
-            <div class="player-header">
-                <h2 id="player-title" class="player-title"></h2>
-                <button id="close-player" class="modal-close">×</button>
+    <div id="video-player" class="fixed inset-0 bg-black/95 z-[2000] flex flex-col md:flex-row hidden">
+        <div class="flex-1 flex flex-col p-4 md:p-6">
+            <div class="flex justify-between items-center mb-4 md:mb-6">
+                <h2 id="player-title" class="text-lg md:text-2xl font-semibold text-white"></h2>
+                <button id="close-player" class="bg-transparent border-none text-2xl text-text-muted cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-all duration-200 hover:bg-bg-tertiary hover:text-text-primary">×</button>
             </div>
-            <div class="player-content">
-                <div class="player-video">
-                    <iframe id="player-iframe" frameborder="0" allowfullscreen></iframe>
+            <div class="flex-1 flex flex-col gap-4 md:gap-6">
+                <div class="flex-1 min-h-0">
+                    <iframe id="player-iframe" class="w-full h-full border-none rounded-lg" frameborder="0" allowfullscreen></iframe>
                 </div>
-                <div id="player-comments" class="video-comments hidden"></div>
+                <div id="player-comments" class="text-xs text-text-muted mt-2 italic hidden"></div>
             </div>
         </div>
-        <div class="player-sidebar">
-            <div class="sidebar-section">
-                <h3 class="sidebar-title">Todos los Videos</h3>
+        <div class="w-full md:w-80 h-[200px] md:h-auto bg-black/90 p-4 md:p-6 overflow-y-auto border-t md:border-t-0 md:border-l border-border-primary">
+            <div class="mb-8">
+                <h3 class="text-sm font-semibold text-text-secondary mb-3 uppercase tracking-wider">Todos los Videos</h3>
                 <div id="player-video-list">
                     <!-- Lista de videos se carga dinámicamente -->
                 </div>
@@ -866,8 +126,8 @@ import BaseTailwind from '../../layouts/BaseTailwind.astro';
         </div>
     </div>
 
-    <script>
-/*        // Constantes y configuración
+    <script is:inline>
+        // Constantes y configuración
         const STORAGE_KEY = 'video-organizer-data';
         const YOUTUBE_REGEX = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
         const YOUTUBE_PLAYLIST_REGEX = /(?:youtube\.com\/playlist\?list=|youtube\.com\/.*[?&]list=)([a-zA-Z0-9_-]+)/;
@@ -1053,15 +313,15 @@ import BaseTailwind from '../../layouts/BaseTailwind.astro';
 
             appState.categories.forEach(category => {
                 const li = document.createElement('li');
-                li.className = 'category-item';
+                li.className = 'p-3 bg-bg-tertiary rounded-lg flex justify-between items-center cursor-pointer transition-all duration-200 hover:bg-border-primary';
                 li.innerHTML = `
                     <div>
-                        <div class="category-name">${category.name}</div>
-                        <div class="category-count">${category.videos.length} videos</div>
+                        <div class="font-medium text-text-primary mb-1">${category.name}</div>
+                        <div class="text-xs text-text-muted">${category.videos.length} videos</div>
                     </div>
-                    <div class="category-actions">
-                        <button onclick="editCategory('${category.id}')" title="Editar">✏️</button>
-                        <button onclick="deleteCategory('${category.id}')" title="Eliminar">🗑️</button>
+                    <div class="flex gap-2">
+                        <button onclick="editCategory('${category.id}')" class="bg-transparent border-none cursor-pointer text-base p-1 opacity-60 transition-opacity duration-200 hover:opacity-100" title="Editar">✏️</button>
+                        <button onclick="deleteCategory('${category.id}')" class="bg-transparent border-none cursor-pointer text-base p-1 opacity-60 transition-opacity duration-200 hover:opacity-100" title="Eliminar">🗑️</button>
                     </div>
                 `;
                 container.appendChild(li);
@@ -1091,13 +351,13 @@ import BaseTailwind from '../../layouts/BaseTailwind.astro';
 
             filteredCategories.forEach(category => {
                 const column = document.createElement('div');
-                column.className = 'category-column';
+                column.className = 'bg-bg-secondary rounded-lg p-4 min-w-[280px]';
                 column.innerHTML = `
-                    <div class="column-header">
-                        <h3 class="column-title">${category.name}</h3>
-                        <button onclick="addVideoToCategory('${category.id}')" class="btn btn-primary" style="padding: 4px 8px; font-size: 12px;">+</button>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-base font-semibold text-text-primary">${category.name}</h3>
+                        <button onclick="addVideoToCategory('${category.id}')" class="px-2 py-1 rounded-lg text-xs font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover">+</button>
                     </div>
-                    <div class="videos-grid" id="videos-${category.id}">
+                    <div class="flex flex-col gap-3" id="videos-${category.id}">
                         ${category.videos.map(video => renderVideoCard(video)).join('')}
                     </div>
                 `;
@@ -1124,33 +384,35 @@ import BaseTailwind from '../../layouts/BaseTailwind.astro';
 
         function renderVideoCard(video, showCategory = false) {
             const thumbnailHtml = video.thumbnail 
-                ? `<img src="${video.thumbnail}" alt="${video.title}" onerror="this.style.display='none'">`
-                : `<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-muted);">
+                ? `<img src="${video.thumbnail}" alt="${video.title}" class="absolute top-0 left-0 w-full h-full object-cover" onerror="this.style.display='none'">`
+                : `<div class="absolute inset-0 flex items-center justify-center text-text-muted">
                      ${video.isPlaylist ? '📋' : '🎬'}
                    </div>`;
 
+            const platformBg = video.platform === 'youtube' ? 'bg-red-500/10 text-red-500' : 'bg-black/10 text-text-primary';
+            
             return `
-                <div class="video-card" onclick="playVideo('${video.id}')">
-                    <div class="video-thumbnail">
+                <div class="bg-bg-tertiary rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg group" onclick="playVideo('${video.id}')">
+                    <div class="relative w-full pt-[56.25%] bg-bg-primary overflow-hidden">
                         ${thumbnailHtml}
-                        <div class="video-overlay">
-                            <button class="play-button">▶ Reproducir</button>
+                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            <button class="bg-accent text-white border-none px-4 py-2 rounded-md font-medium cursor-pointer">▶ Reproducir</button>
                         </div>
                     </div>
-                    <div class="video-info">
-                        <h4 class="video-title">${video.title}</h4>
-                        <div class="video-meta">
-                            <span class="video-platform platform-${video.platform}">
+                    <div class="p-3">
+                        <h4 class="text-sm font-medium text-text-primary mb-2 line-clamp-2">${video.title}</h4>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs px-2 py-1 rounded font-medium ${platformBg}">
                                 ${video.platform === 'youtube' ? 'YouTube' : 'Udemy'}
                                 ${video.isPlaylist ? ' Playlist' : ''}
                             </span>
-                            <div class="video-actions">
-                                <button onclick="event.stopPropagation(); editVideo('${video.id}')" title="Editar">✏️</button>
-                                <button onclick="event.stopPropagation(); deleteVideo('${video.id}')" title="Eliminar">🗑️</button>
+                            <div class="flex gap-2">
+                                <button onclick="event.stopPropagation(); editVideo('${video.id}')" class="bg-transparent border-none cursor-pointer text-sm opacity-60 transition-opacity duration-200 hover:opacity-100" title="Editar">✏️</button>
+                                <button onclick="event.stopPropagation(); deleteVideo('${video.id}')" class="bg-transparent border-none cursor-pointer text-sm opacity-60 transition-opacity duration-200 hover:opacity-100" title="Eliminar">🗑️</button>
                             </div>
                         </div>
-                        ${showCategory ? `<div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">${video.categoryName}</div>` : ''}
-                        ${video.comments ? `<div class="video-comments">${video.comments}</div>` : ''}
+                        ${showCategory ? `<div class="text-xs text-text-muted mt-1">${video.categoryName}</div>` : ''}
+                        ${video.comments ? `<div class="text-xs text-text-muted mt-2 italic">${video.comments}</div>` : ''}
                     </div>
                 </div>
             `;
@@ -1187,12 +449,13 @@ import BaseTailwind from '../../layouts/BaseTailwind.astro';
 
         // Funciones de la aplicación
         function addCategory() {
+            if (!elements.categoryInput) return;
             const name = elements.categoryInput.value.trim();
             if (!name) return;
 
             const newCategory = {
                 id: generateId(),
-                name,
+                name: name,
                 videos: []
             };
 
@@ -1222,21 +485,34 @@ import BaseTailwind from '../../layouts/BaseTailwind.astro';
             }
         }
 
-        function showAddVideoModal(categoryId = null) {
-            elements.addVideoModal.classList.remove('hidden');
-            if (categoryId) {
+        function showAddVideoModal(categoryId) {
+            if (categoryId === undefined) categoryId = null;
+            if (elements.addVideoModal) {
+                elements.addVideoModal.classList.remove('hidden');
+            }
+            if (categoryId && elements.videoCategory) {
                 elements.videoCategory.value = categoryId;
             }
-            elements.videoUrl.focus();
+            if (elements.videoUrl) {
+                elements.videoUrl.focus();
+            }
         }
 
         function hideAddVideoModal() {
-            elements.addVideoModal.classList.add('hidden');
-            elements.addVideoForm.reset();
-            elements.urlError.classList.add('hidden');
+            if (elements.addVideoModal) {
+                elements.addVideoModal.classList.add('hidden');
+            }
+            if (elements.addVideoForm) {
+                elements.addVideoForm.reset();
+            }
+            if (elements.urlError) {
+                elements.urlError.classList.add('hidden');
+            }
         }
 
         async function addVideo() {
+            if (!elements.videoUrl || !elements.videoCategory || !elements.videoComments) return;
+            
             const url = elements.videoUrl.value.trim();
             const categoryId = elements.videoCategory.value;
             const comments = elements.videoComments.value.trim();
@@ -1257,8 +533,10 @@ import BaseTailwind from '../../layouts/BaseTailwind.astro';
             }
 
             try {
-                elements.saveVideo.textContent = 'Agregando...';
-                elements.saveVideo.disabled = true;
+                if (elements.saveVideo) {
+                    elements.saveVideo.textContent = 'Agregando...';
+                    elements.saveVideo.disabled = true;
+                }
 
                 const videoData = await createVideoObject(url, comments);
                 const category = appState.categories.find(cat => cat.id === categoryId);
@@ -1270,16 +548,20 @@ import BaseTailwind from '../../layouts/BaseTailwind.astro';
                     hideAddVideoModal();
                 }
             } catch (error) {
-                showError(error.message || 'Error al agregar el video');
+                showError((error && error.message) || 'Error al agregar el video');
             } finally {
-                elements.saveVideo.textContent = 'Agregar';
-                elements.saveVideo.disabled = false;
+                if (elements.saveVideo) {
+                    elements.saveVideo.textContent = 'Agregar';
+                    elements.saveVideo.disabled = false;
+                }
             }
         }
 
         function showError(message) {
-            elements.urlError.textContent = message;
-            elements.urlError.classList.remove('hidden');
+            if (elements.urlError) {
+                elements.urlError.textContent = message;
+                elements.urlError.classList.remove('hidden');
+            }
         }
 
         function deleteVideo(videoId) {
@@ -1327,15 +609,17 @@ import BaseTailwind from '../../layouts/BaseTailwind.astro';
                 elements.playerIframe.src = '';
                 // Para Udemy, mostrar enlace
                 elements.playerIframe.style.display = 'none';
-                const playerVideo = document.querySelector('.player-video');
-                playerVideo.innerHTML = `
-                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #000; color: white; text-align: center; padding: 20px;">
-                        <div>
-                            <p style="margin-bottom: 16px;">Los videos de Udemy requieren autenticación</p>
-                            <a href="${video.url}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Abrir en Udemy</a>
+                const playerVideo = document.querySelector('.flex-1.min-h-0');
+                if (playerVideo) {
+                    playerVideo.innerHTML = `
+                        <div class="flex items-center justify-center h-full bg-black text-white text-center p-5">
+                            <div>
+                                <p class="mb-4">Los videos de Udemy requieren autenticación</p>
+                                <a href="${video.url}" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover">Abrir en Udemy</a>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                }
             }
 
             if (video.comments) {
@@ -1359,11 +643,12 @@ import BaseTailwind from '../../layouts/BaseTailwind.astro';
 
             allVideos.forEach(video => {
                 const item = document.createElement('div');
-                item.className = `video-list-item ${video.id === appState.selectedVideo?.id ? 'active' : ''}`;
+                const isActive = video.id === appState.selectedVideo?.id;
+                item.className = `p-3 rounded-lg mb-2 cursor-pointer transition-all duration-200 ${isActive ? 'bg-accent text-white' : 'bg-white/5 hover:bg-white/10'}`;
                 item.onclick = () => playVideo(video.id);
                 item.innerHTML = `
-                    <div class="video-list-title">${video.title}</div>
-                    <div class="video-list-category">${video.categoryName}</div>
+                    <div class="text-sm font-medium mb-1">${video.title}</div>
+                    <div class="text-xs opacity-70">${video.categoryName}</div>
                 `;
                 container.appendChild(item);
             });
@@ -1378,22 +663,40 @@ import BaseTailwind from '../../layouts/BaseTailwind.astro';
         function toggleTheme() {
             appState.currentTheme = appState.currentTheme === 'dark' ? 'light' : 'dark';
             document.body.setAttribute('data-theme', appState.currentTheme);
-            elements.themeToggle.textContent = appState.currentTheme === 'dark' ? '☀️' : '🌙';
-            elements.themeToggle.title = appState.currentTheme === 'dark' ? 'Modo claro' : 'Modo oscuro';
+            if (elements.themeToggle) {
+                elements.themeToggle.textContent = appState.currentTheme === 'dark' ? '☀️' : '🌙';
+                elements.themeToggle.title = appState.currentTheme === 'dark' ? 'Modo claro' : 'Modo oscuro';
+            }
             saveToStorage();
         }
 
         function setView(view) {
             appState.currentView = view;
-            elements.boardViewBtn.classList.toggle('active', view === 'board');
-            elements.listViewBtn.classList.toggle('active', view === 'list');
+            // Actualizar clases Tailwind para botones activos
+            if (view === 'board') {
+                if (elements.boardViewBtn) {
+                    elements.boardViewBtn.className = 'px-3 md:px-4 py-1.5 rounded-md text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-accent text-white shadow-sm';
+                }
+                if (elements.listViewBtn) {
+                    elements.listViewBtn.className = 'px-3 md:px-4 py-1.5 rounded-md text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-transparent text-text-muted hover:text-text-primary';
+                }
+            } else {
+                if (elements.boardViewBtn) {
+                    elements.boardViewBtn.className = 'px-3 md:px-4 py-1.5 rounded-md text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-transparent text-text-muted hover:text-text-primary';
+                }
+                if (elements.listViewBtn) {
+                    elements.listViewBtn.className = 'px-3 md:px-4 py-1.5 rounded-md text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-accent text-white shadow-sm';
+                }
+            }
             saveToStorage();
             render();
         }
 
         function handleSearch() {
-            appState.searchQuery = elements.searchInput.value.trim();
-            render();
+            if (elements.searchInput) {
+                appState.searchQuery = elements.searchInput.value.trim();
+                render();
+            }
         }
 
         function exportData() {
@@ -1454,74 +757,167 @@ import BaseTailwind from '../../layouts/BaseTailwind.astro';
         }
 
         // Funciones globales para eventos onclick
-        window.addVideoToCategory = (categoryId) => showAddVideoModal(categoryId);
+        window.addVideoToCategory = function(categoryId) { showAddVideoModal(categoryId); };
         window.editCategory = editCategory;
         window.deleteCategory = deleteCategory;
         window.deleteVideo = deleteVideo;
         window.editVideo = editVideo;
         window.playVideo = playVideo;
 
-        // Event listeners
-        elements.boardViewBtn.addEventListener('click', () => setView('board'));
-        elements.listViewBtn.addEventListener('click', () => setView('list'));
-        elements.addCategoryBtn.addEventListener('click', addCategory);
-        elements.categoryInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') addCategory();
-        });
-        elements.addVideoBtn.addEventListener('click', () => showAddVideoModal());
-        elements.closeVideoModal.addEventListener('click', hideAddVideoModal);
-        elements.cancelVideo.addEventListener('click', hideAddVideoModal);
-        elements.addVideoForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            addVideo();
-        });
-        elements.searchInput.addEventListener('input', handleSearch);
-        elements.themeToggle.addEventListener('click', toggleTheme);
-        elements.exportBtn.addEventListener('click', exportData);
-        elements.importBtn.addEventListener('click', importData);
-        elements.closePlayer.addEventListener('click', closeVideoPlayer);
-        elements.createFirstCategory.addEventListener('click', () => {
-            elements.categoryInput.focus();
-        });
+        // Función para registrar event listeners
+        function setupEventListeners() {
+            // Event listeners
+            if (elements.boardViewBtn) {
+                elements.boardViewBtn.addEventListener('click', () => setView('board'));
+            }
+            if (elements.listViewBtn) {
+                elements.listViewBtn.addEventListener('click', () => setView('list'));
+            }
+            if (elements.addCategoryBtn) {
+                elements.addCategoryBtn.addEventListener('click', addCategory);
+            }
+            if (elements.categoryInput) {
+                elements.categoryInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') addCategory();
+                });
+            }
+            if (elements.addVideoBtn) {
+                elements.addVideoBtn.addEventListener('click', () => showAddVideoModal());
+            }
+            if (elements.closeVideoModal) {
+                elements.closeVideoModal.addEventListener('click', hideAddVideoModal);
+            }
+            if (elements.cancelVideo) {
+                elements.cancelVideo.addEventListener('click', hideAddVideoModal);
+            }
+            if (elements.addVideoForm) {
+                elements.addVideoForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    addVideo();
+                });
+            }
+            if (elements.searchInput) {
+                elements.searchInput.addEventListener('input', handleSearch);
+            }
+            if (elements.themeToggle) {
+                elements.themeToggle.addEventListener('click', toggleTheme);
+            }
+            if (elements.exportBtn) {
+                elements.exportBtn.addEventListener('click', exportData);
+            }
+            if (elements.importBtn) {
+                elements.importBtn.addEventListener('click', importData);
+            }
+            if (elements.closePlayer) {
+                elements.closePlayer.addEventListener('click', closeVideoPlayer);
+            }
+            if (elements.createFirstCategory) {
+                elements.createFirstCategory.addEventListener('click', () => {
+                    if (elements.categoryInput) {
+                        elements.categoryInput.focus();
+                    }
+                });
+            }
 
-        // Cerrar modales con Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                if (!elements.addVideoModal.classList.contains('hidden')) {
-                    hideAddVideoModal();
+            // Cerrar modales con Escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (elements.addVideoModal && !elements.addVideoModal.classList.contains('hidden')) {
+                        hideAddVideoModal();
+                    }
+                    if (elements.videoPlayer && !elements.videoPlayer.classList.contains('hidden')) {
+                        closeVideoPlayer();
+                    }
                 }
-                if (!elements.videoPlayer.classList.contains('hidden')) {
-                    closeVideoPlayer();
-                }
-            }
-        });
+            });
 
-        // Cerrar modales clickeando fuera
-        elements.addVideoModal.addEventListener('click', (e) => {
-            if (e.target === elements.addVideoModal) {
-                hideAddVideoModal();
+            // Cerrar modales clickeando fuera
+            if (elements.addVideoModal) {
+                elements.addVideoModal.addEventListener('click', (e) => {
+                    if (e.target === elements.addVideoModal) {
+                        hideAddVideoModal();
+                    }
+                });
             }
-        });
 
-        elements.videoPlayer.addEventListener('click', (e) => {
-            if (e.target === elements.videoPlayer) {
-                closeVideoPlayer();
+            if (elements.videoPlayer) {
+                elements.videoPlayer.addEventListener('click', (e) => {
+                    if (e.target === elements.videoPlayer) {
+                        closeVideoPlayer();
+                    }
+                });
             }
-        });
+        }
 
         // Inicialización
         function init() {
+            // Re-obtener elementos del DOM por si acaso
+            elements.boardViewBtn = document.getElementById('board-view-btn');
+            elements.listViewBtn = document.getElementById('list-view-btn');
+            elements.addVideoBtn = document.getElementById('add-video-btn');
+            elements.addCategoryBtn = document.getElementById('add-category-btn');
+            elements.categoryInput = document.getElementById('category-input');
+            elements.searchInput = document.getElementById('search-input');
+            elements.themeToggle = document.getElementById('theme-toggle');
+            elements.addVideoModal = document.getElementById('add-video-modal');
+            elements.closeVideoModal = document.getElementById('close-video-modal');
+            elements.cancelVideo = document.getElementById('cancel-video');
+            elements.addVideoForm = document.getElementById('add-video-form');
+            elements.videoUrl = document.getElementById('video-url');
+            elements.videoCategory = document.getElementById('video-category');
+            elements.videoComments = document.getElementById('video-comments');
+            elements.saveVideo = document.getElementById('save-video');
+            elements.urlError = document.getElementById('url-error');
+            elements.exportBtn = document.getElementById('export-btn');
+            elements.importBtn = document.getElementById('import-btn');
+            elements.videoPlayer = document.getElementById('video-player');
+            elements.closePlayer = document.getElementById('close-player');
+            elements.playerTitle = document.getElementById('player-title');
+            elements.playerIframe = document.getElementById('player-iframe');
+            elements.playerComments = document.getElementById('player-comments');
+            elements.playerVideoList = document.getElementById('player-video-list');
+            elements.createFirstCategory = document.getElementById('create-first-category');
+            elements.boardView = document.getElementById('board-view');
+            elements.listView = document.getElementById('list-view');
+            elements.emptyState = document.getElementById('empty-state');
+            elements.categoriesList = document.getElementById('categories-list');
+
             loadFromStorage();
             document.body.setAttribute('data-theme', appState.currentTheme);
-            elements.themeToggle.textContent = appState.currentTheme === 'dark' ? '☀️' : '🌙';
-            elements.themeToggle.title = appState.currentTheme === 'dark' ? 'Modo claro' : 'Modo oscuro';
-            elements.boardViewBtn.classList.toggle('active', appState.currentView === 'board');
-            elements.listViewBtn.classList.toggle('active', appState.currentView === 'list');
+            if (elements.themeToggle) {
+                elements.themeToggle.textContent = appState.currentTheme === 'dark' ? '☀️' : '🌙';
+                elements.themeToggle.title = appState.currentTheme === 'dark' ? 'Modo claro' : 'Modo oscuro';
+            }
+            // Inicializar clases de botones de vista
+            if (appState.currentView === 'board') {
+                if (elements.boardViewBtn) {
+                    elements.boardViewBtn.className = 'px-3 md:px-4 py-1.5 rounded-md text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-accent text-white shadow-sm';
+                }
+                if (elements.listViewBtn) {
+                    elements.listViewBtn.className = 'px-3 md:px-4 py-1.5 rounded-md text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-transparent text-text-muted hover:text-text-primary';
+                }
+            } else {
+                if (elements.boardViewBtn) {
+                    elements.boardViewBtn.className = 'px-3 md:px-4 py-1.5 rounded-md text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-transparent text-text-muted hover:text-text-primary';
+                }
+                if (elements.listViewBtn) {
+                    elements.listViewBtn.className = 'px-3 md:px-4 py-1.5 rounded-md text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-accent text-white shadow-sm';
+                }
+            }
+            
+            // Configurar event listeners
+            setupEventListeners();
+            
             render();
         }
 
-        // Iniciar la aplicación
-        init();*/
+        // Iniciar la aplicación cuando el DOM esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            // Si el DOM ya está listo, ejecutar inmediatamente
+            setTimeout(init, 0);
+        }
     </script>
     </div>
 </BaseTailwind>

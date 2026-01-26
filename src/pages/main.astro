@@ -1,5 +1,8 @@
 ---
+import BaseTailwind from "../layouts/BaseTailwind.astro";
 import CurrencyConverter from "../components/main-page/CurrencyConverter.astro";
+
+export const prerender = true;
 import WeatherWidget from "../components/main-page/WeatherWidget.astro";
 import ChuckFacts from "../components/main-page/ChuckFacts.astro";
 import RetroTranslator from "../components/main-page/RetroTranslator.astro";
@@ -30,17 +33,12 @@ function pathToRoute(key: string): { segment: string; name: string; url: string 
 const pages = keys.map(pathToRoute).sort((a, b) => a.segment.localeCompare(b.segment));
 ---
 
-<!doctype html>
-<html lang="es">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href={`${baseUrl}/favicon.svg`} />
-		<link rel="icon" href={`${baseUrl}/favicon.ico`} />
-		<meta name="viewport" content="width=device-width" />
-		<title>Bienvenido a MG Lab</title>
-	</head>
-	<body>
-		<div class="container">
+<BaseTailwind 
+	title="Bienvenido a MG Lab"
+	description="MG Lab Depot - Herramientas y aplicaciones"
+	lang="es"
+>
+	<div class="container">
 			<aside class="sidebar" aria-label="Main Navigation Sidebar">
 				<nav class="menu">
 					{
@@ -370,5 +368,5 @@ const pages = keys.map(pathToRoute).sort((a, b) => a.segment.localeCompare(b.seg
 				}
 			}
 		</style>
-	</body>
-</html>
+	</div>
+</BaseTailwind>

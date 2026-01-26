@@ -1,8 +1,8 @@
 // ejemplos.js
-const ejemplosInstrucciones = `📝 **Incluir** 1-3 ejemplos del formato o tipo de respuesta esperada.
-📋 **Mostrar** la estructura deseada mediante ejemplos reales.
-⚖️ **Mantener** consistencia en el formato de todos los ejemplos.
-🎯 Similar a **Few-Shot** pero enfocado en mostrar el formato/estructura de salida.
+const ejemplosInstrucciones = `**Incluir** 1-3 ejemplos del formato o tipo de respuesta esperada.
+**Mostrar** la estructura deseada mediante ejemplos reales.
+**Mantener** consistencia en el formato de todos los ejemplos.
+Similar a **Few-Shot** pero enfocado en mostrar el formato/estructura de salida.
 
 Ejemplo:
 - Base: "Consejos para cuidar un gato"

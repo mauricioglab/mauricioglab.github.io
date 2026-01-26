@@ -1,6 +1,8 @@
 ---
 import BaseTailwind from '../../layouts/BaseTailwind.astro';
 
+export const prerender = true;
+
 const base = import.meta.env.BASE_URL;
 const b = base.endsWith("/") ? base : `${base}/`;
 

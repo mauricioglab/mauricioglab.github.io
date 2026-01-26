@@ -1,10 +1,10 @@
 // role-playing.js
-const rolePlayingInstructions = `🎭 **Aplicar la siguiente fórmula de Role-Play**:
-1️⃣ **Rol**: "Actúa como [profesional/experto]"
-2️⃣ **Contexto**: "Te daré [información específica]"
-3️⃣ **Tarea**: "Deberás [acción específica]"
-4️⃣ **Tono/Estilo**: (Opcional) "Utiliza un tono [profesional/amigable/etc]"
-5️⃣ **Detalles**: "Los detalles importantes son: [especificaciones]"
+const rolePlayingInstructions = `**Aplicar la siguiente fórmula de Role-Play**:
+1. **Rol**: "Actúa como [profesional/experto]"
+2. **Contexto**: "Te daré [información específica]"
+3. **Tarea**: "Deberás [acción específica]"
+4. **Tono/Estilo**: (Opcional) "Utiliza un tono [profesional/amigable/etc]"
+5. **Detalles**: "Los detalles importantes son: [especificaciones]"
 
 Ejemplo:
 - Base: "Consejos para cuidar un gato"

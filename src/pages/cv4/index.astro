@@ -1,0 +1,879 @@
+---
+// src/pages/cv-hibrido.astro
+export const prerender = true;
+---
+
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gonzalez Mauricio - Full Stack Developer .NET + Angular</title>
+        <meta
+            name="description"
+            content="Full Stack Developer con 4 años de experiencia en .NET Core, Angular y AWS."
+        />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            body {
+                font-family: "Inter", sans-serif;
+            }
+        </style>
+    </head>
+    <body class="bg-gray-50">
+        <!-- Header Simple -->
+        <header
+            class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-200"
+        >
+            <div
+                class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between"
+            >
+                <div class="text-sm font-semibold text-gray-900">
+                    CV - Gonzalez Mauricio
+                </div>
+                <a
+                    href="/"
+                    class="text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                    ← Volver
+                </a>
+            </div>
+        </header>
+
+        <main class="max-w-6xl mx-auto px-6 py-12">
+            <!-- Hero Section -->
+            <section class="mb-16">
+                <h1 class="text-5xl font-extrabold text-gray-900 mb-2">
+                    Gonzalez Mauricio
+                </h1>
+                <h2 class="text-2xl text-gray-700 font-semibold mb-6">
+                    Full Stack Developer <span class="text-blue-600"
+                        >.NET + Angular</span
+                    >
+                </h2>
+
+                <!-- Stats Badges -->
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <span
+                        class="px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold border border-blue-200"
+                    >
+                        4 años de experiencia
+                    </span>
+                    <span
+                        class="px-4 py-2 bg-emerald-50 text-emerald-700 rounded-full text-sm font-semibold border border-emerald-200"
+                    >
+                        Docente 7 materias
+                    </span>
+                    <span
+                        class="px-4 py-2 bg-purple-50 text-purple-700 rounded-full text-sm font-semibold border border-purple-200"
+                    >
+                        Arquitectura DDD & CQRS
+                    </span>
+                    <span
+                        class="px-4 py-2 bg-orange-50 text-orange-700 rounded-full text-sm font-semibold border border-orange-200"
+                    >
+                        AWS + Docker
+                    </span>
+                </div>
+
+                <!-- Summary -->
+                <p class="text-lg text-gray-600 leading-relaxed mb-6 max-w-4xl">
+                    Transformando ideas complejas en soluciones robustas y
+                    escalables. Especializado en arquitecturas críticas,
+                    sistemas de alto rendimiento y optimización de procesos.
+                    Combinando desarrollo profesional con docencia técnica en
+                    nivel terciario.
+                </p>
+
+                <!-- Contact Info - Arreglado -->
+                <div class="flex flex-wrap gap-6 text-sm text-gray-600">
+                    <div class="flex items-center gap-2">
+                        <span>📧</span>
+                        <a
+                            href="mailto:mauriciogcode@gmail.com"
+                            class="hover:text-blue-600 transition-colors"
+                        >
+                            mauriciogcode@gmail.com
+                        </a>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span>📱</span>
+                        <span>(+54) 351 513 7091</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span>🔗</span>
+                        <a
+                            href="https://www.linkedin.com/in/mauriciogdev/"
+                            target="_blank"
+                            class="hover:text-blue-600 transition-colors"
+                        >
+                            LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Perfil Profesional -->
+            <section class="mb-16">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">
+                    🎯 Perfil Profesional
+                </h3>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div
+                        class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow"
+                    >
+                        <div
+                            class="w-14 h-14 bg-blue-500 rounded-xl flex items-center justify-center mb-4 text-3xl"
+                        >
+                            💻
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2">
+                            Desarrollador Full Stack
+                        </h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            .NET Core, Angular, AWS. Arquitectura DDD, CQRS y
+                            microservicios para sistemas críticos.
+                        </p>
+                    </div>
+
+                    <div
+                        class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow"
+                    >
+                        <div
+                            class="w-14 h-14 bg-emerald-500 rounded-xl flex items-center justify-center mb-4 text-3xl"
+                        >
+                            ⚡
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2">
+                            Optimización de Sistemas
+                        </h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Reducción de procesos de 4h a 30min. Performance
+                            tuning y escalabilidad.
+                        </p>
+                    </div>
+
+                    <div
+                        class="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow"
+                    >
+                        <div
+                            class="w-14 h-14 bg-purple-500 rounded-xl flex items-center justify-center mb-4 text-3xl"
+                        >
+                            🎓
+                        </div>
+                        <h4 class="text-lg font-bold text-gray-900 mb-2">
+                            Docente Técnico
+                        </h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            7 materias en nivel terciario. Stack: Python, React,
+                            React Native, .NET, Bases de Datos.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skills -->
+            <section class="mb-16">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">
+                    🛠️ Habilidades Técnicas
+                </h3>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Backend -->
+                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="text-2xl">⚙️</div>
+                            <h4 class="text-lg font-bold text-gray-900">
+                                Backend
+                            </h4>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium"
+                                >.NET Core</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium"
+                                >C#</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium"
+                                >ASP.NET</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium"
+                                >Entity Framework</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium"
+                                >Dapper</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium"
+                                >Node.js</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium"
+                                >NestJS</span
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Frontend -->
+                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="text-2xl">🎨</div>
+                            <h4 class="text-lg font-bold text-gray-900">
+                                Frontend
+                            </h4>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium"
+                                >Angular</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium"
+                                >TypeScript</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium"
+                                >JavaScript</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium"
+                                >PrimeNG</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium"
+                                >HTML5/CSS3</span
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Cloud -->
+                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="text-2xl">☁️</div>
+                            <h4 class="text-lg font-bold text-gray-900">
+                                Cloud & DevOps
+                            </h4>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="px-3 py-1 bg-orange-50 text-orange-700 rounded-full text-sm font-medium"
+                                >AWS S3</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-orange-50 text-orange-700 rounded-full text-sm font-medium"
+                                >AWS Lambda</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-orange-50 text-orange-700 rounded-full text-sm font-medium"
+                                >Docker</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-orange-50 text-orange-700 rounded-full text-sm font-medium"
+                                >Amazon ECS</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-orange-50 text-orange-700 rounded-full text-sm font-medium"
+                                >Rekognition</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-orange-50 text-orange-700 rounded-full text-sm font-medium"
+                                >CI/CD</span
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Arquitectura -->
+                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="text-2xl">🏗️</div>
+                            <h4 class="text-lg font-bold text-gray-900">
+                                Arquitectura & DB
+                            </h4>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-sm font-medium"
+                                >SQL Server</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-sm font-medium"
+                                >Oracle PL/SQL</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-sm font-medium"
+                                >DDD</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-sm font-medium"
+                                >CQRS</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-sm font-medium"
+                                >Microservicios</span
+                            >
+                            <span
+                                class="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-sm font-medium"
+                                >REST APIs</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Experiencia -->
+            <section class="mb-16">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">
+                    💼 Experiencia Profesional
+                </h3>
+
+                <div class="space-y-8">
+                    <!-- GyL Group -->
+                    <div class="relative pl-8 border-l-2 border-blue-500">
+                        <div
+                            class="absolute -left-3 top-0 w-6 h-6 bg-blue-500 rounded-full border-4 border-white"
+                        >
+                        </div>
+
+                        <div
+                            class="bg-white rounded-xl p-6 border border-gray-200"
+                        >
+                            <div
+                                class="flex flex-wrap items-start justify-between gap-4 mb-4"
+                            >
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-900">
+                                        Desarrollador Full Stack
+                                    </h4>
+                                    <p
+                                        class="text-lg text-blue-600 font-semibold"
+                                    >
+                                        GyL Group
+                                    </p>
+                                </div>
+                                <span
+                                    class="px-4 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold whitespace-nowrap"
+                                >
+                                    01/2023 – Presente
+                                </span>
+                            </div>
+
+                            <!-- Proyectos -->
+                            <div class="space-y-4">
+                                <div>
+                                    <h5 class="font-bold text-gray-900 mb-2">
+                                        ▸ Sistemas de Declaraciones Juradas
+                                        (ASI)
+                                    </h5>
+                                    <ul
+                                        class="space-y-1 text-gray-700 text-sm ml-4"
+                                    >
+                                        <li>
+                                            • Formularios dinámicos y consumo de
+                                            APIs externas para integración
+                                            gubernamental
+                                        </li>
+                                        <li>
+                                            • Referente técnico: code reviews,
+                                            resolución de bloqueos y mentoría
+                                            junior
+                                        </li>
+                                        <li>
+                                            • <strong
+                                                >Optimización crítica:</strong
+                                            > Reducción de 4h a 30min procesando 250K
+                                            registros (87% mejora)
+                                        </li>
+                                        <li>
+                                            • Migración exitosa a Angular 19
+                                            manteniendo compatibilidad
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h5 class="font-bold text-gray-900 mb-2">
+                                        ▸ Mapas de Calor & Auditorías
+                                    </h5>
+                                    <ul
+                                        class="space-y-1 text-gray-700 text-sm ml-4"
+                                    >
+                                        <li>
+                                            • Automatización de revisión manual
+                                            Excel a sistema interactivo
+                                        </li>
+                                        <li>
+                                            • Generación performante de informes
+                                            PDF/Excel server-side
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h5 class="font-bold text-gray-900 mb-2">
+                                        ▸ API Billetera Virtual
+                                    </h5>
+                                    <ul
+                                        class="space-y-1 text-gray-700 text-sm ml-4"
+                                    >
+                                        <li>
+                                            • Módulo de firmantes/aprobadores
+                                            con reglas complejas multi-nivel
+                                        </li>
+                                        <li>
+                                            • Dockerización de microservicios
+                                            para Amazon ECS
+                                        </li>
+                                        <li>
+                                            • Implementación DDD, CQRS, Facade y
+                                            Mediator
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div
+                                class="flex flex-wrap gap-2 pt-4 border-t border-gray-200 mt-4"
+                            >
+                                <span
+                                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                                    >Angular 19</span
+                                >
+                                <span
+                                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                                    >.NET Core</span
+                                >
+                                <span
+                                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                                    >Docker</span
+                                >
+                                <span
+                                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                                    >AWS ECS</span
+                                >
+                                <span
+                                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                                    >DDD</span
+                                >
+                                <span
+                                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                                    >CQRS</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SimpleMak -->
+                    <div class="relative pl-8 border-l-2 border-gray-300">
+                        <div
+                            class="absolute -left-3 top-0 w-6 h-6 bg-gray-400 rounded-full border-4 border-white"
+                        >
+                        </div>
+
+                        <div
+                            class="bg-white rounded-xl p-6 border border-gray-200"
+                        >
+                            <div
+                                class="flex flex-wrap items-start justify-between gap-4 mb-4"
+                            >
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-900">
+                                        Desarrollador .NET
+                                    </h4>
+                                    <p
+                                        class="text-lg text-gray-600 font-semibold"
+                                    >
+                                        SimpleMak
+                                    </p>
+                                </div>
+                                <span
+                                    class="px-4 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-semibold whitespace-nowrap"
+                                >
+                                    11/2022 – 02/2023
+                                </span>
+                            </div>
+
+                            <ul class="space-y-1 text-gray-700 text-sm">
+                                <li>
+                                    • Desarrollo módulo Warehousing aplicando
+                                    DDD y CQRS
+                                </li>
+                                <li>
+                                    • Formularios complejos con JavaScript
+                                    Vanilla emulando reactividad
+                                </li>
+                                <li>
+                                    • Integración con APIs externas y gestión de
+                                    inventario en tiempo real
+                                </li>
+                            </ul>
+
+                            <div
+                                class="flex flex-wrap gap-2 pt-4 border-t border-gray-200 mt-4"
+                            >
+                                <span
+                                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                                    >ASP.NET Core</span
+                                >
+                                <span
+                                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                                    >DDD</span
+                                >
+                                <span
+                                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                                    >SQL Server</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- UNSAM -->
+                    <div class="relative pl-8 border-l-2 border-gray-300">
+                        <div
+                            class="absolute -left-3 top-0 w-6 h-6 bg-gray-400 rounded-full border-4 border-white"
+                        >
+                        </div>
+
+                        <div
+                            class="bg-white rounded-xl p-6 border border-gray-200"
+                        >
+                            <div
+                                class="flex flex-wrap items-start justify-between gap-4 mb-4"
+                            >
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-900">
+                                        Analista - Desarrollador
+                                    </h4>
+                                    <p
+                                        class="text-lg text-gray-600 font-semibold"
+                                    >
+                                        Universidad Nacional de San Martín
+                                    </p>
+                                </div>
+                                <span
+                                    class="px-4 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-semibold whitespace-nowrap"
+                                >
+                                    11/2021 – 12/2022
+                                </span>
+                            </div>
+
+                            <ul class="space-y-1 text-gray-700 text-sm">
+                                <li>
+                                    • Formularios web accesibles para Ministerio
+                                    de Desarrollo Social (WCAG)
+                                </li>
+                                <li>
+                                    • Gestión de concesiones y trámites
+                                    administrativos online
+                                </li>
+                                <li>
+                                    • Resolución de bugs críticos en sistemas
+                                    legacy
+                                </li>
+                            </ul>
+
+                            <div
+                                class="flex flex-wrap gap-2 pt-4 border-t border-gray-200 mt-4"
+                            >
+                                <span
+                                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                                    >ASP.NET MVC</span
+                                >
+                                <span
+                                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                                    >Razor</span
+                                >
+                                <span
+                                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                                    >Azure DevOps</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RocketBot -->
+                    <div class="relative pl-8 border-l-2 border-gray-300">
+                        <div
+                            class="absolute -left-3 top-0 w-6 h-6 bg-gray-400 rounded-full border-4 border-white"
+                        >
+                        </div>
+
+                        <div
+                            class="bg-white rounded-xl p-6 border border-gray-200"
+                        >
+                            <div
+                                class="flex flex-wrap items-start justify-between gap-4 mb-4"
+                            >
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-900">
+                                        Desarrollador C#
+                                    </h4>
+                                    <p
+                                        class="text-lg text-gray-600 font-semibold"
+                                    >
+                                        RocketBot
+                                    </p>
+                                </div>
+                                <span
+                                    class="px-4 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-semibold whitespace-nowrap"
+                                >
+                                    07/2021 – 09/2021
+                                </span>
+                            </div>
+
+                            <ul class="space-y-1 text-gray-700 text-sm">
+                                <li>
+                                    • Orchestrator de Gestión de Bots RPA para
+                                    automatización empresarial
+                                </li>
+                                <li>
+                                    • Módulo de autenticación JWT con sistema de
+                                    roles granular
+                                </li>
+                                <li>
+                                    • Sistema de auditoría completo para
+                                    tracking y compliance
+                                </li>
+                            </ul>
+
+                            <div
+                                class="flex flex-wrap gap-2 pt-4 border-t border-gray-200 mt-4"
+                            >
+                                <span
+                                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                                    >ASP.NET Core</span
+                                >
+                                <span
+                                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                                    >AngularJS</span
+                                >
+                                <span
+                                    class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
+                                    >SQLite</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Docencia -->
+            <section class="mb-16">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">
+                    🎓 Experiencia Docente
+                </h3>
+
+                <div
+                    class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-8 border-2 border-purple-200"
+                >
+                    <div class="flex items-start gap-4">
+                        <div
+                            class="w-16 h-16 bg-purple-500 rounded-xl flex items-center justify-center flex-shrink-0 text-3xl"
+                        >
+                            📚
+                        </div>
+                        <div class="flex-1">
+                            <div
+                                class="flex flex-wrap items-start justify-between gap-4 mb-3"
+                            >
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-900">
+                                        Profesor - Carreras de Tecnología
+                                    </h4>
+                                    <p
+                                        class="text-lg text-purple-700 font-semibold"
+                                    >
+                                        Instituto Cervantes
+                                    </p>
+                                </div>
+                                <span
+                                    class="px-4 py-1 bg-purple-500 text-white rounded-full text-sm font-semibold whitespace-nowrap"
+                                >
+                                    08/2024 – Presente
+                                </span>
+                            </div>
+
+                            <p class="text-gray-700 mb-4">
+                                Docente a cargo de 7 materias técnicas en
+                                carreras de nivel terciario: Análisis de
+                                Sistemas, Análisis de Datos e IA, y Desarrollo
+                                Web.
+                            </p>
+
+                            <div class="mb-4">
+                                <h5
+                                    class="font-bold text-gray-900 mb-2 text-sm"
+                                >
+                                    Materias dictadas:
+                                </h5>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium"
+                                        >Práctica Profesionalizante III</span
+                                    >
+                                    <span
+                                        class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium"
+                                        >Introducción a la Programación</span
+                                    >
+                                    <span
+                                        class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium"
+                                        >Base de Datos</span
+                                    >
+                                    <span
+                                        class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium"
+                                        >Programación Web II</span
+                                    >
+                                    <span
+                                        class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium"
+                                        >Apps Móviles</span
+                                    >
+                                    <span
+                                        class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium"
+                                        >Python</span
+                                    >
+                                    <span
+                                        class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium"
+                                        >React</span
+                                    >
+                                </div>
+                            </div>
+
+                            <div>
+                                <h5
+                                    class="font-bold text-gray-900 mb-2 text-sm"
+                                >
+                                    Stack tecnológico enseñado:
+                                </h5>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
+                                        >.NET</span
+                                    >
+                                    <span
+                                        class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
+                                        >Angular</span
+                                    >
+                                    <span
+                                        class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
+                                        >React</span
+                                    >
+                                    <span
+                                        class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
+                                        >React Native</span
+                                    >
+                                    <span
+                                        class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
+                                        >Python</span
+                                    >
+                                    <span
+                                        class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
+                                        >SQL</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Educación -->
+            <section class="mb-16">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">
+                    📚 Educación & Certificaciones
+                </h3>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div
+                        class="bg-white rounded-xl p-6 border border-gray-200 text-center"
+                    >
+                        <div class="text-4xl mb-3">✅</div>
+                        <h4 class="font-bold text-gray-900 mb-1">
+                            Analista de Sistemas de Computación
+                        </h4>
+                        <p class="text-blue-600 font-semibold text-sm">
+                            Instituto Cervantes
+                        </p>
+                        <p class="text-gray-500 text-xs">2023</p>
+                    </div>
+
+                    <div
+                        class="bg-white rounded-xl p-6 border border-gray-200 text-center"
+                    >
+                        <div class="text-4xl mb-3">✅</div>
+                        <h4 class="font-bold text-gray-900 mb-1">
+                            Diplomatura en Programación .NET
+                        </h4>
+                        <p class="text-emerald-600 font-semibold text-sm">
+                            UTN Buenos Aires
+                        </p>
+                        <p class="text-gray-500 text-xs">2023</p>
+                    </div>
+
+                    <div
+                        class="bg-white rounded-xl p-6 border border-gray-200 text-center"
+                    >
+                        <div class="text-4xl mb-3">➕</div>
+                        <h4 class="font-bold text-gray-900 mb-1">
+                            Diplomatura en Ciencia de Datos e IA
+                        </h4>
+                        <p class="text-orange-600 font-semibold text-sm">
+                            UTN Buenos Aires
+                        </p>
+                        <p class="text-orange-500 text-xs font-semibold">
+                            En curso - 2025
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA -->
+            <section class="mb-12">
+                <div
+                    class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-center text-white"
+                >
+                    <h3 class="text-2xl font-bold mb-3">¿Trabajamos juntos?</h3>
+                    <p class="text-blue-100 mb-6 max-w-2xl mx-auto">
+                        Estoy disponible para nuevos desafíos y proyectos
+                        ambiciosos. Conectemos.
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <a
+                            href="mailto:mauriciogcode@gmail.com"
+                            class="px-6 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+                        >
+                            📧 Enviar Email
+                        </a>
+                        <a
+                            href="https://www.linkedin.com/in/mauriciogdev/"
+                            target="_blank"
+                            class="px-6 py-3 bg-transparent border-2 border-white text-white rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
+                        >
+                            🔗 Ver LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-white py-8">
+            <div class="max-w-6xl mx-auto px-6 text-center">
+                <p class="text-gray-400 text-sm">
+                    © 2026 Gonzalez Mauricio - Full Stack Developer .NET +
+                    Angular
+                </p>
+            </div>
+        </footer>
+    </body>
+</html>

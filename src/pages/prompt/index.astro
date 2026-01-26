@@ -1,4 +1,6 @@
 ---
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+
 // Astro frontmatter for server-side configuration
 export const prerender = true;
 
@@ -6,17 +8,15 @@ const baseUrl = import.meta.env.BASE_URL;
 const promptBase = baseUrl.endsWith('/') ? `${baseUrl}prompt/` : `${baseUrl}/prompt/`;
 ---
 
-<!doctype html>
-<html lang="es" data-bs-theme="light" class="h-full">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Teleprompter — by MgLab</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <link rel="stylesheet" href={`${promptBase}style.css`}>
-</head>
+<BaseTailwind
+  title="Teleprompter — by MgLab"
+  description="Laboratorio avanzado de ingeniería de prompts"
+  lang="es"
+>
+  <link slot="head" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <link slot="head" rel="stylesheet" href={`${promptBase}style.css`} />
 
-<body class="flex h-screen overflow-hidden bg-[var(--bs-body-bg)] text-[var(--bs-body-color)] font-sans">
+  <div class="flex h-screen overflow-hidden bg-[var(--bs-body-bg)] text-[var(--bs-body-color)] font-sans" data-bs-theme="light">
   <!-- Sidebar -->
   <aside class="flex flex-col w-72 bg-[var(--bs-body-bg)] border-r border-[var(--bs-border-color)] shadow-lg">
     <!-- Sidebar Header -->
@@ -340,5 +340,5 @@ const promptBase = baseUrl.endsWith('/') ? `${baseUrl}prompt/` : `${baseUrl}/pro
       }
     });
   </script>
-</body>
-</html>
+  </div>
+</BaseTailwind>

@@ -1,8 +1,8 @@
 // pasos.js
-const pasosInstrucciones = `🔢 **Dividir** la tarea en pasos claros y numerados.
-👣 **Indicar** al modelo que siga el orden establecido en cada paso.
-📌 Usar formato tipo: "Paso 1: [acción], Paso 2: [acción], Paso 3: [acción]".
-🎯 Definir el orden de ejecución.
+const pasosInstrucciones = `**Dividir** la tarea en pasos claros y numerados.
+**Indicar** al modelo que siga el orden establecido en cada paso.
+Usar formato tipo: "Paso 1: [acción], Paso 2: [acción], Paso 3: [acción]".
+Definir el orden de ejecución.
 
 Ejemplo:
 - Base: "Consejos para cuidar un gato"

@@ -1,0 +1,163 @@
+{
+  "categories": [
+    {
+      "id": "mkpizk9dj88kccz8f7n",
+      "name": "Zhan Zhuang",
+      "videos": [
+        {
+          "id": "mkpj6pje3emjxf88vgi",
+          "url": "https://www.youtube.com/watch?v=YFq-BFV903I&t=75s",
+          "platform": "youtube",
+          "videoId": "YFq-BFV903I",
+          "title": "15 minutos de ZhanZhuang Guiado para principiantes",
+          "thumbnail": "https://img.youtube.com/vi/YFq-BFV903I/hqdefault.jpg",
+          "comments": "",
+          "createdAt": 1769091136970
+        },
+        {
+          "id": "mkpj8w34ei541eagjbk",
+          "url": "https://www.youtube.com/watch?v=UgBCks_brbM",
+          "platform": "youtube",
+          "videoId": "UgBCks_brbM",
+          "title": "Zhan Zhuang Qigong - Abrazar el Árbol",
+          "thumbnail": "https://img.youtube.com/vi/UgBCks_brbM/hqdefault.jpg",
+          "comments": "",
+          "createdAt": 1769091238768
+        },
+        {
+          "id": "mkpj9dt0klr53098h5s",
+          "url": "https://www.youtube.com/watch?v=LxXoCSZ8aM0&t=5s",
+          "platform": "youtube",
+          "videoId": "LxXoCSZ8aM0",
+          "title": "STANDING QIGONG MEDITATION | ZHAN ZHUANG",
+          "thumbnail": "https://img.youtube.com/vi/LxXoCSZ8aM0/hqdefault.jpg",
+          "comments": "",
+          "createdAt": 1769091261732
+        },
+        {
+          "id": "mkpjh7g02srukpiel6v",
+          "url": "https://www.youtube.com/watch?v=QtV9NY0zjgY",
+          "platform": "youtube",
+          "videoId": "QtV9NY0zjgY",
+          "title": "🚀 CALENTAMIENTO Rápido y Completo para TAICHÍ o CHIKUNG",
+          "thumbnail": "https://img.youtube.com/vi/QtV9NY0zjgY/hqdefault.jpg",
+          "comments": "",
+          "createdAt": 1769091626736
+        }
+      ]
+    },
+    {
+      "id": "mkpiebqrg6fznn3t4iv",
+      "name": "Ba Dua Jin",
+      "videos": [
+        {
+          "id": "mkpif72608uqrkly6srq",
+          "url": "https://www.youtube.com/watch?v=tkMfyMnAgHU",
+          "platform": "youtube",
+          "videoId": "tkMfyMnAgHU",
+          "title": "🔴Baduanjin ✔️ Los OCHO brocados de seda (versión espejo-Mirrored version)",
+          "thumbnail": "https://img.youtube.com/vi/tkMfyMnAgHU/hqdefault.jpg",
+          "comments": "Tranquilo",
+          "createdAt": 1769089853310
+        },
+        {
+          "id": "mkpig7khksfszqovi6o",
+          "url": "https://www.youtube.com/watch?v=0wUODu2Dqy8",
+          "platform": "youtube",
+          "videoId": "0wUODu2Dqy8",
+          "title": "Ba Duan Jin - Las 8 Joyas",
+          "thumbnail": "https://img.youtube.com/vi/0wUODu2Dqy8/hqdefault.jpg",
+          "comments": "Completo",
+          "createdAt": 1769089900625
+        },
+        {
+          "id": "mkpj8kzgkagxwbu9d9a",
+          "url": "https://www.youtube.com/watch?v=ISi1-Dl1Z1s&pp=ygUQYmFkdWFuamluIHFpZ29uZw%3D%3D",
+          "platform": "youtube",
+          "videoId": "ISi1-Dl1Z1s",
+          "title": "PRACTÍCALO CADA DÍA Y VERÁS UN GRAN CAMBIO EN TU VIDA - Chikung de LAS 8 JOYAS - BA DUAN JIN",
+          "thumbnail": "https://img.youtube.com/vi/ISi1-Dl1Z1s/hqdefault.jpg",
+          "comments": "Es de trujillo",
+          "createdAt": 1769091224380
+        },
+        {
+          "id": "mkplzs9f50k9aya6l6a",
+          "url": "https://www.youtube.com/playlist?list=PL11Xj_vsfpttEPOtp5loEPZbO64BF8Ots",
+          "platform": "youtube",
+          "isPlaylist": true,
+          "playlistId": "PL11Xj_vsfpttEPOtp5loEPZbO64BF8Ots",
+          "title": "▷Curso completo de Chikung: Las 8 Joyas u 8 piezas del Brocado",
+          "thumbnail": null,
+          "comments": "",
+          "createdAt": 1769095852755
+        }
+      ]
+    },
+    {
+      "id": "mkpiehapnukrqs7m12",
+      "name": "Shi Ba Shi",
+      "videos": [
+        {
+          "id": "mkpih3owfsyhadlqa9",
+          "url": "https://www.youtube.com/watch?v=TQkNjUYSs_8&t=743s",
+          "platform": "youtube",
+          "videoId": "TQkNjUYSs_8",
+          "title": "18 ejercicios de CHI KUNG para la salud | SHI BA SHI 2 de 3",
+          "thumbnail": "https://img.youtube.com/vi/TQkNjUYSs_8/hqdefault.jpg",
+          "comments": "",
+          "createdAt": 1769089942256
+        },
+        {
+          "id": "mkpiho9vvoh42htil1s",
+          "url": "https://www.youtube.com/watch?v=atDKESW5Dzc&t=46s",
+          "platform": "youtube",
+          "videoId": "atDKESW5Dzc",
+          "title": "Chi Kung | QI GONG PARA LA SALUD | Shi Ba Shi 3 de 3",
+          "thumbnail": "https://img.youtube.com/vi/atDKESW5Dzc/hqdefault.jpg",
+          "comments": "",
+          "createdAt": 1769089968931
+        },
+        {
+          "id": "mkpj4847pdw4z1cvmno",
+          "url": "https://www.youtube.com/watch?v=t3bPeZBz0nE&t=2s",
+          "platform": "youtube",
+          "videoId": "t3bPeZBz0nE",
+          "title": "CHI KUNG | 18 ejercicios para la salud | SHI BA SHI 1 de 3",
+          "thumbnail": "https://img.youtube.com/vi/t3bPeZBz0nE/hqdefault.jpg",
+          "comments": "",
+          "createdAt": 1769091021079
+        },
+        {
+          "id": "mkpj5t4f782ovzjoo0i",
+          "url": "https://www.youtube.com/watch?v=n7KNURTsit0&t=1219s",
+          "platform": "youtube",
+          "videoId": "n7KNURTsit0",
+          "title": "Tai Chi Qi Gong de 18 Movimientos - Shr Ba Shr (SHIBASHI) - FACIL Y EFECTIVO",
+          "thumbnail": "https://img.youtube.com/vi/n7KNURTsit0/hqdefault.jpg",
+          "comments": "",
+          "createdAt": 1769091094959
+        },
+        {
+          "id": "mkpkehkoiilcwpqcm6",
+          "url": "https://www.youtube.com/playlist?list=PLtpokBfacHx-_yQYbtwfZEfC-jYQ2Yd_i",
+          "platform": "youtube",
+          "isPlaylist": true,
+          "playlistId": "PLtpokBfacHx-_yQYbtwfZEfC-jYQ2Yd_i",
+          "title": "Taiji Qigong Shibashi",
+          "thumbnail": null,
+          "comments": "",
+          "createdAt": 1769093179512
+        }
+      ]
+    },
+    {
+      "id": "mkpier1mjdithxfozc",
+      "name": "Wu Qin Xi",
+      "videos": []
+    }
+  ],
+  "currentView": "board",
+  "selectedVideo": null,
+  "currentTheme": "dark",
+  "searchQuery": ""
+}
