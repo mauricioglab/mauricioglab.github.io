@@ -1,0 +1,405 @@
+---
+// src/pages/cv-freelance.astro
+---
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mauricio González - Desarrollo Full Stack & Consultoría Técnica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+            50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.9); }
+        }
+        .pulse-glow { animation: pulse-glow 2s infinite; }
+    </style>
+</head>
+<body class="bg-gray-900">
+    
+    <!-- Hero IMPACTANTE -->
+    <section class="min-h-screen flex items-center justify-center px-6 py-20 bg-gradient-to-br from-gray-900 via-blue-950 to-purple-950">
+        <div class="max-w-5xl mx-auto text-center">
+            <div class="mb-8">
+                <div class="inline-block px-6 py-2 bg-emerald-500 text-white rounded-full text-sm font-bold mb-6 pulse-glow">
+                    ⚡ DISPONIBLE PARA PROYECTOS
+                </div>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-black mb-6 text-white leading-tight">
+                Transformo Tu Negocio<br/>
+                <span class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    en Código Escalable
+                </span>
+            </h1>
+            
+            <p class="text-2xl text-white mb-4 font-bold">
+                Mauricio González
+            </p>
+            
+            <p class="text-xl text-gray-200 mb-12 max-w-3xl mx-auto leading-relaxed">
+                Desarrollo Full Stack, Arquitectura de Software y Optimización de Sistemas Críticos. 
+                <span class="text-emerald-400 font-bold">Reduzco tus tiempos de proceso hasta un 87%.</span>
+            </p>
+
+            <!-- Métricas GRANDES -->
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl p-8 border-2 border-emerald-400 shadow-2xl">
+                    <div class="text-6xl font-black text-white mb-2">87%</div>
+                    <p class="text-white font-bold text-lg">Mejora de Performance</p>
+                    <p class="text-emerald-100 mt-2">250K registros: 4h → 30min</p>
+                </div>
+                <div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-8 border-2 border-blue-400 shadow-2xl">
+                    <div class="text-6xl font-black text-white mb-2">4+</div>
+                    <p class="text-white font-bold text-lg">Años de Experiencia</p>
+                    <p class="text-blue-100 mt-2">Sistemas críticos en producción</p>
+                </div>
+                <div class="bg-gradient-to-br from-purple-600 to-purple-800 rounded-2xl p-8 border-2 border-purple-400 shadow-2xl">
+                    <div class="text-6xl font-black text-white mb-2">15+</div>
+                    <p class="text-white font-bold text-lg">Proyectos Entregados</p>
+                    <p class="text-purple-100 mt-2">100% en tiempo y forma</p>
+                </div>
+            </div>
+
+            <!-- CTA Principal -->
+            <div class="flex flex-wrap gap-4 justify-center">
+                <a href="#contacto" class="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-bold text-lg hover:scale-105 transition-transform shadow-2xl">
+                    🚀 Iniciar Proyecto
+                </a>
+                <a href="#portfolio" class="px-8 py-4 bg-white text-gray-900 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors shadow-xl">
+                    📂 Ver Casos de Éxito
+                </a>
+            </div>
+
+            <!-- Quick Contact -->
+            <div class="mt-12 flex flex-wrap gap-6 justify-center text-base">
+                <a href="mailto:mauriciogcode@gmail.com" class="flex items-center gap-2 text-blue-300 hover:text-blue-200 font-semibold">
+                    📧 mauriciogcode@gmail.com
+                </a>
+                <a href="https://www.linkedin.com/in/mauriciogdev/" target="_blank" class="flex items-center gap-2 text-blue-300 hover:text-blue-200 font-semibold">
+                    🔗 LinkedIn
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stack Tecnológico VISUAL -->
+    <section class="py-20 px-6 bg-gray-950">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-black text-center mb-4 text-white">
+                🛠️ Stack Tecnológico de Élite
+            </h2>
+            <p class="text-center text-gray-300 mb-12 text-lg">
+                Herramientas enterprise-grade para soluciones que escalan
+            </p>
+
+            <div class="grid md:grid-cols-4 gap-6">
+                <!-- Backend -->
+                <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl p-6 border-2 border-emerald-400 hover:scale-105 transition-transform shadow-xl">
+                    <div class="text-4xl mb-3">⚙️</div>
+                    <h3 class="text-xl font-bold text-white mb-3">Backend</h3>
+                    <div class="space-y-2 text-sm text-white font-medium">
+                        <div>✓ .NET Core / C#</div>
+                        <div>✓ Node.js / NestJS</div>
+                        <div>✓ Entity Framework</div>
+                        <div>✓ API REST</div>
+                    </div>
+                </div>
+
+                <!-- Frontend -->
+                <div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-6 border-2 border-blue-400 hover:scale-105 transition-transform shadow-xl">
+                    <div class="text-4xl mb-3">🎨</div>
+                    <h3 class="text-xl font-bold text-white mb-3">Frontend</h3>
+                    <div class="space-y-2 text-sm text-white font-medium">
+                        <div>✓ Angular / React</div>
+                        <div>✓ TypeScript</div>
+                        <div>✓ React Native</div>
+                        <div>✓ UI/UX Responsive</div>
+                    </div>
+                </div>
+
+                <!-- Cloud -->
+                <div class="bg-gradient-to-br from-orange-600 to-orange-800 rounded-2xl p-6 border-2 border-orange-400 hover:scale-105 transition-transform shadow-xl">
+                    <div class="text-4xl mb-3">☁️</div>
+                    <h3 class="text-xl font-bold text-white mb-3">Cloud</h3>
+                    <div class="space-y-2 text-sm text-white font-medium">
+                        <div>✓ AWS (S3, Lambda, ECS)</div>
+                        <div>✓ Docker</div>
+                        <div>✓ CI/CD Pipelines</div>
+                        <div>✓ Microservicios</div>
+                    </div>
+                </div>
+
+                <!-- Arquitectura -->
+                <div class="bg-gradient-to-br from-purple-600 to-purple-800 rounded-2xl p-6 border-2 border-purple-400 hover:scale-105 transition-transform shadow-xl">
+                    <div class="text-4xl mb-3">🏗️</div>
+                    <h3 class="text-xl font-bold text-white mb-3">Arquitectura</h3>
+                    <div class="space-y-2 text-sm text-white font-medium">
+                        <div>✓ DDD / CQRS</div>
+                        <div>✓ SQL Server / Oracle</div>
+                        <div>✓ Patrones Avanzados</div>
+                        <div>✓ Escalabilidad</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Casos de Éxito -->
+    <section id="portfolio" class="py-20 px-6 bg-gray-900">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-black text-center mb-4 text-white">
+                🏆 Casos de Éxito Comprobados
+            </h2>
+            <p class="text-center text-gray-300 mb-12 text-lg">
+                Resultados medibles, impacto real
+            </p>
+
+            <div class="space-y-8">
+                <!-- Caso 1: Optimización -->
+                <div class="bg-gray-800 rounded-2xl p-8 border-2 border-emerald-500 shadow-2xl">
+                    <div class="flex flex-wrap items-start gap-6">
+                        <div class="flex-shrink-0">
+                            <div class="w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center text-3xl shadow-xl">
+                                ⚡
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-2xl font-bold text-emerald-400 mb-2">Optimización de Sistema Crítico</h3>
+                            <p class="text-gray-300 mb-4 text-lg">Sistema de Declaraciones Juradas para organismo gubernamental</p>
+                            
+                            <div class="grid md:grid-cols-3 gap-4 mb-4">
+                                <div class="bg-gray-900 rounded-lg p-4 border border-emerald-500">
+                                    <div class="text-3xl font-black text-emerald-400">87%</div>
+                                    <div class="text-sm text-gray-300">Reducción de tiempo</div>
+                                </div>
+                                <div class="bg-gray-900 rounded-lg p-4 border border-blue-500">
+                                    <div class="text-3xl font-black text-blue-400">250K</div>
+                                    <div class="text-sm text-gray-300">Registros procesados</div>
+                                </div>
+                                <div class="bg-gray-900 rounded-lg p-4 border border-purple-500">
+                                    <div class="text-3xl font-black text-purple-400">30min</div>
+                                    <div class="text-sm text-gray-300">De 4 horas a 30min</div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-emerald-600 text-white rounded-full text-xs font-bold">Angular</span>
+                                <span class="px-3 py-1 bg-emerald-600 text-white rounded-full text-xs font-bold">.NET Core</span>
+                                <span class="px-3 py-1 bg-emerald-600 text-white rounded-full text-xs font-bold">Performance Tuning</span>
+                                <span class="px-3 py-1 bg-emerald-600 text-white rounded-full text-xs font-bold">SQL Optimization</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Caso 2: Arquitectura -->
+                <div class="bg-gray-800 rounded-2xl p-8 border-2 border-blue-500 shadow-2xl">
+                    <div class="flex flex-wrap items-start gap-6">
+                        <div class="flex-shrink-0">
+                            <div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center text-3xl shadow-xl">
+                                🏗️
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-2xl font-bold text-blue-400 mb-2">API Billetera Virtual Escalable</h3>
+                            <p class="text-gray-300 mb-4 text-lg">Arquitectura de microservicios con alta disponibilidad</p>
+                            
+                            <ul class="space-y-2 text-white mb-4">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-blue-400 mt-1">✓</span>
+                                    <span>Implementación de patrones DDD, CQRS, Facade y Mediator</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-blue-400 mt-1">✓</span>
+                                    <span>Dockerización y deployment en Amazon ECS</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-blue-400 mt-1">✓</span>
+                                    <span>Sistema de firmantes multi-nivel con reglas de negocio complejas</span>
+                                </li>
+                            </ul>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-blue-600 text-white rounded-full text-xs font-bold">.NET Core</span>
+                                <span class="px-3 py-1 bg-blue-600 text-white rounded-full text-xs font-bold">Docker</span>
+                                <span class="px-3 py-1 bg-blue-600 text-white rounded-full text-xs font-bold">AWS ECS</span>
+                                <span class="px-3 py-1 bg-blue-600 text-white rounded-full text-xs font-bold">DDD</span>
+                                <span class="px-3 py-1 bg-blue-600 text-white rounded-full text-xs font-bold">CQRS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Caso 3: Automatización -->
+                <div class="bg-gray-800 rounded-2xl p-8 border-2 border-purple-500 shadow-2xl">
+                    <div class="flex flex-wrap items-start gap-6">
+                        <div class="flex-shrink-0">
+                            <div class="w-20 h-20 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center text-3xl shadow-xl">
+                                🤖
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-2xl font-bold text-purple-400 mb-2">Automatización de Auditorías</h3>
+                            <p class="text-gray-300 mb-4 text-lg">De Excel manual a sistema interactivo en tiempo real</p>
+                            
+                            <ul class="space-y-2 text-white mb-4">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-purple-400 mt-1">✓</span>
+                                    <span>Eliminación de revisión manual en hojas de cálculo</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-purple-400 mt-1">✓</span>
+                                    <span>Visualización interactiva de mapas de calor</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-purple-400 mt-1">✓</span>
+                                    <span>Generación performante de informes PDF/Excel server-side</span>
+                                </li>
+                            </ul>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-purple-600 text-white rounded-full text-xs font-bold">Angular</span>
+                                <span class="px-3 py-1 bg-purple-600 text-white rounded-full text-xs font-bold">.NET Core</span>
+                                <span class="px-3 py-1 bg-purple-600 text-white rounded-full text-xs font-bold">PDF Generation</span>
+                                <span class="px-3 py-1 bg-purple-600 text-white rounded-full text-xs font-bold">Data Visualization</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Servicios -->
+    <section class="py-20 px-6 bg-gray-950">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-black text-center mb-4 text-white">
+                💼 Servicios Profesionales
+            </h2>
+            <p class="text-center text-gray-300 mb-12 text-lg">
+                Soluciones a medida para cada necesidad
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Desarrollo -->
+                <div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-8 border-2 border-blue-400 shadow-2xl">
+                    <div class="text-5xl mb-4">🚀</div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Desarrollo Full Stack</h3>
+                    <ul class="space-y-3 text-white mb-6">
+                        <li class="flex items-start gap-2">
+                            <span class="text-blue-200 font-bold">✓</span>
+                            <span>Aplicaciones web escalables</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-blue-200 font-bold">✓</span>
+                            <span>APIs REST y microservicios</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-blue-200 font-bold">✓</span>
+                            <span>Integración con sistemas legacy</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-blue-200 font-bold">✓</span>
+                            <span>Migración de tecnologías</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Optimización -->
+                <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl p-8 border-2 border-emerald-400 shadow-2xl">
+                    <div class="text-5xl mb-4">⚡</div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Optimización</h3>
+                    <ul class="space-y-3 text-white mb-6">
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-200 font-bold">✓</span>
+                            <span>Performance tuning</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-200 font-bold">✓</span>
+                            <span>Refactorización de código</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-200 font-bold">✓</span>
+                            <span>Optimización de queries SQL</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-200 font-bold">✓</span>
+                            <span>Escalabilidad de sistemas</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Consultoría -->
+                <div class="bg-gradient-to-br from-purple-600 to-purple-800 rounded-2xl p-8 border-2 border-purple-400 shadow-2xl">
+                    <div class="text-5xl mb-4">🎓</div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Consultoría & Training</h3>
+                    <ul class="space-y-3 text-white mb-6">
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-200 font-bold">✓</span>
+                            <span>Auditoría técnica</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-200 font-bold">✓</span>
+                            <span>Arquitectura de software</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-200 font-bold">✓</span>
+                            <span>Capacitación de equipos</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-purple-200 font-bold">✓</span>
+                            <span>Code review y mentoring</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final POTENTE -->
+    <section id="contacto" class="py-20 px-6 bg-gray-900">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-12 shadow-2xl border-4 border-white">
+                <h2 class="text-4xl font-black mb-4 text-white">
+                    ¿Listo para Escalar tu Proyecto?
+                </h2>
+                <p class="text-xl text-white mb-8">
+                    Trabajemos juntos para llevar tu software al siguiente nivel.
+                    <br/>
+                    <span class="font-bold text-yellow-300">Respuesta garantizada en menos de 24 horas.</span>
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                    <a href="mailto:mauriciogcode@gmail.com" class="px-8 py-4 bg-white text-blue-600 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors shadow-xl">
+                        📧 Enviar Email Ahora
+                    </a>
+                    <a href="https://www.linkedin.com/in/mauriciogdev/" target="_blank" class="px-8 py-4 bg-gray-900 text-white rounded-xl font-bold text-lg hover:bg-gray-800 transition-colors border-2 border-white">
+                        💼 Conectar en LinkedIn
+                    </a>
+                </div>
+
+                <div class="text-lg text-white font-semibold">
+                    <p>📱 (+54) 351 513 7091</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 bg-black">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="text-gray-300 text-sm">
+                © 2026 Mauricio González - Full Stack Developer & Software Architect
+            </p>
+            <p class="text-gray-400 text-xs mt-2">
+                .NET Core • Angular • AWS • Arquitectura Escalable
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
