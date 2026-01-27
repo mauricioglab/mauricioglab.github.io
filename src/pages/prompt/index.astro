@@ -16,7 +16,7 @@ const promptBase = baseUrl.endsWith('/') ? `${baseUrl}prompt/` : `${baseUrl}/pro
   <link slot="head" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
   <link slot="head" rel="stylesheet" href={`${promptBase}style.css`} />
 
-  <div class="flex h-screen overflow-hidden bg-[var(--bs-body-bg)] text-[var(--bs-body-color)] font-sans" data-bs-theme="light">
+  <div id="appContainer" class="flex h-screen overflow-hidden bg-[var(--bs-body-bg)] text-[var(--bs-body-color)] font-sans">
   <!-- Sidebar -->
   <aside class="flex flex-col w-72 bg-[var(--bs-body-bg)] border-r border-[var(--bs-border-color)] shadow-lg">
     <!-- Sidebar Header -->
@@ -56,6 +56,12 @@ const promptBase = baseUrl.endsWith('/') ? `${baseUrl}prompt/` : `${baseUrl}/pro
       </h1>
       <div class="flex items-center gap-4">
         <button 
+          id="settingsBtn" 
+          class="p-2.5 rounded-lg border border-[var(--bs-border-color)] bg-[var(--bs-secondary-bg)] text-[var(--bs-body-color)] hover:bg-[var(--bs-tertiary-bg)] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          title="Configuración">
+          <i class="fas fa-cog text-base"></i>
+        </button>
+        <button 
           id="themeToggle" 
           class="p-2.5 rounded-lg border border-[var(--bs-border-color)] bg-[var(--bs-secondary-bg)] text-[var(--bs-body-color)] hover:bg-[var(--bs-tertiary-bg)] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500" 
           title="Cambiar tema">
@@ -74,69 +80,51 @@ const promptBase = baseUrl.endsWith('/') ? `${baseUrl}prompt/` : `${baseUrl}/pro
       </div>
     </header>
 
-    <div class="flex-1 overflow-y-auto p-8 space-y-6">
-      <!-- Input section -->
-      <section class="bg-[var(--bs-secondary-bg)] rounded-xl p-6 shadow-sm border border-[var(--bs-border-color)]">
-        <label class="flex items-center gap-2 text-base font-semibold text-[var(--bs-body-color)] mb-4">
-          <i class="fas fa-edit text-blue-600"></i>
-          <span>Prompt</span>
-        </label>
-        <div class="flex gap-4 items-end">
-          <textarea 
-            id="prompt" 
-            class="flex-1 min-h-[100px] px-4 py-3 rounded-lg border border-[var(--bs-border-color)] bg-[var(--bs-body-bg)] text-[var(--bs-body-color)] placeholder:text-[var(--bs-secondary-color)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none" 
-            rows="3" 
-            placeholder="Escribe un prompt aquí..."
-            spellcheck="false"></textarea>
-          <button 
-            id="genBtn" 
-            class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg whitespace-nowrap flex items-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-sm hover:shadow-md">
-            <i class="fas fa-play"></i>
-            <span>Generar</span>
-          </button>
-        </div>
-        <div id="status" class="flex items-center justify-center gap-2 mt-4 text-sm text-[var(--bs-secondary-color)]">
-          <i class="fas fa-check-circle text-green-500"></i>
-          <span>Listo</span>
-      </div>
-      </section>
+    <div class="flex-1 overflow-y-auto p-6 space-y-4">
+      <!-- Input + Definition row -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <!-- Prompt section -->
+        <section class="bg-[var(--bs-secondary-bg)] rounded-xl p-4 shadow-sm border border-[var(--bs-border-color)]">
+          <label class="flex items-center gap-2 text-sm font-semibold text-[var(--bs-body-color)] mb-2">
+            <i class="fas fa-edit text-blue-600"></i>
+            <span>Prompt</span>
+          </label>
+          <div class="flex gap-3 items-end">
+            <textarea 
+              id="prompt" 
+              class="flex-1 px-3 py-2 rounded-lg border border-[var(--bs-border-color)] bg-[var(--bs-body-bg)] text-[var(--bs-body-color)] placeholder:text-[var(--bs-secondary-color)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none text-sm" 
+              rows="2" 
+              placeholder="Escribe un prompt aquí..."
+              spellcheck="false"></textarea>
+            <button 
+              id="genBtn" 
+              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg whitespace-nowrap flex items-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm hover:shadow-md">
+              <i class="fas fa-play"></i>
+              <span>Generar</span>
+            </button>
+          </div>
+          <div id="status" class="flex items-center justify-center gap-1.5 mt-2 text-xs text-[var(--bs-secondary-color)]">
+            <i class="fas fa-check-circle text-green-500"></i>
+            <span>Listo</span>
+          </div>
+        </section>
 
-      <!-- Configuration section -->
-      <section class="bg-[var(--bs-secondary-bg)] rounded-xl p-6 shadow-sm border border-[var(--bs-border-color)]">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div>
-            <label class="flex items-center gap-2 text-sm font-semibold text-[var(--bs-body-color)] mb-3">
-              <i class="fas fa-key text-red-500"></i>
-              <span>API Key (Requerida)</span>
-            </label>
-            <input 
-              id="openRouterKey" 
-              type="password"
-              class="w-full px-4 py-2.5 rounded-lg border border-[var(--bs-border-color)] bg-[var(--bs-body-bg)] text-[var(--bs-body-color)] placeholder:text-[var(--bs-secondary-color)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all mb-2" 
-              placeholder="Tu API Key de OpenRouter">
-            <p class="text-xs text-[var(--bs-secondary-color)]">
-              Consigue una en: 
-              <a href="https://openrouter.ai/keys" target="_blank" class="text-blue-600 hover:text-blue-700 underline">OpenRouter <i class="fas fa-external-link-alt text-[0.65rem]"></i></a> 
-              o 
-              <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-600 hover:text-blue-700 underline">Google AI Studio <i class="fas fa-external-link-alt text-[0.65rem]"></i></a>
-            </p>
+        <!-- Definition section -->
+        <section class="bg-[var(--bs-secondary-bg)] rounded-xl p-4 shadow-sm border border-[var(--bs-border-color)]">
+          <div class="flex items-center gap-2 text-sm font-semibold text-[var(--bs-body-color)] mb-2">
+            <i class="fas fa-book text-purple-600"></i>
+            <span>Definición</span>
           </div>
-          <div>
-            <label class="flex items-center gap-2 text-sm font-semibold text-[var(--bs-body-color)] mb-3">
-              <i class="fas fa-cogs text-blue-600"></i>
-              <span>Instrucciones Generales</span>
-            </label>
-            <input 
-              id="generalInstructions" 
-              class="w-full px-4 py-2.5 rounded-lg border border-[var(--bs-border-color)] bg-[var(--bs-body-bg)] text-[var(--bs-body-color)] placeholder:text-[var(--bs-secondary-color)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" 
-              placeholder="Instrucciones generales"
-              value="Las respuestas deben ser en español.">
+          <div 
+            id="definitionOutput" 
+            class="px-3 py-2 rounded-lg border border-[var(--bs-border-color)] bg-[var(--bs-tertiary-bg)] text-[var(--bs-body-color)] text-sm leading-relaxed h-[76px] overflow-y-auto">
+            Selecciona una técnica del menú lateral para ver su definición.
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       <!-- Dual Output section -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-0">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-[500px]">
         <!-- Left Panel: Instructions -->
         <div class="flex flex-col bg-[var(--bs-secondary-bg)] rounded-xl p-6 shadow-sm border border-[var(--bs-border-color)] min-h-0">
           <div class="flex items-center gap-2 text-base font-semibold text-[var(--bs-body-color)] mb-4 flex-shrink-0">
@@ -164,6 +152,59 @@ const promptBase = baseUrl.endsWith('/') ? `${baseUrl}prompt/` : `${baseUrl}/pro
     </div>
   </div>
   </main>
+
+  <!-- Settings Modal -->
+  <div class="fixed inset-0 z-50 hidden" id="settingsModal" tabindex="-1" aria-hidden="true">
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" id="settingsBackdrop">
+      <div class="bg-[var(--bs-body-bg)] rounded-xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden flex flex-col">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-[var(--bs-border-color)]">
+          <h5 class="text-xl font-bold text-[var(--bs-heading-color)] flex items-center gap-2">
+            <i class="fas fa-cog text-blue-600"></i>
+            <span>Configuración</span>
+          </h5>
+          <button type="button" class="p-2 rounded-lg hover:bg-[var(--bs-tertiary-bg)] transition-colors" id="closeSettingsModal" aria-label="Close">
+            <i class="fas fa-times text-[var(--bs-body-color)]"></i>
+          </button>
+        </div>
+        <div class="px-6 py-5 space-y-5">
+          <div>
+            <label class="flex items-center gap-2 text-sm font-semibold text-[var(--bs-body-color)] mb-3">
+              <i class="fas fa-key text-red-500"></i>
+              <span>API Key (Requerida)</span>
+            </label>
+            <input 
+              id="openRouterKey" 
+              type="password"
+              class="w-full px-4 py-2.5 rounded-lg border border-[var(--bs-border-color)] bg-[var(--bs-tertiary-bg)] text-[var(--bs-body-color)] placeholder:text-[var(--bs-secondary-color)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all mb-2" 
+              placeholder="Tu API Key de OpenRouter">
+            <p class="text-xs text-[var(--bs-secondary-color)]">
+              Consigue una en: 
+              <a href="https://openrouter.ai/keys" target="_blank" class="text-blue-600 hover:text-blue-700 underline">OpenRouter <i class="fas fa-external-link-alt text-[0.65rem]"></i></a> 
+              o 
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-600 hover:text-blue-700 underline">Google AI Studio <i class="fas fa-external-link-alt text-[0.65rem]"></i></a>
+            </p>
+          </div>
+          <div>
+            <label class="flex items-center gap-2 text-sm font-semibold text-[var(--bs-body-color)] mb-3">
+              <i class="fas fa-language text-blue-600"></i>
+              <span>Instrucciones Generales</span>
+            </label>
+            <input 
+              id="generalInstructions" 
+              class="w-full px-4 py-2.5 rounded-lg border border-[var(--bs-border-color)] bg-[var(--bs-tertiary-bg)] text-[var(--bs-body-color)] placeholder:text-[var(--bs-secondary-color)] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" 
+              placeholder="Instrucciones generales"
+              value="Las respuestas deben ser en español.">
+            <p class="text-xs text-[var(--bs-secondary-color)] mt-2">
+              Se añadirán a cada prompt generado.
+            </p>
+          </div>
+        </div>
+        <div class="px-6 py-4 border-t border-[var(--bs-border-color)] flex justify-end">
+          <button type="button" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500" id="closeSettingsBtn">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Help Modal -->
   <div class="fixed inset-0 z-50 hidden" id="helpModal" tabindex="-1" aria-hidden="true">
@@ -249,31 +290,83 @@ const promptBase = baseUrl.endsWith('/') ? `${baseUrl}prompt/` : `${baseUrl}/pro
   <script src={`${promptBase}antipatterns/fragmentacion.js`}></script>
   <script src={`${promptBase}antipatterns/encoding-ofuscacion.js`}></script>
 
+  <!-- Learning Techniques -->
+  <script src={`${promptBase}learning/generated-knowledge.js`}></script>
+  <script src={`${promptBase}learning/least-to-most.js`}></script>
+  <script src={`${promptBase}learning/self-ask.js`}></script>
+  <script src={`${promptBase}learning/react.js`}></script>
+
   <!-- App logic -->
   <script src={`${promptBase}app.js`}></script>
 
   <script>
-    // Apply theme immediately on page load
+    // Apply theme immediately on page load (before DOM ready)
     (function() {
-      const savedTheme = localStorage.getItem('theme') || 'light';
+      const savedTheme = localStorage.getItem('promptTheme') || 'light';
       document.documentElement.setAttribute('data-bs-theme', savedTheme);
     })();
+  </script>
 
+  <script>
     // Initialize after DOM is ready
     document.addEventListener('DOMContentLoaded', function() {
+      // Apply saved theme to container and update icon
+      const savedTheme = localStorage.getItem('promptTheme') || 'light';
+      const appContainer = document.getElementById('appContainer');
+      if (appContainer) appContainer.setAttribute('data-bs-theme', savedTheme);
+      
+      const themeIcon = document.querySelector('#themeToggle i');
+      if (themeIcon) {
+        themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun text-base' : 'fas fa-moon text-base';
+      }
+
       // Theme toggle
       const themeToggle = document.getElementById('themeToggle');
       if (themeToggle) {
         themeToggle.addEventListener('click', function() {
-          const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+          const container = document.getElementById('appContainer');
+          const currentTheme = container ? container.getAttribute('data-bs-theme') : 'light';
           const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          
+          // Apply to both
           document.documentElement.setAttribute('data-bs-theme', newTheme);
-          localStorage.setItem('theme', newTheme);
+          if (container) container.setAttribute('data-bs-theme', newTheme);
+          localStorage.setItem('promptTheme', newTheme);
           
           const icon = this.querySelector('i');
           if (icon) {
-            icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            icon.className = newTheme === 'dark' ? 'fas fa-sun text-base' : 'fas fa-moon text-base';
           }
+        });
+      }
+
+      // Settings modal
+      const settingsBtn = document.getElementById('settingsBtn');
+      const settingsModal = document.getElementById('settingsModal');
+      const settingsBackdrop = document.getElementById('settingsBackdrop');
+      const closeSettingsModal = document.getElementById('closeSettingsModal');
+      const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+
+      function showSettingsModal() {
+        if (settingsModal) {
+          settingsModal.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+        }
+      }
+
+      function hideSettingsModal() {
+        if (settingsModal) {
+          settingsModal.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
+      }
+
+      if (settingsBtn) settingsBtn.addEventListener('click', showSettingsModal);
+      if (closeSettingsModal) closeSettingsModal.addEventListener('click', hideSettingsModal);
+      if (closeSettingsBtn) closeSettingsBtn.addEventListener('click', hideSettingsModal);
+      if (settingsBackdrop) {
+        settingsBackdrop.addEventListener('click', function(e) {
+          if (e.target === settingsBackdrop) hideSettingsModal();
         });
       }
 
@@ -284,46 +377,34 @@ const promptBase = baseUrl.endsWith('/') ? `${baseUrl}prompt/` : `${baseUrl}/pro
       const helpModal = document.getElementById('helpModal');
       const modalBackdrop = document.getElementById('modalBackdrop');
       
-      function showModal() {
+      function showHelpModal() {
         if (helpModal) {
           helpModal.classList.remove('hidden');
-          helpModal.classList.add('show');
           document.body.style.overflow = 'hidden';
         }
       }
       
-      function hideModal() {
+      function hideHelpModal() {
         if (helpModal) {
           helpModal.classList.add('hidden');
-          helpModal.classList.remove('show');
           document.body.style.overflow = '';
         }
       }
       
-      if (helpIcon && helpModal) {
-        helpIcon.addEventListener('click', showModal);
-      }
-      
+      if (helpIcon) helpIcon.addEventListener('click', showHelpModal);
+      if (closeHelpModal) closeHelpModal.addEventListener('click', hideHelpModal);
+      if (closeHelpModalBtn) closeHelpModalBtn.addEventListener('click', hideHelpModal);
       if (modalBackdrop) {
         modalBackdrop.addEventListener('click', function(e) {
-          if (e.target === modalBackdrop) {
-            hideModal();
-          }
+          if (e.target === modalBackdrop) hideHelpModal();
         });
       }
-
-      if (closeHelpModal) {
-        closeHelpModal.addEventListener('click', hideModal);
-      }
-
-      if (closeHelpModalBtn) {
-        closeHelpModalBtn.addEventListener('click', hideModal);
-      }
       
-      // Close modal on Escape key
+      // Close modals on Escape key
       document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && helpModal && !helpModal.classList.contains('hidden')) {
-          hideModal();
+        if (e.key === 'Escape') {
+          if (settingsModal && !settingsModal.classList.contains('hidden')) hideSettingsModal();
+          if (helpModal && !helpModal.classList.contains('hidden')) hideHelpModal();
         }
       });
 

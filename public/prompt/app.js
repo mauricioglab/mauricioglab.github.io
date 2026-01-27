@@ -1,3 +1,40 @@
+// Función para extraer definición de las instrucciones (primeras líneas hasta punto o salto de línea doble)
+function extractDefinition(instructions) {
+    if (!instructions) return 'Definición no disponible.';
+    
+    // Limpiar y obtener el texto
+    const text = instructions.trim();
+    
+    // Buscar hasta el primer salto de línea doble o "Ejemplo:" o límite de caracteres
+    let definition = text;
+    
+    // Cortar en el primer bloque significativo
+    const markers = ['\n\n', '\nEjemplo:', '\n-', '\n1.', '\n•'];
+    let endIndex = text.length;
+    
+    for (const marker of markers) {
+        const idx = text.indexOf(marker);
+        if (idx > 0 && idx < endIndex) {
+            endIndex = idx;
+        }
+    }
+    
+    definition = text.substring(0, endIndex).trim();
+    
+    // Si es muy largo, cortar en el último punto dentro de los primeros 300 caracteres
+    if (definition.length > 300) {
+        const truncated = definition.substring(0, 300);
+        const lastPeriod = truncated.lastIndexOf('.');
+        if (lastPeriod > 100) {
+            definition = truncated.substring(0, lastPeriod + 1);
+        } else {
+            definition = truncated + '...';
+        }
+    }
+    
+    return definition;
+}
+
 // Sidebar items configuration
 const sidebarItems = [
     { id: 'priming', title: 'Priming', icon: 'fas fa-fill-drip', group: 'Técnicas', instructions: 'primingInstructions' },
@@ -35,7 +72,12 @@ const sidebarItems = [
     { id: 'prompt_leaking', title: 'Prompt Leaking', icon: 'fas fa-faucet', group: 'Antipatrones', instructions: 'promptLeakingInstructions' },
     { id: 'escalacion_gradual', title: 'Escalación Gradual', icon: 'fas fa-stairs', group: 'Antipatrones', instructions: 'escalacionGradualInstructions' },
     { id: 'fragmentacion', title: 'Fragmentación', icon: 'fas fa-puzzle-piece', group: 'Antipatrones', instructions: 'fragmentacionInstructions' },
-    { id: 'encoding_ofuscacion', title: 'Encoding/Ofuscación', icon: 'fas fa-barcode', group: 'Antipatrones', instructions: 'encodingOfuscacionInstructions' }
+    { id: 'encoding_ofuscacion', title: 'Encoding/Ofuscación', icon: 'fas fa-barcode', group: 'Antipatrones', instructions: 'encodingOfuscacionInstructions' },
+
+    { id: 'generated_knowledge', title: 'Generated Knowledge', icon: 'fas fa-atom', group: 'Aprendizaje de Modelos', instructions: 'generatedKnowledgeInstructions', standalone: true },
+    { id: 'least_to_most', title: 'Least-to-Most', icon: 'fas fa-layer-group', group: 'Aprendizaje de Modelos', instructions: 'leastToMostInstructions', standalone: true },
+    { id: 'self_ask', title: 'Self-Ask', icon: 'fas fa-question', group: 'Aprendizaje de Modelos', instructions: 'selfAskInstructions', standalone: true },
+    { id: 'react', title: 'ReAct', icon: 'fas fa-sync-alt', group: 'Aprendizaje de Modelos', instructions: 'reactInstructions', standalone: true }
 ];
 
 let selectedItem = null;
@@ -81,6 +123,13 @@ function selectItem(item) {
 
     // Update Instructions panel
     let instructions = window[item.instructions] || null;
+    
+    // Update Definition panel (extraído de las instrucciones)
+    const defElem = document.getElementById('definitionOutput');
+    if (defElem) {
+        const definition = extractDefinition(instructions);
+        defElem.textContent = definition;
+    }
     const instrElem = document.getElementById('instructionsOutput');
 
     if (instrElem) {
@@ -124,21 +173,32 @@ function renderSidebar() {
             currentGroup = item.group;
 
             currentGroupDiv = document.createElement('div');
-            currentGroupDiv.className = 'border-b border-[var(--bs-border-color)]';
+            currentGroupDiv.className = 'item-group border-b border-[var(--bs-border-color)]';
             if (currentGroup !== 'Técnicas') currentGroupDiv.classList.add('collapsed');
 
             const header = document.createElement('div');
-            header.className = 'px-4 py-3 text-xs font-bold uppercase cursor-pointer flex justify-between items-center text-[var(--bs-secondary-color)] bg-[var(--bs-tertiary-bg)] hover:bg-[var(--bs-secondary-bg)] transition-colors border-b border-[var(--bs-border-color)]';
+            header.className = 'item-group-header px-4 py-3 text-xs font-bold uppercase cursor-pointer flex justify-between items-center text-[var(--bs-secondary-color)] bg-[var(--bs-tertiary-bg)] hover:bg-[var(--bs-secondary-bg)] transition-colors border-b border-[var(--bs-border-color)]';
 
             let groupIcon = '';
             if (currentGroup === 'Técnicas') groupIcon = '<i class="fas fa-tools"></i> ';
             else if (currentGroup === 'Estrategias') groupIcon = '<i class="fas fa-lightbulb"></i> ';
             else if (currentGroup === 'Antipatrones') groupIcon = '<i class="fas fa-exclamation-triangle"></i> ';
+            else if (currentGroup === 'Aprendizaje de Modelos') groupIcon = '<i class="fas fa-graduation-cap"></i> ';
 
             header.innerHTML = `<span class="flex items-center gap-2">${groupIcon}${currentGroup}</span> <i class="fas fa-chevron-down toggle-icon text-[0.7rem] transition-transform duration-300"></i>`;
             header.onclick = (e) => {
                 const group = e.currentTarget.parentElement;
-                group.classList.toggle('collapsed');
+                const wasCollapsed = group.classList.contains('collapsed');
+                
+                // Cerrar todos los grupos (comportamiento acordeón)
+                document.querySelectorAll('.item-group').forEach(g => {
+                    g.classList.add('collapsed');
+                });
+                
+                // Si estaba cerrado, abrirlo
+                if (wasCollapsed) {
+                    group.classList.remove('collapsed');
+                }
             };
 
             currentContentDiv = document.createElement('div');
