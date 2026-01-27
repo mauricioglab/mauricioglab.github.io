@@ -1,10 +1,9 @@
----
 import { getBlogPosts, normalizeBaseUrl } from '../../utils/blog';
 import rss from '@astrojs/rss';
 
 export async function GET(context: { site: string | undefined }) {
   const posts = await getBlogPosts();
-  const site = context.site || 'https://mauricioglab.github.io/mglab-spa-depot/';
+  const site = context.site || 'https://mauricioglab.github.io/';
   const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
 
   return rss({
