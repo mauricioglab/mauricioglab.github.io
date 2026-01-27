@@ -1,0 +1,69 @@
+---
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import ShareButtons from '../../components/blog/ShareButtons.astro';
+import { calculateReadingTime, normalizeBaseUrl } from '../../utils/blog';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: Awaited<ReturnType<typeof getCollection<'blog'>>>[number];
+}
+
+const { post } = Astro.props;
+const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
+const fullUrl = `${Astro.site}${normalizedBase}blog/${post.slug}/`;
+const { Content } = await post.render();
+const readingTime = calculateReadingTime(post.body);
+---
+
+<BlogLayout 
+  title={`${post.data.title} | Blog`}
+  description={post.data.description}
+  blogTitle="Blog"
+  blogSubtitle="Artículos y pensamientos"
+>
+  <slot name="head">
+    <link rel="canonical" href={fullUrl} />
+    <meta property="og:title" content={post.data.title} />
+    <meta property="og:description" content={post.data.description} />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={fullUrl} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={post.data.title} />
+    <meta name="twitter:description" content={post.data.description} />
+    <meta name="article:published_time" content={post.data.pubDate.toISOString()} />
+    <meta name="article:author" content={post.data.author} />
+    {post.data.categories.map((category) => (
+      <meta name="article:tag" content={category} />
+    ))}
+  </slot>
+
+  <article class="post entry" itemscope itemtype="https://schema.org/BlogPosting">
+    <header class="entry-header">
+      <h1 class="entry-title" itemprop="headline">{post.data.title}</h1>
+      <p class="entry-meta">
+        Escrito <span class="by">por</span> <span class="entry-author-name" itemprop="author">{post.data.author}</span>
+        <time datetime={post.data.pubDate.toISOString()} itemprop="datePublished" class="hidden">{post.data.pubDate.toISOString()}</time>
+        {readingTime > 0 && (
+          <>
+            <span> &middot; </span>
+            <span>{readingTime} min de lectura</span>
+          </>
+        )}
+      </p>
+    </header>
+    
+    <div class="entry-content" itemprop="articleBody">
+      <Content />
+    </div>
+
+    <ShareButtons title={post.data.title} url={fullUrl} />
+  </article>
+</BlogLayout>

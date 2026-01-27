@@ -1,0 +1,53 @@
+---
+import BlogLayout from '../../../layouts/BlogLayout.astro';
+import { normalizeBaseUrl } from '../../../utils/blog';
+
+export const prerender = true;
+
+const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
+const currentUrl = `${Astro.site}${normalizedBase}blog/about/`;
+---
+
+<BlogLayout 
+  title="Acerca de | Blog" 
+  description="Acerca de este blog"
+  blogTitle="Blog"
+  blogSubtitle="Artículos y pensamientos"
+>
+  <slot name="head">
+    <link rel="canonical" href={currentUrl} />
+  </slot>
+
+  <article class="post entry">
+    <header class="entry-header">
+      <h1 class="entry-title">Acerca de</h1>
+    </header>
+    
+    <div class="entry-content">
+      <p>Bienvenido a mi blog. Este es un espacio donde comparto mis pensamientos, ideas y aprendizajes sobre diversos temas.</p>
+      
+      <h3>Sobre el autor</h3>
+      
+      <p>Soy un desarrollador apasionado por la tecnología y el diseño minimalista. Creo en la simplicidad como principio fundamental tanto en el código como en la vida.</p>
+      
+      <h3>Sobre este blog</h3>
+      
+      <p>Este blog está construido con Astro, un framework moderno que permite crear sitios web rápidos y eficientes. El diseño está inspirado en la filosofía minimalista: menos es más.</p>
+      
+      <p>Aquí encontrarás artículos sobre:</p>
+      
+      <ul>
+        <li>Desarrollo web y programación</li>
+        <li>Diseño y experiencia de usuario</li>
+        <li>Productividad y organización</li>
+        <li>Tecnología en general</li>
+      </ul>
+      
+      <h3>Contacto</h3>
+      
+      <p>Si tienes alguna pregunta o simplemente quieres saludar, no dudes en contactarme a través de las redes sociales o por correo electrónico.</p>
+      
+      <p>Gracias por visitar y espero que encuentres útil el contenido.</p>
+    </div>
+  </article>
+</BlogLayout>

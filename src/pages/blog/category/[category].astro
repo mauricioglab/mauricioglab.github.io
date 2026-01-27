@@ -1,0 +1,62 @@
+---
+import BlogLayout from '../../../layouts/BlogLayout.astro';
+import PostCard from '../../../components/blog/PostCard.astro';
+import { normalizeBaseUrl } from '../../../utils/blog';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  
+  // Get all unique categories
+  const categories = [...new Set(posts.flatMap(post => post.data.categories))];
+  
+  return categories.map((category) => ({
+    params: { category: category.toLowerCase().replace(/\s+/g, '-') },
+    props: { 
+      categoryName: category,
+      posts: posts.filter(post => 
+        post.data.categories.some(c => c.toLowerCase() === category.toLowerCase())
+      ).sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+    },
+  }));
+}
+
+interface Props {
+  categoryName: string;
+  posts: Awaited<ReturnType<typeof getCollection<'blog'>>>;
+}
+
+const { categoryName, posts } = Astro.props;
+const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
+const currentUrl = `${Astro.site}${normalizedBase}blog/category/${categoryName.toLowerCase().replace(/\s+/g, '-')}/`;
+---
+
+<BlogLayout 
+  title={`${categoryName} | Blog`}
+  description={`Artículos sobre ${categoryName}`}
+  blogTitle="Blog"
+  blogSubtitle={`Artículos sobre ${categoryName}`}
+>
+  <slot name="head">
+    <link rel="canonical" href={currentUrl} />
+  </slot>
+
+  <div>
+    <header class="text-center mb-[50px] pb-[30px] border-b border-[#e5e5e5]">
+      <p class="text-xs font-normal uppercase tracking-[0.1em] text-[#594a42] mb-2.5">Categoría</p>
+      <h1 class="text-4xl font-normal text-[#594a42] mb-2.5">{categoryName}</h1>
+      <p class="text-sm italic text-[#594a42]">{posts.length} {posts.length === 1 ? 'artículo' : 'artículos'}</p>
+    </header>
+
+    {posts.length === 0 ? (
+      <p class="text-center text-[#594a42]">No hay posts en esta categoría.</p>
+    ) : (
+      <div role="list">
+        {posts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    )}
+  </div>
+</BlogLayout>
+

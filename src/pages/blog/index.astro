@@ -1,0 +1,32 @@
+---
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import { getBlogPosts, normalizeBaseUrl } from '../../utils/blog';
+import PostCard from '../../components/blog/PostCard.astro';
+
+export const prerender = true;
+
+const posts = await getBlogPosts();
+const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
+const currentUrl = `${Astro.site}${normalizedBase}blog/`;
+---
+
+<BlogLayout 
+  title="Blog" 
+  description="Artículos y publicaciones"
+  blogTitle="Blog"
+  blogSubtitle="Artículos y pensamientos"
+>
+  <slot name="head">
+    <link rel="canonical" href={currentUrl} />
+  </slot>
+
+  {posts.length === 0 ? (
+    <p class="text-center text-[#594a42]">No hay posts disponibles.</p>
+  ) : (
+    <div role="list">
+      {posts.map((post) => (
+        <PostCard post={post} />
+      ))}
+    </div>
+  )}
+</BlogLayout>

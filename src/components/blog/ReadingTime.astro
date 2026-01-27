@@ -1,0 +1,17 @@
+---
+import { calculateReadingTime } from '../../utils/blog';
+
+interface Props {
+  content: string;
+}
+
+const { content } = Astro.props;
+const readingTime = calculateReadingTime(content);
+---
+
+{readingTime > 0 && (
+  <>
+    <span> &middot; </span>
+    <span>{readingTime} min de lectura</span>
+  </>
+)}

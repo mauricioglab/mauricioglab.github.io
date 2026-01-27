@@ -1,0 +1,74 @@
+---
+import BlogLayout from '../../../layouts/BlogLayout.astro';
+import { normalizeBaseUrl } from '../../../utils/blog';
+
+export const prerender = true;
+
+const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
+const currentUrl = `${Astro.site}${normalizedBase}blog/privacy/`;
+---
+
+<BlogLayout 
+  title="Política de Privacidad | Blog"
+  description="Política de privacidad"
+  blogTitle="Blog"
+  blogSubtitle="Artículos y pensamientos"
+>
+  <slot name="head">
+    <link rel="canonical" href={currentUrl} />
+  </slot>
+
+  <article class="post entry">
+    <header class="entry-header">
+      <h1 class="entry-title">Política de Privacidad</h1>
+    </header>
+    
+    <div class="entry-content">
+      <p><strong>SECTION 1: WHO WE ARE</strong></p>
+      
+      <p>Our website address is this blog. Privacy information is controlled by MG Lab who can be reached at the contact information provided below.</p>
+      
+      <p><strong>SECTION 2: WHAT PERSONAL DATA WE COLLECT AND WHY WE COLLECT IT</strong></p>
+      
+      <p><strong>COMMENTS:</strong> When visitors leave comments on the site we collect the data shown in the comments form, and also the visitor's IP address and browser to help prevent spam.</p>
+      
+      <p><strong>CONTACT FORMS:</strong> To assist with sending you requested information, we may collect and store your email address. You may opt out of the collection of your data by unsubscribing from any mailing lists.</p>
+      
+      <p><strong>EMBEDDED CONTENT FROM OTHER WEBSITES:</strong> Articles on this site may include embedded content (e.g. youtube, facebook, x, etc.). Embedded content from other websites behaves in the exact same way as if the visitor has visited the other website. These websites may collect data about you, use cookies, embed additional third-party tracking, and monitor your interaction with that embedded content.</p>
+      
+      <p><strong>ANALYTICS:</strong> We may use analytics services to record information about the pages a user has seen, for example the URL of the page, time of day, device used, etc. The information that we collect is anonymized.</p>
+      
+      <p><strong>SECTION 3: WHO WE SHARE YOUR DATA WITH</strong></p>
+      
+      <p>The data collected may be shared with service providers and others who help with our business operations and assist in the delivery of our products and services. We will never sell, rent, or lease your Personal Data to a third party.</p>
+      
+      <p><strong>SECTION 4: HOW LONG WE RETAIN YOUR DATA</strong></p>
+      
+      <p>If you leave a comment, the comment and its metadata are retained indefinitely. Analytics data is retained indefinitely. Contact forms are held indefinitely.</p>
+      
+      <p><strong>SECTION 5: WHAT RIGHTS YOU HAVE OVER YOUR DATA</strong></p>
+      
+      <p>If you have an account on this site, or have left comments, you can request to receive an exported file of the personal data we hold about you, including any data you have provided to us. You can also request that we erase any personal data we hold about you. This does not include any data we are obliged to keep for administrative, legal, or security purposes.</p>
+      
+      <p><strong>SECTION 6: WHERE WE SEND YOUR DATA</strong></p>
+      
+      <p>Visitor comments may be checked through an automated spam detection service. Third parties have access to your data as noted within this agreement.</p>
+      
+      <p><strong>ADDITIONAL INFORMATION</strong></p>
+      
+      <p>We will retain your Personal Data for the period necessary to fulfill the purposes outlined in this Privacy Policy unless a longer retention period is required or allowed by law.</p>
+      
+      <p><strong>PROTECTION OF PERSONAL DATA</strong></p>
+      
+      <p>We use reasonable and appropriate physical, electronic, and administrative safeguards to protect personal data from loss, misuse and unauthorized access, disclosure, alteration and destruction, taking into account the nature of the Personal Data and risks involved in processing that information.</p>
+      
+      <p><strong>CHANGES TO THIS PRIVACY POLICY</strong></p>
+      
+      <p>We may change this Privacy Policy at any time. The most recent version of the Privacy Policy is indicated by the "Last Updated" date at the top of the Privacy Policy. All changes are effective immediately upon posting. Please review this Privacy Policy frequently to stay updated on changes that may affect you.</p>
+      
+      <p><strong>CONTACT INFORMATION</strong></p>
+      
+      <p>If you have any questions about this Privacy Policy, please contact us through the contact information provided on this website.</p>
+    </div>
+  </article>
+</BlogLayout>

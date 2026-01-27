@@ -20,7 +20,16 @@ const b = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
 
 // Obtener todas las páginas dinámicamente
 const glob = import.meta.glob("./**/*.astro");
-const keys = Object.keys(glob).filter((k) => k !== "./index.astro" && k !== "./main.astro");
+const keys = Object.keys(glob).filter((k) => 
+  k !== "./index.astro" && 
+  k !== "./main.astro" &&
+  !k.startsWith("./blog/[") && 
+  !k.startsWith("./blog/category/[") &&
+  k !== "./blog/about/index.astro" &&
+  k !== "./blog/search/index.astro" &&
+  k !== "./blog/archives/index.astro" &&
+  k !== "./blog/privacy/index.astro"
+);
 
 function pathToRoute(key: string): { segment: string; name: string; url: string } {
 	const raw = key.replace(/^\.\//, "").replace(/\.astro$/, "");

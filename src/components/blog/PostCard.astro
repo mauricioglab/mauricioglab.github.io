@@ -1,0 +1,42 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { normalizeBaseUrl } from '../../utils/blog';
+import ReadingTime from './ReadingTime.astro';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  baseUrl?: string;
+}
+
+const { post, baseUrl = import.meta.env.BASE_URL } = Astro.props;
+const normalizedBase = normalizeBaseUrl(baseUrl);
+const url = `${normalizedBase}blog/${post.slug}/`;
+---
+
+<article 
+  data-post-card
+  data-title={post.data.title}
+  data-description={post.data.description}
+  data-categories={post.data.categories.join(' ')}
+  class="post entry mb-[50px] pb-[50px] border-b border-[#e5e5e5] last:border-b-0"
+  itemscope
+  itemtype="https://schema.org/BlogPosting"
+>
+  <header class="entry-header mb-5">
+    <h2 class="entry-title">
+      <a class="entry-title-link hover:opacity-80" href={url} itemprop="headline">
+        {post.data.title}
+      </a>
+    </h2>
+    <p class="entry-meta">
+      Escrito <span class="by">por</span> <span class="entry-author-name" itemprop="author">{post.data.author}</span>
+      <time datetime={post.data.pubDate.toISOString()} itemprop="datePublished" class="hidden">{post.data.pubDate.toISOString()}</time>
+      <ReadingTime content={post.body} />
+    </p>
+  </header>
+  
+  <div class="entry-content" itemprop="description">
+    <p>{post.data.description}</p>
+    <p><a href={url} class="more-link underline hover:opacity-80" aria-label={`Leer más sobre ${post.data.title}`}>Leer más</a></p>
+  </div>
+</article>
