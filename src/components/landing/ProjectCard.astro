@@ -1,0 +1,132 @@
+---
+import type { Project } from '../../data/projects';
+import { 
+  type Lang, 
+  useTranslations, 
+  type ProjectTranslations 
+} from '../../i18n';
+
+interface Props {
+  project: Project;
+  profileId: 'developer' | 'analista' | 'ia-engineer';
+  lang?: Lang;
+}
+
+const { project, profileId, lang = 'es' } = Astro.props;
+const profileData = project.profiles[profileId];
+
+if (!profileData) return null;
+
+// Load translated project content from i18n (single source of truth)
+const projectsT = await useTranslations<ProjectTranslations>(lang, 'projects');
+const translatedProject = projectsT[project.id];
+const translatedProfile = translatedProject?.profiles?.[profileId];
+
+// Get content from i18n
+const title = translatedProject?.title || project.id;
+const description = translatedProfile?.description || '';
+const highlights = translatedProfile?.highlights || [];
+
+// Determine theme colors based on profile
+const isIA = profileId === 'ia-engineer';
+
+// Build language-aware case study URL
+const caseStudyUrl = project.links.caseStudy 
+  ? `/${lang}${project.links.caseStudy}` 
+  : null;
+---
+
+<div class:list={[
+  "p-8 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2",
+  isIA ? "bg-slate-900 border border-slate-800" : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+]}>
+  {profileData.icon && (
+    <div class:list={[
+      "mb-4 text-4xl",
+      isIA ? "text-emerald-500" : "text-blue-600 dark:text-blue-400"
+    ]}>
+      <i class={`fas ${profileData.icon}`}></i>
+    </div>
+  )}
+  
+  <h3 class:list={[
+    "text-2xl font-bold mb-4",
+    isIA ? "text-slate-100" : "text-slate-900 dark:text-white"
+  ]}>{title}</h3>
+  
+  <p class:list={[
+    "mb-6 leading-relaxed",
+    isIA ? "text-slate-400" : "text-slate-600 dark:text-slate-400"
+  ]}>
+    {description}
+  </p>
+  
+  <!-- Highlights -->
+  <div class="space-y-3 mb-6">
+    {highlights.map((highlight) => (
+      <div class="flex items-start">
+        <i class:list={[
+          "fas fa-check-circle mt-1 mr-3 flex-shrink-0",
+          isIA ? "text-emerald-500" : "text-blue-600 dark:text-blue-400"
+        ]}></i>
+        <p class:list={[
+          "text-sm",
+          isIA ? "text-slate-400" : "text-slate-600 dark:text-slate-400"
+        ]}>{highlight}</p>
+      </div>
+    ))}
+  </div>
+  
+  <!-- Tags -->
+  <div class="flex flex-wrap gap-2 mb-6">
+    {profileData.tags.map((tag) => (
+      <span class:list={[
+        "px-3 py-1 rounded-full text-xs font-bold",
+        isIA ? "bg-emerald-500/20 text-emerald-400" : "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
+      ]}>
+        {tag}
+      </span>
+    ))}
+  </div>
+  
+  <!-- Links -->
+  <div class="flex flex-wrap gap-3">
+    {caseStudyUrl && (
+      <a 
+        href={caseStudyUrl} 
+        class:list={[
+          "px-4 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition",
+          isIA ? "bg-emerald-600 text-white" : "bg-blue-600 text-white"
+        ]}
+      >
+        <i class="fas fa-book-open mr-1"></i> Case Study
+      </a>
+    )}
+    {project.links.demo && (
+      <a 
+        href={project.links.demo} 
+        target="_blank"
+        rel="noopener noreferrer"
+        class:list={[
+          "border px-4 py-2 rounded-lg text-sm font-bold transition",
+          isIA ? "border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white" : "border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white"
+        ]}
+      >
+        <i class="fas fa-external-link-alt mr-1"></i> Demo
+      </a>
+    )}
+    {project.links.github && (
+      <a 
+        href={project.links.github} 
+        target="_blank"
+        rel="noopener noreferrer"
+        class:list={[
+          "border px-4 py-2 rounded-lg text-sm font-bold transition",
+          isIA ? "border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white" : "border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white"
+        ]}
+      >
+        <i class="fab fa-github mr-1"></i> Code
+      </a>
+    )}
+  </div>
+</div>

@@ -1,0 +1,43 @@
+{
+  "title": "Freelance Tech Lead",
+  "subtitle": "Fullstack & Consulting",
+  "description": "I scale startups from 0 to production",
+  "seo": {
+    "title": "Freelance Tech Lead | Fullstack Developer | Consulting",
+    "description": "Freelance Tech Lead specialized in scaling tech startups. 10+ years of experience, 50+ projects."
+  },
+  "hero": {
+    "badge": "AVAILABLE FOR PROJECTS AND CONSULTING",
+    "headline": "I Scale Startups from <span class=\"text-orange-600 dark:text-orange-400\">0 to Production</span>.",
+    "subheadline": "Tech Lead & Fullstack Developer with 10+ years of experience. 50+ projects delivered, 15+ teams led. Angular, .NET, Node.js, AWS.",
+    "ctaPrimary": "Schedule Consultation",
+    "ctaSecondary": "View Projects"
+  },
+  "projectsDescription": "Delivered projects that generated real impact. From MVPs to scalable enterprise systems.",
+  "ctaTitle": "Need to scale your project?",
+  "ctaDescription": "I can help as Tech Lead, consultant or developer. Let's talk about your challenge.",
+  "services": {
+    "title1": "Team Leadership",
+    "desc1": "Technical team management, solution architecture and mentorship for junior and senior developers.",
+    "title2": "Fullstack Development",
+    "desc2": "Angular, .NET Core, Node.js, Python. From frontend to database, I deliver complete solutions.",
+    "title3": "Technical Consulting",
+    "desc3": "Code audits, architecture definition, performance optimization and legacy system migration."
+  },
+  "experience": {
+    "role1": "Senior Team Lead",
+    "company1": "Tech Company | 2024 - Present",
+    "items1": [
+      "40% reduction in team development time",
+      "Leadership of 8 developers on critical projects",
+      "Migration of 10+ legacy systems to modern architectures"
+    ],
+    "role2": "Senior Fullstack Developer",
+    "company2": "Freelance Projects | 2019 - 2024",
+    "items2": [
+      "15+ APIs developed for enterprise clients",
+      "60% performance improvement on existing applications",
+      "5+ cloud projects deployed on AWS and Azure"
+    ]
+  }
+}

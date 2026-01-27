@@ -1,0 +1,74 @@
+---
+import type { Profile } from '../../data/profiles';
+import { 
+  type Lang, 
+  useTranslations, 
+  type CommonTranslations, 
+  type ProfileTranslations 
+} from '../../i18n';
+
+interface Props {
+  profile: Profile;
+  lang?: Lang;
+}
+
+const { profile, lang = 'es' } = Astro.props;
+const t = await useTranslations<CommonTranslations>(lang, 'common');
+const content = await useTranslations<ProfileTranslations>(lang, profile.id);
+---
+
+<section class="py-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 transition-colors">
+  <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
+    <div>
+      <div class="inline-block bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-4 py-1 rounded-full text-sm font-bold mb-6">
+        {content.hero.badge}
+      </div>
+      <h1 class="text-5xl font-extrabold mb-6 leading-tight text-slate-900 dark:text-white" set:html={content.hero.headline}></h1>
+      <p class="text-xl text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+        {content.hero.subheadline}
+      </p>
+      <div class="flex flex-wrap gap-4">
+        <a 
+          href={profile.cvUrl} 
+          class="bg-blue-600 dark:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold hover:opacity-90 transition inline-flex items-center"
+        >
+          <i class="fas fa-file-pdf mr-2"></i>
+          {content.hero.ctaPrimary}
+        </a>
+        <a 
+          href="#proyectos" 
+          class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-8 py-4 rounded-xl font-bold border border-blue-600 dark:border-blue-500 hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition"
+        >
+          {content.hero.ctaSecondary}
+        </a>
+      </div>
+    </div>
+    
+    <!-- Stats/Info Card -->
+    <div class="bg-slate-50 dark:bg-slate-800 rounded-3xl p-8 border border-slate-200 dark:border-slate-700 shadow-lg">
+      <div class="space-y-6">
+        <div class="flex items-center p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-700">
+          <i class="fas fa-briefcase text-blue-600 dark:text-blue-400 text-2xl mr-4"></i>
+          <div>
+            <p class="font-bold text-slate-900 dark:text-white">{t.hero.yearsExp}</p>
+            <p class="text-sm text-slate-500 dark:text-slate-400">{t.hero.yearsExpSub}</p>
+          </div>
+        </div>
+        <div class="flex items-center p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-700">
+          <i class="fas fa-map-marker-alt text-blue-600 dark:text-blue-400 text-2xl mr-4"></i>
+          <div>
+            <p class="font-bold text-slate-900 dark:text-white">{t.hero.location}</p>
+            <p class="text-sm text-slate-500 dark:text-slate-400">{t.hero.locationSub}</p>
+          </div>
+        </div>
+        <div class="flex items-center p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-700">
+          <i class="fas fa-check-circle text-blue-600 dark:text-blue-400 text-2xl mr-4"></i>
+          <div>
+            <p class="font-bold text-slate-900 dark:text-white">{t.hero.availability}</p>
+            <p class="text-sm text-slate-500 dark:text-slate-400">{t.hero.availabilitySub}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,195 @@
+---
+import type { Profile } from '../data/profiles';
+import { 
+  type Lang, 
+  useTranslations, 
+  getAlternateUrl,
+  type CommonTranslations, 
+  type ProfileTranslations 
+} from '../i18n';
+import BaseTailwind from './BaseTailwind.astro';
+
+interface Props {
+  title: string;
+  profile: Profile;
+  lang?: Lang;
+}
+
+const { title, profile, lang = 'es' } = Astro.props;
+const { theme } = profile;
+const t = await useTranslations<CommonTranslations>(lang, 'common');
+const content = await useTranslations<ProfileTranslations>(lang, profile.id);
+
+// Determine alternate language URL
+const altLang = lang === 'es' ? 'en' : 'es';
+const altPath = getAlternateUrl(Astro.url, lang);
+---
+
+<BaseTailwind title={`${title} | ${content.title}`} description={content.seo.description} lang={lang}>
+  <!-- Header/Nav -->
+  <header class="bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-50 border-b border-slate-200 dark:border-slate-700 transition-colors">
+    <nav class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="text-2xl font-bold text-slate-900 dark:text-white">
+        {content.title.split(' ')[0]}
+        <span class="text-sm font-normal text-slate-600 dark:text-slate-400 ml-2">
+          | {content.subtitle}
+        </span>
+      </div>
+      
+      <div class="hidden md:flex items-center space-x-6">
+        <a href="#proyectos" class="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
+          {t.nav.projects}
+        </a>
+        <a href="#skills" class="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
+          {t.nav.skills}
+        </a>
+        <a href="#experiencia" class="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
+          {t.nav.experience}
+        </a>
+        <a href="/blog" class="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
+          {t.nav.blog}
+        </a>
+        
+        <!-- Divider -->
+        <div class="h-6 w-px bg-slate-300 dark:bg-slate-600"></div>
+        
+        <!-- Theme Toggle -->
+        <button 
+          id="themeToggle"
+          class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+          title="Toggle theme"
+        >
+          <i class="fas fa-sun dark:hidden"></i>
+          <i class="fas fa-moon hidden dark:inline"></i>
+        </button>
+        
+        <!-- Language Toggle -->
+        <a 
+          href={altPath}
+          class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition text-sm font-medium"
+          title={altLang === 'en' ? 'Switch to English' : 'Cambiar a Español'}
+        >
+          {altLang.toUpperCase()}
+        </a>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <!-- Mobile toggles -->
+        <div class="flex md:hidden items-center gap-2">
+          <button 
+            id="themeToggleMobile"
+            class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+          >
+            <i class="fas fa-sun dark:hidden text-sm"></i>
+            <i class="fas fa-moon hidden dark:inline text-sm"></i>
+          </button>
+          <a 
+            href={altPath}
+            class="px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-medium"
+          >
+            {altLang.toUpperCase()}
+          </a>
+        </div>
+        
+        <a 
+          href="#contacto" 
+          class="bg-blue-600 dark:bg-blue-500 text-white px-4 md:px-6 py-2 rounded-lg hover:opacity-90 transition font-bold text-sm md:text-base"
+        >
+          {t.nav.contact}
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors">
+    <slot />
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 py-12 transition-colors">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <!-- Info -->
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-blue-600 dark:text-blue-400">
+            {content.title}
+          </h3>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">
+            {content.description}
+          </p>
+        </div>
+        
+        <!-- Links -->
+        <div>
+          <h4 class="font-bold mb-4 text-slate-900 dark:text-white">{t.footer.links}</h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="#proyectos" class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
+                {t.nav.projects}
+              </a>
+            </li>
+            <li>
+              <a href="#skills" class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
+                {t.nav.skills}
+              </a>
+            </li>
+            <li>
+              <a href={profile.cvUrl} class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
+                {t.cta.downloadCV}
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- Contact -->
+        <div>
+          <h4 class="font-bold mb-4 text-slate-900 dark:text-white">{t.footer.contact}</h4>
+          <div class="space-y-3">
+            <a 
+              href={profile.linkedinUrl} 
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+            >
+              <i class="fab fa-linkedin text-xl mr-2"></i>
+              LinkedIn
+            </a>
+            <a 
+              href={profile.githubUrl} 
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+            >
+              <i class="fab fa-github text-xl mr-2"></i>
+              GitHub
+            </a>
+            <a 
+              href={`mailto:${profile.email}`}
+              class="flex items-center text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+            >
+              <i class="fas fa-envelope text-xl mr-2"></i>
+              Email
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center pt-8 border-t border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-500 text-sm">
+        <p>&copy; 2026 {content.title}. {t.footer.rights}</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Theme Toggle Script -->
+  <script is:inline>
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('#themeToggle, #themeToggleMobile');
+      if (btn) {
+        document.documentElement.classList.toggle('dark');
+        const isDark = document.documentElement.classList.contains('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      }
+    });
+  </script>
+</BaseTailwind>

@@ -1,0 +1,258 @@
+---
+// SnakeGame.astro - Mini juego Snake clásico
+---
+
+<div id="snakeGameModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center backdrop-blur-sm">
+  <div class="bg-gray-900 rounded-2xl p-4 max-w-sm w-full mx-4 shadow-2xl border-2 border-green-500 text-center">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-2">
+      <h2 class="text-lg font-bold text-green-400">🐍 Snake</h2>
+      <button id="closeSnakeGame" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
+    </div>
+    
+    <!-- Score -->
+    <div class="flex justify-between text-sm mb-2">
+      <span class="text-green-400">Puntos: <span id="snakeScore">0</span></span>
+      <span class="text-gray-400">Récord: <span id="snakeHighScore">0</span></span>
+    </div>
+    
+    <!-- Canvas -->
+    <canvas id="snakeCanvas" class="bg-gray-800 rounded border border-gray-700 mx-auto block"></canvas>
+    
+    <!-- Controls info -->
+    <p id="snakeStatus" class="text-gray-400 text-xs mt-2">Flechas o WASD para mover</p>
+    
+    <!-- Start button -->
+    <button 
+      id="startSnakeGame" 
+      class="mt-3 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full transition-colors text-sm"
+    >
+      Jugar
+    </button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('snakeGameModal');
+    const closeBtn = document.getElementById('closeSnakeGame');
+    const startBtn = document.getElementById('startSnakeGame') as HTMLButtonElement;
+    const canvas = document.getElementById('snakeCanvas') as HTMLCanvasElement;
+    const scoreEl = document.getElementById('snakeScore');
+    const highScoreEl = document.getElementById('snakeHighScore');
+    const statusEl = document.getElementById('snakeStatus');
+    const gameTabBtn = document.getElementById('gameTabBtn');
+    
+    const ctx = canvas?.getContext('2d');
+    const gridSize = 15;
+    const tileCount = 17;
+    
+    canvas.width = gridSize * tileCount;
+    canvas.height = gridSize * tileCount;
+    
+    let snake: {x: number, y: number}[] = [];
+    let food = {x: 0, y: 0};
+    let dx = 0, dy = 0;
+    let score = 0;
+    let gameLoop: number | null = null;
+    let highScore = parseInt(localStorage.getItem('snakeHighScore') || '0');
+    let gameRunning = false;
+    
+    if (highScoreEl) highScoreEl.textContent = String(highScore);
+    
+    // Open modal
+    if (gameTabBtn) {
+      gameTabBtn.addEventListener('click', () => {
+        if (modal) {
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+        }
+        resetGame();
+      });
+    }
+    
+    function closeModal() {
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      stopGame();
+    }
+    
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+    }
+    
+    function resetGame() {
+      stopGame();
+      snake = [{x: 8, y: 8}];
+      dx = 0;
+      dy = 0;
+      score = 0;
+      gameRunning = false;
+      if (scoreEl) scoreEl.textContent = '0';
+      if (statusEl) statusEl.textContent = 'Flechas o WASD para mover';
+      if (startBtn) {
+        startBtn.disabled = false;
+        startBtn.textContent = 'Jugar';
+      }
+      placeFood();
+      draw();
+    }
+    
+    function stopGame() {
+      if (gameLoop) {
+        clearInterval(gameLoop);
+        gameLoop = null;
+      }
+      gameRunning = false;
+    }
+    
+    function placeFood() {
+      food.x = Math.floor(Math.random() * tileCount);
+      food.y = Math.floor(Math.random() * tileCount);
+      // Avoid placing on snake
+      for (const part of snake) {
+        if (part.x === food.x && part.y === food.y) {
+          placeFood();
+          return;
+        }
+      }
+    }
+    
+    function draw() {
+      if (!ctx) return;
+      
+      // Clear
+      ctx.fillStyle = '#1f2937';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw food
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.arc(
+        food.x * gridSize + gridSize / 2,
+        food.y * gridSize + gridSize / 2,
+        gridSize / 2 - 2,
+        0, Math.PI * 2
+      );
+      ctx.fill();
+      
+      // Draw snake
+      snake.forEach((part, i) => {
+        ctx.fillStyle = i === 0 ? '#22c55e' : '#4ade80';
+        ctx.fillRect(
+          part.x * gridSize + 1,
+          part.y * gridSize + 1,
+          gridSize - 2,
+          gridSize - 2
+        );
+      });
+    }
+    
+    function update() {
+      if (dx === 0 && dy === 0) return;
+      
+      const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+      
+      // Wall collision
+      if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+        gameOver();
+        return;
+      }
+      
+      // Self collision
+      for (const part of snake) {
+        if (head.x === part.x && head.y === part.y) {
+          gameOver();
+          return;
+        }
+      }
+      
+      snake.unshift(head);
+      
+      // Eat food
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        if (scoreEl) scoreEl.textContent = String(score);
+        placeFood();
+      } else {
+        snake.pop();
+      }
+      
+      draw();
+    }
+    
+    function gameOver() {
+      stopGame();
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('snakeHighScore', String(highScore));
+        if (highScoreEl) highScoreEl.textContent = String(highScore);
+        if (statusEl) statusEl.textContent = '🏆 ¡Nuevo récord!';
+      } else {
+        if (statusEl) statusEl.textContent = '💀 Game Over';
+      }
+      if (startBtn) {
+        startBtn.disabled = false;
+        startBtn.textContent = 'Reintentar';
+      }
+    }
+    
+    function startGame() {
+      resetGame();
+      dx = 1;
+      dy = 0;
+      gameRunning = true;
+      if (startBtn) startBtn.disabled = true;
+      if (statusEl) statusEl.textContent = '🎮 ¡Vamos!';
+      gameLoop = window.setInterval(update, 100);
+    }
+    
+    if (startBtn) {
+      startBtn.addEventListener('click', startGame);
+    }
+    
+    // Keyboard controls
+    document.addEventListener('keydown', (e) => {
+      if (!modal || modal.classList.contains('hidden')) return;
+      
+      if (e.key === 'Escape') {
+        closeModal();
+        return;
+      }
+      
+      if (!gameRunning) return;
+      
+      switch(e.key) {
+        case 'ArrowUp':
+        case 'w':
+        case 'W':
+          if (dy !== 1) { dx = 0; dy = -1; }
+          e.preventDefault();
+          break;
+        case 'ArrowDown':
+        case 's':
+        case 'S':
+          if (dy !== -1) { dx = 0; dy = 1; }
+          e.preventDefault();
+          break;
+        case 'ArrowLeft':
+        case 'a':
+        case 'A':
+          if (dx !== 1) { dx = -1; dy = 0; }
+          e.preventDefault();
+          break;
+        case 'ArrowRight':
+        case 'd':
+        case 'D':
+          if (dx !== -1) { dx = 1; dy = 0; }
+          e.preventDefault();
+          break;
+      }
+    });
+  });
+</script>

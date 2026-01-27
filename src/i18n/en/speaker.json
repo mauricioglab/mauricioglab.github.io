@@ -1,0 +1,43 @@
+{
+  "title": "Speaker & Educator",
+  "subtitle": "AI & Programming",
+  "description": "I transform complex technology into practical knowledge",
+  "seo": {
+    "title": "Speaker & Educator | AI and Programming | Tech Talks",
+    "description": "Speaker and educator specialized in AI, programming and emerging technologies. 10+ years training professionals."
+  },
+  "hero": {
+    "badge": "AVAILABLE FOR TALKS AND TRAINING",
+    "headline": "I Make <span class=\"text-purple-600 dark:text-purple-400\">Technology</span> Understandable.",
+    "subheadline": "Educator with 10+ years of experience, 500+ students trained. Specialist in AI, programming and emerging technologies. Talks that inspire and training that transforms.",
+    "ctaPrimary": "Book a Talk",
+    "ctaSecondary": "View Experience"
+  },
+  "projectsDescription": "Talks and training that transform teams and organizations.",
+  "ctaTitle": "Want to train your team?",
+  "ctaDescription": "I offer inspirational talks, practical workshops and in-company training.",
+  "topics": {
+    "title1": "Practical AI",
+    "desc1": "How to use AI in your daily work. Prompt Engineering, n8n automations, LLM integration into existing systems.",
+    "title2": "Development & Architecture",
+    "desc2": "Clean Architecture, microservices, best practices. Angular, .NET, Python for teams that want to improve.",
+    "title3": "Technical Leadership",
+    "desc3": "How to lead development teams, manage technical debt and make architectural decisions."
+  },
+  "experience": {
+    "role1": "University Educator",
+    "company1": "Educational Institutions | 2024 - Present",
+    "items1": [
+      "Subjects: Professional Practice, Intro to Programming, Databases",
+      "Programs: Systems Analysis Technician, Web Development, AI",
+      "50+ talks and workshops delivered"
+    ],
+    "role2": "Corporate Trainer",
+    "company2": "Tech Companies | 2019 - Present",
+    "items2": [
+      "500+ students trained in programming and technology",
+      "AI and automation workshops for enterprise teams",
+      "Personalized mentoring for developers"
+    ]
+  }
+}

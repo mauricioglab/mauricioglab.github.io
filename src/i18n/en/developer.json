@@ -1,0 +1,34 @@
+{
+  "title": "Full-Stack Developer",
+  "subtitle": ".NET + Angular",
+  "description": "I build enterprise systems that scale",
+  "seo": {
+    "title": "Full-Stack Developer .NET + Angular | Portfolio",
+    "description": "Developer specialized in enterprise architectures with .NET Core, Angular and SQL Server. 5+ years of experience."
+  },
+  "hero": {
+    "badge": "AVAILABLE FOR ENTERPRISE PROJECTS",
+    "headline": "I Build Solutions that <span class=\"text-blue-600 dark:text-blue-400\">Scale</span>.",
+    "subheadline": "Full-Stack Developer with 5+ years building robust architectures in .NET and Angular. From design to production, I deliver systems that handle real load.",
+    "ctaPrimary": "Download Developer CV",
+    "ctaSecondary": "View Projects"
+  },
+  "projectsDescription": "Enterprise systems that handle real load. Robust architectures with .NET, Angular and SQL Server.",
+  "ctaTitle": "Looking for a Developer who delivers results?",
+  "ctaDescription": "Let's talk about your project. I can start immediately.",
+  "experience": {
+    "role1": "Senior Full-Stack Developer",
+    "company1": "Tech Company | 2021 - Present",
+    "items1": [
+      "Led monolith to microservices migration (8 services, 0 downtime)",
+      "60% reduction in response times through SQL query optimization",
+      "CI/CD implementation with GitHub Actions and Azure DevOps"
+    ],
+    "role2": "Full-Stack Developer",
+    "company2": "IT Consulting | 2019 - 2021",
+    "items2": [
+      "Development of 5+ enterprise applications with .NET Core and Angular",
+      "Clean architecture and SOLID patterns implementation"
+    ]
+  }
+}

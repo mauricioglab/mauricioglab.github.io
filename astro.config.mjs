@@ -8,6 +8,14 @@ export default defineConfig({
   output: "static",
   server: { open: "/" },
   integrations: [tailwind()],
+  i18n: {
+    defaultLocale: 'es',
+    locales: ['es', 'en'],
+    routing: {
+      prefixDefaultLocale: true,
+      redirectToDefaultLocale: false
+    }
+  },
   markdown: {
     shikiConfig: {
       theme: 'github-light',

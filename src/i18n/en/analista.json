@@ -1,0 +1,42 @@
+{
+  "title": "Systems Analyst",
+  "subtitle": "Architecture & Strategy",
+  "description": "From requirements to code",
+  "seo": {
+    "title": "Systems Analyst | Architecture & DDD | Portfolio",
+    "description": "Systems Analyst specialized in software architecture, DDD and complex domain modeling."
+  },
+  "hero": {
+    "badge": "FORMAL DEGREE: SYSTEMS ANALYST",
+    "headline": "I Design Architectures that <span class=\"text-slate-900 dark:text-slate-100\">Scale</span> and Solve.",
+    "subheadline": "Systems Analyst with strong technical profile. I not only design models and processes: I understand the code behind them. 5+ years transforming business requirements into robust systems.",
+    "ctaPrimary": "Download Analyst CV",
+    "ctaSecondary": "View Design Cases"
+  },
+  "projectsDescription": "From requirements to domain model. Architectures that solve complex business problems.",
+  "ctaTitle": "Need to design a solid architecture?",
+  "ctaDescription": "I can help you transform complex requirements into scalable systems.",
+  "methodology": {
+    "title1": "1. Discovery",
+    "desc1": "Stakeholder interviews, current process analysis and pain points documentation. Using techniques like Event Storming and User Story Mapping.",
+    "title2": "2. Design",
+    "desc2": "Domain modeling with DDD, bounded contexts definition and architecture design. UML diagrams, C4 and complete technical documentation.",
+    "title3": "3. Validation",
+    "desc3": "Technical review with development team, feasibility validation and iterative adjustments. I ensure the design is implementable."
+  },
+  "experience": {
+    "role1": "Senior Systems Analyst",
+    "company1": "Tech Company | 2021 - Present",
+    "items1": [
+      "Architecture design for 3 enterprise systems (DDD + Microservices)",
+      "40% reduction in technical debt through architectural refactoring",
+      "Event Storming workshop facilitation with multidisciplinary teams"
+    ],
+    "role2": "Functional Analyst",
+    "company2": "IT Consulting | 2019 - 2021",
+    "items2": [
+      "Requirements gathering and documentation for 8+ projects",
+      "Business process modeling with BPMN and UML use cases"
+    ]
+  }
+}

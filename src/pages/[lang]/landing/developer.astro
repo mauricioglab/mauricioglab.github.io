@@ -1,0 +1,148 @@
+---
+import ProfileLayout from '../../../layouts/ProfileLayout.astro';
+import HeroSection from '../../../components/landing/HeroSection.astro';
+import ProjectCard from '../../../components/landing/ProjectCard.astro';
+import SkillsSection from '../../../components/landing/SkillsSection.astro';
+import { profiles } from '../../../data/profiles';
+import { getProjectsByProfile } from '../../../data/projects';
+import { 
+  type Lang, 
+  useTranslations, 
+  type CommonTranslations, 
+  type ProfileTranslations 
+} from '../../../i18n';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'es' } },
+    { params: { lang: 'en' } }
+  ];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const profile = profiles.developer;
+const projects = getProjectsByProfile('developer', true);
+const t = await useTranslations<CommonTranslations>(lang, 'common');
+const content = await useTranslations<ProfileTranslations>(lang, 'developer');
+---
+
+<ProfileLayout title={content.title} profile={profile} lang={lang}>
+  <!-- Hero -->
+  <HeroSection profile={profile} lang={lang} />
+  
+  <!-- Proyectos -->
+  <section id="proyectos" class="py-20 bg-slate-50 dark:bg-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-4 text-slate-900 dark:text-white">{t.sections.featuredProjects}</h2>
+        <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+          {content.projectsDescription}
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-8">
+        {projects.map((project) => (
+          <ProjectCard 
+            project={project} 
+            profileId="developer"
+            lang={lang}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <!-- Skills -->
+  <SkillsSection profile={profile} lang={lang} />
+  
+  <!-- Experiencia -->
+  <section id="experiencia" class="py-20 bg-slate-50 dark:bg-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-12 text-center text-slate-900 dark:text-white">{t.sections.experience}</h2>
+      
+      <div class="max-w-4xl mx-auto space-y-8">
+        <!-- Timeline Item 1 -->
+        <div class="flex gap-6">
+          <div class="flex flex-col items-center">
+            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+              1
+            </div>
+            <div class="w-1 h-full bg-blue-200 dark:bg-blue-900 mt-2"></div>
+          </div>
+          <div class="flex-1 pb-8">
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{content.experience.role1}</h3>
+              <p class="text-blue-600 dark:text-blue-400 font-semibold mb-3">{content.experience.company1}</p>
+              <ul class="space-y-2 text-slate-600 dark:text-slate-400">
+                {content.experience.items1.map((item) => (
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-blue-600 dark:text-blue-400 mt-1 mr-2"></i>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Timeline Item 2 -->
+        <div class="flex gap-6">
+          <div class="flex flex-col items-center">
+            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+              2
+            </div>
+          </div>
+          <div class="flex-1 pb-8">
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{content.experience.role2}</h3>
+              <p class="text-blue-600 dark:text-blue-400 font-semibold mb-3">{content.experience.company2}</p>
+              <ul class="space-y-2 text-slate-600 dark:text-slate-400">
+                {content.experience.items2.map((item) => (
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-blue-600 dark:text-blue-400 mt-1 mr-2"></i>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- CTA Final -->
+  <section id="contacto" class="py-20 bg-blue-600 dark:bg-blue-700 text-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-4xl font-bold mb-6">{content.ctaTitle}</h2>
+      <p class="text-xl mb-8 opacity-90">
+        {content.ctaDescription}
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a 
+          href={profile.cvUrl}
+          class="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold hover:bg-slate-100 transition inline-flex items-center"
+        >
+          <i class="fas fa-file-pdf mr-2"></i>
+          {t.cta.downloadCV}
+        </a>
+        <a 
+          href={`mailto:${profile.email}`}
+          class="border-2 border-white text-white px-8 py-4 rounded-xl font-bold hover:bg-white hover:text-blue-600 transition"
+        >
+          <i class="fas fa-envelope mr-2"></i>
+          {t.cta.sendEmail}
+        </a>
+        <a 
+          href={profile.linkedinUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="border-2 border-white text-white px-8 py-4 rounded-xl font-bold hover:bg-white hover:text-blue-600 transition"
+        >
+          <i class="fab fa-linkedin mr-2"></i>
+          {t.cta.connectLinkedIn}
+        </a>
+      </div>
+    </div>
+  </section>
+</ProfileLayout>

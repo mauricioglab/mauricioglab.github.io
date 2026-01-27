@@ -1,0 +1,34 @@
+{
+  "title": "Full-Stack Developer",
+  "subtitle": ".NET + Angular",
+  "description": "Construyo sistemas enterprise que escalan",
+  "seo": {
+    "title": "Full-Stack Developer .NET + Angular | Portfolio",
+    "description": "Developer especializado en arquitecturas enterprise con .NET Core, Angular y SQL Server. +5 años de experiencia."
+  },
+  "hero": {
+    "badge": "DISPONIBLE PARA PROYECTOS ENTERPRISE",
+    "headline": "Desarrollo Soluciones que <span class=\"text-blue-600 dark:text-blue-400\">Escalan</span>.",
+    "subheadline": "Full-Stack Developer con +5 años construyendo arquitecturas robustas en .NET y Angular. Del diseño a producción, entrego sistemas que soportan carga real.",
+    "ctaPrimary": "Descargar CV Developer",
+    "ctaSecondary": "Ver Proyectos"
+  },
+  "projectsDescription": "Sistemas enterprise que soportan carga real. Arquitecturas robustas con .NET, Angular y SQL Server.",
+  "ctaTitle": "¿Buscás un Developer que entregue resultados?",
+  "ctaDescription": "Hablemos de tu proyecto. Puedo empezar de inmediato.",
+  "experience": {
+    "role1": "Senior Full-Stack Developer",
+    "company1": "Empresa Tech | 2021 - Presente",
+    "items1": [
+      "Lideré migración de monolito a microservicios (8 servicios, 0 downtime)",
+      "Reducción del 60% en tiempos de respuesta mediante optimización de queries SQL",
+      "Implementación de CI/CD con GitHub Actions y Azure DevOps"
+    ],
+    "role2": "Full-Stack Developer",
+    "company2": "Consultora IT | 2019 - 2021",
+    "items2": [
+      "Desarrollo de 5+ aplicaciones enterprise con .NET Core y Angular",
+      "Implementación de arquitectura limpia y patrones SOLID"
+    ]
+  }
+}

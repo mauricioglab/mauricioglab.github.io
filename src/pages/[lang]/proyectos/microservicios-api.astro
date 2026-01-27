@@ -1,0 +1,464 @@
+---
+import type { Lang } from '../../../i18n';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'es' } },
+    { params: { lang: 'en' } }
+  ];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+
+const t = {
+  es: {
+    back: '← Volver a proyectos',
+    badge: 'Side Project - DevOps',
+    title: 'Arquitectura de Microservicios',
+    description: 'Sistema de microservicios con Docker, AWS y comunicación asíncrona. Proyecto que demuestra escalabilidad, resiliencia y buenas prácticas de DevOps.',
+    stats: {
+      services: { value: '4', label: 'Microservicios' },
+      uptime: { value: '99.9%', label: 'Uptime SLA' },
+      latency: { value: '<100ms', label: 'Latencia P95' }
+    },
+    links: {
+      github: '💻 Ver en GitHub',
+      docs: '📚 Documentación API'
+    },
+    problem: {
+      title: 'El Problema',
+      intro: 'Quería aprender y demostrar expertise en arquitecturas distribuidas y DevOps. El desafío era:',
+      items: [
+        'Diseñar múltiples servicios independientes con responsabilidades claras',
+        'Implementar comunicación asíncrona confiable entre servicios',
+        'Containerizar con Docker y orquestar con AWS ECS',
+        'Implementar observabilidad (logs, métricas, trazas)',
+        'Garantizar resiliencia y manejo de fallos'
+      ]
+    },
+    process: {
+      title: 'Mi Proceso',
+      phases: [
+        {
+          title: '1. Diseño de Arquitectura',
+          description: 'Definí 4 microservicios con responsabilidades claras:',
+          services: [
+            { name: 'User Service:', desc: 'Gestión de usuarios y autenticación' },
+            { name: 'Product Service:', desc: 'Catálogo de productos' },
+            { name: 'Order Service:', desc: 'Gestión de órdenes' },
+            { name: 'Notification Service:', desc: 'Envío de notificaciones' }
+          ]
+        },
+        {
+          title: '2. Implementación de Servicios',
+          description: 'Cada servicio es independiente con su propia base de datos:',
+          items: ['APIs REST bien documentadas', 'Validaciones y manejo de errores', 'Health checks para monitoreo', 'Logging estructurado']
+        },
+        {
+          title: '3. Comunicación Asíncrona',
+          description: 'Implementé RabbitMQ para comunicación entre servicios:',
+          items: ['Event-driven architecture', 'Message queues para desacoplamiento', 'Dead letter queues para manejo de errores', 'Retry policies automáticas']
+        },
+        {
+          title: '4. Containerización y Orquestación',
+          description: 'Dockericé cada servicio y desplegué en AWS:',
+          items: ['Dockerfiles optimizados (multi-stage builds)', 'Docker Compose para desarrollo local', 'AWS ECS para orquestación en producción', 'Auto-scaling basado en métricas']
+        },
+        {
+          title: '5. Observabilidad y Monitoreo',
+          description: 'Implementé stack completo de observabilidad:',
+          items: ['CloudWatch para logs y métricas', 'X-Ray para distributed tracing', 'Dashboards en Grafana', 'Alertas automáticas']
+        }
+      ]
+    },
+    solution: {
+      title: 'La Solución',
+      architecture: {
+        title: 'Arquitectura de Microservicios',
+        items: [
+          { label: 'API Gateway:', text: 'Punto de entrada único, enrutamiento, rate limiting, autenticación' },
+          { label: 'Servicios Independientes:', text: 'Cada uno con su base de datos, escalable independientemente' },
+          { label: 'Message Broker:', text: 'RabbitMQ para comunicación asíncrona y desacoplamiento' },
+          { label: 'Service Discovery:', text: 'AWS ECS service discovery para localización dinámica' }
+        ]
+      },
+      patterns: {
+        title: 'Patrones Implementados',
+        items: [
+          { name: 'API Gateway Pattern', desc: 'Enrutamiento centralizado, composición de servicios' },
+          { name: 'Event-Driven', desc: 'Comunicación asíncrona, desacoplamiento' },
+          { name: 'Circuit Breaker', desc: 'Resiliencia ante fallos de servicios' },
+          { name: 'Saga Pattern', desc: 'Transacciones distribuidas' }
+        ]
+      },
+      infra: {
+        title: 'Infraestructura en AWS',
+        items: [
+          { label: 'ECS Fargate:', text: 'Orquestación de contenedores sin gestionar servidores' },
+          { label: 'RDS:', text: 'Bases de datos PostgreSQL gestionadas' },
+          { label: 'ElastiCache:', text: 'Redis para caching distribuido' },
+          { label: 'CloudWatch:', text: 'Logs, métricas y alarmas' },
+          { label: 'X-Ray:', text: 'Distributed tracing para debugging' }
+        ]
+      }
+    },
+    results: {
+      title: 'Resultados & Impacto',
+      metrics: [
+        { value: '99.9%', label: 'Uptime en producción', color: 'emerald' },
+        { value: '<100ms', label: 'Latencia P95', color: 'blue' },
+        { value: '10x', label: 'Escalabilidad horizontal', color: 'purple' },
+        { value: '0', label: 'Downtime en 6 meses', color: 'orange' }
+      ],
+      learnings: {
+        title: 'Aprendizajes Clave',
+        items: [
+          { label: 'Microservicios:', text: 'Diseño de servicios independientes, trade-offs de complejidad' },
+          { label: 'Comunicación asíncrona:', text: 'Message queues, event-driven architecture, garantías de entrega' },
+          { label: 'DevOps:', text: 'Containerización, orquestación, CI/CD, infraestructura como código' },
+          { label: 'Observabilidad:', text: 'Importancia de logs, métricas y trazas en sistemas distribuidos' },
+          { label: 'Resiliencia:', text: 'Circuit breakers, retry policies, graceful degradation' }
+        ]
+      }
+    },
+    stack: {
+      title: 'Stack Tecnológico',
+      observability: 'Observabilidad'
+    },
+    cta: {
+      title: '¿Necesitas expertise en arquitecturas distribuidas?',
+      subtitle: 'Tengo experiencia en microservicios, DevOps y sistemas de alta disponibilidad. Conectemos.',
+      button: 'Enviar Email'
+    }
+  },
+  en: {
+    back: '← Back to projects',
+    badge: 'Side Project - DevOps',
+    title: 'Microservices Architecture',
+    description: 'Microservices system with Docker, AWS, and asynchronous communication. Project demonstrating scalability, resilience, and DevOps best practices.',
+    stats: {
+      services: { value: '4', label: 'Microservices' },
+      uptime: { value: '99.9%', label: 'Uptime SLA' },
+      latency: { value: '<100ms', label: 'P95 Latency' }
+    },
+    links: {
+      github: '💻 View on GitHub',
+      docs: '📚 API Documentation'
+    },
+    problem: {
+      title: 'The Problem',
+      intro: 'I wanted to learn and demonstrate expertise in distributed architectures and DevOps. The challenge was:',
+      items: [
+        'Design multiple independent services with clear responsibilities',
+        'Implement reliable asynchronous communication between services',
+        'Containerize with Docker and orchestrate with AWS ECS',
+        'Implement observability (logs, metrics, traces)',
+        'Ensure resilience and fault handling'
+      ]
+    },
+    process: {
+      title: 'My Process',
+      phases: [
+        {
+          title: '1. Architecture Design',
+          description: 'I defined 4 microservices with clear responsibilities:',
+          services: [
+            { name: 'User Service:', desc: 'User management and authentication' },
+            { name: 'Product Service:', desc: 'Product catalog' },
+            { name: 'Order Service:', desc: 'Order management' },
+            { name: 'Notification Service:', desc: 'Notification delivery' }
+          ]
+        },
+        {
+          title: '2. Service Implementation',
+          description: 'Each service is independent with its own database:',
+          items: ['Well-documented REST APIs', 'Validations and error handling', 'Health checks for monitoring', 'Structured logging']
+        },
+        {
+          title: '3. Asynchronous Communication',
+          description: 'I implemented RabbitMQ for inter-service communication:',
+          items: ['Event-driven architecture', 'Message queues for decoupling', 'Dead letter queues for error handling', 'Automatic retry policies']
+        },
+        {
+          title: '4. Containerization and Orchestration',
+          description: 'I containerized each service and deployed to AWS:',
+          items: ['Optimized Dockerfiles (multi-stage builds)', 'Docker Compose for local development', 'AWS ECS for production orchestration', 'Metrics-based auto-scaling']
+        },
+        {
+          title: '5. Observability and Monitoring',
+          description: 'I implemented a complete observability stack:',
+          items: ['CloudWatch for logs and metrics', 'X-Ray for distributed tracing', 'Grafana dashboards', 'Automatic alerts']
+        }
+      ]
+    },
+    solution: {
+      title: 'The Solution',
+      architecture: {
+        title: 'Microservices Architecture',
+        items: [
+          { label: 'API Gateway:', text: 'Single entry point, routing, rate limiting, authentication' },
+          { label: 'Independent Services:', text: 'Each with its own database, independently scalable' },
+          { label: 'Message Broker:', text: 'RabbitMQ for asynchronous communication and decoupling' },
+          { label: 'Service Discovery:', text: 'AWS ECS service discovery for dynamic location' }
+        ]
+      },
+      patterns: {
+        title: 'Implemented Patterns',
+        items: [
+          { name: 'API Gateway Pattern', desc: 'Centralized routing, service composition' },
+          { name: 'Event-Driven', desc: 'Asynchronous communication, decoupling' },
+          { name: 'Circuit Breaker', desc: 'Resilience against service failures' },
+          { name: 'Saga Pattern', desc: 'Distributed transactions' }
+        ]
+      },
+      infra: {
+        title: 'AWS Infrastructure',
+        items: [
+          { label: 'ECS Fargate:', text: 'Container orchestration without managing servers' },
+          { label: 'RDS:', text: 'Managed PostgreSQL databases' },
+          { label: 'ElastiCache:', text: 'Redis for distributed caching' },
+          { label: 'CloudWatch:', text: 'Logs, metrics, and alarms' },
+          { label: 'X-Ray:', text: 'Distributed tracing for debugging' }
+        ]
+      }
+    },
+    results: {
+      title: 'Results & Impact',
+      metrics: [
+        { value: '99.9%', label: 'Production uptime', color: 'emerald' },
+        { value: '<100ms', label: 'P95 Latency', color: 'blue' },
+        { value: '10x', label: 'Horizontal scalability', color: 'purple' },
+        { value: '0', label: 'Downtime in 6 months', color: 'orange' }
+      ],
+      learnings: {
+        title: 'Key Learnings',
+        items: [
+          { label: 'Microservices:', text: 'Designing independent services, complexity trade-offs' },
+          { label: 'Async communication:', text: 'Message queues, event-driven architecture, delivery guarantees' },
+          { label: 'DevOps:', text: 'Containerization, orchestration, CI/CD, infrastructure as code' },
+          { label: 'Observability:', text: 'Importance of logs, metrics, and traces in distributed systems' },
+          { label: 'Resilience:', text: 'Circuit breakers, retry policies, graceful degradation' }
+        ]
+      }
+    },
+    stack: {
+      title: 'Tech Stack',
+      observability: 'Observability'
+    },
+    cta: {
+      title: 'Need expertise in distributed architectures?',
+      subtitle: 'I have experience in microservices, DevOps, and high-availability systems. Let\'s connect.',
+      button: 'Send Email'
+    }
+  }
+};
+
+const content = t[lang];
+---
+
+<!doctype html>
+<html lang={lang}>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{content.title} - Case Study</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+        <style>body { font-family: "Inter", sans-serif; }</style>
+    </head>
+    <body class="bg-white">
+        <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
+            <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+                <a href="/" class="text-xl font-bold text-gray-900">MG<span class="text-blue-600">.</span></a>
+                <a href={`/${lang}/landing/developer`} class="text-sm text-gray-600 hover:text-blue-600 transition">{content.back}</a>
+            </div>
+        </header>
+
+        <main class="max-w-4xl mx-auto px-6 py-16">
+            <section class="mb-16">
+                <div class="mb-8">
+                    <span class="px-4 py-2 bg-emerald-50 text-emerald-700 rounded-full text-sm font-semibold">{content.badge}</span>
+                </div>
+                <h1 class="text-5xl font-extrabold text-gray-900 mb-6">{content.title}</h1>
+                <p class="text-xl text-gray-600 leading-relaxed mb-8">{content.description}</p>
+
+                <div class="grid grid-cols-3 gap-4 mb-8">
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="text-2xl font-bold text-emerald-600">{content.stats.services.value}</div>
+                        <div class="text-sm text-gray-600">{content.stats.services.label}</div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="text-2xl font-bold text-emerald-600">{content.stats.uptime.value}</div>
+                        <div class="text-sm text-gray-600">{content.stats.uptime.label}</div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="text-2xl font-bold text-emerald-600">{content.stats.latency.value}</div>
+                        <div class="text-sm text-gray-600">{content.stats.latency.label}</div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-4">
+                    <a href="https://github.com/mauriciogdev/microservicios-api" target="_blank" class="px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition">{content.links.github}</a>
+                    <a href="https://api-docs.example.com" target="_blank" class="px-6 py-3 border-2 border-gray-300 text-gray-900 rounded-lg font-semibold hover:border-emerald-600 transition">{content.links.docs}</a>
+                </div>
+            </section>
+
+            <hr class="my-16" />
+
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">{content.problem.title}</h2>
+                <div class="bg-emerald-50 rounded-xl p-8 border border-emerald-200">
+                    <p class="text-gray-700 leading-relaxed mb-4">{content.problem.intro}</p>
+                    <ul class="space-y-3 text-gray-700">
+                        {content.problem.items.map((item) => (
+                            <li class="flex items-start gap-3">
+                                <span class="text-emerald-600 font-bold">•</span>
+                                <span>{item}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </section>
+
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">{content.process.title}</h2>
+                <div class="space-y-8">
+                    <div class="border-l-4 border-emerald-600 pl-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">{content.process.phases[0].title}</h3>
+                        <p class="text-gray-600 mb-4">{content.process.phases[0].description}</p>
+                        <div class="bg-gray-50 rounded-lg p-4 text-sm text-gray-700 space-y-2">
+                            {content.process.phases[0].services?.map((s) => (
+                                <div><strong>{s.name}</strong> {s.desc}</div>
+                            ))}
+                        </div>
+                    </div>
+                    {content.process.phases.slice(1).map((phase, idx) => {
+                        const colors = ['border-blue-600', 'border-purple-600', 'border-orange-600', 'border-red-600'];
+                        return (
+                            <div class={`border-l-4 ${colors[idx]} pl-6`}>
+                                <h3 class="text-xl font-bold text-gray-900 mb-3">{phase.title}</h3>
+                                <p class="text-gray-600 mb-4">{phase.description}</p>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    {phase.items?.map((item) => <li>✓ {item}</li>)}
+                                </ul>
+                            </div>
+                        );
+                    })}
+                </div>
+            </section>
+
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">{content.solution.title}</h2>
+                <div class="space-y-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">{content.solution.architecture.title}</h3>
+                        <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                            <div class="space-y-4 text-sm text-gray-700">
+                                {content.solution.architecture.items.map((item) => (
+                                    <div>
+                                        <span class="font-semibold block mb-2">{item.label}</span>
+                                        {item.text}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">{content.solution.patterns.title}</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            {content.solution.patterns.items.map((p) => (
+                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                    <div class="font-semibold text-gray-900 mb-2">{p.name}</div>
+                                    <div class="text-sm text-gray-700">{p.desc}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">{content.solution.infra.title}</h3>
+                        <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                            <div class="space-y-3 text-sm text-gray-700">
+                                {content.solution.infra.items.map((item) => (
+                                    <div><span class="font-semibold">{item.label}</span> {item.text}</div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">{content.results.title}</h2>
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    {content.results.metrics.map((m) => (
+                        <div class={`bg-gradient-to-br from-${m.color}-50 to-${m.color}-100 rounded-xl p-6 border border-${m.color}-200`}>
+                            <div class={`text-3xl font-bold text-${m.color}-600 mb-2`}>{m.value}</div>
+                            <div class="text-gray-700">{m.label}</div>
+                        </div>
+                    ))}
+                </div>
+                <div class="bg-gray-50 rounded-xl p-8 border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">{content.results.learnings.title}</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        {content.results.learnings.items.map((item) => (
+                            <li class="flex items-start gap-3">
+                                <span class="text-emerald-600 font-bold">✓</span>
+                                <span><strong>{item.label}</strong> {item.text}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </section>
+
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">{content.stack.title}</h2>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                        <h3 class="font-bold text-gray-900 mb-4">Backend</h3>
+                        <div class="space-y-2 text-sm text-gray-700">
+                            <div>• .NET Core 8</div>
+                            <div>• C#</div>
+                            <div>• MassTransit (RabbitMQ)</div>
+                            <div>• Polly (Resilience)</div>
+                            <div>• Serilog (Logging)</div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                        <h3 class="font-bold text-gray-900 mb-4">{lang === 'es' ? 'Infraestructura' : 'Infrastructure'}</h3>
+                        <div class="space-y-2 text-sm text-gray-700">
+                            <div>• Docker</div>
+                            <div>• AWS ECS Fargate</div>
+                            <div>• RabbitMQ</div>
+                            <div>• PostgreSQL</div>
+                            <div>• Redis</div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                        <h3 class="font-bold text-gray-900 mb-4">{content.stack.observability}</h3>
+                        <div class="space-y-2 text-sm text-gray-700">
+                            <div>• CloudWatch</div>
+                            <div>• X-Ray</div>
+                            <div>• Grafana</div>
+                            <div>• Prometheus</div>
+                            <div>• GitHub Actions (CI/CD)</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-gradient-to-r from-emerald-600 to-blue-600 rounded-xl p-8 text-white text-center">
+                <h2 class="text-2xl font-bold mb-4">{content.cta.title}</h2>
+                <p class="text-emerald-100 mb-6">{content.cta.subtitle}</p>
+                <a href="mailto:mauriciogcode@gmail.com" class="inline-block px-6 py-3 bg-white text-emerald-600 rounded-lg font-semibold hover:bg-emerald-50 transition">{content.cta.button}</a>
+            </section>
+        </main>
+
+        <footer class="bg-gray-900 text-white py-8 mt-20">
+            <div class="max-w-4xl mx-auto px-6 text-center">
+                <p class="text-gray-400 text-sm">© 2026 Mauricio Gonzalez - Full Stack Developer</p>
+            </div>
+        </footer>
+    </body>
+</html>

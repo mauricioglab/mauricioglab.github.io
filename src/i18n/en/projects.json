@@ -1,0 +1,120 @@
+{
+  "ecommerce": {
+    "title": "Enterprise E-commerce Platform",
+    "shortDescription": "Scalable e-commerce system with microservices architecture",
+    "profiles": {
+      "developer": {
+        "description": "Microservices architecture with .NET Core 8 and Angular 17. Payment system integrated with Stripe and real-time inventory management.",
+        "highlights": [
+          "API Gateway with Ocelot + Redis Cache for 50k req/min",
+          "Optimized SQL Server with clustered indexes and partitioning",
+          "60% reduction in response times vs. previous monolith"
+        ]
+      },
+      "analista": {
+        "description": "Complete architectural redesign based on Domain-Driven Design and Event Storming. Monolith to microservices migration.",
+        "highlights": [
+          "Identification of 5 Bounded Contexts (Catalog, Orders, Payments, Inventory, Users)",
+          "Complete UML modeling and API contract definition (OpenAPI)",
+          "40% reduction in technical debt and improved maintainability"
+        ]
+      },
+      "ia-engineer": {
+        "description": "Intelligent recommendation system using embeddings and semantic search. Customer service chatbot with RAG.",
+        "highlights": [
+          "OpenAI Embeddings integration for personalized recommendations",
+          "Pinecone as vector database for semantic search",
+          "35% increase in conversion rate thanks to recommendations"
+        ]
+      }
+    }
+  },
+  "task-manager-ddd": {
+    "title": "Task Manager with DDD",
+    "shortDescription": "Enterprise task manager with clean architecture and DDD",
+    "profiles": {
+      "developer": {
+        "description": "Full-stack application with Clean Architecture, CQRS and Event Sourcing. Backend in .NET 8 and frontend in Angular with NgRx.",
+        "highlights": [
+          "CQRS implementation with MediatR and Event Sourcing",
+          "Automated testing with 85% coverage (xUnit + Cypress)",
+          "Automated deployment on Azure with CI/CD (GitHub Actions)"
+        ]
+      },
+      "analista": {
+        "description": "Complex domain design with multiple aggregates and business policies. Workflow modeling with states and transitions.",
+        "highlights": [
+          "Definition of 3 main Aggregates (Task, Project, Team)",
+          "State machine modeling for task lifecycle",
+          "Complete technical documentation with UML and C4 diagrams"
+        ]
+      }
+    }
+  },
+  "microservicios-api": {
+    "title": "API Gateway with Microservices",
+    "shortDescription": "Microservices architecture with asynchronous messaging",
+    "profiles": {
+      "developer": {
+        "description": "Distributed system with 8 independent microservices. Asynchronous communication with RabbitMQ and synchronization with gRPC.",
+        "highlights": [
+          "API Gateway with JWT authentication and rate limiting",
+          "RabbitMQ for domain events and asynchronous communication",
+          "Observability with Prometheus, Grafana and Seq for logs"
+        ]
+      },
+      "analista": {
+        "description": "Monolith decomposition strategy into microservices. Contract definition and communication policies between services.",
+        "highlights": [
+          "Dependency analysis and bounded contexts definition",
+          "Gradual migration strategy with zero downtime",
+          "Pattern documentation: Saga, API Composition, CQRS"
+        ]
+      }
+    }
+  },
+  "chatbot-rag": {
+    "title": "Enterprise RAG Chatbot",
+    "shortDescription": "Automated response system with AI and semantic search",
+    "profiles": {
+      "ia-engineer": {
+        "description": "Intelligent chatbot that answers questions based on internal technical documentation. Uses embeddings and vector search for relevant context.",
+        "highlights": [
+          "LangChain + OpenAI GPT-4 for response generation",
+          "Pinecone as vector database with 10k+ indexed documents",
+          "70% reduction in manual queries to support team"
+        ]
+      },
+      "developer": {
+        "description": "Backend in FastAPI with integration to legacy .NET systems. Frontend in React with real-time response streaming.",
+        "highlights": [
+          "REST API with FastAPI and OAuth2 authentication",
+          "Integration with Active Directory for SSO",
+          "WebSockets for LLM response streaming"
+        ]
+      }
+    }
+  },
+  "data-extraction-llm": {
+    "title": "Data Extraction with LLMs",
+    "shortDescription": "Automated pipeline to convert PDFs into structured data",
+    "profiles": {
+      "ia-engineer": {
+        "description": "System that processes unstructured documents (invoices, contracts) and extracts validated data for legacy systems.",
+        "highlights": [
+          "Python + Pydantic for schema validation",
+          "GPT-4o for extraction with function calling",
+          "95% accuracy in critical field extraction"
+        ]
+      },
+      "developer": {
+        "description": "Integration with SQL Server and existing .NET systems. Batch processing pipeline with Azure Functions.",
+        "highlights": [
+          "Azure Functions for serverless processing",
+          "Integration with SQL Server via Entity Framework",
+          "Processing of 1000+ documents/day"
+        ]
+      }
+    }
+  }
+}

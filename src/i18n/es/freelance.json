@@ -1,0 +1,43 @@
+{
+  "title": "Tech Lead Freelance",
+  "subtitle": "Fullstack & Consultoría",
+  "description": "Escalo startups de 0 a producción",
+  "seo": {
+    "title": "Tech Lead Freelance | Fullstack Developer | Consultoría",
+    "description": "Tech Lead freelance especializado en escalar startups tecnológicas. +10 años de experiencia, 50+ proyectos."
+  },
+  "hero": {
+    "badge": "DISPONIBLE PARA PROYECTOS Y CONSULTORÍA",
+    "headline": "Escalo Startups de <span class=\"text-orange-600 dark:text-orange-400\">0 a Producción</span>.",
+    "subheadline": "Tech Lead & Desarrollador Fullstack con +10 años de experiencia. 50+ proyectos entregados, 15+ equipos liderados. Angular, .NET, Node.js, AWS.",
+    "ctaPrimary": "Agendar Consultoría",
+    "ctaSecondary": "Ver Proyectos"
+  },
+  "projectsDescription": "Proyectos entregados que generaron impacto real. Desde MVPs hasta sistemas enterprise escalables.",
+  "ctaTitle": "¿Necesitás escalar tu proyecto?",
+  "ctaDescription": "Puedo ayudarte como Tech Lead, consultor o desarrollador. Hablemos de tu desafío.",
+  "services": {
+    "title1": "Liderazgo de Equipo",
+    "desc1": "Gestión de equipos técnicos, arquitectura de soluciones y mentoría de desarrolladores junior y senior.",
+    "title2": "Desarrollo Fullstack",
+    "desc2": "Angular, .NET Core, Node.js, Python. Desde el frontend hasta la base de datos, entrego soluciones completas.",
+    "title3": "Consultoría Técnica",
+    "desc3": "Auditorías de código, definición de arquitectura, optimización de performance y migración de sistemas legacy."
+  },
+  "experience": {
+    "role1": "Líder de Equipo Senior",
+    "company1": "Empresa Tech | 2024 - Presente",
+    "items1": [
+      "Reducción del 40% en tiempo de desarrollo del equipo",
+      "Liderazgo de 8 desarrolladores en proyectos críticos",
+      "Migración de 10+ sistemas legacy a arquitecturas modernas"
+    ],
+    "role2": "Desarrollador Fullstack Senior",
+    "company2": "Proyectos Freelance | 2019 - 2024",
+    "items2": [
+      "15+ APIs desarrolladas para clientes enterprise",
+      "Mejora del 60% en performance de aplicaciones existentes",
+      "5+ proyectos cloud desplegados en AWS y Azure"
+    ]
+  }
+}

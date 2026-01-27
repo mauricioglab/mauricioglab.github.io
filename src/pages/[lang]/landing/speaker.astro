@@ -1,0 +1,278 @@
+---
+import ProfileLayout from '../../../layouts/ProfileLayout.astro';
+import HeroSection from '../../../components/landing/HeroSection.astro';
+import SkillsSection from '../../../components/landing/SkillsSection.astro';
+import { profiles } from '../../../data/profiles';
+import { 
+  type Lang, 
+  useTranslations, 
+  type CommonTranslations, 
+  type ProfileTranslations 
+} from '../../../i18n';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'es' } },
+    { params: { lang: 'en' } }
+  ];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const profile = profiles.speaker;
+const t = await useTranslations<CommonTranslations>(lang, 'common');
+const content = await useTranslations<ProfileTranslations>(lang, 'speaker');
+---
+
+<ProfileLayout title={content.title} profile={profile} lang={lang}>
+  <!-- Hero -->
+  <HeroSection profile={profile} lang={lang} />
+  
+  <!-- Temas que Ofrezco -->
+  <section id="proyectos" class="py-20 bg-slate-50 dark:bg-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-4 text-slate-900 dark:text-white">
+          {lang === 'es' ? 'Temas que Ofrezco' : 'Topics I Offer'}
+        </h2>
+        <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+          {content.projectsDescription}
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border-l-4 border-purple-600 shadow-sm hover:shadow-lg transition">
+          <div class="text-4xl mb-4">🤖</div>
+          <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">{content.topics?.title1}</h3>
+          <p class="text-slate-600 dark:text-slate-400">
+            {content.topics?.desc1}
+          </p>
+        </div>
+        
+        <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border-l-4 border-blue-600 shadow-sm hover:shadow-lg transition">
+          <div class="text-4xl mb-4">💻</div>
+          <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">{content.topics?.title2}</h3>
+          <p class="text-slate-600 dark:text-slate-400">
+            {content.topics?.desc2}
+          </p>
+        </div>
+        
+        <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border-l-4 border-green-600 shadow-sm hover:shadow-lg transition">
+          <div class="text-4xl mb-4">🎯</div>
+          <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">{content.topics?.title3}</h3>
+          <p class="text-slate-600 dark:text-slate-400">
+            {content.topics?.desc3}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Métricas -->
+  <section class="py-20 bg-white dark:bg-slate-900 transition-colors">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-12 text-center text-slate-900 dark:text-white">
+        {lang === 'es' ? 'Trayectoria' : 'Track Record'}
+      </h2>
+      
+      <div class="grid md:grid-cols-4 gap-8">
+        <div class="text-center p-6 bg-purple-50 dark:bg-purple-900/20 rounded-2xl">
+          <div class="text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2">10+</div>
+          <p class="text-slate-600 dark:text-slate-400">{lang === 'es' ? 'Años como docente' : 'Years as educator'}</p>
+        </div>
+        <div class="text-center p-6 bg-blue-50 dark:bg-blue-900/20 rounded-2xl">
+          <div class="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">500+</div>
+          <p class="text-slate-600 dark:text-slate-400">{lang === 'es' ? 'Estudiantes capacitados' : 'Students trained'}</p>
+        </div>
+        <div class="text-center p-6 bg-green-50 dark:bg-green-900/20 rounded-2xl">
+          <div class="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">50+</div>
+          <p class="text-slate-600 dark:text-slate-400">{lang === 'es' ? 'Charlas y talleres' : 'Talks and workshops'}</p>
+        </div>
+        <div class="text-center p-6 bg-orange-50 dark:bg-orange-900/20 rounded-2xl">
+          <div class="text-4xl font-bold text-orange-600 dark:text-orange-400 mb-2">3</div>
+          <p class="text-slate-600 dark:text-slate-400">{lang === 'es' ? 'Carreras universitarias' : 'University programs'}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Formatos Disponibles -->
+  <section class="py-20 bg-slate-50 dark:bg-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-12 text-center text-slate-900 dark:text-white">
+        {lang === 'es' ? 'Formatos Disponibles' : 'Available Formats'}
+      </h2>
+      
+      <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+          <div class="w-16 h-16 bg-purple-600 rounded-2xl flex items-center justify-center mb-6">
+            <i class="fas fa-microphone text-white text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">
+            {lang === 'es' ? 'Charlas Inspiracionales' : 'Inspirational Talks'}
+          </h3>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">
+            {lang === 'es' 
+              ? 'Keynotes de 30-60 minutos sobre tendencias tech, IA y el futuro del trabajo. Ideales para conferencias y eventos corporativos.'
+              : '30-60 minute keynotes about tech trends, AI and the future of work. Ideal for conferences and corporate events.'
+            }
+          </p>
+          <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+            <li class="flex items-center"><i class="fas fa-check text-purple-600 mr-2"></i> {lang === 'es' ? 'Formato presencial o virtual' : 'In-person or virtual'}</li>
+            <li class="flex items-center"><i class="fas fa-check text-purple-600 mr-2"></i> {lang === 'es' ? 'Q&A incluido' : 'Q&A included'}</li>
+          </ul>
+        </div>
+        
+        <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+          <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mb-6">
+            <i class="fas fa-laptop-code text-white text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">
+            {lang === 'es' ? 'Workshops Prácticos' : 'Practical Workshops'}
+          </h3>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">
+            {lang === 'es' 
+              ? 'Talleres de 2-4 horas donde los participantes aprenden haciendo. IA, programación, automatizaciones.'
+              : '2-4 hour workshops where participants learn by doing. AI, programming, automations.'
+            }
+          </p>
+          <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+            <li class="flex items-center"><i class="fas fa-check text-blue-600 mr-2"></i> {lang === 'es' ? 'Hands-on con ejercicios' : 'Hands-on exercises'}</li>
+            <li class="flex items-center"><i class="fas fa-check text-blue-600 mr-2"></i> {lang === 'es' ? 'Material incluido' : 'Materials included'}</li>
+          </ul>
+        </div>
+        
+        <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+          <div class="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center mb-6">
+            <i class="fas fa-graduation-cap text-white text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">
+            {lang === 'es' ? 'Capacitaciones In-Company' : 'In-Company Training'}
+          </h3>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">
+            {lang === 'es' 
+              ? 'Programas de formación personalizados para tu equipo. Desde 1 día hasta programas de varios meses.'
+              : 'Customized training programs for your team. From 1 day to multi-month programs.'
+            }
+          </p>
+          <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+            <li class="flex items-center"><i class="fas fa-check text-green-600 mr-2"></i> {lang === 'es' ? 'Contenido a medida' : 'Custom content'}</li>
+            <li class="flex items-center"><i class="fas fa-check text-green-600 mr-2"></i> {lang === 'es' ? 'Seguimiento post-capacitación' : 'Post-training follow-up'}</li>
+          </ul>
+        </div>
+        
+        <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+          <div class="w-16 h-16 bg-orange-600 rounded-2xl flex items-center justify-center mb-6">
+            <i class="fas fa-user-graduate text-white text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">
+            {lang === 'es' ? 'Mentorías 1:1' : '1:1 Mentoring'}
+          </h3>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">
+            {lang === 'es' 
+              ? 'Acompañamiento personalizado para developers que quieren crecer en su carrera técnica.'
+              : 'Personalized guidance for developers who want to grow their technical careers.'
+            }
+          </p>
+          <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+            <li class="flex items-center"><i class="fas fa-check text-orange-600 mr-2"></i> {lang === 'es' ? 'Sesiones semanales o quincenales' : 'Weekly or biweekly sessions'}</li>
+            <li class="flex items-center"><i class="fas fa-check text-orange-600 mr-2"></i> {lang === 'es' ? 'Plan de desarrollo personalizado' : 'Personalized development plan'}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Skills -->
+  <SkillsSection profile={profile} lang={lang} />
+  
+  <!-- Experiencia -->
+  <section id="experiencia" class="py-20 bg-slate-50 dark:bg-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-12 text-center text-slate-900 dark:text-white">{t.sections.experience}</h2>
+      
+      <div class="max-w-4xl mx-auto space-y-8">
+        <div class="flex gap-6">
+          <div class="flex flex-col items-center">
+            <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+              1
+            </div>
+            <div class="w-1 h-full bg-purple-200 dark:bg-purple-900 mt-2"></div>
+          </div>
+          <div class="flex-1 pb-8">
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{content.experience.role1}</h3>
+              <p class="text-purple-600 dark:text-purple-400 font-semibold mb-3">{content.experience.company1}</p>
+              <ul class="space-y-2 text-slate-600 dark:text-slate-400">
+                {content.experience.items1.map((item) => (
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-purple-600 dark:text-purple-400 mt-1 mr-2"></i>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex gap-6">
+          <div class="flex flex-col items-center">
+            <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+              2
+            </div>
+          </div>
+          <div class="flex-1">
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{content.experience.role2}</h3>
+              <p class="text-purple-600 dark:text-purple-400 font-semibold mb-3">{content.experience.company2}</p>
+              <ul class="space-y-2 text-slate-600 dark:text-slate-400">
+                {content.experience.items2.map((item) => (
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-purple-600 dark:text-purple-400 mt-1 mr-2"></i>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- CTA Final -->
+  <section id="contacto" class="py-20 bg-gradient-to-br from-purple-600 to-purple-700 text-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-4xl font-bold mb-6">{content.ctaTitle}</h2>
+      <p class="text-xl mb-8 opacity-90">
+        {content.ctaDescription}
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a 
+          href="https://calendly.com/mauricio-gonzalez"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="bg-white text-purple-600 px-8 py-4 rounded-xl font-bold hover:bg-slate-100 transition inline-flex items-center"
+        >
+          <i class="fas fa-calendar-alt mr-2"></i>
+          {content.hero.ctaPrimary}
+        </a>
+        <a 
+          href={`mailto:${profile.email}`}
+          class="border-2 border-white text-white px-8 py-4 rounded-xl font-bold hover:bg-white hover:text-purple-600 transition"
+        >
+          <i class="fas fa-envelope mr-2"></i>
+          {t.cta.sendEmail}
+        </a>
+        <a 
+          href={profile.linkedinUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="border-2 border-white text-white px-8 py-4 rounded-xl font-bold hover:bg-white hover:text-purple-600 transition"
+        >
+          <i class="fab fa-linkedin mr-2"></i>
+          {t.cta.connectLinkedIn}
+        </a>
+      </div>
+    </div>
+  </section>
+</ProfileLayout>

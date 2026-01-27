@@ -1,0 +1,43 @@
+{
+  "title": "Speaker & Docente",
+  "subtitle": "IA & Programación",
+  "description": "Transformo tecnología compleja en conocimiento práctico",
+  "seo": {
+    "title": "Speaker & Docente | IA y Programación | Charlas Tech",
+    "description": "Speaker y docente especializado en IA, programación y tecnologías emergentes. +10 años formando profesionales."
+  },
+  "hero": {
+    "badge": "DISPONIBLE PARA CHARLAS Y CAPACITACIONES",
+    "headline": "Hago que la <span class=\"text-purple-600 dark:text-purple-400\">Tecnología</span> sea Comprensible.",
+    "subheadline": "Docente con +10 años de experiencia, +500 estudiantes capacitados. Especialista en IA, programación y tecnologías emergentes. Charlas que inspiran y capacitaciones que transforman.",
+    "ctaPrimary": "Contratar Charla",
+    "ctaSecondary": "Ver Experiencia"
+  },
+  "projectsDescription": "Charlas y capacitaciones que transforman equipos y organizaciones.",
+  "ctaTitle": "¿Querés capacitar a tu equipo?",
+  "ctaDescription": "Ofrezco charlas inspiracionales, workshops prácticos y capacitaciones in-company.",
+  "topics": {
+    "title1": "Inteligencia Artificial Práctica",
+    "desc1": "Cómo usar IA en tu trabajo diario. Prompt Engineering, automatizaciones con n8n, integración de LLMs en sistemas existentes.",
+    "title2": "Desarrollo & Arquitectura",
+    "desc2": "Clean Architecture, microservicios, buenas prácticas. Angular, .NET, Python para equipos que quieren mejorar.",
+    "title3": "Liderazgo Técnico",
+    "desc3": "Cómo liderar equipos de desarrollo, gestionar deuda técnica y tomar decisiones arquitectónicas."
+  },
+  "experience": {
+    "role1": "Docente Universitario",
+    "company1": "Instituciones Educativas | 2024 - Presente",
+    "items1": [
+      "Materias: Práctica Profesionalizante, Intro a Programación, Bases de Datos",
+      "Carreras: Técnico en Análisis de Sistemas, Desarrollo Web, IA",
+      "+50 charlas y talleres realizados"
+    ],
+    "role2": "Capacitador Corporativo",
+    "company2": "Empresas Tech | 2019 - Presente",
+    "items2": [
+      "+500 estudiantes capacitados en programación y tecnología",
+      "Workshops de IA y automatización para equipos enterprise",
+      "Mentorías personalizadas para developers"
+    ]
+  }
+}

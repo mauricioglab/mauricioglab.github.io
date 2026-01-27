@@ -1,0 +1,40 @@
+{
+  "title": "IA Engineer",
+  "subtitle": "Python & LLMs",
+  "description": "Integrando IA en sistemas reales",
+  "seo": {
+    "title": "IA Engineer | Python, LangChain & RAG | Portfolio",
+    "description": "IA Engineer especializado en integración de LLMs, RAG y automatización con Python. Background en desarrollo enterprise."
+  },
+  "hero": {
+    "badge": "ESPECIALIZACIÓN ACTIVA EN IA & LLMs",
+    "headline": "Integrando <span class=\"text-emerald-500\">Inteligencia</span> en Sistemas Reales.",
+    "subheadline": "Full-Stack Developer (.NET/Angular) con +5 años de experiencia, ahora enfocado en construir soluciones con Python, LangChain y RAGs. Uniendo la robustez del software enterprise con el poder de la IA generativa.",
+    "ctaPrimary": "Descargar CV IA Engineer",
+    "ctaSecondary": "Ver Repositorios IA"
+  },
+  "projectsDescription": "Integrando LLMs y RAG en sistemas enterprise. Python, LangChain y arquitecturas escalables.",
+  "ctaTitle": "¿Querés integrar IA en tu sistema?",
+  "ctaDescription": "Combino experiencia enterprise con las últimas tecnologías de IA. Hablemos de tu proyecto.",
+  "background": {
+    "title1": "+5 Años en .NET/Angular",
+    "desc1": "No soy un data scientist que aprendió a programar. Soy un developer enterprise que ahora domina IA. Entiendo arquitecturas, APIs, bases de datos y deployment.",
+    "title2": "Especialización en IA",
+    "desc2": "Desde 2023 trabajando con LLMs, RAG y LangChain. Integro modelos de IA en sistemas existentes sin romper nada. Python production-ready."
+  },
+  "experience": {
+    "role1": "IA Engineer / Full-Stack Developer",
+    "company1": "Empresa Tech | 2023 - Presente",
+    "items1": [
+      "Desarrollo de chatbot RAG que redujo 70% de consultas manuales",
+      "Pipeline de extracción de datos con LLMs (95% de precisión)",
+      "Integración de Python/FastAPI con sistemas .NET legacy"
+    ],
+    "role2": "Senior Full-Stack Developer",
+    "company2": "Empresa Tech | 2019 - 2023",
+    "items2": [
+      "Arquitecturas enterprise con .NET Core y Angular",
+      "Microservicios, CQRS y Event Sourcing"
+    ]
+  }
+}

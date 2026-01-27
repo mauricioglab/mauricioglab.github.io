@@ -1,0 +1,63 @@
+---
+import type { Profile } from '../../data/profiles';
+import { 
+  type Lang, 
+  useTranslations, 
+  type CommonTranslations,
+  type SkillsTranslations 
+} from '../../i18n';
+import { skillsByProfile } from '../../data/skills';
+
+interface Props {
+  profile: Profile;
+  lang?: Lang;
+}
+
+const { profile, lang = 'es' } = Astro.props;
+const t = await useTranslations<CommonTranslations>(lang, 'common');
+const skillsT = await useTranslations<SkillsTranslations>(lang, 'skills');
+const skills = skillsByProfile[profile.id];
+
+// Get translated category name from categoryKey
+const getCategoryName = (categoryKey: string, profileId: string) => {
+  const categories = skillsT.categories[profileId];
+  if (!categories) return categoryKey;
+  return categories[categoryKey] || categoryKey;
+};
+
+// Get translated level
+const getLevelName = (level: string) => {
+  return skillsT.levels[level as keyof typeof skillsT.levels] || level;
+};
+---
+
+<section id="skills" class="py-20 bg-white dark:bg-slate-900 transition-colors">
+  <div class="max-w-7xl mx-auto px-4">
+    <h2 class="text-3xl font-bold mb-12 text-center text-slate-900 dark:text-white">
+      {t.sections.techStack}
+    </h2>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {skills.map((category) => (
+        <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 hover:shadow-lg transition">
+          <h3 class="text-xl font-bold mb-4 text-blue-600 dark:text-blue-400">
+            {getCategoryName(category.categoryKey, profile.id)}
+          </h3>
+          <div class="space-y-3">
+            {category.skills.map((skill) => (
+              <div class="flex items-center">
+                <i class={`fas ${skill.icon} text-slate-500 dark:text-slate-400 mr-3`}></i>
+                <span class="text-sm text-slate-700 dark:text-slate-300">{skill.name}</span>
+                {skill.level === 'expert' && (
+                  <span class="ml-auto text-xs bg-blue-600 dark:bg-blue-500 text-white px-2 py-0.5 rounded">
+                    {getLevelName('expert')}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

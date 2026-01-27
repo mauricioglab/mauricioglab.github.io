@@ -1,0 +1,42 @@
+{
+  "title": "Analista de Sistemas",
+  "subtitle": "Arquitectura & Estrategia",
+  "description": "Del relevamiento al código",
+  "seo": {
+    "title": "Analista de Sistemas | Arquitectura & DDD | Portfolio",
+    "description": "Analista de Sistemas especializado en arquitectura de software, DDD y modelado de dominios complejos."
+  },
+  "hero": {
+    "badge": "TÍTULO FORMAL: ANALISTA DE SISTEMAS",
+    "headline": "Diseño Arquitecturas que <span class=\"text-slate-900 dark:text-slate-100\">Escalan</span> y Solucionan.",
+    "subheadline": "Analista de Sistemas con fuerte perfil técnico. No solo diseño modelos y procesos: entiendo el código detrás de ellos. +5 años transformando requerimientos de negocio en sistemas robustos.",
+    "ctaPrimary": "Descargar CV Analista",
+    "ctaSecondary": "Ver Casos de Diseño"
+  },
+  "projectsDescription": "Del relevamiento al modelo de dominio. Arquitecturas que resuelven problemas de negocio complejos.",
+  "ctaTitle": "¿Necesitás diseñar una arquitectura sólida?",
+  "ctaDescription": "Puedo ayudarte a transformar requerimientos complejos en sistemas escalables.",
+  "methodology": {
+    "title1": "1. Relevamiento",
+    "desc1": "Entrevistas con stakeholders, análisis de procesos actuales y documentación de pain points. Uso de técnicas como Event Storming y User Story Mapping.",
+    "title2": "2. Diseño",
+    "desc2": "Modelado de dominio con DDD, definición de bounded contexts y diseño de arquitectura. Diagramas UML, C4 y documentación técnica completa.",
+    "title3": "3. Validación",
+    "desc3": "Revisión técnica con el equipo de desarrollo, validación de factibilidad y ajustes iterativos. Aseguro que el diseño sea implementable."
+  },
+  "experience": {
+    "role1": "Analista de Sistemas Senior",
+    "company1": "Empresa Tech | 2021 - Presente",
+    "items1": [
+      "Diseño de arquitectura para 3 sistemas enterprise (DDD + Microservicios)",
+      "Reducción del 40% en deuda técnica mediante refactoring arquitectónico",
+      "Facilitación de workshops de Event Storming con equipos multidisciplinarios"
+    ],
+    "role2": "Analista Funcional",
+    "company2": "Consultora IT | 2019 - 2021",
+    "items2": [
+      "Relevamiento y documentación de requerimientos para 8+ proyectos",
+      "Modelado de procesos de negocio con BPMN y casos de uso UML"
+    ]
+  }
+}

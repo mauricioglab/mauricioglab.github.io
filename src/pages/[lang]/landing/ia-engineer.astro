@@ -1,0 +1,176 @@
+---
+import ProfileLayout from '../../../layouts/ProfileLayout.astro';
+import HeroSection from '../../../components/landing/HeroSection.astro';
+import ProjectCard from '../../../components/landing/ProjectCard.astro';
+import SkillsSection from '../../../components/landing/SkillsSection.astro';
+import { profiles } from '../../../data/profiles';
+import { getProjectsByProfile } from '../../../data/projects';
+import { 
+  type Lang, 
+  useTranslations, 
+  type CommonTranslations, 
+  type ProfileTranslations 
+} from '../../../i18n';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'es' } },
+    { params: { lang: 'en' } }
+  ];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const profile = profiles['ia-engineer'];
+const projects = getProjectsByProfile('ia-engineer', true);
+const t = await useTranslations<CommonTranslations>(lang, 'common');
+const content = await useTranslations<ProfileTranslations>(lang, 'ia-engineer');
+---
+
+<ProfileLayout title={content.title} profile={profile} lang={lang}>
+  <!-- Hero -->
+  <HeroSection profile={profile} lang={lang} />
+  
+  <!-- Proyectos IA -->
+  <section id="proyectos" class="py-20 bg-slate-900 dark:bg-slate-950 transition-colors">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-4 text-emerald-500 font-mono">01. {t.sections.featuredProjects}</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">
+          {content.projectsDescription}
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-8">
+        {projects.map((project) => (
+          <ProjectCard 
+            project={project} 
+            profileId="ia-engineer"
+            lang={lang}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <!-- Background Técnico -->
+  <section class="py-20 bg-slate-950 transition-colors">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-12 text-center text-emerald-500 font-mono">02. {t.sections.background}</h2>
+      
+      <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl">
+          <div class="text-emerald-500 text-3xl mb-4">
+            <i class="fas fa-code"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-slate-100">{content.background?.title1}</h3>
+          <p class="text-slate-400 leading-relaxed">
+            {content.background?.desc1}
+          </p>
+        </div>
+        
+        <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl">
+          <div class="text-emerald-500 text-3xl mb-4">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-slate-100">{content.background?.title2}</h3>
+          <p class="text-slate-400 leading-relaxed">
+            {content.background?.desc2}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Skills -->
+  <SkillsSection profile={profile} lang={lang} />
+  
+  <!-- Experiencia -->
+  <section id="experiencia" class="py-20 bg-slate-950 transition-colors">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-12 text-center text-emerald-500 font-mono">03. {t.sections.experience}</h2>
+      
+      <div class="max-w-4xl mx-auto space-y-8">
+        <div class="flex gap-6">
+          <div class="flex flex-col items-center">
+            <div class="w-12 h-12 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold">
+              1
+            </div>
+            <div class="w-1 h-full bg-emerald-900 mt-2"></div>
+          </div>
+          <div class="flex-1 pb-8">
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl">
+              <h3 class="text-xl font-bold text-slate-100 mb-2">{content.experience.role1}</h3>
+              <p class="text-emerald-500 font-semibold mb-3">{content.experience.company1}</p>
+              <ul class="space-y-2 text-slate-400">
+                {content.experience.items1.map((item) => (
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-emerald-500 mt-1 mr-2"></i>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex gap-6">
+          <div class="flex flex-col items-center">
+            <div class="w-12 h-12 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold">
+              2
+            </div>
+          </div>
+          <div class="flex-1">
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl">
+              <h3 class="text-xl font-bold text-slate-100 mb-2">{content.experience.role2}</h3>
+              <p class="text-emerald-500 font-semibold mb-3">{content.experience.company2}</p>
+              <ul class="space-y-2 text-slate-400">
+                {content.experience.items2.map((item) => (
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-emerald-500 mt-1 mr-2"></i>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- CTA Final -->
+  <section id="contacto" class="py-20 bg-gradient-to-br from-emerald-900 to-slate-900 text-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-emerald-500/5 backdrop-blur-3xl"></div>
+    <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+      <h2 class="text-4xl font-bold mb-6">{content.ctaTitle}</h2>
+      <p class="text-xl mb-8 opacity-90">
+        {content.ctaDescription}
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a 
+          href={profile.cvUrl}
+          class="bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-emerald-500 transition inline-flex items-center shadow-lg shadow-emerald-500/20"
+        >
+          <i class="fas fa-file-pdf mr-2"></i>
+          {t.cta.downloadCV}
+        </a>
+        <a 
+          href={profile.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="border-2 border-emerald-500 text-emerald-500 px-8 py-4 rounded-xl font-bold hover:bg-emerald-500 hover:text-white transition"
+        >
+          <i class="fab fa-github mr-2"></i>
+          {t.cta.viewRepos}
+        </a>
+        <a 
+          href={`mailto:${profile.email}`}
+          class="border-2 border-white text-white px-8 py-4 rounded-xl font-bold hover:bg-white hover:text-slate-900 transition"
+        >
+          <i class="fas fa-envelope mr-2"></i>
+          {t.cta.sendEmail}
+        </a>
+      </div>
+    </div>
+  </section>
+</ProfileLayout>

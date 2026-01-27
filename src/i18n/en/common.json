@@ -1,0 +1,39 @@
+{
+  "nav": {
+    "projects": "Projects",
+    "skills": "Skills",
+    "experience": "Experience",
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "hero": {
+    "yearsExp": "+5 Years of Experience",
+    "yearsExpSub": "Enterprise projects and startups",
+    "location": "Remote / Hybrid",
+    "locationSub": "Argentina (GMT-3)",
+    "availability": "Immediate Availability",
+    "availabilitySub": "Full-time or projects"
+  },
+  "sections": {
+    "featuredProjects": "Featured Projects",
+    "techStack": "Tech Stack",
+    "experience": "Experience",
+    "methodology": "My Methodology",
+    "background": "Technical Background"
+  },
+  "cta": {
+    "downloadCV": "Download CV",
+    "sendEmail": "Send Email",
+    "connectLinkedIn": "Connect on LinkedIn",
+    "viewRepos": "View Repositories"
+  },
+  "footer": {
+    "links": "Links",
+    "contact": "Contact",
+    "rights": "All rights reserved."
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark"
+  }
+}

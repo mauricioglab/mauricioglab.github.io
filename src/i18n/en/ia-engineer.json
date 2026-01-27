@@ -1,0 +1,40 @@
+{
+  "title": "AI Engineer",
+  "subtitle": "Python & LLMs",
+  "description": "Integrating AI into real systems",
+  "seo": {
+    "title": "AI Engineer | Python, LangChain & RAG | Portfolio",
+    "description": "AI Engineer specialized in LLM integration, RAG and automation with Python. Enterprise development background."
+  },
+  "hero": {
+    "badge": "ACTIVE SPECIALIZATION IN AI & LLMs",
+    "headline": "Integrating <span class=\"text-emerald-500\">Intelligence</span> into Real Systems.",
+    "subheadline": "Full-Stack Developer (.NET/Angular) with 5+ years of experience, now focused on building solutions with Python, LangChain and RAGs. Combining enterprise software robustness with generative AI power.",
+    "ctaPrimary": "Download AI Engineer CV",
+    "ctaSecondary": "View AI Repositories"
+  },
+  "projectsDescription": "Integrating LLMs and RAG into enterprise systems. Python, LangChain and scalable architectures.",
+  "ctaTitle": "Want to integrate AI into your system?",
+  "ctaDescription": "I combine enterprise experience with the latest AI technologies. Let's talk about your project.",
+  "background": {
+    "title1": "+5 Years in .NET/Angular",
+    "desc1": "I'm not a data scientist who learned to code. I'm an enterprise developer who now masters AI. I understand architectures, APIs, databases and deployment.",
+    "title2": "AI Specialization",
+    "desc2": "Since 2023 working with LLMs, RAG and LangChain. I integrate AI models into existing systems without breaking anything. Production-ready Python."
+  },
+  "experience": {
+    "role1": "AI Engineer / Full-Stack Developer",
+    "company1": "Tech Company | 2023 - Present",
+    "items1": [
+      "RAG chatbot development that reduced 70% of manual queries",
+      "Data extraction pipeline with LLMs (95% accuracy)",
+      "Python/FastAPI integration with .NET legacy systems"
+    ],
+    "role2": "Senior Full-Stack Developer",
+    "company2": "Tech Company | 2019 - 2023",
+    "items2": [
+      "Enterprise architectures with .NET Core and Angular",
+      "Microservices, CQRS and Event Sourcing"
+    ]
+  }
+}
