@@ -1,26 +1,54 @@
 ---
-import ProfileLayout from '../../../layouts/ProfileLayout.astro';
-import HeroSection from '../../../components/landing/HeroSection.astro';
-import SkillsSection from '../../../components/landing/SkillsSection.astro';
-import { profiles } from '../../../data/profiles';
+import ProfileLayout from '@layouts/ProfileLayout.astro';
+import HeroSection from '@components/landing/HeroSection.astro';
+import SkillsSection from '@components/landing/SkillsSection.astro';
+import FeatureCards from '@components/landing/FeatureCards.astro';
+import StatsGrid from '@components/landing/StatsGrid.astro';
+import ExperienceTimeline from '@components/landing/ExperienceTimeline.astro';
+import CTASection from '@components/landing/CTASection.astro';
+import { profiles } from '@data/profiles';
+import { getLanguagePaths } from '@utils/i18n-paths';
 import { 
   type Lang, 
   useTranslations, 
   type CommonTranslations, 
   type ProfileTranslations 
-} from '../../../i18n';
+} from '@i18n/index';
 
-export function getStaticPaths() {
-  return [
-    { params: { lang: 'es' } },
-    { params: { lang: 'en' } }
-  ];
-}
+export const getStaticPaths = getLanguagePaths;
 
 const { lang } = Astro.params as { lang: Lang };
 const profile = profiles.freelance;
 const t = await useTranslations<CommonTranslations>(lang, 'common');
 const content = await useTranslations<ProfileTranslations>(lang, 'freelance');
+
+// Services cards configuration - using specific colors for each card
+const serviceCards = [
+  { icon: 'fas fa-users', title: content.services?.title1 || '', description: content.services?.desc1 || '', color: 'orange-600' },
+  { icon: 'fas fa-code', title: content.services?.title2 || '', description: content.services?.desc2 || '', color: 'blue-600' },
+  { icon: 'fas fa-chart-line', title: content.services?.title3 || '', description: content.services?.desc3 || '', color: 'green-600' },
+];
+
+// Impact stats - using specific colors for each stat
+const impactStats = [
+  { value: '10+', label: lang === 'es' ? 'Años de experiencia' : 'Years of experience', color: 'orange-600' },
+  { value: '50+', label: lang === 'es' ? 'Proyectos entregados' : 'Projects delivered', color: 'blue-600' },
+  { value: '15+', label: lang === 'es' ? 'Equipos liderados' : 'Teams led', color: 'green-600' },
+  { value: '100%', label: lang === 'es' ? 'Proyectos a tiempo' : 'On-time projects', color: 'purple-600' },
+];
+
+// Transform experience data for the component
+const experiences = [
+  { role: content.experience.role1, company: content.experience.company1, items: content.experience.items1 },
+  { role: content.experience.role2, company: content.experience.company2, items: content.experience.items2 },
+];
+
+// CTA buttons configuration
+const ctaButtons = [
+  { text: content.hero.ctaPrimary, href: 'https://calendly.com/mauricio-gonzalez', icon: 'fas fa-calendar-alt', primary: true, external: true },
+  { text: t.cta.downloadCV, href: profile.cvUrl, icon: 'fas fa-file-pdf' },
+  { text: t.cta.connectLinkedIn, href: profile.linkedinUrl, icon: 'fab fa-linkedin', external: true },
+];
 ---
 
 <ProfileLayout title={content.title} profile={profile} lang={lang}>
@@ -28,168 +56,37 @@ const content = await useTranslations<ProfileTranslations>(lang, 'freelance');
   <HeroSection profile={profile} lang={lang} />
   
   <!-- Servicios -->
-  <section id="proyectos" class="py-20 bg-slate-50 dark:bg-slate-800 transition-colors">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold mb-4 text-slate-900 dark:text-white">{lang === 'es' ? 'Servicios' : 'Services'}</h2>
-        <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-          {content.projectsDescription}
-        </p>
-      </div>
-      
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg transition">
-          <div class="w-16 h-16 bg-orange-600 rounded-2xl flex items-center justify-center mb-6">
-            <i class="fas fa-users text-white text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">{content.services?.title1}</h3>
-          <p class="text-slate-600 dark:text-slate-400">
-            {content.services?.desc1}
-          </p>
-        </div>
-        
-        <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg transition">
-          <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mb-6">
-            <i class="fas fa-code text-white text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">{content.services?.title2}</h3>
-          <p class="text-slate-600 dark:text-slate-400">
-            {content.services?.desc2}
-          </p>
-        </div>
-        
-        <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg transition">
-          <div class="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center mb-6">
-            <i class="fas fa-chart-line text-white text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">{content.services?.title3}</h3>
-          <p class="text-slate-600 dark:text-slate-400">
-            {content.services?.desc3}
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <FeatureCards
+    title={lang === 'es' ? 'Servicios' : 'Services'}
+    subtitle={content.projectsDescription}
+    cards={serviceCards}
+    columns={3}
+    variant="icon-box"
+  />
   
   <!-- Métricas de Impacto -->
-  <section class="py-20 bg-white dark:bg-slate-900 transition-colors">
-    <div class="max-w-7xl mx-auto px-4">
-      <h2 class="text-3xl font-bold mb-12 text-center text-slate-900 dark:text-white">
-        {lang === 'es' ? 'Impacto Cuantificado' : 'Quantified Impact'}
-      </h2>
-      
-      <div class="grid md:grid-cols-4 gap-8">
-        <div class="text-center p-6 bg-orange-50 dark:bg-orange-900/20 rounded-2xl">
-          <div class="text-4xl font-bold text-orange-600 dark:text-orange-400 mb-2">10+</div>
-          <p class="text-slate-600 dark:text-slate-400">{lang === 'es' ? 'Años de experiencia' : 'Years of experience'}</p>
-        </div>
-        <div class="text-center p-6 bg-blue-50 dark:bg-blue-900/20 rounded-2xl">
-          <div class="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">50+</div>
-          <p class="text-slate-600 dark:text-slate-400">{lang === 'es' ? 'Proyectos entregados' : 'Projects delivered'}</p>
-        </div>
-        <div class="text-center p-6 bg-green-50 dark:bg-green-900/20 rounded-2xl">
-          <div class="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">15+</div>
-          <p class="text-slate-600 dark:text-slate-400">{lang === 'es' ? 'Equipos liderados' : 'Teams led'}</p>
-        </div>
-        <div class="text-center p-6 bg-purple-50 dark:bg-purple-900/20 rounded-2xl">
-          <div class="text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2">100%</div>
-          <p class="text-slate-600 dark:text-slate-400">{lang === 'es' ? 'Proyectos a tiempo' : 'On-time projects'}</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <StatsGrid
+    title={lang === 'es' ? 'Impacto Cuantificado' : 'Quantified Impact'}
+    stats={impactStats}
+    columns={4}
+  />
   
   <!-- Skills -->
   <SkillsSection profile={profile} lang={lang} />
   
   <!-- Experiencia -->
-  <section id="experiencia" class="py-20 bg-slate-50 dark:bg-slate-800 transition-colors">
-    <div class="max-w-7xl mx-auto px-4">
-      <h2 class="text-3xl font-bold mb-12 text-center text-slate-900 dark:text-white">{t.sections.experience}</h2>
-      
-      <div class="max-w-4xl mx-auto space-y-8">
-        <div class="flex gap-6">
-          <div class="flex flex-col items-center">
-            <div class="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold">
-              1
-            </div>
-            <div class="w-1 h-full bg-orange-200 dark:bg-orange-900 mt-2"></div>
-          </div>
-          <div class="flex-1 pb-8">
-            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
-              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{content.experience.role1}</h3>
-              <p class="text-orange-600 dark:text-orange-400 font-semibold mb-3">{content.experience.company1}</p>
-              <ul class="space-y-2 text-slate-600 dark:text-slate-400">
-                {content.experience.items1.map((item) => (
-                  <li class="flex items-start">
-                    <i class="fas fa-check-circle text-orange-600 dark:text-orange-400 mt-1 mr-2"></i>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-        
-        <div class="flex gap-6">
-          <div class="flex flex-col items-center">
-            <div class="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold">
-              2
-            </div>
-          </div>
-          <div class="flex-1">
-            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
-              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{content.experience.role2}</h3>
-              <p class="text-orange-600 dark:text-orange-400 font-semibold mb-3">{content.experience.company2}</p>
-              <ul class="space-y-2 text-slate-600 dark:text-slate-400">
-                {content.experience.items2.map((item) => (
-                  <li class="flex items-start">
-                    <i class="fas fa-check-circle text-orange-600 dark:text-orange-400 mt-1 mr-2"></i>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <ExperienceTimeline 
+    title={t.sections.experience}
+    experiences={experiences}
+    profileId="freelance"
+  />
   
   <!-- CTA Final -->
-  <section id="contacto" class="py-20 bg-gradient-to-br from-orange-600 to-orange-700 text-white">
-    <div class="max-w-4xl mx-auto px-4 text-center">
-      <h2 class="text-4xl font-bold mb-6">{content.ctaTitle}</h2>
-      <p class="text-xl mb-8 opacity-90">
-        {content.ctaDescription}
-      </p>
-      <div class="flex flex-wrap justify-center gap-4">
-        <a 
-          href="https://calendly.com/mauricio-gonzalez"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="bg-white text-orange-600 px-8 py-4 rounded-xl font-bold hover:bg-slate-100 transition inline-flex items-center"
-        >
-          <i class="fas fa-calendar-alt mr-2"></i>
-          {content.hero.ctaPrimary}
-        </a>
-        <a 
-          href={profile.cvUrl}
-          class="border-2 border-white text-white px-8 py-4 rounded-xl font-bold hover:bg-white hover:text-orange-600 transition"
-        >
-          <i class="fas fa-file-pdf mr-2"></i>
-          {t.cta.downloadCV}
-        </a>
-        <a 
-          href={profile.linkedinUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="border-2 border-white text-white px-8 py-4 rounded-xl font-bold hover:bg-white hover:text-orange-600 transition"
-        >
-          <i class="fab fa-linkedin mr-2"></i>
-          {t.cta.connectLinkedIn}
-        </a>
-      </div>
-    </div>
-  </section>
+  <CTASection
+    title={content.ctaTitle}
+    description={content.ctaDescription}
+    buttons={ctaButtons}
+    profileId="freelance"
+    gradient={true}
+  />
 </ProfileLayout>

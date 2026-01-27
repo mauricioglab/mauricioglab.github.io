@@ -6,9 +6,27 @@ import ReadingTime from './ReadingTime.astro';
 interface Props {
   post: CollectionEntry<'blog'>;
   baseUrl?: string;
+  /** i18n texts for the component */
+  i18n?: {
+    writtenBy?: string;
+    readMore?: string;
+    readingTimeUnit?: string;
+  };
 }
 
-const { post, baseUrl = import.meta.env.BASE_URL } = Astro.props;
+const { 
+  post, 
+  baseUrl = import.meta.env.BASE_URL,
+  i18n = {}
+} = Astro.props;
+
+// Default translations (Spanish)
+const texts = {
+  writtenBy: i18n.writtenBy || 'Escrito por',
+  readMore: i18n.readMore || 'Leer más',
+  readingTimeUnit: i18n.readingTimeUnit || 'min de lectura',
+};
+
 const normalizedBase = normalizeBaseUrl(baseUrl);
 const url = `${normalizedBase}blog/${post.slug}/`;
 ---
@@ -29,14 +47,14 @@ const url = `${normalizedBase}blog/${post.slug}/`;
       </a>
     </h2>
     <p class="entry-meta">
-      Escrito <span class="by">por</span> <span class="entry-author-name" itemprop="author">{post.data.author}</span>
+      {texts.writtenBy} <span class="entry-author-name" itemprop="author">{post.data.author}</span>
       <time datetime={post.data.pubDate.toISOString()} itemprop="datePublished" class="hidden">{post.data.pubDate.toISOString()}</time>
-      <ReadingTime content={post.body} />
+      <ReadingTime content={post.body} unitText={texts.readingTimeUnit} />
     </p>
   </header>
   
   <div class="entry-content" itemprop="description">
     <p>{post.data.description}</p>
-    <p><a href={url} class="more-link underline hover:opacity-80" aria-label={`Leer más sobre ${post.data.title}`}>Leer más</a></p>
+    <p><a href={url} class="more-link underline hover:opacity-80" aria-label={`${texts.readMore} ${post.data.title}`}>{texts.readMore}</a></p>
   </div>
 </article>

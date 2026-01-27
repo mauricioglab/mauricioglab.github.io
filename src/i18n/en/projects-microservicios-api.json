@@ -1,0 +1,120 @@
+{
+  "back": "← Back to projects",
+  "badge": "Side Project - DevOps",
+  "title": "Microservices Architecture",
+  "description": "Microservices system with Docker, AWS, and asynchronous communication. Project demonstrating scalability, resilience, and DevOps best practices.",
+  "stats": {
+    "services": { "value": "4", "label": "Microservices" },
+    "uptime": { "value": "99.9%", "label": "Uptime SLA" },
+    "latency": { "value": "<100ms", "label": "P95 Latency" }
+  },
+  "links": {
+    "github": "💻 View on GitHub",
+    "docs": "📚 API Documentation"
+  },
+  "problem": {
+    "title": "The Problem",
+    "intro": "I wanted to learn and demonstrate expertise in distributed architectures and DevOps. The challenge was:",
+    "items": [
+      "Design multiple independent services with clear responsibilities",
+      "Implement reliable asynchronous communication between services",
+      "Containerize with Docker and orchestrate with AWS ECS",
+      "Implement observability (logs, metrics, traces)",
+      "Ensure resilience and fault handling"
+    ]
+  },
+  "process": {
+    "title": "My Process",
+    "phases": [
+      {
+        "title": "1. Architecture Design",
+        "description": "I defined 4 microservices with clear responsibilities:",
+        "services": [
+          { "name": "User Service:", "desc": "User management and authentication" },
+          { "name": "Product Service:", "desc": "Product catalog" },
+          { "name": "Order Service:", "desc": "Order management" },
+          { "name": "Notification Service:", "desc": "Notification delivery" }
+        ]
+      },
+      {
+        "title": "2. Service Implementation",
+        "description": "Each service is independent with its own database:",
+        "items": ["Well-documented REST APIs", "Validations and error handling", "Health checks for monitoring", "Structured logging"]
+      },
+      {
+        "title": "3. Asynchronous Communication",
+        "description": "I implemented RabbitMQ for inter-service communication:",
+        "items": ["Event-driven architecture", "Message queues for decoupling", "Dead letter queues for error handling", "Automatic retry policies"]
+      },
+      {
+        "title": "4. Containerization and Orchestration",
+        "description": "I containerized each service and deployed to AWS:",
+        "items": ["Optimized Dockerfiles (multi-stage builds)", "Docker Compose for local development", "AWS ECS for production orchestration", "Metrics-based auto-scaling"]
+      },
+      {
+        "title": "5. Observability and Monitoring",
+        "description": "I implemented a complete observability stack:",
+        "items": ["CloudWatch for logs and metrics", "X-Ray for distributed tracing", "Grafana dashboards", "Automatic alerts"]
+      }
+    ]
+  },
+  "solution": {
+    "title": "The Solution",
+    "architecture": {
+      "title": "Microservices Architecture",
+      "items": [
+        { "label": "API Gateway:", "text": "Single entry point, routing, rate limiting, authentication" },
+        { "label": "Independent Services:", "text": "Each with its own database, independently scalable" },
+        { "label": "Message Broker:", "text": "RabbitMQ for asynchronous communication and decoupling" },
+        { "label": "Service Discovery:", "text": "AWS ECS service discovery for dynamic location" }
+      ]
+    },
+    "patterns": {
+      "title": "Implemented Patterns",
+      "items": [
+        { "name": "API Gateway Pattern", "desc": "Centralized routing, service composition" },
+        { "name": "Event-Driven", "desc": "Asynchronous communication, decoupling" },
+        { "name": "Circuit Breaker", "desc": "Resilience against service failures" },
+        { "name": "Saga Pattern", "desc": "Distributed transactions" }
+      ]
+    },
+    "infra": {
+      "title": "AWS Infrastructure",
+      "items": [
+        { "label": "ECS Fargate:", "text": "Container orchestration without managing servers" },
+        { "label": "RDS:", "text": "Managed PostgreSQL databases" },
+        { "label": "ElastiCache:", "text": "Redis for distributed caching" },
+        { "label": "CloudWatch:", "text": "Logs, metrics, and alarms" },
+        { "label": "X-Ray:", "text": "Distributed tracing for debugging" }
+      ]
+    }
+  },
+  "results": {
+    "title": "Results & Impact",
+    "metrics": [
+      { "value": "99.9%", "label": "Production uptime", "color": "emerald" },
+      { "value": "<100ms", "label": "P95 Latency", "color": "blue" },
+      { "value": "10x", "label": "Horizontal scalability", "color": "purple" },
+      { "value": "0", "label": "Downtime in 6 months", "color": "orange" }
+    ],
+    "learnings": {
+      "title": "Key Learnings",
+      "items": [
+        { "label": "Microservices:", "text": "Designing independent services, complexity trade-offs" },
+        { "label": "Async communication:", "text": "Message queues, event-driven architecture, delivery guarantees" },
+        { "label": "DevOps:", "text": "Containerization, orchestration, CI/CD, infrastructure as code" },
+        { "label": "Observability:", "text": "Importance of logs, metrics, and traces in distributed systems" },
+        { "label": "Resilience:", "text": "Circuit breakers, retry policies, graceful degradation" }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Tech Stack",
+    "observability": "Observability"
+  },
+  "cta": {
+    "title": "Need expertise in distributed architectures?",
+    "subtitle": "I have experience in microservices, DevOps, and high-availability systems. Let's connect.",
+    "button": "Send Email"
+  }
+}

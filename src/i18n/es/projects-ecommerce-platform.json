@@ -1,0 +1,127 @@
+{
+  "back": "← Volver a proyectos",
+  "badge": "Side Project",
+  "title": "E-commerce Platform",
+  "description": "Plataforma de e-commerce completa con carrito dinámico, integración de pagos y panel administrativo. Proyecto personal que demuestra arquitectura full stack moderna.",
+  "stats": {
+    "time": { "value": "3 meses", "label": "Tiempo de desarrollo" },
+    "products": { "value": "+500", "label": "Productos en catálogo" },
+    "responsive": { "value": "100%", "label": "Responsive design" }
+  },
+  "links": {
+    "demo": "🌐 Ver Demo en Vivo",
+    "github": "💻 Ver en GitHub"
+  },
+  "problem": {
+    "title": "El Problema",
+    "intro": "Quería crear un proyecto personal que demostrara mis habilidades en full stack development. Necesitaba algo más complejo que un CRUD básico, que incluyera:",
+    "items": [
+      "Gestión compleja de estado en frontend (carrito, filtros, búsqueda)",
+      "APIs RESTful robustas con validaciones y manejo de errores",
+      "Integración con servicio de pagos (Stripe)",
+      "Panel administrativo para gestionar productos y órdenes",
+      "Base de datos relacional bien estructurada"
+    ]
+  },
+  "process": {
+    "title": "Mi Proceso",
+    "phases": [
+      {
+        "title": "1. Diseño de Arquitectura",
+        "description": "Comencé diseñando la arquitectura de la aplicación. Decidí usar una estructura de capas clara:"
+      },
+      {
+        "title": "2. Desarrollo Backend",
+        "description": "Implementé las APIs usando .NET Core con Entity Framework:",
+        "items": [
+          "Endpoints RESTful para productos, carrito, órdenes",
+          "Autenticación JWT para usuarios",
+          "Validaciones con FluentValidation",
+          "Manejo de excepciones global",
+          "Integración con Stripe API para pagos"
+        ]
+      },
+      {
+        "title": "3. Desarrollo Frontend",
+        "description": "Construí la interfaz con Angular y gestión de estado:",
+        "items": [
+          "Componentes reutilizables (ProductCard, CartItem, etc.)",
+          "NgRx para state management del carrito",
+          "Búsqueda y filtros en tiempo real",
+          "Integración con Stripe Elements para pagos seguros",
+          "Responsive design con Tailwind CSS"
+        ]
+      },
+      {
+        "title": "4. Testing y Deployment",
+        "description": "Aseguré la calidad y disponibilidad:",
+        "items": [
+          "Unit tests con xUnit para backend",
+          "Integration tests para APIs",
+          "E2E tests con Cypress para frontend",
+          "Deployment en AWS (S3 + CloudFront para frontend, ECS para backend)"
+        ]
+      }
+    ]
+  },
+  "solution": {
+    "title": "La Solución",
+    "frontend": {
+      "title": "Frontend - Angular + NgRx",
+      "description": "Implementé una aplicación Angular moderna con gestión de estado centralizada usando NgRx:",
+      "items": {
+        "cart": { "label": "Carrito de compras:", "text": "Estado sincronizado en tiempo real, persistencia en localStorage" },
+        "search": { "label": "Búsqueda y filtros:", "text": "Debouncing para optimizar llamadas a API" },
+        "checkout": { "label": "Checkout:", "text": "Flujo seguro con validaciones en cliente y servidor" },
+        "admin": { "label": "Panel admin:", "text": "Dashboard con gráficos de ventas y gestión de inventario" }
+      }
+    },
+    "backend": {
+      "title": "Backend - .NET Core + SQL Server",
+      "description": "APIs RESTful robustas con arquitectura en capas:",
+      "items": {
+        "products": { "label": "Productos:", "text": "Catálogo con búsqueda full-text, filtros por categoría y precio" },
+        "orders": { "label": "Órdenes:", "text": "Gestión completa del ciclo de vida, notificaciones por email" },
+        "payments": { "label": "Pagos:", "text": "Integración segura con Stripe, webhooks para confirmación" },
+        "users": { "label": "Usuarios:", "text": "Autenticación JWT, roles y permisos granulares" }
+      }
+    },
+    "database": {
+      "title": "Base de Datos",
+      "description": "Diseño relacional normalizado con SQL Server:",
+      "items": [
+        "Tablas: Users, Products, Categories, Orders, OrderItems, Payments",
+        "Índices en campos de búsqueda frecuente",
+        "Constraints para integridad referencial",
+        "Stored procedures para operaciones complejas"
+      ]
+    }
+  },
+  "results": {
+    "title": "Resultados & Impacto",
+    "metrics": {
+      "performance": { "value": "95%", "label": "Lighthouse Performance Score" },
+      "loadTime": { "value": "<2s", "label": "Tiempo de carga promedio" },
+      "uptime": { "value": "99.9%", "label": "Uptime en producción" },
+      "errors": { "value": "0", "label": "Errores críticos reportados" }
+    },
+    "learnings": {
+      "title": "Aprendizajes Clave",
+      "items": [
+        { "label": "State Management:", "text": "Experiencia profunda con NgRx en aplicaciones complejas" },
+        { "label": "Integración de pagos:", "text": "Implementación segura de Stripe con manejo de webhooks" },
+        { "label": "Performance:", "text": "Optimización de queries, lazy loading, caching estratégico" },
+        { "label": "Testing:", "text": "Cobertura completa con unit, integration y E2E tests" }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Stack Tecnológico",
+    "infrastructure": "Infraestructura"
+  },
+  "cta": {
+    "title": "¿Te interesa este tipo de trabajo?",
+    "subtitle": "Tengo más proyectos y experiencia en arquitecturas complejas. Conectemos.",
+    "button": "Enviar Email"
+  }
+}

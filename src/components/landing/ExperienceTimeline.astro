@@ -1,0 +1,98 @@
+---
+/**
+ * Experience Timeline Component
+ * Displays work experience in a vertical timeline format
+ */
+
+import type { ProfileId } from '../../data/profiles';
+
+export interface ExperienceItem {
+  role: string;
+  company: string;
+  items: string[];
+}
+
+interface Props {
+  title: string;
+  experiences: ExperienceItem[];
+  profileId: ProfileId;
+}
+
+const { title, experiences, profileId } = Astro.props;
+
+// Static color mappings for Tailwind (classes must be complete for purging)
+const colorClasses: Record<ProfileId, {
+  circleBg: string;
+  lineBg: string;
+  companyText: string;
+  checkIcon: string;
+}> = {
+  developer: {
+    circleBg: 'bg-blue-600',
+    lineBg: 'bg-blue-200 dark:bg-blue-900',
+    companyText: 'text-blue-600 dark:text-blue-400',
+    checkIcon: 'text-blue-600 dark:text-blue-400',
+  },
+  analista: {
+    circleBg: 'bg-slate-900 dark:bg-slate-600',
+    lineBg: 'bg-slate-200 dark:bg-slate-700',
+    companyText: 'text-slate-700 dark:text-slate-400',
+    checkIcon: 'text-slate-900 dark:text-slate-400',
+  },
+  'ia-engineer': {
+    circleBg: 'bg-emerald-600',
+    lineBg: 'bg-emerald-200 dark:bg-emerald-900',
+    companyText: 'text-emerald-600 dark:text-emerald-400',
+    checkIcon: 'text-emerald-600 dark:text-emerald-400',
+  },
+  freelance: {
+    circleBg: 'bg-orange-600',
+    lineBg: 'bg-orange-200 dark:bg-orange-900',
+    companyText: 'text-orange-600 dark:text-orange-400',
+    checkIcon: 'text-orange-600 dark:text-orange-400',
+  },
+  speaker: {
+    circleBg: 'bg-purple-600',
+    lineBg: 'bg-purple-200 dark:bg-purple-900',
+    companyText: 'text-purple-600 dark:text-purple-400',
+    checkIcon: 'text-purple-600 dark:text-purple-400',
+  },
+};
+
+const colors = colorClasses[profileId];
+---
+
+<section id="experiencia" class="py-20 bg-slate-50 dark:bg-slate-800 transition-colors">
+  <div class="max-w-7xl mx-auto px-4">
+    <h2 class="text-3xl font-bold mb-12 text-center text-slate-900 dark:text-white">{title}</h2>
+    
+    <div class="max-w-4xl mx-auto space-y-8">
+      {experiences.map((exp, idx) => (
+        <div class="flex gap-6">
+          <div class="flex flex-col items-center">
+            <div class:list={['w-12 h-12 rounded-full flex items-center justify-center text-white font-bold', colors.circleBg]}>
+              {idx + 1}
+            </div>
+            {idx < experiences.length - 1 && (
+              <div class:list={['w-1 h-full mt-2', colors.lineBg]}></div>
+            )}
+          </div>
+          <div class={`flex-1 ${idx < experiences.length - 1 ? 'pb-8' : ''}`}>
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{exp.role}</h3>
+              <p class:list={['font-semibold mb-3', colors.companyText]}>{exp.company}</p>
+              <ul class="space-y-2 text-slate-600 dark:text-slate-400">
+                {exp.items.map((item) => (
+                  <li class="flex items-start">
+                    <i class:list={['fas fa-check-circle mt-1 mr-2', colors.checkIcon]}></i>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

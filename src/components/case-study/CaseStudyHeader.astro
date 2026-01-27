@@ -1,0 +1,106 @@
+---
+/**
+ * Case Study Header Component
+ * Displays badge, title, description, stats and action links
+ */
+
+export interface Stat {
+  value: string;
+  label: string;
+}
+
+export interface Link {
+  text: string;
+  url: string;
+  primary?: boolean;
+}
+
+type AccentColor = 'blue' | 'emerald' | 'purple' | 'orange';
+
+interface Props {
+  badge: string;
+  title: string;
+  description: string;
+  stats: Stat[];
+  links: Link[];
+  accentColor: AccentColor;
+}
+
+const { badge, title, description, stats, links, accentColor } = Astro.props;
+
+// Static color mappings for Tailwind
+const colorClasses: Record<AccentColor, {
+  badgeBg: string;
+  badgeText: string;
+  statValue: string;
+  primaryBtn: string;
+  secondaryBtnHover: string;
+}> = {
+  blue: {
+    badgeBg: 'bg-blue-50 dark:bg-blue-900/30',
+    badgeText: 'text-blue-700 dark:text-blue-300',
+    statValue: 'text-blue-600 dark:text-blue-400',
+    primaryBtn: 'bg-blue-600 hover:bg-blue-700',
+    secondaryBtnHover: 'hover:border-blue-600',
+  },
+  emerald: {
+    badgeBg: 'bg-emerald-50 dark:bg-emerald-900/30',
+    badgeText: 'text-emerald-700 dark:text-emerald-300',
+    statValue: 'text-emerald-600 dark:text-emerald-400',
+    primaryBtn: 'bg-emerald-600 hover:bg-emerald-700',
+    secondaryBtnHover: 'hover:border-emerald-600',
+  },
+  purple: {
+    badgeBg: 'bg-purple-50 dark:bg-purple-900/30',
+    badgeText: 'text-purple-700 dark:text-purple-300',
+    statValue: 'text-purple-600 dark:text-purple-400',
+    primaryBtn: 'bg-purple-600 hover:bg-purple-700',
+    secondaryBtnHover: 'hover:border-purple-600',
+  },
+  orange: {
+    badgeBg: 'bg-orange-50 dark:bg-orange-900/30',
+    badgeText: 'text-orange-700 dark:text-orange-300',
+    statValue: 'text-orange-600 dark:text-orange-400',
+    primaryBtn: 'bg-orange-600 hover:bg-orange-700',
+    secondaryBtnHover: 'hover:border-orange-600',
+  },
+};
+
+const colors = colorClasses[accentColor];
+---
+
+<section class="mb-16">
+  <div class="mb-8">
+    <span class:list={['px-4 py-2 rounded-full text-sm font-semibold', colors.badgeBg, colors.badgeText]}>
+      {badge}
+    </span>
+  </div>
+  <h1 class="text-5xl font-extrabold mb-6">{title}</h1>
+  <p class="text-xl text-slate-600 dark:text-slate-400 leading-relaxed mb-8">{description}</p>
+
+  <div class="grid grid-cols-3 gap-4 mb-8">
+    {stats.map(stat => (
+      <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
+        <div class:list={['text-2xl font-bold', colors.statValue]}>{stat.value}</div>
+        <div class="text-sm text-slate-600 dark:text-slate-400">{stat.label}</div>
+      </div>
+    ))}
+  </div>
+
+  <div class="flex flex-wrap gap-4">
+    {links.map(link => (
+      <a 
+        href={link.url} 
+        target="_blank" 
+        class:list={[
+          'px-6 py-3 rounded-lg font-semibold transition',
+          link.primary 
+            ? [colors.primaryBtn, 'text-white']
+            : ['border-2 border-slate-300 dark:border-slate-600', colors.secondaryBtnHover]
+        ]}
+      >
+        {link.text}
+      </a>
+    ))}
+  </div>
+</section>

@@ -1,495 +1,131 @@
 ---
-import type { Lang } from '../../../i18n';
+import { type Lang, useTranslations } from '@i18n/index';
+import { getLanguagePaths } from '@utils/i18n-paths';
+import CaseStudyLayout from '@layouts/CaseStudyLayout.astro';
+import CaseStudyHeader from '@components/case-study/CaseStudyHeader.astro';
+import ProblemSection from '@components/case-study/ProblemSection.astro';
+import ProcessTimeline from '@components/case-study/ProcessTimeline.astro';
+import SolutionSection from '@components/case-study/SolutionSection.astro';
+import MetricsGrid from '@components/case-study/MetricsGrid.astro';
+import TechStack from '@components/case-study/TechStack.astro';
+import CaseStudyCTA from '@components/case-study/CaseStudyCTA.astro';
 
-export function getStaticPaths() {
-  return [
-    { params: { lang: 'es' } },
-    { params: { lang: 'en' } }
-  ];
-}
+export const getStaticPaths = getLanguagePaths;
 
 const { lang } = Astro.params as { lang: Lang };
+const content = await useTranslations<any>(lang, 'projects-ecommerce-platform');
 
-// Translations
-const t = {
-  es: {
-    back: '← Volver a proyectos',
-    badge: 'Side Project',
-    title: 'E-commerce Platform',
-    description: 'Plataforma de e-commerce completa con carrito dinámico, integración de pagos y panel administrativo. Proyecto personal que demuestra arquitectura full stack moderna.',
-    stats: {
-      time: { value: '3 meses', label: 'Tiempo de desarrollo' },
-      products: { value: '+500', label: 'Productos en catálogo' },
-      responsive: { value: '100%', label: 'Responsive design' }
-    },
-    links: {
-      demo: '🌐 Ver Demo en Vivo',
-      github: '💻 Ver en GitHub'
-    },
-    problem: {
-      title: 'El Problema',
-      intro: 'Quería crear un proyecto personal que demostrara mis habilidades en full stack development. Necesitaba algo más complejo que un CRUD básico, que incluyera:',
-      items: [
-        'Gestión compleja de estado en frontend (carrito, filtros, búsqueda)',
-        'APIs RESTful robustas con validaciones y manejo de errores',
-        'Integración con servicio de pagos (Stripe)',
-        'Panel administrativo para gestionar productos y órdenes',
-        'Base de datos relacional bien estructurada'
-      ]
-    },
-    process: {
-      title: 'Mi Proceso',
-      phases: [
-        {
-          title: '1. Diseño de Arquitectura',
-          description: 'Comencé diseñando la arquitectura de la aplicación. Decidí usar una estructura de capas clara:'
-        },
-        {
-          title: '2. Desarrollo Backend',
-          description: 'Implementé las APIs usando .NET Core con Entity Framework:',
-          items: [
-            'Endpoints RESTful para productos, carrito, órdenes',
-            'Autenticación JWT para usuarios',
-            'Validaciones con FluentValidation',
-            'Manejo de excepciones global',
-            'Integración con Stripe API para pagos'
-          ]
-        },
-        {
-          title: '3. Desarrollo Frontend',
-          description: 'Construí la interfaz con Angular y gestión de estado:',
-          items: [
-            'Componentes reutilizables (ProductCard, CartItem, etc.)',
-            'NgRx para state management del carrito',
-            'Búsqueda y filtros en tiempo real',
-            'Integración con Stripe Elements para pagos seguros',
-            'Responsive design con Tailwind CSS'
-          ]
-        },
-        {
-          title: '4. Testing y Deployment',
-          description: 'Aseguré la calidad y disponibilidad:',
-          items: [
-            'Unit tests con xUnit para backend',
-            'Integration tests para APIs',
-            'E2E tests con Cypress para frontend',
-            'Deployment en AWS (S3 + CloudFront para frontend, ECS para backend)'
-          ]
-        }
-      ]
-    },
-    solution: {
-      title: 'La Solución',
-      frontend: {
-        title: 'Frontend - Angular + NgRx',
-        description: 'Implementé una aplicación Angular moderna con gestión de estado centralizada usando NgRx:',
-        items: {
-          cart: { label: 'Carrito de compras:', text: 'Estado sincronizado en tiempo real, persistencia en localStorage' },
-          search: { label: 'Búsqueda y filtros:', text: 'Debouncing para optimizar llamadas a API' },
-          checkout: { label: 'Checkout:', text: 'Flujo seguro con validaciones en cliente y servidor' },
-          admin: { label: 'Panel admin:', text: 'Dashboard con gráficos de ventas y gestión de inventario' }
-        }
-      },
-      backend: {
-        title: 'Backend - .NET Core + SQL Server',
-        description: 'APIs RESTful robustas con arquitectura en capas:',
-        items: {
-          products: { label: 'Productos:', text: 'Catálogo con búsqueda full-text, filtros por categoría y precio' },
-          orders: { label: 'Órdenes:', text: 'Gestión completa del ciclo de vida, notificaciones por email' },
-          payments: { label: 'Pagos:', text: 'Integración segura con Stripe, webhooks para confirmación' },
-          users: { label: 'Usuarios:', text: 'Autenticación JWT, roles y permisos granulares' }
-        }
-      },
-      database: {
-        title: 'Base de Datos',
-        description: 'Diseño relacional normalizado con SQL Server:',
-        items: [
-          'Tablas: Users, Products, Categories, Orders, OrderItems, Payments',
-          'Índices en campos de búsqueda frecuente',
-          'Constraints para integridad referencial',
-          'Stored procedures para operaciones complejas'
-        ]
-      }
-    },
-    results: {
-      title: 'Resultados & Impacto',
-      metrics: {
-        performance: { value: '95%', label: 'Lighthouse Performance Score' },
-        loadTime: { value: '<2s', label: 'Tiempo de carga promedio' },
-        uptime: { value: '99.9%', label: 'Uptime en producción' },
-        errors: { value: '0', label: 'Errores críticos reportados' }
-      },
-      learnings: {
-        title: 'Aprendizajes Clave',
-        items: [
-          { label: 'State Management:', text: 'Experiencia profunda con NgRx en aplicaciones complejas' },
-          { label: 'Integración de pagos:', text: 'Implementación segura de Stripe con manejo de webhooks' },
-          { label: 'Performance:', text: 'Optimización de queries, lazy loading, caching estratégico' },
-          { label: 'Testing:', text: 'Cobertura completa con unit, integration y E2E tests' }
-        ]
-      }
-    },
-    stack: {
-      title: 'Stack Tecnológico',
-      infrastructure: 'Infraestructura'
-    },
-    cta: {
-      title: '¿Te interesa este tipo de trabajo?',
-      subtitle: 'Tengo más proyectos y experiencia en arquitecturas complejas. Conectemos.',
-      button: 'Enviar Email'
-    }
+const accentColor = 'blue';
+
+// Transform content to component props
+const headerStats = [
+  { value: content.stats.time.value, label: content.stats.time.label },
+  { value: content.stats.products.value, label: content.stats.products.label },
+  { value: content.stats.responsive.value, label: content.stats.responsive.label },
+];
+
+const headerLinks = [
+  { text: content.links.demo, url: 'https://ecommerce-demo.example.com', primary: true },
+  { text: content.links.github, url: 'https://github.com/mauriciogdev/ecommerce-platform' },
+];
+
+const resultMetrics = [
+  { value: content.results.metrics.performance.value, label: content.results.metrics.performance.label },
+  { value: content.results.metrics.loadTime.value, label: content.results.metrics.loadTime.label },
+  { value: content.results.metrics.uptime.value, label: content.results.metrics.uptime.label },
+  { value: content.results.metrics.errors.value, label: content.results.metrics.errors.label },
+];
+
+const solutionSubsections = [
+  {
+    title: content.solution.frontend.title,
+    description: content.solution.frontend.description,
+    items: [
+      { label: content.solution.frontend.items.cart.label, text: content.solution.frontend.items.cart.text },
+      { label: content.solution.frontend.items.search.label, text: content.solution.frontend.items.search.text },
+      { label: content.solution.frontend.items.checkout.label, text: content.solution.frontend.items.checkout.text },
+      { label: content.solution.frontend.items.admin.label, text: content.solution.frontend.items.admin.text },
+    ],
   },
-  en: {
-    back: '← Back to projects',
-    badge: 'Side Project',
-    title: 'E-commerce Platform',
-    description: 'Complete e-commerce platform with dynamic cart, payment integration, and admin panel. Personal project showcasing modern full-stack architecture.',
-    stats: {
-      time: { value: '3 months', label: 'Development time' },
-      products: { value: '+500', label: 'Products in catalog' },
-      responsive: { value: '100%', label: 'Responsive design' }
-    },
-    links: {
-      demo: '🌐 View Live Demo',
-      github: '💻 View on GitHub'
-    },
-    problem: {
-      title: 'The Problem',
-      intro: 'I wanted to create a personal project that showcased my full-stack development skills. I needed something more complex than a basic CRUD, including:',
-      items: [
-        'Complex state management in frontend (cart, filters, search)',
-        'Robust RESTful APIs with validations and error handling',
-        'Payment service integration (Stripe)',
-        'Admin panel to manage products and orders',
-        'Well-structured relational database'
-      ]
-    },
-    process: {
-      title: 'My Process',
-      phases: [
-        {
-          title: '1. Architecture Design',
-          description: 'I started by designing the application architecture. I decided to use a clear layered structure:'
-        },
-        {
-          title: '2. Backend Development',
-          description: 'I implemented the APIs using .NET Core with Entity Framework:',
-          items: [
-            'RESTful endpoints for products, cart, orders',
-            'JWT authentication for users',
-            'Validations with FluentValidation',
-            'Global exception handling',
-            'Stripe API integration for payments'
-          ]
-        },
-        {
-          title: '3. Frontend Development',
-          description: 'I built the interface with Angular and state management:',
-          items: [
-            'Reusable components (ProductCard, CartItem, etc.)',
-            'NgRx for cart state management',
-            'Real-time search and filters',
-            'Stripe Elements integration for secure payments',
-            'Responsive design with Tailwind CSS'
-          ]
-        },
-        {
-          title: '4. Testing and Deployment',
-          description: 'I ensured quality and availability:',
-          items: [
-            'Unit tests with xUnit for backend',
-            'Integration tests for APIs',
-            'E2E tests with Cypress for frontend',
-            'Deployment on AWS (S3 + CloudFront for frontend, ECS for backend)'
-          ]
-        }
-      ]
-    },
-    solution: {
-      title: 'The Solution',
-      frontend: {
-        title: 'Frontend - Angular + NgRx',
-        description: 'I implemented a modern Angular application with centralized state management using NgRx:',
-        items: {
-          cart: { label: 'Shopping cart:', text: 'Real-time synchronized state, localStorage persistence' },
-          search: { label: 'Search and filters:', text: 'Debouncing to optimize API calls' },
-          checkout: { label: 'Checkout:', text: 'Secure flow with client and server validations' },
-          admin: { label: 'Admin panel:', text: 'Dashboard with sales charts and inventory management' }
-        }
-      },
-      backend: {
-        title: 'Backend - .NET Core + SQL Server',
-        description: 'Robust RESTful APIs with layered architecture:',
-        items: {
-          products: { label: 'Products:', text: 'Catalog with full-text search, category and price filters' },
-          orders: { label: 'Orders:', text: 'Complete lifecycle management, email notifications' },
-          payments: { label: 'Payments:', text: 'Secure Stripe integration, webhooks for confirmation' },
-          users: { label: 'Users:', text: 'JWT authentication, granular roles and permissions' }
-        }
-      },
-      database: {
-        title: 'Database',
-        description: 'Normalized relational design with SQL Server:',
-        items: [
-          'Tables: Users, Products, Categories, Orders, OrderItems, Payments',
-          'Indexes on frequently searched fields',
-          'Constraints for referential integrity',
-          'Stored procedures for complex operations'
-        ]
-      }
-    },
-    results: {
-      title: 'Results & Impact',
-      metrics: {
-        performance: { value: '95%', label: 'Lighthouse Performance Score' },
-        loadTime: { value: '<2s', label: 'Average load time' },
-        uptime: { value: '99.9%', label: 'Production uptime' },
-        errors: { value: '0', label: 'Critical errors reported' }
-      },
-      learnings: {
-        title: 'Key Learnings',
-        items: [
-          { label: 'State Management:', text: 'Deep experience with NgRx in complex applications' },
-          { label: 'Payment integration:', text: 'Secure Stripe implementation with webhook handling' },
-          { label: 'Performance:', text: 'Query optimization, lazy loading, strategic caching' },
-          { label: 'Testing:', text: 'Complete coverage with unit, integration and E2E tests' }
-        ]
-      }
-    },
-    stack: {
-      title: 'Tech Stack',
-      infrastructure: 'Infrastructure'
-    },
-    cta: {
-      title: 'Interested in this type of work?',
-      subtitle: 'I have more projects and experience in complex architectures. Let\'s connect.',
-      button: 'Send Email'
-    }
-  }
-};
+  {
+    title: content.solution.backend.title,
+    description: content.solution.backend.description,
+    items: [
+      { label: content.solution.backend.items.products.label, text: content.solution.backend.items.products.text },
+      { label: content.solution.backend.items.orders.label, text: content.solution.backend.items.orders.text },
+      { label: content.solution.backend.items.payments.label, text: content.solution.backend.items.payments.text },
+      { label: content.solution.backend.items.users.label, text: content.solution.backend.items.users.text },
+    ],
+  },
+  {
+    title: content.solution.database.title,
+    description: content.solution.database.description,
+    items: content.solution.database.items,
+  },
+];
 
-const content = t[lang];
+const techStackColumns = [
+  { title: 'Frontend', items: ['Angular 18', 'TypeScript', 'NgRx (State Management)', 'Tailwind CSS', 'RxJS'] },
+  { title: 'Backend', items: ['.NET Core 8', 'C#', 'Entity Framework Core', 'FluentValidation', 'AutoMapper'] },
+  { title: content.stack.infrastructure, items: ['SQL Server', 'AWS (S3, CloudFront, ECS)', 'Docker', 'Stripe API', 'GitHub Actions (CI/CD)'] },
+];
 ---
 
-<!doctype html>
-<html lang={lang}>
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>E-commerce Platform - Case Study</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-        <style>
-            body { font-family: "Inter", sans-serif; }
-        </style>
-    </head>
-    <body class="bg-white">
-        <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
-            <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-                <a href="/" class="text-xl font-bold text-gray-900">MG<span class="text-blue-600">.</span></a>
-                <a href={`/${lang}/landing/developer`} class="text-sm text-gray-600 hover:text-blue-600 transition">{content.back}</a>
-            </div>
-        </header>
+<CaseStudyLayout 
+  title={`${content.title} - Case Study`}
+  description={content.description}
+  lang={lang}
+  backUrl={`/${lang}/landing/developer`}
+  backText={content.back}
+  accentColor={accentColor}
+>
+  <CaseStudyHeader
+    badge={content.badge}
+    title={content.title}
+    description={content.description}
+    stats={headerStats}
+    links={headerLinks}
+    accentColor={accentColor}
+  />
 
-        <main class="max-w-4xl mx-auto px-6 py-16">
-            <section class="mb-16">
-                <div class="mb-8">
-                    <span class="px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold">{content.badge}</span>
-                </div>
-                <h1 class="text-5xl font-extrabold text-gray-900 mb-6">{content.title}</h1>
-                <p class="text-xl text-gray-600 leading-relaxed mb-8">{content.description}</p>
+  <hr class="my-16 border-slate-200 dark:border-slate-700" />
 
-                <div class="grid grid-cols-3 gap-4 mb-8">
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <div class="text-2xl font-bold text-blue-600">{content.stats.time.value}</div>
-                        <div class="text-sm text-gray-600">{content.stats.time.label}</div>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <div class="text-2xl font-bold text-blue-600">{content.stats.products.value}</div>
-                        <div class="text-sm text-gray-600">{content.stats.products.label}</div>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <div class="text-2xl font-bold text-blue-600">{content.stats.responsive.value}</div>
-                        <div class="text-sm text-gray-600">{content.stats.responsive.label}</div>
-                    </div>
-                </div>
+  <ProblemSection
+    title={content.problem.title}
+    intro={content.problem.intro}
+    items={content.problem.items}
+    accentColor={accentColor}
+  />
 
-                <div class="flex flex-wrap gap-4">
-                    <a href="https://ecommerce-demo.example.com" target="_blank" class="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">{content.links.demo}</a>
-                    <a href="https://github.com/mauriciogdev/ecommerce-platform" target="_blank" class="px-6 py-3 border-2 border-gray-300 text-gray-900 rounded-lg font-semibold hover:border-blue-600 transition">{content.links.github}</a>
-                </div>
-            </section>
+  <ProcessTimeline
+    title={content.process.title}
+    phases={content.process.phases}
+    accentColor={accentColor}
+    showFirstPhaseCode={true}
+  />
 
-            <hr class="my-16" />
+  <SolutionSection
+    title={content.solution.title}
+    subsections={solutionSubsections}
+  />
 
-            <section class="mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">{content.problem.title}</h2>
-                <div class="bg-blue-50 rounded-xl p-8 border border-blue-200">
-                    <p class="text-gray-700 leading-relaxed mb-4">{content.problem.intro}</p>
-                    <ul class="space-y-3 text-gray-700">
-                        {content.problem.items.map((item) => (
-                            <li class="flex items-start gap-3">
-                                <span class="text-blue-600 font-bold">•</span>
-                                <span>{item}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </section>
+  <MetricsGrid
+    title={content.results.title}
+    metrics={resultMetrics}
+    learnings={content.results.learnings}
+    accentColor={accentColor}
+  />
 
-            <section class="mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">{content.process.title}</h2>
-                <div class="space-y-8">
-                    <div class="border-l-4 border-blue-600 pl-6">
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">{content.process.phases[0].title}</h3>
-                        <p class="text-gray-600 mb-4">{content.process.phases[0].description}</p>
-                        <div class="bg-gray-50 rounded-lg p-4 font-mono text-sm text-gray-700">
-                            <div>Backend/</div>
-                            <div class="ml-4">├── Controllers/</div>
-                            <div class="ml-4">├── Services/</div>
-                            <div class="ml-4">├── Repositories/</div>
-                            <div class="ml-4">├── Models/</div>
-                            <div class="ml-4">└── Data/</div>
-                            <div>Frontend/</div>
-                            <div class="ml-4">├── Components/</div>
-                            <div class="ml-4">├── Services/</div>
-                            <div class="ml-4">├── Store/ (State Management)</div>
-                            <div class="ml-4">└── Pages/</div>
-                        </div>
-                    </div>
-                    {content.process.phases.slice(1).map((phase, idx) => (
-                        <div class={`border-l-4 pl-6 ${idx === 0 ? 'border-purple-600' : idx === 1 ? 'border-emerald-600' : 'border-orange-600'}`}>
-                            <h3 class="text-xl font-bold text-gray-900 mb-3">{phase.title}</h3>
-                            <p class="text-gray-600 mb-4">{phase.description}</p>
-                            <ul class="space-y-2 text-gray-700">
-                                {phase.items?.map((item) => <li>✓ {item}</li>)}
-                            </ul>
-                        </div>
-                    ))}
-                </div>
-            </section>
+  <TechStack
+    title={content.stack.title}
+    columns={techStackColumns}
+  />
 
-            <section class="mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">{content.solution.title}</h2>
-                <div class="space-y-8">
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-4">{content.solution.frontend.title}</h3>
-                        <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                            <p class="text-gray-700 mb-4">{content.solution.frontend.description}</p>
-                            <div class="space-y-3 text-sm text-gray-700">
-                                <div><span class="font-semibold">{content.solution.frontend.items.cart.label}</span> {content.solution.frontend.items.cart.text}</div>
-                                <div><span class="font-semibold">{content.solution.frontend.items.search.label}</span> {content.solution.frontend.items.search.text}</div>
-                                <div><span class="font-semibold">{content.solution.frontend.items.checkout.label}</span> {content.solution.frontend.items.checkout.text}</div>
-                                <div><span class="font-semibold">{content.solution.frontend.items.admin.label}</span> {content.solution.frontend.items.admin.text}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-4">{content.solution.backend.title}</h3>
-                        <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                            <p class="text-gray-700 mb-4">{content.solution.backend.description}</p>
-                            <div class="space-y-3 text-sm text-gray-700">
-                                <div><span class="font-semibold">{content.solution.backend.items.products.label}</span> {content.solution.backend.items.products.text}</div>
-                                <div><span class="font-semibold">{content.solution.backend.items.orders.label}</span> {content.solution.backend.items.orders.text}</div>
-                                <div><span class="font-semibold">{content.solution.backend.items.payments.label}</span> {content.solution.backend.items.payments.text}</div>
-                                <div><span class="font-semibold">{content.solution.backend.items.users.label}</span> {content.solution.backend.items.users.text}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-4">{content.solution.database.title}</h3>
-                        <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                            <p class="text-gray-700 mb-4">{content.solution.database.description}</p>
-                            <div class="space-y-2 text-sm text-gray-700">
-                                {content.solution.database.items.map((item) => <div>• {item}</div>)}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">{content.results.title}</h2>
-                <div class="grid md:grid-cols-2 gap-6 mb-8">
-                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
-                        <div class="text-3xl font-bold text-blue-600 mb-2">{content.results.metrics.performance.value}</div>
-                        <div class="text-gray-700">{content.results.metrics.performance.label}</div>
-                    </div>
-                    <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-6 border border-emerald-200">
-                        <div class="text-3xl font-bold text-emerald-600 mb-2">{content.results.metrics.loadTime.value}</div>
-                        <div class="text-gray-700">{content.results.metrics.loadTime.label}</div>
-                    </div>
-                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
-                        <div class="text-3xl font-bold text-purple-600 mb-2">{content.results.metrics.uptime.value}</div>
-                        <div class="text-gray-700">{content.results.metrics.uptime.label}</div>
-                    </div>
-                    <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 border border-orange-200">
-                        <div class="text-3xl font-bold text-orange-600 mb-2">{content.results.metrics.errors.value}</div>
-                        <div class="text-gray-700">{content.results.metrics.errors.label}</div>
-                    </div>
-                </div>
-                <div class="bg-gray-50 rounded-xl p-8 border border-gray-200">
-                    <h3 class="text-xl font-bold text-gray-900 mb-4">{content.results.learnings.title}</h3>
-                    <ul class="space-y-3 text-gray-700">
-                        {content.results.learnings.items.map((item) => (
-                            <li class="flex items-start gap-3">
-                                <span class="text-blue-600 font-bold">✓</span>
-                                <span><strong>{item.label}</strong> {item.text}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </section>
-
-            <section class="mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">{content.stack.title}</h2>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <div class="bg-white rounded-xl p-6 border border-gray-200">
-                        <h3 class="font-bold text-gray-900 mb-4">Frontend</h3>
-                        <div class="space-y-2 text-sm text-gray-700">
-                            <div>• Angular 18</div>
-                            <div>• TypeScript</div>
-                            <div>• NgRx (State Management)</div>
-                            <div>• Tailwind CSS</div>
-                            <div>• RxJS</div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-xl p-6 border border-gray-200">
-                        <h3 class="font-bold text-gray-900 mb-4">Backend</h3>
-                        <div class="space-y-2 text-sm text-gray-700">
-                            <div>• .NET Core 8</div>
-                            <div>• C#</div>
-                            <div>• Entity Framework Core</div>
-                            <div>• FluentValidation</div>
-                            <div>• AutoMapper</div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-xl p-6 border border-gray-200">
-                        <h3 class="font-bold text-gray-900 mb-4">{content.stack.infrastructure}</h3>
-                        <div class="space-y-2 text-sm text-gray-700">
-                            <div>• SQL Server</div>
-                            <div>• AWS (S3, CloudFront, ECS)</div>
-                            <div>• Docker</div>
-                            <div>• Stripe API</div>
-                            <div>• GitHub Actions (CI/CD)</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 text-white text-center">
-                <h2 class="text-2xl font-bold mb-4">{content.cta.title}</h2>
-                <p class="text-blue-100 mb-6">{content.cta.subtitle}</p>
-                <a href="mailto:mauriciogcode@gmail.com" class="inline-block px-6 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition">{content.cta.button}</a>
-            </section>
-        </main>
-
-        <footer class="bg-gray-900 text-white py-8 mt-20">
-            <div class="max-w-4xl mx-auto px-6 text-center">
-                <p class="text-gray-400 text-sm">© 2026 Mauricio Gonzalez - Full Stack Developer</p>
-            </div>
-        </footer>
-    </body>
-</html>
+  <CaseStudyCTA
+    title={content.cta.title}
+    subtitle={content.cta.subtitle}
+    buttonText={content.cta.button}
+    accentColor={accentColor}
+    secondaryColor="purple"
+  />
+</CaseStudyLayout>

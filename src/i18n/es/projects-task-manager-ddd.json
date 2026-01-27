@@ -1,0 +1,108 @@
+{
+  "back": "← Volver a proyectos",
+  "badge": "Side Project - Arquitectura",
+  "title": "Task Manager con DDD",
+  "description": "Gestor de tareas implementado con Domain-Driven Design, CQRS y eventos de dominio. Proyecto educativo que demuestra patrones arquitectónicos avanzados.",
+  "stats": {
+    "time": { "value": "2 meses", "label": "Tiempo de desarrollo" },
+    "aggregates": { "value": "8", "label": "Agregados de dominio" },
+    "coverage": { "value": "100%", "label": "Test coverage" }
+  },
+  "links": {
+    "demo": "🌐 Ver Demo en Vivo",
+    "github": "💻 Ver en GitHub"
+  },
+  "problem": {
+    "title": "El Problema",
+    "intro": "Quería profundizar en Domain-Driven Design y patrones arquitectónicos avanzados. Necesitaba un proyecto que me permitiera:",
+    "items": [
+      "Aplicar DDD con agregados, value objects y entidades de dominio",
+      "Implementar CQRS separando lecturas y escrituras",
+      "Usar eventos de dominio para comunicación entre agregados",
+      "Implementar especificaciones para queries complejas",
+      "Lograr cobertura de tests del 100%"
+    ]
+  },
+  "process": {
+    "title": "Mi Proceso",
+    "phases": [
+      {
+        "title": "1. Event Storming & Modelado de Dominio",
+        "description": "Comencé identificando los eventos de dominio y agregados:",
+        "details": [
+          { "name": "Agregado Task:", "desc": "Raíz del agregado con value objects (TaskId, Title, Description, Status)" },
+          { "name": "Agregado Project:", "desc": "Contiene múltiples tareas, gestiona ciclo de vida" },
+          { "name": "Eventos:", "desc": "TaskCreated, TaskCompleted, TaskAssigned, ProjectArchived" }
+        ]
+      },
+      {
+        "title": "2. Implementación de Agregados",
+        "description": "Implementé agregados con lógica de negocio encapsulada:",
+        "items": ["Value Objects inmutables (TaskStatus, Priority, etc.)", "Métodos de dominio que validan reglas de negocio", "Publicación de eventos de dominio", "Repositorios para persistencia"]
+      },
+      {
+        "title": "3. CQRS & Event Sourcing",
+        "description": "Separé lecturas y escrituras con CQRS:",
+        "items": ["Commands para cambios de estado (CreateTaskCommand, CompleteTaskCommand)", "Queries para lecturas optimizadas (GetTasksByProjectQuery)", "Event handlers que actualizan read models", "Proyecciones para vistas denormalizadas"]
+      },
+      {
+        "title": "4. Testing Exhaustivo",
+        "description": "Implementé tests en múltiples niveles:",
+        "items": ["Unit tests para agregados y value objects", "Tests de dominio para reglas de negocio", "Integration tests para handlers y repositorios", "Tests de especificaciones para queries"]
+      }
+    ]
+  },
+  "solution": {
+    "title": "La Solución",
+    "layers": {
+      "title": "Arquitectura de Capas",
+      "items": [
+        { "label": "Domain Layer:", "text": "Agregados, Value Objects, Interfaces de repositorio, Eventos de dominio" },
+        { "label": "Application Layer:", "text": "Commands, Queries, Handlers, DTOs, Mappers" },
+        { "label": "Infrastructure Layer:", "text": "Implementación de repositorios, Event Store, Proyecciones" },
+        { "label": "Presentation Layer:", "text": "Controllers, API endpoints, Validaciones de entrada" }
+      ]
+    },
+    "patterns": {
+      "title": "Patrones Implementados",
+      "items": [
+        { "name": "Domain-Driven Design", "desc": "Agregados, Value Objects, Especificaciones, Repositorios" },
+        { "name": "CQRS", "desc": "Separación de Commands y Queries, Read Models" },
+        { "name": "Event Sourcing", "desc": "Event Store, Proyecciones, Replay de eventos" },
+        { "name": "Mediator Pattern", "desc": "MediatR para orquestación de handlers" }
+      ]
+    },
+    "frontend": {
+      "title": "Frontend - React",
+      "description": "Interfaz moderna con React y gestión de estado:",
+      "items": ["React Hooks para state management", "Componentes funcionales reutilizables", "Integración con API backend", "Drag & drop para organizar tareas", "Filtros y búsqueda en tiempo real"]
+    }
+  },
+  "results": {
+    "title": "Resultados & Impacto",
+    "metrics": [
+      { "value": "100%", "label": "Test Coverage", "color": "purple" },
+      { "value": "8", "label": "Agregados de Dominio", "color": "blue" },
+      { "value": "45+", "label": "Tests Unitarios", "color": "emerald" },
+      { "value": "0", "label": "Violaciones de reglas de negocio", "color": "orange" }
+    ],
+    "learnings": {
+      "title": "Aprendizajes Clave",
+      "items": [
+        { "label": "DDD en profundidad:", "text": "Modelado de dominios complejos, lenguaje ubicuo, bounded contexts" },
+        { "label": "CQRS:", "text": "Separación clara entre lecturas y escrituras, optimización de queries" },
+        { "label": "Event Sourcing:", "text": "Auditoría completa, replay de eventos, reconstrucción de estado" },
+        { "label": "Testing:", "text": "Importancia de tests en arquitecturas complejas, TDD en dominio" }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Stack Tecnológico",
+    "infrastructure": "Infraestructura"
+  },
+  "cta": {
+    "title": "¿Buscas alguien con expertise en arquitectura?",
+    "subtitle": "Tengo experiencia en patrones avanzados y arquitecturas escalables. Hablemos.",
+    "button": "Enviar Email"
+  }
+}

@@ -1,5 +1,12 @@
 export type ProfileId = 'developer' | 'analista' | 'ia-engineer' | 'freelance' | 'speaker';
 
+// Shared URLs - update these once for all profiles
+const SHARED_URLS = {
+  github: 'https://github.com/tu-usuario',
+  linkedin: 'https://linkedin.com/in/mauricioglab',
+  email: 'tu-email@example.com'
+} as const;
+
 export interface Profile {
   id: ProfileId;
   cvUrl: string;
@@ -20,9 +27,9 @@ export const profiles: Record<ProfileId, Profile> = {
   developer: {
     id: 'developer',
     cvUrl: '/cv-developer.pdf',
-    githubUrl: 'https://github.com/tu-usuario',
-    linkedinUrl: 'https://linkedin.com/in/tu-perfil',
-    email: 'tu-email@example.com',
+    githubUrl: SHARED_URLS.github,
+    linkedinUrl: SHARED_URLS.linkedin,
+    email: SHARED_URLS.email,
     theme: {
       primary: 'blue-600',
       secondary: 'blue-100',
@@ -35,9 +42,9 @@ export const profiles: Record<ProfileId, Profile> = {
   analista: {
     id: 'analista',
     cvUrl: '/cv-analista.pdf',
-    githubUrl: 'https://github.com/tu-usuario',
-    linkedinUrl: 'https://linkedin.com/in/tu-perfil',
-    email: 'tu-email@example.com',
+    githubUrl: SHARED_URLS.github,
+    linkedinUrl: SHARED_URLS.linkedin,
+    email: SHARED_URLS.email,
     theme: {
       primary: 'slate-900',
       secondary: 'slate-100',
@@ -50,9 +57,9 @@ export const profiles: Record<ProfileId, Profile> = {
   'ia-engineer': {
     id: 'ia-engineer',
     cvUrl: '/cv-ia.pdf',
-    githubUrl: 'https://github.com/tu-usuario',
-    linkedinUrl: 'https://linkedin.com/in/tu-perfil',
-    email: 'tu-email@example.com',
+    githubUrl: SHARED_URLS.github,
+    linkedinUrl: SHARED_URLS.linkedin,
+    email: SHARED_URLS.email,
     theme: {
       primary: 'emerald-600',
       secondary: 'emerald-500/10',
@@ -65,9 +72,9 @@ export const profiles: Record<ProfileId, Profile> = {
   freelance: {
     id: 'freelance',
     cvUrl: '/cv-freelance.pdf',
-    githubUrl: 'https://github.com/tu-usuario',
-    linkedinUrl: 'https://linkedin.com/in/mauricioglab',
-    email: 'tu-email@example.com',
+    githubUrl: SHARED_URLS.github,
+    linkedinUrl: SHARED_URLS.linkedin,
+    email: SHARED_URLS.email,
     theme: {
       primary: 'orange-600',
       secondary: 'orange-100',
@@ -80,9 +87,9 @@ export const profiles: Record<ProfileId, Profile> = {
   speaker: {
     id: 'speaker',
     cvUrl: '/cv-speaker.pdf',
-    githubUrl: 'https://github.com/tu-usuario',
-    linkedinUrl: 'https://linkedin.com/in/mauricioglab',
-    email: 'tu-email@example.com',
+    githubUrl: SHARED_URLS.github,
+    linkedinUrl: SHARED_URLS.linkedin,
+    email: SHARED_URLS.email,
     theme: {
       primary: 'purple-600',
       secondary: 'purple-100',

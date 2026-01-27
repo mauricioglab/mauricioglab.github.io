@@ -1,0 +1,74 @@
+---
+/**
+ * Solution Section Component
+ * Flexible component to display solution details with subsections
+ */
+
+export interface SolutionItem {
+  label: string;
+  text: string;
+}
+
+export interface SolutionSubsection {
+  title: string;
+  description?: string;
+  items?: SolutionItem[] | string[];
+  gridItems?: Array<{ name: string; desc: string }>;
+}
+
+interface Props {
+  title: string;
+  subsections: SolutionSubsection[];
+}
+
+const { title, subsections } = Astro.props;
+
+// Helper to check if items are strings or objects
+const isStringArray = (items: any[]): items is string[] => 
+  items.length > 0 && typeof items[0] === 'string';
+---
+
+<section class="mb-16">
+  <h2 class="text-3xl font-bold mb-6">{title}</h2>
+  <div class="space-y-8">
+    {subsections.map(subsection => (
+      <div>
+        <h3 class="text-xl font-bold mb-4">{subsection.title}</h3>
+        <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700">
+          {subsection.description && (
+            <p class="mb-4">{subsection.description}</p>
+          )}
+          
+          {/* Grid items (patterns, etc.) */}
+          {subsection.gridItems && subsection.gridItems.length > 0 && (
+            <div class="grid md:grid-cols-2 gap-4">
+              {subsection.gridItems.map(item => (
+                <div class="bg-white dark:bg-slate-900 rounded-lg p-4 border border-slate-200 dark:border-slate-700">
+                  <div class="font-semibold mb-2">{item.name}</div>
+                  <div class="text-sm text-slate-600 dark:text-slate-400">{item.desc}</div>
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {/* Regular items */}
+          {subsection.items && subsection.items.length > 0 && (
+            isStringArray(subsection.items) ? (
+              <div class="space-y-2 text-sm">
+                {subsection.items.map(item => <div>• {item}</div>)}
+              </div>
+            ) : (
+              <div class="space-y-3 text-sm">
+                {(subsection.items as SolutionItem[]).map(item => (
+                  <div>
+                    <span class="font-semibold">{item.label}</span> {item.text}
+                  </div>
+                ))}
+              </div>
+            )
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

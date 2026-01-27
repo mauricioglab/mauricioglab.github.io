@@ -5,6 +5,15 @@
   "compilerOptions": {
     "types": ["node"],
     "moduleResolution": "node",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@data/*": ["src/data/*"],
+      "@i18n/*": ["src/i18n/*"],
+      "@assets/*": ["src/assets/*"],
+      "@utils/*": ["src/utils/*"]
+    }
   }
 }

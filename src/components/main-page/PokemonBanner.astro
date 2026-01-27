@@ -4,8 +4,7 @@
             id="pokemon-img"
             src=""
             alt="Pocket Monster"
-            class="pokemon-sprite"
-            style="display: none;"
+            class="pokemon-sprite hidden"
         />
         <div id="pokemon-loader" class="loader">?</div>
     </div>
@@ -42,8 +41,8 @@
                         ?.front_default;
 
                 imgEl.src = gen1Sprite || data.sprites.front_default || "";
-                imgEl.style.display = "block";
-                if (loaderEl) loaderEl.style.display = "none";
+                imgEl.classList.remove("hidden");
+                if (loaderEl) loaderEl.classList.add("hidden");
             }
         } catch (e) {
             console.error("Error fetching Pokemon", e);

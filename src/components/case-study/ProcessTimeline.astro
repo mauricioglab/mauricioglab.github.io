@@ -1,0 +1,103 @@
+---
+/**
+ * Process Timeline Component
+ * Displays the development process phases with a timeline
+ */
+
+export interface Phase {
+  title: string;
+  description: string;
+  items?: string[];
+  services?: Array<{ name: string; desc: string }>;
+  details?: Array<{ name: string; desc: string }>;
+  codeBlock?: string;
+}
+
+type AccentColor = 'blue' | 'emerald' | 'purple' | 'orange';
+
+interface Props {
+  title: string;
+  phases: Phase[];
+  accentColor: AccentColor;
+  showFirstPhaseCode?: boolean;
+}
+
+const { title, phases, accentColor, showFirstPhaseCode = false } = Astro.props;
+
+// Phase border colors (cycling through)
+const phaseBorderClasses = [
+  'border-blue-600',
+  'border-purple-600',
+  'border-emerald-600',
+  'border-orange-600',
+  'border-red-600',
+];
+
+// First phase uses accent color
+const accentBorderClasses: Record<AccentColor, string> = {
+  blue: 'border-blue-600',
+  emerald: 'border-emerald-600',
+  purple: 'border-purple-600',
+  orange: 'border-orange-600',
+};
+---
+
+<section class="mb-16">
+  <h2 class="text-3xl font-bold mb-6">{title}</h2>
+  <div class="space-y-8">
+    {phases.map((phase, idx) => {
+      const borderClass = idx === 0 
+        ? accentBorderClasses[accentColor] 
+        : phaseBorderClasses[(idx - 1) % phaseBorderClasses.length];
+      
+      return (
+        <div class:list={['border-l-4 pl-6', borderClass]}>
+          <h3 class="text-xl font-bold mb-3">{phase.title}</h3>
+          <p class="text-slate-600 dark:text-slate-400 mb-4">{phase.description}</p>
+          
+          {/* Code block for first phase if enabled */}
+          {idx === 0 && showFirstPhaseCode && (
+            <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-4 font-mono text-sm">
+              <div>Backend/</div>
+              <div class="ml-4">├── Controllers/</div>
+              <div class="ml-4">├── Services/</div>
+              <div class="ml-4">├── Repositories/</div>
+              <div class="ml-4">├── Models/</div>
+              <div class="ml-4">└── Data/</div>
+              <div>Frontend/</div>
+              <div class="ml-4">├── Components/</div>
+              <div class="ml-4">├── Services/</div>
+              <div class="ml-4">├── Store/ (State Management)</div>
+              <div class="ml-4">└── Pages/</div>
+            </div>
+          )}
+          
+          {/* Service list */}
+          {phase.services && phase.services.length > 0 && (
+            <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-4 text-sm space-y-2">
+              {phase.services.map(s => (
+                <div><strong>{s.name}</strong> {s.desc}</div>
+              ))}
+            </div>
+          )}
+          
+          {/* Details list */}
+          {phase.details && phase.details.length > 0 && (
+            <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-4 text-sm space-y-2">
+              {phase.details.map(d => (
+                <div><strong>{d.name}</strong> {d.desc}</div>
+              ))}
+            </div>
+          )}
+          
+          {/* Items list */}
+          {phase.items && phase.items.length > 0 && (
+            <ul class="space-y-2 text-sm">
+              {phase.items.map(item => <li>✓ {item}</li>)}
+            </ul>
+          )}
+        </div>
+      );
+    })}
+  </div>
+</section>

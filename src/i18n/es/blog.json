@@ -1,0 +1,51 @@
+{
+  "nav": {
+    "about": "Acerca de",
+    "blog": "Blog"
+  },
+  "header": {
+    "defaultTitle": "Blog",
+    "defaultSubtitle": "Artículos y pensamientos"
+  },
+  "footer": {
+    "archive": "Archivo",
+    "search": "Buscar",
+    "privacy": "Privacidad"
+  },
+  "search": {
+    "pageTitle": "Buscar | Blog",
+    "pageDescription": "Buscar artículos del blog",
+    "title": "Buscar",
+    "subtitle": "Busca artículos por título, contenido o categoría",
+    "placeholder": "Escribe para buscar...",
+    "ariaLabel": "Buscar artículos",
+    "noResults": "No se encontraron resultados para tu búsqueda."
+  },
+  "about": {
+    "pageTitle": "Acerca de | Blog",
+    "pageDescription": "Acerca de este blog",
+    "title": "Acerca de",
+    "intro": "Bienvenido a mi blog. Este es un espacio donde comparto mis pensamientos, ideas y aprendizajes sobre diversos temas.",
+    "authorTitle": "Sobre el autor",
+    "authorDescription": "Soy un desarrollador apasionado por la tecnología y el diseño minimalista. Creo en la simplicidad como principio fundamental tanto en el código como en la vida.",
+    "blogTitle": "Sobre este blog",
+    "blogDescription": "Este blog está construido con Astro, un framework moderno que permite crear sitios web rápidos y eficientes. El diseño está inspirado en la filosofía minimalista: menos es más.",
+    "topicsIntro": "Aquí encontrarás artículos sobre:",
+    "topics": [
+      "Desarrollo web y programación",
+      "Diseño y experiencia de usuario",
+      "Productividad y organización",
+      "Tecnología en general"
+    ],
+    "contactTitle": "Contacto",
+    "contactDescription": "Si tienes alguna pregunta o simplemente quieres saludar, no dudes en contactarme a través de las redes sociales o por correo electrónico.",
+    "thanks": "Gracias por visitar y espero que encuentres útil el contenido."
+  },
+  "postCard": {
+    "writtenBy": "Escrito por",
+    "readMore": "Leer más"
+  },
+  "readingTime": {
+    "unit": "min de lectura"
+  }
+}

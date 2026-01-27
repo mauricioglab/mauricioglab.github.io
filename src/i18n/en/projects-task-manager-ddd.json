@@ -1,0 +1,108 @@
+{
+  "back": "← Back to projects",
+  "badge": "Side Project - Architecture",
+  "title": "Task Manager with DDD",
+  "description": "Task manager implemented with Domain-Driven Design, CQRS, and domain events. Educational project demonstrating advanced architectural patterns.",
+  "stats": {
+    "time": { "value": "2 months", "label": "Development time" },
+    "aggregates": { "value": "8", "label": "Domain aggregates" },
+    "coverage": { "value": "100%", "label": "Test coverage" }
+  },
+  "links": {
+    "demo": "🌐 View Live Demo",
+    "github": "💻 View on GitHub"
+  },
+  "problem": {
+    "title": "The Problem",
+    "intro": "I wanted to dive deep into Domain-Driven Design and advanced architectural patterns. I needed a project that would allow me to:",
+    "items": [
+      "Apply DDD with aggregates, value objects, and domain entities",
+      "Implement CQRS separating reads and writes",
+      "Use domain events for communication between aggregates",
+      "Implement specifications for complex queries",
+      "Achieve 100% test coverage"
+    ]
+  },
+  "process": {
+    "title": "My Process",
+    "phases": [
+      {
+        "title": "1. Event Storming & Domain Modeling",
+        "description": "I started by identifying domain events and aggregates:",
+        "details": [
+          { "name": "Task Aggregate:", "desc": "Aggregate root with value objects (TaskId, Title, Description, Status)" },
+          { "name": "Project Aggregate:", "desc": "Contains multiple tasks, manages lifecycle" },
+          { "name": "Events:", "desc": "TaskCreated, TaskCompleted, TaskAssigned, ProjectArchived" }
+        ]
+      },
+      {
+        "title": "2. Aggregate Implementation",
+        "description": "I implemented aggregates with encapsulated business logic:",
+        "items": ["Immutable Value Objects (TaskStatus, Priority, etc.)", "Domain methods that validate business rules", "Domain event publishing", "Repositories for persistence"]
+      },
+      {
+        "title": "3. CQRS & Event Sourcing",
+        "description": "I separated reads and writes with CQRS:",
+        "items": ["Commands for state changes (CreateTaskCommand, CompleteTaskCommand)", "Queries for optimized reads (GetTasksByProjectQuery)", "Event handlers that update read models", "Projections for denormalized views"]
+      },
+      {
+        "title": "4. Exhaustive Testing",
+        "description": "I implemented tests at multiple levels:",
+        "items": ["Unit tests for aggregates and value objects", "Domain tests for business rules", "Integration tests for handlers and repositories", "Specification tests for queries"]
+      }
+    ]
+  },
+  "solution": {
+    "title": "The Solution",
+    "layers": {
+      "title": "Layered Architecture",
+      "items": [
+        { "label": "Domain Layer:", "text": "Aggregates, Value Objects, Repository interfaces, Domain events" },
+        { "label": "Application Layer:", "text": "Commands, Queries, Handlers, DTOs, Mappers" },
+        { "label": "Infrastructure Layer:", "text": "Repository implementations, Event Store, Projections" },
+        { "label": "Presentation Layer:", "text": "Controllers, API endpoints, Input validations" }
+      ]
+    },
+    "patterns": {
+      "title": "Implemented Patterns",
+      "items": [
+        { "name": "Domain-Driven Design", "desc": "Aggregates, Value Objects, Specifications, Repositories" },
+        { "name": "CQRS", "desc": "Commands and Queries separation, Read Models" },
+        { "name": "Event Sourcing", "desc": "Event Store, Projections, Event replay" },
+        { "name": "Mediator Pattern", "desc": "MediatR for handler orchestration" }
+      ]
+    },
+    "frontend": {
+      "title": "Frontend - React",
+      "description": "Modern interface with React and state management:",
+      "items": ["React Hooks for state management", "Reusable functional components", "Backend API integration", "Drag & drop for task organization", "Real-time filters and search"]
+    }
+  },
+  "results": {
+    "title": "Results & Impact",
+    "metrics": [
+      { "value": "100%", "label": "Test Coverage", "color": "purple" },
+      { "value": "8", "label": "Domain Aggregates", "color": "blue" },
+      { "value": "45+", "label": "Unit Tests", "color": "emerald" },
+      { "value": "0", "label": "Business rule violations", "color": "orange" }
+    ],
+    "learnings": {
+      "title": "Key Learnings",
+      "items": [
+        { "label": "Deep DDD:", "text": "Complex domain modeling, ubiquitous language, bounded contexts" },
+        { "label": "CQRS:", "text": "Clear separation between reads and writes, query optimization" },
+        { "label": "Event Sourcing:", "text": "Complete audit trail, event replay, state reconstruction" },
+        { "label": "Testing:", "text": "Importance of tests in complex architectures, TDD in domain" }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Tech Stack",
+    "infrastructure": "Infrastructure"
+  },
+  "cta": {
+    "title": "Looking for someone with architecture expertise?",
+    "subtitle": "I have experience in advanced patterns and scalable architectures. Let's talk.",
+    "button": "Send Email"
+  }
+}

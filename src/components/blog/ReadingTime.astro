@@ -3,15 +3,17 @@ import { calculateReadingTime } from '../../utils/blog';
 
 interface Props {
   content: string;
+  /** Text to display after the number (default: "min de lectura") */
+  unitText?: string;
 }
 
-const { content } = Astro.props;
+const { content, unitText = 'min de lectura' } = Astro.props;
 const readingTime = calculateReadingTime(content);
 ---
 
 {readingTime > 0 && (
   <>
     <span> &middot; </span>
-    <span>{readingTime} min de lectura</span>
+    <span>{readingTime} {unitText}</span>
   </>
 )}

@@ -1,0 +1,61 @@
+---
+/**
+ * Case Study CTA Component
+ * Final call-to-action section with gradient background
+ */
+
+import { SITE_CONFIG, getMailtoLink } from '../../data/config';
+
+type AccentColor = 'blue' | 'emerald' | 'purple' | 'orange';
+type SecondaryColor = 'blue' | 'purple';
+
+interface Props {
+  title: string;
+  subtitle: string;
+  buttonText: string;
+  accentColor: AccentColor;
+  secondaryColor?: SecondaryColor;
+}
+
+const { title, subtitle, buttonText, accentColor, secondaryColor = 'blue' } = Astro.props;
+
+// Static gradient and button color mappings
+const gradientClasses: Record<string, string> = {
+  'blue-purple': 'bg-gradient-to-r from-blue-600 to-purple-600',
+  'blue-blue': 'bg-gradient-to-r from-blue-600 to-blue-700',
+  'emerald-blue': 'bg-gradient-to-r from-emerald-600 to-blue-600',
+  'emerald-purple': 'bg-gradient-to-r from-emerald-600 to-purple-600',
+  'purple-blue': 'bg-gradient-to-r from-purple-600 to-blue-600',
+  'purple-purple': 'bg-gradient-to-r from-purple-600 to-purple-700',
+  'orange-blue': 'bg-gradient-to-r from-orange-600 to-blue-600',
+  'orange-purple': 'bg-gradient-to-r from-orange-600 to-purple-600',
+};
+
+const subtitleClasses: Record<AccentColor, string> = {
+  blue: 'text-blue-100',
+  emerald: 'text-emerald-100',
+  purple: 'text-purple-100',
+  orange: 'text-orange-100',
+};
+
+const buttonClasses: Record<AccentColor, string> = {
+  blue: 'text-blue-600 hover:bg-blue-50',
+  emerald: 'text-emerald-600 hover:bg-emerald-50',
+  purple: 'text-purple-600 hover:bg-purple-50',
+  orange: 'text-orange-600 hover:bg-orange-50',
+};
+
+const gradientKey = `${accentColor}-${secondaryColor}`;
+const gradient = gradientClasses[gradientKey] || gradientClasses['blue-purple'];
+---
+
+<section class:list={['rounded-xl p-8 text-white text-center', gradient]}>
+  <h2 class="text-2xl font-bold mb-4">{title}</h2>
+  <p class:list={['mb-6', subtitleClasses[accentColor]]}>{subtitle}</p>
+  <a 
+    href={getMailtoLink()} 
+    class:list={['inline-block px-6 py-3 bg-white rounded-lg font-semibold transition', buttonClasses[accentColor]]}
+  >
+    {buttonText}
+  </a>
+</section>

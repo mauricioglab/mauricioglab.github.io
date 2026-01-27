@@ -1,12 +1,12 @@
 ---
 // Calculadora de costos para impresión 3D - Aplicación Astro
-import BaseTailwind from '../../layouts/BaseTailwind.astro';
-import logoImage from './logo.jpg';
+import BaseTailwind from '@layouts/BaseTailwind.astro';
+import { Image } from 'astro:assets';
+import calculadoraLogo from '@assets/images/calculadora-logo.jpg';
 
 export const prerender = true;
 
 const title = "Creatopia Calc";
-const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <BaseTailwind 
@@ -264,7 +264,8 @@ const baseUrl = import.meta.env.BASE_URL;
             margin: 30px 0;
         }
         
-        .header img {
+        .header img,
+        .header .logo-image {
             height: 60px;
             border-radius: 8px;
             margin-bottom: 10px;
@@ -301,7 +302,7 @@ const baseUrl = import.meta.env.BASE_URL;
     </style>
         <!-- Header -->
         <div class="header">
-            <img src={logoImage.src} alt="Creatopia Calc">
+            <Image src={calculadoraLogo} alt="Creatopia Calc" class="logo-image" />
             <h1>{title}</h1>
             <p>Calculadora de costos para impresión 3D</p>
         </div>

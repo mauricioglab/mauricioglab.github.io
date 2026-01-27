@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "title": "Bienvenido a MG Lab",
+    "description": "MG Lab Depot - Herramientas y aplicaciones"
+  },
+  "header": {
+    "title": "Welcome to MG Lab Depot",
+    "searchPlaceholder": "Buscar en Google...",
+    "searchButton": "IR"
+  },
+  "sidebar": {
+    "alfSays": "ALF DICE:",
+    "alfMessage": "¡Visítanos!"
+  },
+  "content": {
+    "whatsHot": "▼ Lo más destacado"
+  },
+  "footer": {
+    "backToHome": "← Volver al inicio"
+  },
+  "widgets": {
+    "translator": {
+      "title": "INGLÉS A ESPAÑOL",
+      "placeholder": "ESCRIBE AQUÍ...",
+      "translateButton": "TRADUCIR",
+      "clearButton": "LIMPIAR"
+    },
+    "pokemon": {
+      "title": "Introduciendo Pocketmonster",
+      "subtitle": "¡Regístrate hoy para una prueba gratuita!"
+    },
+    "ads": {
+      "tech": "¡TECNOLOGÍA!",
+      "buyNow": "WOW. ¡CÓMPRALO AHORA!",
+      "movies": "PELÍCULAS Y TV",
+      "moreUpdates": "¡Más actualizaciones pronto!"
+    }
+  }
+}

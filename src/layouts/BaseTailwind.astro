@@ -1,7 +1,7 @@
 ---
 import Header from './Header.astro';
 import Footer from './Footer.astro';
-import SnakeGame from '../components/SnakeGame.astro';
+import DinoGame from '../components/games/DinoGame.astro';
 
 interface Props {
 	title?: string;
@@ -51,12 +51,12 @@ const baseUrl = import.meta.env.BASE_URL;
 		<button 
 			id="gameTabBtn"
 			class="fixed bottom-0 right-6 bg-black hover:bg-gray-900 text-white px-3 py-1.5 rounded-t-lg shadow-md transition-transform duration-300 ease-out hover:-translate-y-0.5 text-lg z-40 cursor-pointer border-none"
-			title="Jugar Snake"
+			title="Jugar Dino"
 		>
-			🎮
+			🧉
 		</button>
 
-		<!-- Snake Game Modal -->
-		<SnakeGame />
+		<!-- Dino Game Modal -->
+		<DinoGame />
 	</body>
 </html>

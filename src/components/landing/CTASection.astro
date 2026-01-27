@@ -1,0 +1,101 @@
+---
+/**
+ * CTA Section Component
+ * Call-to-action section for landing pages
+ */
+
+import type { ProfileId } from '../../data/profiles';
+
+export interface CTAButton {
+  text: string;
+  href: string;
+  icon: string;
+  primary?: boolean;
+  external?: boolean;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  buttons: CTAButton[];
+  profileId: ProfileId;
+  gradient?: boolean;
+}
+
+const { title, description, buttons, profileId, gradient = false } = Astro.props;
+
+// Static color mappings for Tailwind (classes must be complete for purging)
+const colorClasses: Record<ProfileId, {
+  sectionBg: string;
+  sectionBgGradient: string;
+  primaryBtn: string;
+  primaryBtnText: string;
+  secondaryBtnHover: string;
+}> = {
+  developer: {
+    sectionBg: 'bg-blue-600 dark:bg-blue-700',
+    sectionBgGradient: 'bg-gradient-to-br from-blue-600 to-blue-700',
+    primaryBtn: 'bg-white hover:bg-slate-100',
+    primaryBtnText: 'text-blue-600',
+    secondaryBtnHover: 'hover:bg-white hover:text-blue-600',
+  },
+  analista: {
+    sectionBg: 'bg-slate-900',
+    sectionBgGradient: 'bg-gradient-to-br from-slate-900 to-slate-800',
+    primaryBtn: 'bg-white hover:bg-slate-100',
+    primaryBtnText: 'text-slate-900',
+    secondaryBtnHover: 'hover:bg-white hover:text-slate-900',
+  },
+  'ia-engineer': {
+    sectionBg: 'bg-emerald-600 dark:bg-emerald-700',
+    sectionBgGradient: 'bg-gradient-to-br from-emerald-900 to-slate-900',
+    primaryBtn: 'bg-emerald-600 hover:bg-emerald-500',
+    primaryBtnText: 'text-white',
+    secondaryBtnHover: 'hover:bg-emerald-500 hover:text-white',
+  },
+  freelance: {
+    sectionBg: 'bg-orange-600 dark:bg-orange-700',
+    sectionBgGradient: 'bg-gradient-to-br from-orange-600 to-orange-700',
+    primaryBtn: 'bg-white hover:bg-slate-100',
+    primaryBtnText: 'text-orange-600',
+    secondaryBtnHover: 'hover:bg-white hover:text-orange-600',
+  },
+  speaker: {
+    sectionBg: 'bg-purple-600 dark:bg-purple-700',
+    sectionBgGradient: 'bg-gradient-to-br from-purple-600 to-purple-700',
+    primaryBtn: 'bg-white hover:bg-slate-100',
+    primaryBtnText: 'text-purple-600',
+    secondaryBtnHover: 'hover:bg-white hover:text-purple-600',
+  },
+};
+
+const colors = colorClasses[profileId];
+const bgClass = gradient ? colors.sectionBgGradient : colors.sectionBg;
+---
+
+<section id="contacto" class:list={['py-20 text-white', bgClass]}>
+  <div class="max-w-4xl mx-auto px-4 text-center">
+    <h2 class="text-4xl font-bold mb-6">{title}</h2>
+    <p class="text-xl mb-8 opacity-90">
+      {description}
+    </p>
+    <div class="flex flex-wrap justify-center gap-4">
+      {buttons.map((button) => (
+        <a 
+          href={button.href}
+          target={button.external ? '_blank' : undefined}
+          rel={button.external ? 'noopener noreferrer' : undefined}
+          class:list={[
+            'px-8 py-4 rounded-xl font-bold transition inline-flex items-center',
+            button.primary 
+              ? [colors.primaryBtn, colors.primaryBtnText]
+              : ['border-2 border-white text-white', colors.secondaryBtnHover]
+          ]}
+        >
+          <i class={`${button.icon} mr-2`}></i>
+          {button.text}
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

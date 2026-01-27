@@ -1,6 +1,6 @@
 ---
-import BlogLayout from '../../../layouts/BlogLayout.astro';
-import { normalizeBaseUrl } from '../../../utils/blog';
+import BlogLayout from '@layouts/BlogLayout.astro';
+import { normalizeBaseUrl } from '@utils/blog';
 
 export const prerender = true;
 
@@ -10,7 +10,7 @@ const currentUrl = `${Astro.site}${normalizedBase}blog/about/`;
 
 <BlogLayout 
   title="Acerca de | Blog" 
-  description="Acerca de este blog"
+  description="Sobre Mauricio González - Full Stack Developer, Docente y apasionado por la tecnología"
   blogTitle="Blog"
   blogSubtitle="Artículos y pensamientos"
 >
@@ -20,34 +20,52 @@ const currentUrl = `${Astro.site}${normalizedBase}blog/about/`;
 
   <article class="post entry">
     <header class="entry-header">
-      <h1 class="entry-title">Acerca de</h1>
+      <h1 class="entry-title">Acerca de mí</h1>
     </header>
     
     <div class="entry-content">
-      <p>Bienvenido a mi blog. Este es un espacio donde comparto mis pensamientos, ideas y aprendizajes sobre diversos temas.</p>
+      <p>Hola, soy <strong>Mauricio González</strong>, Full Stack Developer especializado en <strong>.NET y Angular</strong> con más de 4 años de experiencia profesional en desarrollo de software.</p>
       
-      <h3>Sobre el autor</h3>
+      <h3>Qué hago</h3>
       
-      <p>Soy un desarrollador apasionado por la tecnología y el diseño minimalista. Creo en la simplicidad como principio fundamental tanto en el código como en la vida.</p>
+      <p>Actualmente trabajo como desarrollador en <strong>GyL Group</strong>, donde me desempeño como referente técnico en proyectos de sistemas críticos. Me especializo en arquitecturas como DDD, CQRS y microservicios, y tengo experiencia con cloud computing en AWS.</p>
+      
+      <p>Además, soy <strong>profesor en carreras de tecnología</strong> en el Instituto Cervantes, donde dicto materias como Programación Web, Bases de Datos y Desarrollo de Aplicaciones Móviles.</p>
+      
+      <h3>Stack técnico</h3>
+      
+      <ul>
+        <li><strong>Backend:</strong> .NET Core, C#, Node.js, NestJS</li>
+        <li><strong>Frontend:</strong> Angular, TypeScript, JavaScript</li>
+        <li><strong>Cloud & DevOps:</strong> AWS, Docker, CI/CD</li>
+        <li><strong>Bases de datos:</strong> SQL Server, Oracle PL/SQL</li>
+        <li><strong>Arquitectura:</strong> DDD, CQRS, Microservicios</li>
+      </ul>
+      
+      <h3>Formación</h3>
+      
+      <ul>
+        <li>Analista de Sistemas de Computación - Instituto Cervantes</li>
+        <li>Diplomatura en Programación .NET - UTN</li>
+        <li>Diplomatura en Ciencia de Datos e IA - UTN</li>
+      </ul>
       
       <h3>Sobre este blog</h3>
       
-      <p>Este blog está construido con Astro, un framework moderno que permite crear sitios web rápidos y eficientes. El diseño está inspirado en la filosofía minimalista: menos es más.</p>
-      
-      <p>Aquí encontrarás artículos sobre:</p>
+      <p>Este espacio está dedicado a compartir conocimientos, experiencias y reflexiones sobre desarrollo de software, tecnología y docencia. Aquí encontrarás artículos sobre:</p>
       
       <ul>
-        <li>Desarrollo web y programación</li>
-        <li>Diseño y experiencia de usuario</li>
-        <li>Productividad y organización</li>
-        <li>Tecnología en general</li>
+        <li>Desarrollo web y arquitectura de software</li>
+        <li>Buenas prácticas y patrones de diseño</li>
+        <li>Cloud computing y DevOps</li>
+        <li>Experiencias en docencia tecnológica</li>
       </ul>
       
       <h3>Contacto</h3>
       
-      <p>Si tienes alguna pregunta o simplemente quieres saludar, no dudes en contactarme a través de las redes sociales o por correo electrónico.</p>
+      <p>Podés encontrarme en <a href="https://www.linkedin.com/in/mauriciogdev/" target="_blank" rel="noopener">LinkedIn</a> o escribirme a <a href="mailto:mauriciogcode@gmail.com">mauriciogcode@gmail.com</a>.</p>
       
-      <p>Gracias por visitar y espero que encuentres útil el contenido.</p>
+      <p>Gracias por visitar el blog.</p>
     </div>
   </article>
 </BlogLayout>

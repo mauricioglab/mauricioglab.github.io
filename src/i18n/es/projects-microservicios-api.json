@@ -1,0 +1,120 @@
+{
+  "back": "← Volver a proyectos",
+  "badge": "Side Project - DevOps",
+  "title": "Arquitectura de Microservicios",
+  "description": "Sistema de microservicios con Docker, AWS y comunicación asíncrona. Proyecto que demuestra escalabilidad, resiliencia y buenas prácticas de DevOps.",
+  "stats": {
+    "services": { "value": "4", "label": "Microservicios" },
+    "uptime": { "value": "99.9%", "label": "Uptime SLA" },
+    "latency": { "value": "<100ms", "label": "Latencia P95" }
+  },
+  "links": {
+    "github": "💻 Ver en GitHub",
+    "docs": "📚 Documentación API"
+  },
+  "problem": {
+    "title": "El Problema",
+    "intro": "Quería aprender y demostrar expertise en arquitecturas distribuidas y DevOps. El desafío era:",
+    "items": [
+      "Diseñar múltiples servicios independientes con responsabilidades claras",
+      "Implementar comunicación asíncrona confiable entre servicios",
+      "Containerizar con Docker y orquestar con AWS ECS",
+      "Implementar observabilidad (logs, métricas, trazas)",
+      "Garantizar resiliencia y manejo de fallos"
+    ]
+  },
+  "process": {
+    "title": "Mi Proceso",
+    "phases": [
+      {
+        "title": "1. Diseño de Arquitectura",
+        "description": "Definí 4 microservicios con responsabilidades claras:",
+        "services": [
+          { "name": "User Service:", "desc": "Gestión de usuarios y autenticación" },
+          { "name": "Product Service:", "desc": "Catálogo de productos" },
+          { "name": "Order Service:", "desc": "Gestión de órdenes" },
+          { "name": "Notification Service:", "desc": "Envío de notificaciones" }
+        ]
+      },
+      {
+        "title": "2. Implementación de Servicios",
+        "description": "Cada servicio es independiente con su propia base de datos:",
+        "items": ["APIs REST bien documentadas", "Validaciones y manejo de errores", "Health checks para monitoreo", "Logging estructurado"]
+      },
+      {
+        "title": "3. Comunicación Asíncrona",
+        "description": "Implementé RabbitMQ para comunicación entre servicios:",
+        "items": ["Event-driven architecture", "Message queues para desacoplamiento", "Dead letter queues para manejo de errores", "Retry policies automáticas"]
+      },
+      {
+        "title": "4. Containerización y Orquestación",
+        "description": "Dockericé cada servicio y desplegué en AWS:",
+        "items": ["Dockerfiles optimizados (multi-stage builds)", "Docker Compose para desarrollo local", "AWS ECS para orquestación en producción", "Auto-scaling basado en métricas"]
+      },
+      {
+        "title": "5. Observabilidad y Monitoreo",
+        "description": "Implementé stack completo de observabilidad:",
+        "items": ["CloudWatch para logs y métricas", "X-Ray para distributed tracing", "Dashboards en Grafana", "Alertas automáticas"]
+      }
+    ]
+  },
+  "solution": {
+    "title": "La Solución",
+    "architecture": {
+      "title": "Arquitectura de Microservicios",
+      "items": [
+        { "label": "API Gateway:", "text": "Punto de entrada único, enrutamiento, rate limiting, autenticación" },
+        { "label": "Servicios Independientes:", "text": "Cada uno con su base de datos, escalable independientemente" },
+        { "label": "Message Broker:", "text": "RabbitMQ para comunicación asíncrona y desacoplamiento" },
+        { "label": "Service Discovery:", "text": "AWS ECS service discovery para localización dinámica" }
+      ]
+    },
+    "patterns": {
+      "title": "Patrones Implementados",
+      "items": [
+        { "name": "API Gateway Pattern", "desc": "Enrutamiento centralizado, composición de servicios" },
+        { "name": "Event-Driven", "desc": "Comunicación asíncrona, desacoplamiento" },
+        { "name": "Circuit Breaker", "desc": "Resiliencia ante fallos de servicios" },
+        { "name": "Saga Pattern", "desc": "Transacciones distribuidas" }
+      ]
+    },
+    "infra": {
+      "title": "Infraestructura en AWS",
+      "items": [
+        { "label": "ECS Fargate:", "text": "Orquestación de contenedores sin gestionar servidores" },
+        { "label": "RDS:", "text": "Bases de datos PostgreSQL gestionadas" },
+        { "label": "ElastiCache:", "text": "Redis para caching distribuido" },
+        { "label": "CloudWatch:", "text": "Logs, métricas y alarmas" },
+        { "label": "X-Ray:", "text": "Distributed tracing para debugging" }
+      ]
+    }
+  },
+  "results": {
+    "title": "Resultados & Impacto",
+    "metrics": [
+      { "value": "99.9%", "label": "Uptime en producción", "color": "emerald" },
+      { "value": "<100ms", "label": "Latencia P95", "color": "blue" },
+      { "value": "10x", "label": "Escalabilidad horizontal", "color": "purple" },
+      { "value": "0", "label": "Downtime en 6 meses", "color": "orange" }
+    ],
+    "learnings": {
+      "title": "Aprendizajes Clave",
+      "items": [
+        { "label": "Microservicios:", "text": "Diseño de servicios independientes, trade-offs de complejidad" },
+        { "label": "Comunicación asíncrona:", "text": "Message queues, event-driven architecture, garantías de entrega" },
+        { "label": "DevOps:", "text": "Containerización, orquestación, CI/CD, infraestructura como código" },
+        { "label": "Observabilidad:", "text": "Importancia de logs, métricas y trazas en sistemas distribuidos" },
+        { "label": "Resiliencia:", "text": "Circuit breakers, retry policies, graceful degradation" }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Stack Tecnológico",
+    "observability": "Observabilidad"
+  },
+  "cta": {
+    "title": "¿Necesitas expertise en arquitecturas distribuidas?",
+    "subtitle": "Tengo experiencia en microservicios, DevOps y sistemas de alta disponibilidad. Conectemos.",
+    "button": "Enviar Email"
+  }
+}

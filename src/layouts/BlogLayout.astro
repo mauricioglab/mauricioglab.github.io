@@ -7,9 +7,10 @@ interface Props {
   description?: string;
   blogTitle?: string;
   blogSubtitle?: string;
+  lang?: string;
 }
 
-const { title, description, blogTitle = "Blog", blogSubtitle = "Artículos y pensamientos" } = Astro.props;
+const { title, description, blogTitle = "Blog", blogSubtitle = "Artículos y pensamientos", lang = "es" } = Astro.props;
 const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
 
 // Get all categories dynamically from posts
@@ -20,7 +21,7 @@ const allCategories = Array.from(
 ---
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

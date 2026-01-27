@@ -1,0 +1,127 @@
+{
+  "back": "← Back to projects",
+  "badge": "Side Project",
+  "title": "E-commerce Platform",
+  "description": "Complete e-commerce platform with dynamic cart, payment integration, and admin panel. Personal project showcasing modern full-stack architecture.",
+  "stats": {
+    "time": { "value": "3 months", "label": "Development time" },
+    "products": { "value": "+500", "label": "Products in catalog" },
+    "responsive": { "value": "100%", "label": "Responsive design" }
+  },
+  "links": {
+    "demo": "🌐 View Live Demo",
+    "github": "💻 View on GitHub"
+  },
+  "problem": {
+    "title": "The Problem",
+    "intro": "I wanted to create a personal project that showcased my full-stack development skills. I needed something more complex than a basic CRUD, including:",
+    "items": [
+      "Complex state management in frontend (cart, filters, search)",
+      "Robust RESTful APIs with validations and error handling",
+      "Payment service integration (Stripe)",
+      "Admin panel to manage products and orders",
+      "Well-structured relational database"
+    ]
+  },
+  "process": {
+    "title": "My Process",
+    "phases": [
+      {
+        "title": "1. Architecture Design",
+        "description": "I started by designing the application architecture. I decided to use a clear layered structure:"
+      },
+      {
+        "title": "2. Backend Development",
+        "description": "I implemented the APIs using .NET Core with Entity Framework:",
+        "items": [
+          "RESTful endpoints for products, cart, orders",
+          "JWT authentication for users",
+          "Validations with FluentValidation",
+          "Global exception handling",
+          "Stripe API integration for payments"
+        ]
+      },
+      {
+        "title": "3. Frontend Development",
+        "description": "I built the interface with Angular and state management:",
+        "items": [
+          "Reusable components (ProductCard, CartItem, etc.)",
+          "NgRx for cart state management",
+          "Real-time search and filters",
+          "Stripe Elements integration for secure payments",
+          "Responsive design with Tailwind CSS"
+        ]
+      },
+      {
+        "title": "4. Testing and Deployment",
+        "description": "I ensured quality and availability:",
+        "items": [
+          "Unit tests with xUnit for backend",
+          "Integration tests for APIs",
+          "E2E tests with Cypress for frontend",
+          "Deployment on AWS (S3 + CloudFront for frontend, ECS for backend)"
+        ]
+      }
+    ]
+  },
+  "solution": {
+    "title": "The Solution",
+    "frontend": {
+      "title": "Frontend - Angular + NgRx",
+      "description": "I implemented a modern Angular application with centralized state management using NgRx:",
+      "items": {
+        "cart": { "label": "Shopping cart:", "text": "Real-time synchronized state, localStorage persistence" },
+        "search": { "label": "Search and filters:", "text": "Debouncing to optimize API calls" },
+        "checkout": { "label": "Checkout:", "text": "Secure flow with client and server validations" },
+        "admin": { "label": "Admin panel:", "text": "Dashboard with sales charts and inventory management" }
+      }
+    },
+    "backend": {
+      "title": "Backend - .NET Core + SQL Server",
+      "description": "Robust RESTful APIs with layered architecture:",
+      "items": {
+        "products": { "label": "Products:", "text": "Catalog with full-text search, category and price filters" },
+        "orders": { "label": "Orders:", "text": "Complete lifecycle management, email notifications" },
+        "payments": { "label": "Payments:", "text": "Secure Stripe integration, webhooks for confirmation" },
+        "users": { "label": "Users:", "text": "JWT authentication, granular roles and permissions" }
+      }
+    },
+    "database": {
+      "title": "Database",
+      "description": "Normalized relational design with SQL Server:",
+      "items": [
+        "Tables: Users, Products, Categories, Orders, OrderItems, Payments",
+        "Indexes on frequently searched fields",
+        "Constraints for referential integrity",
+        "Stored procedures for complex operations"
+      ]
+    }
+  },
+  "results": {
+    "title": "Results & Impact",
+    "metrics": {
+      "performance": { "value": "95%", "label": "Lighthouse Performance Score" },
+      "loadTime": { "value": "<2s", "label": "Average load time" },
+      "uptime": { "value": "99.9%", "label": "Production uptime" },
+      "errors": { "value": "0", "label": "Critical errors reported" }
+    },
+    "learnings": {
+      "title": "Key Learnings",
+      "items": [
+        { "label": "State Management:", "text": "Deep experience with NgRx in complex applications" },
+        { "label": "Payment integration:", "text": "Secure Stripe implementation with webhook handling" },
+        { "label": "Performance:", "text": "Query optimization, lazy loading, strategic caching" },
+        { "label": "Testing:", "text": "Complete coverage with unit, integration and E2E tests" }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Tech Stack",
+    "infrastructure": "Infrastructure"
+  },
+  "cta": {
+    "title": "Interested in this type of work?",
+    "subtitle": "I have more projects and experience in complex architectures. Let's connect.",
+    "button": "Send Email"
+  }
+}

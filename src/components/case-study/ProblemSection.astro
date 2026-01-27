@@ -1,0 +1,62 @@
+---
+/**
+ * Problem Section Component
+ * Displays the problem description and list of challenges
+ */
+
+type AccentColor = 'blue' | 'emerald' | 'purple' | 'orange';
+
+interface Props {
+  title: string;
+  intro: string;
+  items: string[];
+  accentColor: AccentColor;
+}
+
+const { title, intro, items, accentColor } = Astro.props;
+
+// Static color mappings for Tailwind
+const colorClasses: Record<AccentColor, {
+  sectionBg: string;
+  sectionBorder: string;
+  bulletColor: string;
+}> = {
+  blue: {
+    sectionBg: 'bg-blue-50 dark:bg-blue-900/20',
+    sectionBorder: 'border-blue-200 dark:border-blue-800',
+    bulletColor: 'text-blue-600 dark:text-blue-400',
+  },
+  emerald: {
+    sectionBg: 'bg-emerald-50 dark:bg-emerald-900/20',
+    sectionBorder: 'border-emerald-200 dark:border-emerald-800',
+    bulletColor: 'text-emerald-600 dark:text-emerald-400',
+  },
+  purple: {
+    sectionBg: 'bg-purple-50 dark:bg-purple-900/20',
+    sectionBorder: 'border-purple-200 dark:border-purple-800',
+    bulletColor: 'text-purple-600 dark:text-purple-400',
+  },
+  orange: {
+    sectionBg: 'bg-orange-50 dark:bg-orange-900/20',
+    sectionBorder: 'border-orange-200 dark:border-orange-800',
+    bulletColor: 'text-orange-600 dark:text-orange-400',
+  },
+};
+
+const colors = colorClasses[accentColor];
+---
+
+<section class="mb-16">
+  <h2 class="text-3xl font-bold mb-6">{title}</h2>
+  <div class:list={['rounded-xl p-8 border', colors.sectionBg, colors.sectionBorder]}>
+    <p class="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">{intro}</p>
+    <ul class="space-y-3 text-slate-700 dark:text-slate-300">
+      {items.map(item => (
+        <li class="flex items-start gap-3">
+          <span class:list={['font-bold', colors.bulletColor]}>•</span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

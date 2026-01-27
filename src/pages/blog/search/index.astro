@@ -1,7 +1,7 @@
 ---
-import BlogLayout from '../../../layouts/BlogLayout.astro';
-import { getBlogPosts, normalizeBaseUrl } from '../../../utils/blog';
-import PostCard from '../../../components/blog/PostCard.astro';
+import BlogLayout from '@layouts/BlogLayout.astro';
+import { getBlogPosts, normalizeBaseUrl } from '@utils/blog';
+import PostCard from '@components/blog/PostCard.astro';
 
 export const prerender = true;
 
@@ -32,8 +32,7 @@ const currentUrl = `${Astro.site}${normalizedBase}blog/search/`;
         type="text"
         id="search-input"
         placeholder="Escribe para buscar..."
-        class="w-full px-4 py-3 text-lg border border-[#e5e5e5] rounded focus:outline-none focus:border-[#594a42] text-[#594a42]"
-        style="font-family: inherit;"
+        class="w-full px-4 py-3 text-lg border border-[#e5e5e5] rounded focus:outline-none focus:border-[#594a42] text-[#594a42] font-[inherit]"
         aria-label="Buscar artículos"
       />
     </div>
@@ -101,17 +100,3 @@ const currentUrl = `${Astro.site}${normalizedBase}blog/search/`;
     });
   })();
 </script>
-
-<style>
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
-</style>

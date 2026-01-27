@@ -1,7 +1,7 @@
 ---
-import BlogLayout from '../../../layouts/BlogLayout.astro';
-import PostCard from '../../../components/blog/PostCard.astro';
-import { normalizeBaseUrl } from '../../../utils/blog';
+import BlogLayout from '@layouts/BlogLayout.astro';
+import PostCard from '@components/blog/PostCard.astro';
+import { normalizeBaseUrl } from '@utils/blog';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {

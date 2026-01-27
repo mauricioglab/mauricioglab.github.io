@@ -1,0 +1,67 @@
+---
+/**
+ * Stats Grid Component
+ * Displays impact metrics/statistics in a grid format
+ */
+
+export interface StatItem {
+  value: string;
+  label: string;
+  color: string;
+}
+
+interface Props {
+  title: string;
+  stats: StatItem[];
+  columns?: 2 | 3 | 4;
+  bgColor?: string;
+}
+
+const { 
+  title, 
+  stats, 
+  columns = 4,
+  bgColor = 'bg-white dark:bg-slate-900'
+} = Astro.props;
+
+const gridCols = {
+  2: 'md:grid-cols-2',
+  3: 'md:grid-cols-3',
+  4: 'md:grid-cols-4',
+};
+
+// Map color strings to actual Tailwind classes
+const getStatClasses = (color: string) => {
+  const colorMap: Record<string, { bg: string; text: string }> = {
+    'orange-600': { bg: 'bg-orange-50 dark:bg-orange-900/20', text: 'text-orange-600 dark:text-orange-400' },
+    'blue-600': { bg: 'bg-blue-50 dark:bg-blue-900/20', text: 'text-blue-600 dark:text-blue-400' },
+    'green-600': { bg: 'bg-green-50 dark:bg-green-900/20', text: 'text-green-600 dark:text-green-400' },
+    'purple-600': { bg: 'bg-purple-50 dark:bg-purple-900/20', text: 'text-purple-600 dark:text-purple-400' },
+    'emerald-600': { bg: 'bg-emerald-50 dark:bg-emerald-900/20', text: 'text-emerald-600 dark:text-emerald-400' },
+    'slate-900': { bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-900 dark:text-slate-300' },
+  };
+  return colorMap[color] || { bg: 'bg-blue-50 dark:bg-blue-900/20', text: 'text-blue-600 dark:text-blue-400' };
+};
+---
+
+<section class:list={['py-20 transition-colors', bgColor]}>
+  <div class="max-w-7xl mx-auto px-4">
+    <h2 class="text-3xl font-bold mb-12 text-center text-slate-900 dark:text-white">
+      {title}
+    </h2>
+    
+    <div class:list={['grid gap-8', gridCols[columns]]}>
+      {stats.map((stat) => {
+        const classes = getStatClasses(stat.color);
+        return (
+          <div class:list={['text-center p-6 rounded-2xl', classes.bg]}>
+            <div class:list={['text-4xl font-bold mb-2', classes.text]}>
+              {stat.value}
+            </div>
+            <p class="text-slate-600 dark:text-slate-400">{stat.label}</p>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
