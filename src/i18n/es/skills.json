@@ -29,6 +29,12 @@
       "programming": "Programación",
       "soft": "Soft Skills",
       "formats": "Formatos"
+    },
+    "docente": {
+      "programming": "Programación",
+      "ai": "IA & Herramientas",
+      "pedagogy": "Pedagogía",
+      "tools": "Herramientas"
     }
   },
   "levels": {

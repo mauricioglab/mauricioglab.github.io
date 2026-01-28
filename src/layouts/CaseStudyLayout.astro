@@ -1,5 +1,7 @@
 ---
 import type { Lang } from '../i18n';
+import MateGame from '../components/games/MateGame.astro';
+import ContactModal from '../components/landing/ContactModal.astro';
 
 interface Props {
   title: string;
@@ -47,6 +49,7 @@ const baseUrl = import.meta.env.BASE_URL;
           MG<span class={`text-${accentColor}-600`}>.</span>
         </a>
         <a 
+          id="backLink"
           href={backUrl} 
           class={`text-sm text-slate-600 dark:text-slate-400 hover:text-${accentColor}-600 dark:hover:text-${accentColor}-400 transition`}
         >
@@ -66,5 +69,55 @@ const baseUrl = import.meta.env.BASE_URL;
         <p class="text-slate-400 text-sm">© 2026 Mauricio Gonzalez - Full Stack Developer</p>
       </div>
     </footer>
+
+    <!-- Game Tab -->
+    <button 
+      id="gameTabBtn"
+      class="fixed bottom-0 right-6 bg-black hover:bg-gray-900 text-white px-3 py-1.5 rounded-t-lg shadow-md transition-transform duration-300 ease-out hover:-translate-y-0.5 text-lg z-40 cursor-pointer border-none"
+      title="Jugar Mate Run"
+    >
+      🧉
+    </button>
+
+    <!-- Mate Game Modal -->
+    <MateGame />
+
+    <!-- Contact Modal -->
+    <ContactModal lang={lang} />
+
+    <!-- Smart Back Link Script -->
+    <script is:inline>
+    (function() {
+      const backLink = document.getElementById('backLink');
+      if (!backLink) return;
+      
+      const referrer = document.referrer;
+      if (!referrer) return;
+      
+      // Known landing paths
+      const landingPatterns = [
+        '/landing/developer',
+        '/landing/analista',
+        '/landing/ia-engineer',
+        '/landing/freelance',
+        '/landing/speaker',
+        '/landing/docente'
+      ];
+      
+      // Check if referrer matches a known landing
+      for (const pattern of landingPatterns) {
+        if (referrer.includes(pattern)) {
+          // Extract the full landing URL from referrer
+          try {
+            const url = new URL(referrer);
+            backLink.href = url.pathname;
+          } catch (e) {
+            // If URL parsing fails, keep default
+          }
+          break;
+        }
+      }
+    })();
+    </script>
   </body>
 </html>

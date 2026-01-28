@@ -52,6 +52,7 @@ export const SITE_CONFIG = {
     'ia-engineer': '/cv-ia.pdf',
     freelance: '/cv-freelance.pdf',
     speaker: '/cv-speaker.pdf',
+    docente: '/cv-docente.pdf',
   },
   
   // =====================

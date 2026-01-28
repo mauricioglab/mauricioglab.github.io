@@ -4,7 +4,7 @@
  * Final call-to-action section with gradient background
  */
 
-import { SITE_CONFIG, getMailtoLink } from '../../data/config';
+// ContactModal is triggered via data-contact-trigger attribute
 
 type AccentColor = 'blue' | 'emerald' | 'purple' | 'orange';
 type SecondaryColor = 'blue' | 'purple';
@@ -52,10 +52,10 @@ const gradient = gradientClasses[gradientKey] || gradientClasses['blue-purple'];
 <section class:list={['rounded-xl p-8 text-white text-center', gradient]}>
   <h2 class="text-2xl font-bold mb-4">{title}</h2>
   <p class:list={['mb-6', subtitleClasses[accentColor]]}>{subtitle}</p>
-  <a 
-    href={getMailtoLink()} 
-    class:list={['inline-block px-6 py-3 bg-white rounded-lg font-semibold transition', buttonClasses[accentColor]]}
+  <button 
+    data-contact-trigger
+    class:list={['inline-block px-6 py-3 bg-white rounded-lg font-semibold transition cursor-pointer', buttonClasses[accentColor]]}
   >
     {buttonText}
-  </a>
+  </button>
 </section>

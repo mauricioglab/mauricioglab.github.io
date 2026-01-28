@@ -64,6 +64,13 @@ const allCategories = Array.from(
           <ul class="menu flex flex-wrap justify-center list-none gap-0">
             <li>
               <a
+                href={normalizedBase}
+                class="block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#594a42] hover:opacity-80"
+                aria-label="Volver al inicio"><span>← Inicio</span></a
+              >
+            </li>
+            <li>
+              <a
                 href={`${normalizedBase}blog/about/`}
                 class="block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#594a42] hover:opacity-80"
                 aria-label="Acerca del blog"><span>Acerca de</span></a
@@ -78,7 +85,7 @@ const allCategories = Array.from(
             </li>
             {
               allCategories.map((category) => (
-                <li key={category}>
+                <li>
                   <a
                     href={`${normalizedBase}blog/category/${category.toLowerCase().replace(/\s+/g, "-")}/`}
                     class="block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#594a42] hover:opacity-80"

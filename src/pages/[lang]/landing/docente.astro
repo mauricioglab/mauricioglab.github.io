@@ -1,0 +1,195 @@
+---
+import ProfileLayout from '@layouts/ProfileLayout.astro';
+import HeroSection from '@components/landing/HeroSection.astro';
+import SkillsSection from '@components/landing/SkillsSection.astro';
+import FeatureCards from '@components/landing/FeatureCards.astro';
+import StatsGrid from '@components/landing/StatsGrid.astro';
+import ExperienceTimeline from '@components/landing/ExperienceTimeline.astro';
+import CTASection from '@components/landing/CTASection.astro';
+import { profiles } from '@data/profiles';
+import { SITE_CONFIG } from '@data/config';
+import { getLanguagePaths } from '@utils/i18n-paths';
+import { 
+  type Lang, 
+  useTranslations, 
+  type CommonTranslations, 
+  type ProfileTranslations 
+} from '@i18n/index';
+
+export const getStaticPaths = getLanguagePaths;
+
+const { lang } = Astro.params as { lang: Lang };
+const profile = profiles.docente;
+const t = await useTranslations<CommonTranslations>(lang, 'common');
+const content = await useTranslations<ProfileTranslations>(lang, 'docente');
+
+// Subject cards configuration
+const subjectCards = [
+  { icon: '💻', title: content.subjects?.title1 || '', description: content.subjects?.desc1 || '', color: 'teal-600' },
+  { icon: '🗄️', title: content.subjects?.title2 || '', description: content.subjects?.desc2 || '', color: 'blue-600' },
+  { icon: '🚀', title: content.subjects?.title3 || '', description: content.subjects?.desc3 || '', color: 'green-600' },
+  { icon: '🤖', title: content.subjects?.title4 || '', description: content.subjects?.desc4 || '', color: 'purple-600' },
+];
+
+// Track record stats
+const trackRecordStats = [
+  { value: '10+', label: lang === 'es' ? 'Años como docente' : 'Years teaching', color: 'teal-600' },
+  { value: '500+', label: lang === 'es' ? 'Estudiantes formados' : 'Students trained', color: 'blue-600' },
+  { value: '4', label: lang === 'es' ? 'Materias activas' : 'Active courses', color: 'green-600' },
+  { value: '3', label: lang === 'es' ? 'Instituciones' : 'Institutions', color: 'purple-600' },
+];
+
+// Teaching approach cards
+const approachCards = [
+  {
+    icon: 'fas fa-laptop-code',
+    color: 'teal-600',
+    title: lang === 'es' ? 'Aprender Haciendo' : 'Learn by Doing',
+    description: lang === 'es' 
+      ? 'Metodología práctica donde los estudiantes programan desde el primer día. Proyectos reales, no solo teoría.'
+      : 'Hands-on methodology where students code from day one. Real projects, not just theory.',
+    features: [
+      lang === 'es' ? 'Ejercicios prácticos cada clase' : 'Practical exercises every class',
+      lang === 'es' ? 'Proyectos integradores' : 'Integrative projects',
+    ],
+  },
+  {
+    icon: 'fas fa-users',
+    color: 'blue-600',
+    title: lang === 'es' ? 'Trabajo Colaborativo' : 'Collaborative Work',
+    description: lang === 'es' 
+      ? 'Simulamos entornos de trabajo reales. Git, code review, metodologías ágiles desde el aula.'
+      : 'We simulate real work environments. Git, code review, agile methodologies from the classroom.',
+    features: [
+      lang === 'es' ? 'Git y GitHub desde el inicio' : 'Git and GitHub from the start',
+      lang === 'es' ? 'Code review entre pares' : 'Peer code review',
+    ],
+  },
+  {
+    icon: 'fas fa-brain',
+    color: 'green-600',
+    title: lang === 'es' ? 'Pensamiento Crítico' : 'Critical Thinking',
+    description: lang === 'es' 
+      ? 'No enseño solo a copiar código. Enseño a pensar como desarrollador, resolver problemas y tomar decisiones.'
+      : 'I don\'t just teach to copy code. I teach to think like a developer, solve problems and make decisions.',
+    features: [
+      lang === 'es' ? 'Análisis de problemas' : 'Problem analysis',
+      lang === 'es' ? 'Múltiples soluciones' : 'Multiple solutions',
+    ],
+  },
+  {
+    icon: 'fas fa-industry',
+    color: 'purple-600',
+    title: lang === 'es' ? 'Conexión con la Industria' : 'Industry Connection',
+    description: lang === 'es' 
+      ? 'Traigo experiencia real del desarrollo de software. Lo que enseño es lo que se usa en empresas reales.'
+      : 'I bring real software development experience. What I teach is what\'s used in real companies.',
+    features: [
+      lang === 'es' ? 'Casos de uso reales' : 'Real use cases',
+      lang === 'es' ? 'Tecnologías actuales' : 'Current technologies',
+    ],
+  },
+];
+
+// Transform experience data for the component
+const experiences = [
+  { role: content.experience.role1, company: content.experience.company1, items: content.experience.items1 },
+  { role: content.experience.role2, company: content.experience.company2, items: content.experience.items2 },
+];
+
+// CTA buttons configuration
+const ctaButtons = [
+  { text: t.cta.contact, href: '#', icon: 'fas fa-envelope', primary: true, isContactTrigger: true },
+  { text: t.cta.downloadCV, href: profile.cvUrl, icon: 'fas fa-file-pdf' },
+];
+---
+
+<ProfileLayout title={content.title} profile={profile} lang={lang}>
+  <!-- Hero -->
+  <HeroSection profile={profile} lang={lang} />
+  
+  <!-- Materias que Dicto -->
+  <FeatureCards
+    title={lang === 'es' ? 'Materias que Dicto' : 'Courses I Teach'}
+    subtitle={content.projectsDescription}
+    cards={subjectCards}
+    columns={4}
+    variant="border-left"
+  />
+  
+  <!-- Métricas / Trayectoria -->
+  <StatsGrid
+    title={lang === 'es' ? 'Trayectoria Académica' : 'Academic Track Record'}
+    stats={trackRecordStats}
+    columns={4}
+  />
+  
+  <!-- Metodología de Enseñanza -->
+  <section class="py-20 bg-slate-50 dark:bg-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-4 text-center text-slate-900 dark:text-white">
+        {lang === 'es' ? 'Mi Metodología' : 'My Methodology'}
+      </h2>
+      <p class="text-slate-600 dark:text-slate-400 text-center mb-12 max-w-2xl mx-auto">
+        {lang === 'es' 
+          ? 'Cómo enseño programación de forma efectiva y práctica'
+          : 'How I teach programming effectively and practically'}
+      </p>
+      
+      <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        {approachCards.map((card) => (
+          <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+            <div class:list={[
+              'w-16 h-16 rounded-2xl flex items-center justify-center mb-6',
+              card.color === 'teal-600' ? 'bg-teal-600' : '',
+              card.color === 'blue-600' ? 'bg-blue-600' : '',
+              card.color === 'green-600' ? 'bg-green-600' : '',
+              card.color === 'purple-600' ? 'bg-purple-600' : '',
+            ]}>
+              <i class={`${card.icon} text-white text-2xl`}></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">
+              {card.title}
+            </h3>
+            <p class="text-slate-600 dark:text-slate-400 mb-4">
+              {card.description}
+            </p>
+            <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+              {card.features.map((feature) => (
+                <li class="flex items-center">
+                  <i class:list={[
+                    'fas fa-check mr-2',
+                    card.color === 'teal-600' ? 'text-teal-600' : '',
+                    card.color === 'blue-600' ? 'text-blue-600' : '',
+                    card.color === 'green-600' ? 'text-green-600' : '',
+                    card.color === 'purple-600' ? 'text-purple-600' : '',
+                  ]}></i>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <!-- Skills -->
+  <SkillsSection profile={profile} lang={lang} />
+  
+  <!-- Experiencia -->
+  <ExperienceTimeline 
+    title={t.sections.experience}
+    experiences={experiences}
+    profileId="docente"
+  />
+  
+  <!-- CTA Final -->
+  <CTASection
+    title={content.ctaTitle}
+    description={content.ctaDescription}
+    buttons={ctaButtons}
+    profileId="docente"
+    gradient={true}
+  />
+</ProfileLayout>

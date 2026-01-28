@@ -2,18 +2,38 @@
 import Header from './Header.astro';
 import Footer from './Footer.astro';
 import MateGame from '../components/games/MateGame.astro';
+import PromptModal from '../components/shared/PromptModal.astro';
+import type { LayoutType } from '../data/layout-features';
+import { getLayoutFeatures } from '../data/layout-features';
 
 interface Props {
 	title?: string;
 	description?: string;
 	lang?: string;
+	layoutType?: LayoutType;
+	// Override individual features if needed
+	showHeader?: boolean;
+	showFooter?: boolean;
+	showMateGame?: boolean;
+	showPromptModal?: boolean;
 }
 
 const {
 	title = "MG Lab Depot",
 	description = "MG Lab Applications",
 	lang = "es",
+	layoutType = 'public',
+	showHeader: showHeaderOverride,
+	showFooter: showFooterOverride,
+	showMateGame: showMateGameOverride,
+	showPromptModal = false,
 } = Astro.props;
+
+// Get features from config, allow overrides
+const features = getLayoutFeatures(layoutType);
+const showHeader = showHeaderOverride ?? features.showMainHeader;
+const showFooter = showFooterOverride ?? features.showMainFooter;
+const showMateGame = showMateGameOverride ?? features.showMateGame;
 
 const baseUrl = import.meta.env.BASE_URL;
 ---
@@ -38,25 +58,31 @@ const baseUrl = import.meta.env.BASE_URL;
 		<slot name="head" />
 	</head>
 	<body class="min-h-screen flex flex-col p-0">
-		<Header />
+		{showHeader && <Header />}
 
 		<!-- Main Content -->
 		<main class="flex-1">
 			<slot />
 		</main>
 
-		<Footer />
+		{showFooter && <Footer />}
 
-		<!-- Game Tab -->
-		<button 
-			id="gameTabBtn"
-			class="fixed bottom-0 right-6 bg-black hover:bg-gray-900 text-white px-3 py-1.5 rounded-t-lg shadow-md transition-transform duration-300 ease-out hover:-translate-y-0.5 text-lg z-40 cursor-pointer border-none"
-			title="Jugar Mate Run"
-		>
-			🧉
-		</button>
+		{showMateGame && (
+			<>
+				<!-- Game Tab -->
+				<button 
+					id="gameTabBtn"
+					class="fixed bottom-0 right-6 bg-black hover:bg-gray-900 text-white px-3 py-1.5 rounded-t-lg shadow-md transition-transform duration-300 ease-out hover:-translate-y-0.5 text-lg z-40 cursor-pointer border-none"
+					title="Jugar Mate Run"
+				>
+					🧉
+				</button>
 
-		<!-- Mate Game Modal -->
-		<MateGame />
+				<!-- Mate Game Modal -->
+				<MateGame />
+			</>
+		)}
+
+		{showPromptModal && <PromptModal />}
 	</body>
 </html>

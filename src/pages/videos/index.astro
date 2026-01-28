@@ -7,6 +7,7 @@ export const prerender = true;
 <BaseTailwind 
     title="🎬 Video Organizer"
     description="Organizador de videos de YouTube y Udemy"
+    showPromptModal={true}
 >
     <div id="video-organizer-root" class="min-h-screen flex flex-col" data-theme="dark">
     <!-- Header -->
@@ -778,9 +779,15 @@ export const prerender = true;
             render();
         }
 
-        function deleteSelectedVideos() {
+        async function deleteSelectedVideos() {
             if (!appState.selectedVideoIds.length) return;
-            if (!confirm(`¿Eliminar ${appState.selectedVideoIds.length} video(s) seleccionado(s)?`)) return;
+            const confirmed = await window.showConfirmModal({
+                title: '🗑️ Eliminar videos',
+                message: `¿Eliminar ${appState.selectedVideoIds.length} video(s) seleccionado(s)?`,
+                confirmText: 'Eliminar',
+                cancelText: 'Cancelar'
+            });
+            if (!confirmed) return;
             appState.categories.forEach(cat => {
                 cat.videos = cat.videos.filter(v => !appState.selectedVideoIds.includes(v.id));
             });
@@ -1027,19 +1034,32 @@ export const prerender = true;
             render();
         }
 
-        function deleteCategory(categoryId) {
-            if (!confirm('¿Eliminar esta categoría y todos sus videos?')) return;
+        async function deleteCategory(categoryId) {
+            const confirmed = await window.showConfirmModal({
+                title: '🗑️ Eliminar categoría',
+                message: '¿Eliminar esta categoría y todos sus videos?',
+                confirmText: 'Eliminar',
+                cancelText: 'Cancelar'
+            });
+            if (!confirmed) return;
             
             appState.categories = appState.categories.filter(cat => cat.id !== categoryId);
             saveToStorage();
             render();
         }
 
-        function editCategory(categoryId) {
+        async function editCategory(categoryId) {
             const category = appState.categories.find(cat => cat.id === categoryId);
             if (!category) return;
 
-            const newName = prompt('Nuevo nombre de la categoría:', category.name);
+            const newName = await window.showPromptModal({
+                title: '✏️ Renombrar categoría',
+                inputType: 'text',
+                defaultValue: category.name,
+                placeholder: 'Nombre de la categoría',
+                confirmText: 'Guardar',
+                cancelText: 'Cancelar'
+            });
             if (newName && newName.trim()) {
                 category.name = newName.trim();
                 saveToStorage();
@@ -1132,8 +1152,14 @@ export const prerender = true;
             }
         }
 
-        function deleteVideo(videoId) {
-            if (!confirm('¿Eliminar este video?')) return;
+        async function deleteVideo(videoId) {
+            const confirmed = await window.showConfirmModal({
+                title: '🗑️ Eliminar video',
+                message: '¿Eliminar este video?',
+                confirmText: 'Eliminar',
+                cancelText: 'Cancelar'
+            });
+            if (!confirmed) return;
 
             appState.categories.forEach(category => {
                 category.videos = category.videos.filter(video => video.id !== videoId);
@@ -1144,11 +1170,18 @@ export const prerender = true;
             render();
         }
 
-        function editVideo(videoId) {
+        async function editVideo(videoId) {
             const video = findVideoById(videoId);
             if (!video) return;
 
-            const newComments = prompt('Comentarios:', video.comments || '');
+            const newComments = await window.showPromptModal({
+                title: '✏️ Editar comentarios',
+                inputType: 'text',
+                defaultValue: video.comments || '',
+                placeholder: 'Comentarios del video',
+                confirmText: 'Guardar',
+                cancelText: 'Cancelar'
+            });
             if (newComments !== null) {
                 video.comments = newComments.trim();
                 saveToStorage();
@@ -1277,7 +1310,7 @@ export const prerender = true;
             }
         }
 
-        function exportData() {
+        async function exportData() {
             try {
                 const dataStr = JSON.stringify(appState, null, 2);
                 const dataBlob = new Blob([dataStr], { type: 'application/json' });
@@ -1290,7 +1323,11 @@ export const prerender = true;
                 document.body.removeChild(link);
                 URL.revokeObjectURL(url);
             } catch (error) {
-                alert('Error al exportar datos: ' + error.message);
+                await window.showAlertModal({
+                    title: '❌ Error',
+                    message: 'Error al exportar datos: ' + error.message,
+                    confirmText: 'OK'
+                });
             }
         }
 
@@ -1298,26 +1335,44 @@ export const prerender = true;
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = '.json';
-            input.onchange = (e) => {
+            input.onchange = async (e) => {
                 const file = e.target.files[0];
                 if (!file) return;
 
                 const reader = new FileReader();
-                reader.onload = (e) => {
+                reader.onload = async (e) => {
                     try {
                         const data = JSON.parse(e.target.result);
                         if (data.categories && Array.isArray(data.categories)) {
-                            if (confirm('¿Importar estos datos? Se reemplazarán los datos actuales.')) {
+                            const confirmed = await window.showConfirmModal({
+                                title: '📤 Importar datos',
+                                message: '¿Importar estos datos? Se reemplazarán los datos actuales.',
+                                confirmText: 'Importar',
+                                cancelText: 'Cancelar'
+                            });
+                            if (confirmed) {
                                 appState = { ...appState, ...data };
                                 saveToStorage();
                                 render();
-                                alert('Datos importados correctamente');
+                                await window.showAlertModal({
+                                    title: '✅ Éxito',
+                                    message: 'Datos importados correctamente',
+                                    confirmText: 'OK'
+                                });
                             }
                         } else {
-                            alert('Formato de archivo inválido');
+                            await window.showAlertModal({
+                                title: '❌ Error',
+                                message: 'Formato de archivo inválido',
+                                confirmText: 'OK'
+                            });
                         }
                     } catch (error) {
-                        alert('Error al importar: ' + error.message);
+                        await window.showAlertModal({
+                            title: '❌ Error',
+                            message: 'Error al importar: ' + error.message,
+                            confirmText: 'OK'
+                        });
                     }
                 };
                 reader.readAsText(file);

@@ -13,6 +13,8 @@ const title = "Creatopia Calc";
     title={title}
     description="Calculadora de costos para impresión 3D"
     lang="es"
+    layoutType="tool"
+    showPromptModal={true}
 >
     <div class="container">
     <style>
@@ -603,7 +605,7 @@ const title = "Creatopia Calc";
         };
 
         // Función principal de cálculo
-        window.calcular = function() {
+        window.calcular = async function() {
             // Obtener valores de entrada
             const precioKg = parseFloat((document.getElementById('costoFilamento') as HTMLInputElement)?.value || '0') || 0;
             const precioKwh = parseFloat((document.getElementById('precioKwh') as HTMLInputElement)?.value || '0') || 0;
@@ -627,7 +629,11 @@ const title = "Creatopia Calc";
 
             // Validación
             if (precioKg === 0 || gramos === 0) {
-                alert('Ingresa precio filamento y gramos');
+                await window.showAlertModal({
+                    title: '⚠️ Datos faltantes',
+                    message: 'Ingresa precio filamento y gramos',
+                    confirmText: 'OK'
+                });
                 return;
             }
 
@@ -918,7 +924,7 @@ const title = "Creatopia Calc";
             }
         };
 
-        window.cargarReferencias = function() {
+        window.cargarReferencias = async function() {
             const setValue = (id: string, value: number) => {
                 const el = document.getElementById(id) as HTMLInputElement;
                 if (el) el.value = String(value);
@@ -931,11 +937,21 @@ const title = "Creatopia Calc";
             setValue('margenError', window.REF.margenError);
             setValue('comisionML', window.REF.comisionML);
             window.guardarDatos();
-            alert('Referencias cargadas\nPLA: $20k/kg | kWh: $234\nConsumo: 120W | Vida útil: 15.000h\nImpresora: $1.363.990 | Comisión ML: 30%');
+            await window.showAlertModal({
+                title: '✅ Referencias cargadas',
+                message: 'PLA: $20k/kg | kWh: $234\nConsumo: 120W | Vida útil: 15.000h\nImpresora: $1.363.990 | Comisión ML: 30%',
+                confirmText: 'OK'
+            });
         };
 
-        window.resetear = function() {
-            if (confirm('¿Borrar todos los datos?')) {
+        window.resetear = async function() {
+            const confirmed = await window.showConfirmModal({
+                title: '🗑️ Resetear',
+                message: '¿Borrar todos los datos?',
+                confirmText: 'Sí, borrar',
+                cancelText: 'Cancelar'
+            });
+            if (confirmed) {
                 sessionStorage.removeItem('calc3D');
                 localStorage.removeItem('historial3D');
                 location.reload();
@@ -994,33 +1010,57 @@ const title = "Creatopia Calc";
             }).join('');
         };
 
-        window.limpiarHistorial = function() {
-            if (confirm('¿Eliminar TODO el historial?')) {
+        window.limpiarHistorial = async function() {
+            const confirmed = await window.showConfirmModal({
+                title: '🗑️ Limpiar historial',
+                message: '¿Eliminar TODO el historial?',
+                confirmText: 'Sí, eliminar',
+                cancelText: 'Cancelar'
+            });
+            if (confirmed) {
                 localStorage.setItem('historial3D', '[]');
                 window.mostrarHistorial();
             }
         };
 
         // Funciones de test (simplificadas)
-        window.toggleTestInterno = function() {
-            alert('Función de tests en desarrollo para la versión Astro');
+        window.toggleTestInterno = async function() {
+            await window.showAlertModal({
+                title: 'ℹ️ Información',
+                message: 'Función de tests en desarrollo para la versión Astro',
+                confirmText: 'OK'
+            });
         };
 
-        window.nombrarEntrada = function() {
-            const nombre = prompt('Nombre para este cálculo:');
+        window.nombrarEntrada = async function() {
+            const nombre = await window.showPromptModal({
+                title: '📝 Nombrar cálculo',
+                inputType: 'text',
+                placeholder: 'Nombre para este cálculo',
+                confirmText: 'Guardar',
+                cancelText: 'Cancelar'
+            });
             if (nombre) {
                 // Guardar en historial con nombre
-                alert('Cálculo guardado como: ' + nombre);
+                await window.showAlertModal({
+                    title: '✅ Guardado',
+                    message: 'Cálculo guardado como: ' + nombre,
+                    confirmText: 'OK'
+                });
             }
         };
 
         // Funciones de historial completas
-        window.cargarDesdeHistorial = function(id: string) {
+        window.cargarDesdeHistorial = async function(id: string) {
             const historial = JSON.parse(localStorage.getItem('historial3D') || '[]');
             const item = historial.find((h: any) => h.id === id);
             
             if (!item) {
-                alert('No se encontró el cálculo en el historial');
+                await window.showAlertModal({
+                    title: '❌ Error',
+                    message: 'No se encontró el cálculo en el historial',
+                    confirmText: 'OK'
+                });
                 return;
             }
             
@@ -1066,7 +1106,11 @@ const title = "Creatopia Calc";
             }
             
             window.guardarDatos();
-            alert('Datos cargados del historial');
+            await window.showAlertModal({
+                title: '✅ Cargado',
+                message: 'Datos cargados del historial',
+                confirmText: 'OK'
+            });
             const historialEl = document.getElementById('historial');
             if (historialEl && !historialEl.classList.contains('hidden')) {
                 window.toggleHistorial();
@@ -1074,8 +1118,14 @@ const title = "Creatopia Calc";
             window.calcular();
         };
 
-        window.eliminarDelHistorial = function(id: string) {
-            if (!confirm('¿Eliminar este cálculo del historial?')) return;
+        window.eliminarDelHistorial = async function(id: string) {
+            const confirmed = await window.showConfirmModal({
+                title: '🗑️ Eliminar',
+                message: '¿Eliminar este cálculo del historial?',
+                confirmText: 'Eliminar',
+                cancelText: 'Cancelar'
+            });
+            if (!confirmed) return;
             
             let historial = JSON.parse(localStorage.getItem('historial3D') || '[]');
             historial = historial.filter((h: any) => h.id !== id);

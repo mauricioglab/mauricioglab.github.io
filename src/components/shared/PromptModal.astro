@@ -1,0 +1,295 @@
+---
+/**
+ * PromptModal - Componente modal reutilizable
+ * 
+ * Uso desde JavaScript:
+ * 
+ * // Como prompt (input)
+ * const value = await window.showPromptModal({
+ *   title: 'Título',
+ *   message: 'Descripción opcional',
+ *   inputType: 'password', // text, password, number, email
+ *   placeholder: 'Escribe aquí...',
+ *   confirmText: 'Aceptar',
+ *   cancelText: 'Cancelar'
+ * });
+ * 
+ * // Como confirm (sí/no)
+ * const confirmed = await window.showConfirmModal({
+ *   title: '¿Estás seguro?',
+ *   message: 'Esta acción no se puede deshacer',
+ *   confirmText: 'Sí',
+ *   cancelText: 'No'
+ * });
+ * 
+ * // Como alert (solo ok)
+ * await window.showAlertModal({
+ *   title: 'Información',
+ *   message: 'Operación completada',
+ *   confirmText: 'Entendido'
+ * });
+ * 
+ * // Como select (opciones)
+ * const choice = await window.showSelectModal({
+ *   title: 'Elige una opción',
+ *   options: [
+ *     { value: '1', label: 'Opción 1' },
+ *     { value: '2', label: 'Opción 2' }
+ *   ]
+ * });
+ */
+
+interface Props {
+  id?: string;
+}
+
+const { id = 'promptModal' } = Astro.props;
+---
+
+<!-- Modal Container -->
+<div 
+  id={id}
+  class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 backdrop-blur-sm"
+  data-modal-container
+>
+  <div 
+    class="relative bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md mx-4 transform transition-all duration-200 scale-95 opacity-0"
+    data-modal-content
+  >
+    <!-- Header -->
+    <div class="p-5 border-b border-slate-200 dark:border-slate-700" data-modal-header>
+      <h3 class="text-lg font-semibold text-slate-900 dark:text-white" data-modal-title></h3>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 hidden" data-modal-message></p>
+    </div>
+    
+    <!-- Body -->
+    <div class="p-5" data-modal-body>
+      <!-- Input (for prompt mode) -->
+      <input 
+        type="text"
+        class="hidden w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+        data-modal-input
+      />
+      
+      <!-- Select options (for select mode) -->
+      <div class="hidden space-y-2" data-modal-options></div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="p-5 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3" data-modal-footer>
+      <button 
+        type="button"
+        class="hidden px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition"
+        data-modal-cancel
+      >
+        Cancelar
+      </button>
+      <button 
+        type="button"
+        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition"
+        data-modal-confirm
+      >
+        Aceptar
+      </button>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+(function() {
+  const modal = document.querySelector('[data-modal-container]');
+  if (!modal) return;
+  
+  const content = modal.querySelector('[data-modal-content]');
+  const titleEl = modal.querySelector('[data-modal-title]');
+  const messageEl = modal.querySelector('[data-modal-message]');
+  const inputEl = modal.querySelector('[data-modal-input]');
+  const optionsEl = modal.querySelector('[data-modal-options]');
+  const cancelBtn = modal.querySelector('[data-modal-cancel]');
+  const confirmBtn = modal.querySelector('[data-modal-confirm]');
+  
+  let resolvePromise = null;
+  let currentMode = 'alert';
+  let isTransitioning = false;
+  
+  function showModal() {
+    return new Promise((resolve) => {
+      // Wait if another modal is transitioning
+      if (isTransitioning) {
+        setTimeout(() => showModal().then(resolve), 250);
+        return;
+      }
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      requestAnimationFrame(() => {
+        content.classList.remove('scale-95', 'opacity-0');
+        content.classList.add('scale-100', 'opacity-100');
+        setTimeout(resolve, 50);
+      });
+    });
+  }
+  
+  function hideModal() {
+    return new Promise((resolve) => {
+      isTransitioning = true;
+      content.classList.remove('scale-100', 'opacity-100');
+      content.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+        // Reset state
+        inputEl.value = '';
+        inputEl.classList.add('hidden');
+        optionsEl.classList.add('hidden');
+        optionsEl.innerHTML = '';
+        messageEl.classList.add('hidden');
+        cancelBtn.classList.add('hidden');
+        confirmBtn.classList.remove('hidden');
+        isTransitioning = false;
+        resolve();
+      }, 200);
+    });
+  }
+  
+  async function resolve(value) {
+    const callback = resolvePromise;
+    resolvePromise = null;
+    await hideModal();
+    if (callback) {
+      callback(value);
+    }
+  }
+  
+  // Event listeners
+  cancelBtn.addEventListener('click', () => resolve(null));
+  confirmBtn.addEventListener('click', () => {
+    if (currentMode === 'prompt') {
+      resolve(inputEl.value);
+    } else if (currentMode === 'confirm') {
+      resolve(true);
+    } else {
+      resolve(true);
+    }
+  });
+  
+  // Close on backdrop click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      resolve(null);
+    }
+  });
+  
+  // Close on Escape / Enter handling
+  document.addEventListener('keydown', (e) => {
+    if (modal.classList.contains('hidden')) return;
+    
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
+      resolve(null);
+    }
+    
+    // Enter only works for prompt mode and when input is focused
+    if (e.key === 'Enter' && currentMode === 'prompt' && document.activeElement === inputEl) {
+      e.preventDefault();
+      e.stopPropagation();
+      resolve(inputEl.value);
+    }
+  });
+  
+  // === Public API ===
+  
+  // Prompt modal (returns input value or null)
+  window.showPromptModal = function(options = {}) {
+    currentMode = 'prompt';
+    titleEl.textContent = options.title || 'Ingrese un valor';
+    
+    if (options.message) {
+      messageEl.textContent = options.message;
+      messageEl.classList.remove('hidden');
+    }
+    
+    inputEl.type = options.inputType || 'text';
+    inputEl.placeholder = options.placeholder || '';
+    inputEl.value = options.defaultValue || '';
+    inputEl.classList.remove('hidden');
+    
+    cancelBtn.textContent = options.cancelText || 'Cancelar';
+    cancelBtn.classList.remove('hidden');
+    confirmBtn.textContent = options.confirmText || 'Aceptar';
+    
+    showModal();
+    setTimeout(() => inputEl.focus(), 100);
+    
+    return new Promise(res => { resolvePromise = res; });
+  };
+  
+  // Confirm modal (returns true or null)
+  window.showConfirmModal = function(options = {}) {
+    currentMode = 'confirm';
+    titleEl.textContent = options.title || '¿Confirmar?';
+    
+    if (options.message) {
+      messageEl.textContent = options.message;
+      messageEl.classList.remove('hidden');
+    }
+    
+    cancelBtn.textContent = options.cancelText || 'Cancelar';
+    cancelBtn.classList.remove('hidden');
+    confirmBtn.textContent = options.confirmText || 'Confirmar';
+    
+    showModal();
+    
+    return new Promise(res => { resolvePromise = res; });
+  };
+  
+  // Alert modal (returns true when closed)
+  window.showAlertModal = function(options = {}) {
+    currentMode = 'alert';
+    titleEl.textContent = options.title || 'Aviso';
+    
+    if (options.message) {
+      messageEl.textContent = options.message;
+      messageEl.classList.remove('hidden');
+    }
+    
+    confirmBtn.textContent = options.confirmText || 'Entendido';
+    
+    showModal();
+    
+    return new Promise(res => { resolvePromise = res; });
+  };
+  
+  // Select modal (returns selected value or null)
+  window.showSelectModal = function(options = {}) {
+    currentMode = 'select';
+    titleEl.textContent = options.title || 'Seleccione una opción';
+    
+    if (options.message) {
+      messageEl.textContent = options.message;
+      messageEl.classList.remove('hidden');
+    }
+    
+    // Build options
+    optionsEl.innerHTML = '';
+    (options.options || []).forEach(opt => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'w-full px-4 py-3 text-left text-sm font-medium text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 rounded-lg transition';
+      btn.textContent = opt.label;
+      btn.addEventListener('click', () => resolve(opt.value));
+      optionsEl.appendChild(btn);
+    });
+    optionsEl.classList.remove('hidden');
+    
+    // Hide confirm button for select mode
+    confirmBtn.classList.add('hidden');
+    cancelBtn.textContent = options.cancelText || 'Cancelar';
+    cancelBtn.classList.remove('hidden');
+    
+    showModal();
+    
+    return new Promise(res => { resolvePromise = res; });
+  };
+})();
+</script>

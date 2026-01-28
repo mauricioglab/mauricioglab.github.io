@@ -1,85 +1,154 @@
 ---
 import BaseTailwind from '../layouts/BaseTailwind.astro';
+import { getPublicPages, getPagesWithBaseUrl } from '../data/pages-registry';
 
 export const prerender = true;
 
 const base = import.meta.env.BASE_URL;
 const b = base.endsWith("/") ? base : `${base}/`;
-const glob = import.meta.glob("./**/*.astro");
-const keys = Object.keys(glob).filter((k) => 
-  k !== "./index.astro" && 
-  !k.startsWith("./blog/[") && 
-  !k.startsWith("./blog/category/[") &&
-  !k.startsWith("./[lang]/") &&
-  k !== "./blog/about/index.astro" &&
-  k !== "./blog/search/index.astro" &&
-  k !== "./blog/archives/index.astro" &&
-  k !== "./blog/privacy/index.astro"
-);
 
-function pathToRoute(key: string): { segment: string; name: string; url: string } {
-    const raw = key.replace(/^\.\//, "").replace(/\.astro$/, "");
-    const segment = raw.endsWith("/index") ? raw.slice(0, -6) : raw;
-    const url = `${b}${segment}/`;
-    const name = segment.charAt(0).toUpperCase() + segment.slice(1);
-    return { segment, name, url };
-}
-
-const pages = keys.map(pathToRoute).sort((a, b) => a.segment.localeCompare(b.segment));
-
-// i18n pages (manually added since they use [lang] dynamic routes)
-const i18nPages = [
-  // Landing pages
-  { segment: 'es/landing/developer', name: 'Landing Developer', url: `${b}es/landing/developer/` },
-  { segment: 'es/landing/analista', name: 'Landing Analista', url: `${b}es/landing/analista/` },
-  { segment: 'es/landing/ia-engineer', name: 'Landing IA Engineer', url: `${b}es/landing/ia-engineer/` },
-  { segment: 'es/landing/freelance', name: 'Landing Freelance', url: `${b}es/landing/freelance/` },
-  { segment: 'es/landing/speaker', name: 'Landing Speaker', url: `${b}es/landing/speaker/` },
-  // Project case studies
-  { segment: 'es/proyectos/ecommerce-platform', name: 'Case Study: E-commerce', url: `${b}es/proyectos/ecommerce-platform/` },
-  { segment: 'es/proyectos/microservicios-api', name: 'Case Study: Microservicios', url: `${b}es/proyectos/microservicios-api/` },
-  { segment: 'es/proyectos/task-manager-ddd', name: 'Case Study: Task Manager DDD', url: `${b}es/proyectos/task-manager-ddd/` },
-];
-
-const allPages = [...pages, ...i18nPages];
+// Obtener páginas públicas del registry
+const publicPages = getPublicPages().map(p => ({
+  ...p,
+  url: p.url.startsWith('/') ? `${b}${p.url.slice(1)}` : p.url
+}));
 ---
 
-<BaseTailwind title="MG Lab" description="Herramientas">
-	<main class="min-h-[calc(100vh-112px)] flex bg-white">        
-        <div class="w-1/2 flex items-start justify-center py-8 overflow-y-auto">
-            <div class="w-full max-w-lg px-8">
-                <table class="w-full">
-                    <tbody>
-                        {allPages.map((p) => (
-                            <tr class="border-b border-stone-200 hover:bg-stone-50 transition-colors duration-300">
-                                <td class="py-3 px-4 text-stone-700 font-light text-sm">
-                                    {p.name}
-                                </td>
-                                <td class="py-3 px-4 text-right">
-                                    <a 
-                                        href={p.url}
-                                        class="text-stone-500 hover:text-stone-900 transition-colors duration-300 text-sm"
-                                    >
-                                        Ir →
-                                    </a>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+<BaseTailwind title="MG Lab" description="Herramientas" layoutType="index" showPromptModal={true}>
+  <main class="min-h-[calc(100vh-112px)] flex bg-white">        
+    <div class="w-1/2 flex items-start justify-center py-8 overflow-y-auto">
+      <div class="w-full max-w-lg px-8">
+        <table class="w-full">
+          <tbody>
+            {publicPages.map((p) => (
+              <tr class="border-b border-stone-200 hover:bg-stone-50 transition-colors duration-300">
+                <td class="py-3 px-4 text-stone-700 font-light text-sm">
+                  {p.icon && <span class="mr-2">{p.icon}</span>}
+                  {p.name}
+                </td>
+                <td class="py-3 px-4 text-right">
+                  <a 
+                    href={p.url}
+                    class="text-stone-500 hover:text-stone-900 transition-colors duration-300 text-sm"
+                  >
+                    Ir →
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="w-px bg-stone-200 sticky top-0 h-screen"></div>
+    <div class="w-1/2 flex items-center justify-center sticky top-0 h-screen">
+      <div class="text-center space-y-6">
+        <div class="text-8xl opacity-30">
+          
         </div>
-        <div class="w-px bg-stone-200 sticky top-0 h-screen"></div>
-        <div class="w-1/2 flex items-center justify-center sticky top-0 h-screen">
-            <div class="text-center space-y-6">
-                <div class="text-8xl opacity-30">
-                    
-                </div>
-                <p class="text-stone-500 text-lg font-light tracking-wide italic">
-                    "Hola..."
-                </p>
-            </div>
-        </div>
-        
-    </main>
+        <p 
+          id="secretTrigger"
+          class="text-stone-500 text-lg font-light tracking-wide italic cursor-default select-none"
+        >
+          "Hola..."
+        </p>
+      </div>
+    </div>
+  </main>
 </BaseTailwind>
+
+<script is:inline>
+(function() {
+  const trigger = document.getElementById('secretTrigger');
+  if (!trigger) return;
+  
+  const STORAGE_KEY = 'mglab_admin_session';
+  const base = document.querySelector('base')?.href || '/';
+  
+  // Duraciones en milisegundos
+  const DURATIONS = {
+    '10min': 10 * 60 * 1000,
+    '1hora': 60 * 60 * 1000,
+    '8horas': 8 * 60 * 60 * 1000,
+    '1semana': 7 * 24 * 60 * 60 * 1000,
+    'siempre': null // Sin expiración
+  };
+  
+  // Verificar si hay sesión válida
+  function hasValidSession() {
+    try {
+      const session = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (!session) return false;
+      if (session.expires === null) return true; // "siempre"
+      return Date.now() < session.expires;
+    } catch {
+      return false;
+    }
+  }
+  
+  // Guardar sesión
+  function saveSession(duration) {
+    const expires = duration === null ? null : Date.now() + duration;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ expires }));
+  }
+  
+  // Verificar password
+  function verifyPassword(input) {
+    const diaCordoba = new Date().toLocaleString('en-US', { 
+      timeZone: 'America/Argentina/Cordoba', 
+      day: 'numeric'
+    });
+    return input === 'gusfraba' + diaCordoba;
+  }
+  
+  // Pedir duración de sesión (usando modal)
+  async function askDuration() {
+    const choice = await window.showSelectModal({
+      title: '⏱️ Duración de sesión',
+      message: '¿Por cuánto tiempo mantener la sesión activa?',
+      options: [
+        { value: '10min', label: '10 minutos' },
+        { value: '1hora', label: '1 hora' },
+        { value: '8horas', label: '8 horas' },
+        { value: '1semana', label: '1 semana' },
+        { value: 'siempre', label: 'Siempre' }
+      ],
+      cancelText: 'Cancelar'
+    });
+    
+    return choice ? DURATIONS[choice] : DURATIONS['1hora'];
+  }
+  
+  // Handler del double-click
+  trigger.addEventListener('dblclick', async function() {
+    // Si hay sesión válida, ir directo a admin
+    if (hasValidSession()) {
+      window.location.href = base + 'admin/';
+      return;
+    }
+    
+    // Pedir password con modal
+    const input = await window.showPromptModal({
+      title: '🔐',
+      inputType: 'password',
+      placeholder: 'Contraseña...',
+      confirmText: 'Entrar',
+      cancelText: 'Cancelar'
+    });
+    
+    if (!input) return;
+    
+    if (verifyPassword(input)) {
+      const duration = await askDuration();
+      saveSession(duration);
+      window.location.href = base + 'admin/';
+    } else {
+      await window.showAlertModal({
+        title: '❌ Acceso denegado',
+        message: 'Contraseña incorrecta',
+        confirmText: 'OK'
+      });
+    }
+  });
+})();
+</script>

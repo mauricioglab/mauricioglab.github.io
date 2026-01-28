@@ -208,5 +208,43 @@ export const skillsByProfile: SkillsByProfile = {
         { name: 'Mentoring', icon: 'fa-handshake', level: 'advanced' }
       ]
     }
+  ],
+  docente: [
+    {
+      categoryKey: 'programming',
+      skills: [
+        { name: 'Python', icon: 'fab fa-python', level: 'expert' },
+        { name: 'C# / .NET', icon: 'fa-code', level: 'expert' },
+        { name: 'JavaScript', icon: 'fab fa-js', level: 'expert' },
+        { name: 'SQL', icon: 'fa-database', level: 'expert' }
+      ]
+    },
+    {
+      categoryKey: 'ai',
+      skills: [
+        { name: 'ChatGPT/LLMs', icon: 'fa-robot', level: 'expert' },
+        { name: 'Prompt Engineering', icon: 'fa-comment-dots', level: 'expert' },
+        { name: 'AI Tools', icon: 'fa-brain', level: 'advanced' },
+        { name: 'Automation', icon: 'fa-cogs', level: 'advanced' }
+      ]
+    },
+    {
+      categoryKey: 'pedagogy',
+      skills: [
+        { name: 'Didactics', icon: 'fa-chalkboard-teacher', level: 'expert' },
+        { name: 'Curriculum Design', icon: 'fa-book', level: 'expert' },
+        { name: 'Assessment', icon: 'fa-tasks', level: 'expert' },
+        { name: 'Mentoring', icon: 'fa-user-graduate', level: 'expert' }
+      ]
+    },
+    {
+      categoryKey: 'tools',
+      skills: [
+        { name: 'VS Code', icon: 'fa-code', level: 'expert' },
+        { name: 'Git/GitHub', icon: 'fab fa-github', level: 'expert' },
+        { name: 'Moodle/LMS', icon: 'fa-graduation-cap', level: 'advanced' },
+        { name: 'Classroom Tools', icon: 'fa-desktop', level: 'advanced' }
+      ]
+    }
   ]
 };

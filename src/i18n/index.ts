@@ -83,8 +83,10 @@ export interface CommonTranslations {
     background: string;
   };
   cta: {
+    contact: string;
     downloadCV: string;
     sendEmail: string;
+    scheduleCall: string;
     connectLinkedIn: string;
     viewRepos: string;
   };
@@ -146,6 +148,16 @@ export interface ProfileTranslations {
     desc2: string;
     title3: string;
     desc3: string;
+  };
+  subjects?: {
+    title1: string;
+    desc1: string;
+    title2: string;
+    desc2: string;
+    title3: string;
+    desc3: string;
+    title4?: string;
+    desc4?: string;
   };
   experience: {
     role1: string;

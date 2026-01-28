@@ -26,7 +26,7 @@ const altLang = lang === 'es' ? 'en' : 'es';
 const altPath = getAlternateUrl(Astro.url, lang);
 ---
 
-<BaseTailwind title={`${title} | ${content.title}`} description={content.seo.description} lang={lang}>
+<BaseTailwind title={`${title} | ${content.title}`} description={content.seo.description} lang={lang} layoutType="landing">
   <!-- Header/Nav -->
   <header class="bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-50 border-b border-slate-200 dark:border-slate-700 transition-colors">
     <nav class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">

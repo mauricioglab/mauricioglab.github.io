@@ -1,0 +1,45 @@
+{
+  "title": "Docente de Programación & IA",
+  "subtitle": "Educación Tecnológica",
+  "description": "Formando la próxima generación de desarrolladores",
+  "seo": {
+    "title": "Docente de Programación & IA | Educación Tecnológica",
+    "description": "Docente universitario especializado en programación, bases de datos e IA. +10 años formando profesionales en instituciones educativas."
+  },
+  "hero": {
+    "badge": "DOCENTE UNIVERSITARIO",
+    "headline": "Enseño <span class=\"text-teal-600 dark:text-teal-400\">Programación</span> que se Entiende.",
+    "subheadline": "+10 años como docente universitario. Especialista en hacer que la tecnología compleja sea comprensible. Materias de programación, bases de datos e IA aplicada.",
+    "ctaPrimary": "Contactar",
+    "ctaSecondary": "Ver Experiencia"
+  },
+  "projectsDescription": "Materias y cursos que dicto actualmente en instituciones educativas.",
+  "ctaTitle": "¿Buscás un docente para tu institución?",
+  "ctaDescription": "Dicto materias de programación, bases de datos, IA y desarrollo de software. Disponible para instituciones educativas y capacitaciones corporativas.",
+  "subjects": {
+    "title1": "Introducción a la Programación",
+    "desc1": "Fundamentos de programación, lógica, estructuras de datos y algoritmos. Python y pseudocódigo para principiantes.",
+    "title2": "Bases de Datos",
+    "desc2": "Diseño de bases de datos, SQL, modelado ER, normalización. PostgreSQL, MySQL y conceptos de NoSQL.",
+    "title3": "Práctica Profesionalizante",
+    "desc3": "Proyectos reales con metodologías ágiles. Git, trabajo en equipo, documentación y presentación de proyectos.",
+    "title4": "IA Aplicada",
+    "desc4": "Inteligencia Artificial práctica. Prompt Engineering, APIs de LLMs, automatizaciones con n8n y casos de uso reales."
+  },
+  "experience": {
+    "role1": "Docente Universitario",
+    "company1": "Instituciones Educativas | 2014 - Presente",
+    "items1": [
+      "Materias: Intro a Programación, Bases de Datos, Práctica Profesionalizante",
+      "Carreras: Técnico en Análisis de Sistemas, Desarrollo Web, IA",
+      "+500 estudiantes formados en programación y tecnología"
+    ],
+    "role2": "Desarrollador de Contenido Educativo",
+    "company2": "Material Didáctico | 2019 - Presente",
+    "items2": [
+      "Creación de guías prácticas y ejercicios de programación",
+      "Videos tutoriales y material de apoyo para estudiantes",
+      "Diseño de proyectos integradores para evaluación"
+    ]
+  }
+}

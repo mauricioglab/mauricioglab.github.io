@@ -1,6 +1,6 @@
 import { SITE_CONFIG } from './config';
 
-export type ProfileId = 'developer' | 'analista' | 'ia-engineer' | 'freelance' | 'speaker';
+export type ProfileId = 'developer' | 'analista' | 'ia-engineer' | 'freelance' | 'speaker' | 'docente';
 
 export interface Profile {
   id: ProfileId;
@@ -89,6 +89,21 @@ export const profiles: Record<ProfileId, Profile> = {
       primary: 'purple-600',
       secondary: 'purple-100',
       accent: 'purple-500',
+      bg: 'white',
+      text: 'slate-900',
+      cardBg: 'white'
+    }
+  },
+  docente: {
+    id: 'docente',
+    cvUrl: SITE_CONFIG.cvs.docente,
+    githubUrl: SITE_CONFIG.github,
+    linkedinUrl: SITE_CONFIG.linkedin,
+    email: SITE_CONFIG.email,
+    theme: {
+      primary: 'teal-600',
+      secondary: 'teal-100',
+      accent: 'teal-500',
       bg: 'white',
       text: 'slate-900',
       cardBg: 'white'

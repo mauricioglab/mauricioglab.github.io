@@ -1,0 +1,45 @@
+{
+  "title": "Programming & AI Educator",
+  "subtitle": "Technology Education",
+  "description": "Training the next generation of developers",
+  "seo": {
+    "title": "Programming & AI Educator | Technology Education",
+    "description": "University educator specialized in programming, databases and AI. 10+ years training professionals in educational institutions."
+  },
+  "hero": {
+    "badge": "UNIVERSITY EDUCATOR",
+    "headline": "I Teach <span class=\"text-teal-600 dark:text-teal-400\">Programming</span> that Makes Sense.",
+    "subheadline": "10+ years as a university educator. Specialist in making complex technology understandable. Courses in programming, databases and applied AI.",
+    "ctaPrimary": "Contact Me",
+    "ctaSecondary": "View Experience"
+  },
+  "projectsDescription": "Courses and subjects I currently teach at educational institutions.",
+  "ctaTitle": "Looking for an educator for your institution?",
+  "ctaDescription": "I teach programming, databases, AI and software development courses. Available for educational institutions and corporate training.",
+  "subjects": {
+    "title1": "Introduction to Programming",
+    "desc1": "Programming fundamentals, logic, data structures and algorithms. Python and pseudocode for beginners.",
+    "title2": "Databases",
+    "desc2": "Database design, SQL, ER modeling, normalization. PostgreSQL, MySQL and NoSQL concepts.",
+    "title3": "Professional Practice",
+    "desc3": "Real projects with agile methodologies. Git, teamwork, documentation and project presentation.",
+    "title4": "Applied AI",
+    "desc4": "Practical Artificial Intelligence. Prompt Engineering, LLM APIs, n8n automations and real use cases."
+  },
+  "experience": {
+    "role1": "University Educator",
+    "company1": "Educational Institutions | 2014 - Present",
+    "items1": [
+      "Subjects: Intro to Programming, Databases, Professional Practice",
+      "Programs: Systems Analysis Technician, Web Development, AI",
+      "500+ students trained in programming and technology"
+    ],
+    "role2": "Educational Content Developer",
+    "company2": "Teaching Materials | 2019 - Present",
+    "items2": [
+      "Creation of practical guides and programming exercises",
+      "Tutorial videos and support materials for students",
+      "Design of integrative projects for evaluation"
+    ]
+  }
+}
