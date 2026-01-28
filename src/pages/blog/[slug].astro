@@ -1,11 +1,12 @@
 ---
-import BlogLayout from '../../layouts/BlogLayout.astro';
-import ShareButtons from '../../components/blog/ShareButtons.astro';
-import { calculateReadingTime, normalizeBaseUrl } from '../../utils/blog';
-import { getCollection } from 'astro:content';
+import BlogLayout from "../../layouts/BlogLayout.astro";
+import ShareButtons from "../../components/blog/ShareButtons.astro";
+import { calculateReadingTime, normalizeBaseUrl } from "../../utils/blog";
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
   return posts.map((post) => ({
     params: { slug: post.slug },
     props: { post },
@@ -13,7 +14,7 @@ export async function getStaticPaths() {
 }
 
 interface Props {
-  post: Awaited<ReturnType<typeof getCollection<'blog'>>>[number];
+  post: Awaited<ReturnType<typeof getCollection<"blog">>>[number];
 }
 
 const { post } = Astro.props;
@@ -23,7 +24,7 @@ const { Content } = await post.render();
 const readingTime = calculateReadingTime(post.body);
 ---
 
-<BlogLayout 
+<BlogLayout
   title={`${post.data.title} | Blog`}
   description={post.data.description}
   blogTitle="Blog"
@@ -38,28 +39,61 @@ const readingTime = calculateReadingTime(post.body);
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={post.data.title} />
     <meta name="twitter:description" content={post.data.description} />
-    <meta name="article:published_time" content={post.data.pubDate.toISOString()} />
+    <meta
+      name="article:published_time"
+      content={post.data.pubDate.toISOString()}
+    />
     <meta name="article:author" content={post.data.author} />
-    {post.data.categories.map((category) => (
-      <meta name="article:tag" content={category} />
-    ))}
+    {
+      post.data.categories.map((category) => (
+        <meta name="article:tag" content={category} />
+      ))
+    }
   </slot>
 
-  <article class="post entry" itemscope itemtype="https://schema.org/BlogPosting">
-    <header class="entry-header">
-      <h1 class="entry-title" itemprop="headline">{post.data.title}</h1>
-      <p class="entry-meta">
-        Escrito <span class="by">por</span> <span class="entry-author-name" itemprop="author">{post.data.author}</span>
-        <time datetime={post.data.pubDate.toISOString()} itemprop="datePublished" class="hidden">{post.data.pubDate.toISOString()}</time>
-        {readingTime > 0 && (
-          <>
-            <span> &middot; </span>
-            <span>{readingTime} min de lectura</span>
-          </>
-        )}
+  <article
+    class="post entry"
+    itemscope
+    itemtype="https://schema.org/BlogPosting"
+  >
+    <header class="entry-header mb-8">
+      {
+        post.data.image && (
+          <div class="mb-8 flex justify-center w-full">
+            <Image
+              src={post.data.image}
+              alt={post.data.title}
+              class="rounded-xl shadow-lg transition-transform duration-500 w-full max-w-[800px] h-auto object-cover hover:scale-105"
+              width={800}
+              height={450}
+            />
+          </div>
+        )
+      }
+      <h1 class="entry-title text-4xl font-bold mb-4" itemprop="headline">
+        {post.data.title}
+      </h1>
+      <p class="entry-meta text-gray-500">
+        Escrito <span class="by">por</span>
+        <span class="entry-author-name" itemprop="author"
+          >{post.data.author}</span
+        >
+        <time
+          datetime={post.data.pubDate.toISOString()}
+          itemprop="datePublished"
+          class="hidden">{post.data.pubDate.toISOString()}</time
+        >
+        {
+          readingTime > 0 && (
+            <>
+              <span> &middot; </span>
+              <span>{readingTime} min de lectura</span>
+            </>
+          )
+        }
       </p>
     </header>
-    
+
     <div class="entry-content" itemprop="articleBody">
       <Content />
     </div>

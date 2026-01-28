@@ -22,8 +22,10 @@
     "background": "Background Técnico"
   },
   "cta": {
+    "contact": "Contactar",
     "downloadCV": "Descargar CV",
-    "sendEmail": "Enviar Email",
+    "sendEmail": "Enviar Mensaje",
+    "scheduleCall": "Agendar Reunión",
     "connectLinkedIn": "Conectar en LinkedIn",
     "viewRepos": "Ver Repositorios"
   },

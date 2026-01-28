@@ -2,16 +2,15 @@
 title: "Fundación y la Psicohistoria: Un Espejo de Nuestro Presente con IA"
 pubDate: 2025-01-26
 author: "MG Lab"
-categories: ["Libros", "IA", "Reflexiones"]
+categories: ["Libros", "Reflexiones"]
 description: "Reflexiones sobre la psicohistoria de Asimov y su paralelismo con la inteligencia artificial."
+image: "../../assets/blog/foundation.png"
 draft: false
 ---
 
 
 
 Cuando Asimov escribió *Fundación* en los años 40, imaginó la **psicohistoria**: una ciencia matemática capaz de predecir el futuro de civilizaciones enteras. No de individuos, sino de masas. Hoy, leyendo la saga nuevamente, es inevitable ver el paralelismo con la inteligencia artificial moderna.
-
-![Imagen de ejemplo](./fundacion.jpeg)
 
 ## La Matemática de las Masas
 

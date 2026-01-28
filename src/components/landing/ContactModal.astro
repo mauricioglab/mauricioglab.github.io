@@ -1,0 +1,442 @@
+---
+/**
+ * Contact Modal Component
+ * Two-option selector: Send message or Schedule call
+ */
+import { SITE_CONFIG } from '../../data/config';
+
+interface Props {
+  lang?: 'es' | 'en';
+}
+
+const { lang = 'es' } = Astro.props;
+
+const t = {
+  es: {
+    // Initial selection
+    title: '¿Cómo prefieres contactarme?',
+    optionMessage: 'Enviar mensaje',
+    optionMessageDesc: 'Te respondo en menos de 24hs',
+    optionCall: 'Agendar videollamada',
+    optionCallDesc: 'Elegí día y horario que te sirva',
+    // Form
+    formTitle: 'Enviar mensaje',
+    name: 'Nombre',
+    namePlaceholder: 'Tu nombre',
+    email: 'Email',
+    emailPlaceholder: 'tu@email.com',
+    message: 'Mensaje',
+    messagePlaceholder: '¿En qué puedo ayudarte?',
+    send: 'Enviar mensaje',
+    sending: 'Enviando...',
+    back: 'Volver',
+    // States
+    success: '¡Mensaje enviado!',
+    successDetail: 'Te responderé lo antes posible.',
+    error: 'Error al enviar',
+    errorDetail: 'Por favor intenta nuevamente.',
+    close: 'Cerrar',
+    tryAgain: 'Intentar de nuevo'
+  },
+  en: {
+    // Initial selection
+    title: 'How would you like to contact me?',
+    optionMessage: 'Send a message',
+    optionMessageDesc: 'I\'ll reply within 24 hours',
+    optionCall: 'Schedule a video call',
+    optionCallDesc: 'Pick a day and time that works for you',
+    // Form
+    formTitle: 'Send a message',
+    name: 'Name',
+    namePlaceholder: 'Your name',
+    email: 'Email',
+    emailPlaceholder: 'your@email.com',
+    message: 'Message',
+    messagePlaceholder: 'How can I help you?',
+    send: 'Send message',
+    sending: 'Sending...',
+    back: 'Back',
+    // States
+    success: 'Message sent!',
+    successDetail: 'I\'ll get back to you soon.',
+    error: 'Failed to send',
+    errorDetail: 'Please try again.',
+    close: 'Close',
+    tryAgain: 'Try again'
+  }
+};
+
+const labels = t[lang];
+---
+
+<!-- Contact Modal Overlay -->
+<div 
+  id="contactModal" 
+  class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="contactModalTitle"
+  data-formspree={SITE_CONFIG.formspreeEndpoint}
+  data-calendly={SITE_CONFIG.calendly}
+  data-lang={lang}
+>
+  <!-- Modal Content -->
+  <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+    
+    <!-- Close Button (always visible) -->
+    <button 
+      id="closeContactModal"
+      class="absolute top-4 right-4 p-2 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 transition z-10"
+      aria-label="Close"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+
+    <!-- ==================== -->
+    <!-- SELECTION VIEW -->
+    <!-- ==================== -->
+    <div id="selectionView" class="p-6">
+      <h2 id="contactModalTitle" class="text-xl font-bold text-slate-900 dark:text-white text-center mb-6">
+        {labels.title}
+      </h2>
+      
+      <div class="space-y-3">
+        <!-- Option: Send Message -->
+        <button
+          id="selectMessageOption"
+          class="w-full p-4 rounded-xl border-2 border-slate-200 dark:border-slate-600 hover:border-blue-500 dark:hover:border-blue-400 bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group text-left"
+        >
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-200 dark:group-hover:bg-blue-800/40 transition">
+              <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <div>
+              <span class="font-semibold text-slate-900 dark:text-white block">{labels.optionMessage}</span>
+              <span class="text-sm text-slate-500 dark:text-slate-400">{labels.optionMessageDesc}</span>
+            </div>
+            <svg class="w-5 h-5 text-slate-400 dark:text-slate-500 ml-auto group-hover:text-blue-500 dark:group-hover:text-blue-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </div>
+        </button>
+
+        <!-- Option: Schedule Call -->
+        <a
+          href={SITE_CONFIG.calendly}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-full p-4 rounded-xl border-2 border-slate-200 dark:border-slate-600 hover:border-green-500 dark:hover:border-green-400 bg-slate-50 dark:bg-slate-700/50 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all group text-left flex"
+        >
+          <div class="flex items-center gap-4 w-full">
+            <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 dark:group-hover:bg-green-800/40 transition">
+              <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <div>
+              <span class="font-semibold text-slate-900 dark:text-white block">{labels.optionCall}</span>
+              <span class="text-sm text-slate-500 dark:text-slate-400">{labels.optionCallDesc}</span>
+            </div>
+            <svg class="w-5 h-5 text-slate-400 dark:text-slate-500 ml-auto group-hover:text-green-500 dark:group-hover:text-green-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+            </svg>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ==================== -->
+    <!-- FORM VIEW -->
+    <!-- ==================== -->
+    <div id="formView" class="hidden">
+      <!-- Header with back button -->
+      <div class="flex items-center gap-3 p-5 border-b border-slate-200 dark:border-slate-700">
+        <button 
+          id="backToSelection"
+          class="p-2 -ml-2 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+          aria-label="Back"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </button>
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white">
+          {labels.formTitle}
+        </h2>
+      </div>
+
+      <!-- Form -->
+      <form id="contactForm" class="p-5 space-y-4">
+        <!-- Honeypot field (hidden, for bot detection) -->
+        <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
+        
+        <!-- Name -->
+        <div>
+          <label for="contactName" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+            {labels.name}
+          </label>
+          <input
+            type="text"
+            id="contactName"
+            name="name"
+            required
+            placeholder={labels.namePlaceholder}
+            class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm"
+          />
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label for="contactEmail" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+            {labels.email}
+          </label>
+          <input
+            type="email"
+            id="contactEmail"
+            name="email"
+            required
+            placeholder={labels.emailPlaceholder}
+            class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm"
+          />
+        </div>
+
+        <!-- Message -->
+        <div>
+          <label for="contactMessage" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+            {labels.message}
+          </label>
+          <textarea
+            id="contactMessage"
+            name="message"
+            required
+            rows="3"
+            placeholder={labels.messagePlaceholder}
+            class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none text-sm"
+          ></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          id="submitContactForm"
+          class="w-full px-4 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <svg id="sendIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+          </svg>
+          <svg id="loadingIcon" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span id="submitText">{labels.send}</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- ==================== -->
+    <!-- SUCCESS STATE -->
+    <!-- ==================== -->
+    <div id="successState" class="hidden p-6 text-center">
+      <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+        <svg class="w-7 h-7 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1">{labels.success}</h3>
+      <p class="text-slate-500 dark:text-slate-400 text-sm mb-5">{labels.successDetail}</p>
+      <button
+        id="closeSuccessModal"
+        class="px-5 py-2.5 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition"
+      >
+        {labels.close}
+      </button>
+    </div>
+
+    <!-- ==================== -->
+    <!-- ERROR STATE -->
+    <!-- ==================== -->
+    <div id="errorState" class="hidden p-6 text-center">
+      <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+        <svg class="w-7 h-7 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1">{labels.error}</h3>
+      <p class="text-slate-500 dark:text-slate-400 text-sm mb-5">{labels.errorDetail}</p>
+      <button
+        id="retryContactForm"
+        class="px-5 py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+      >
+        {labels.tryAgain}
+      </button>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+(function() {
+  const modal = document.getElementById('contactModal');
+  const selectionView = document.getElementById('selectionView');
+  const formView = document.getElementById('formView');
+  const form = document.getElementById('contactForm');
+  const closeBtn = document.getElementById('closeContactModal');
+  const selectMessageBtn = document.getElementById('selectMessageOption');
+  const backBtn = document.getElementById('backToSelection');
+  const submitBtn = document.getElementById('submitContactForm');
+  const submitText = document.getElementById('submitText');
+  const sendIcon = document.getElementById('sendIcon');
+  const loadingIcon = document.getElementById('loadingIcon');
+  const successState = document.getElementById('successState');
+  const errorState = document.getElementById('errorState');
+  const closeSuccessBtn = document.getElementById('closeSuccessModal');
+  const retryBtn = document.getElementById('retryContactForm');
+  
+  const formspreeEndpoint = modal?.dataset.formspree || '';
+  const lang = modal?.dataset.lang || 'es';
+  
+  const texts = {
+    es: { send: 'Enviar mensaje', sending: 'Enviando...' },
+    en: { send: 'Send message', sending: 'Sending...' }
+  };
+  
+  // View management
+  function showSelection() {
+    selectionView?.classList.remove('hidden');
+    formView?.classList.add('hidden');
+    successState?.classList.add('hidden');
+    errorState?.classList.add('hidden');
+  }
+  
+  function showFormView() {
+    selectionView?.classList.add('hidden');
+    formView?.classList.remove('hidden');
+    successState?.classList.add('hidden');
+    errorState?.classList.add('hidden');
+    // Focus first input
+    setTimeout(() => {
+      const firstInput = form?.querySelector('input[type="text"]');
+      if (firstInput) firstInput.focus();
+    }, 100);
+  }
+  
+  function showSuccess() {
+    selectionView?.classList.add('hidden');
+    formView?.classList.add('hidden');
+    successState?.classList.remove('hidden');
+    errorState?.classList.add('hidden');
+  }
+  
+  function showError() {
+    selectionView?.classList.add('hidden');
+    formView?.classList.add('hidden');
+    successState?.classList.add('hidden');
+    errorState?.classList.remove('hidden');
+  }
+  
+  function setLoading(loading) {
+    if (submitBtn) submitBtn.disabled = loading;
+    if (submitText) submitText.textContent = loading ? texts[lang].sending : texts[lang].send;
+    if (sendIcon) sendIcon.classList.toggle('hidden', loading);
+    if (loadingIcon) loadingIcon.classList.toggle('hidden', !loading);
+  }
+  
+  // Open modal function - shows selection first
+  window.openContactModal = function() {
+    if (modal) {
+      showSelection();
+      form?.reset();
+      setLoading(false);
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+  };
+  
+  // Close modal function
+  function closeModal() {
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+  }
+  
+  // Select message option -> show form
+  selectMessageBtn?.addEventListener('click', showFormView);
+  
+  // Back to selection
+  backBtn?.addEventListener('click', showSelection);
+  
+  // Close on button clicks
+  closeBtn?.addEventListener('click', closeModal);
+  closeSuccessBtn?.addEventListener('click', closeModal);
+  
+  // Retry button - go back to form
+  retryBtn?.addEventListener('click', function() {
+    showFormView();
+    setLoading(false);
+  });
+  
+  // Close on backdrop click
+  modal?.addEventListener('click', function(e) {
+    if (e.target === modal) closeModal();
+  });
+  
+  // Close on Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+      closeModal();
+    }
+  });
+  
+  // Form submission
+  form?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Check honeypot (bot detection)
+    const honeypot = form.querySelector('input[name="_gotcha"]');
+    if (honeypot && honeypot.value) {
+      showSuccess(); // Fake success for bots
+      return;
+    }
+    
+    setLoading(true);
+    
+    const formData = new FormData(form);
+    
+    try {
+      const response = await fetch(formspreeEndpoint, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        showSuccess();
+      } else {
+        showError();
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      showError();
+    }
+    
+    setLoading(false);
+  });
+  
+  // Attach to all contact triggers
+  document.addEventListener('click', function(e) {
+    const trigger = e.target.closest('[data-contact-trigger]');
+    if (trigger) {
+      e.preventDefault();
+      window.openContactModal();
+    }
+  });
+})();
+</script>

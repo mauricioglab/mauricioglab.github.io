@@ -30,23 +30,15 @@ const pages = keys.map(pathToRoute).sort((a, b) => a.segment.localeCompare(b.seg
 // i18n pages (manually added since they use [lang] dynamic routes)
 const i18nPages = [
   // Landing pages
-  { segment: 'es/landing/developer', name: 'Landing Developer (ES)', url: `${b}es/landing/developer/` },
-  { segment: 'en/landing/developer', name: 'Landing Developer (EN)', url: `${b}en/landing/developer/` },
-  { segment: 'es/landing/analista', name: 'Landing Analista (ES)', url: `${b}es/landing/analista/` },
-  { segment: 'en/landing/analista', name: 'Landing Analyst (EN)', url: `${b}en/landing/analista/` },
-  { segment: 'es/landing/ia-engineer', name: 'Landing IA Engineer (ES)', url: `${b}es/landing/ia-engineer/` },
-  { segment: 'en/landing/ia-engineer', name: 'Landing AI Engineer (EN)', url: `${b}en/landing/ia-engineer/` },
-  { segment: 'es/landing/freelance', name: 'Landing Freelance (ES)', url: `${b}es/landing/freelance/` },
-  { segment: 'en/landing/freelance', name: 'Landing Freelance (EN)', url: `${b}en/landing/freelance/` },
-  { segment: 'es/landing/speaker', name: 'Landing Speaker (ES)', url: `${b}es/landing/speaker/` },
-  { segment: 'en/landing/speaker', name: 'Landing Speaker (EN)', url: `${b}en/landing/speaker/` },
+  { segment: 'es/landing/developer', name: 'Landing Developer', url: `${b}es/landing/developer/` },
+  { segment: 'es/landing/analista', name: 'Landing Analista', url: `${b}es/landing/analista/` },
+  { segment: 'es/landing/ia-engineer', name: 'Landing IA Engineer', url: `${b}es/landing/ia-engineer/` },
+  { segment: 'es/landing/freelance', name: 'Landing Freelance', url: `${b}es/landing/freelance/` },
+  { segment: 'es/landing/speaker', name: 'Landing Speaker', url: `${b}es/landing/speaker/` },
   // Project case studies
-  { segment: 'es/proyectos/ecommerce-platform', name: 'Case Study: E-commerce (ES)', url: `${b}es/proyectos/ecommerce-platform/` },
-  { segment: 'en/proyectos/ecommerce-platform', name: 'Case Study: E-commerce (EN)', url: `${b}en/proyectos/ecommerce-platform/` },
-  { segment: 'es/proyectos/microservicios-api', name: 'Case Study: Microservicios (ES)', url: `${b}es/proyectos/microservicios-api/` },
-  { segment: 'en/proyectos/microservicios-api', name: 'Case Study: Microservices (EN)', url: `${b}en/proyectos/microservicios-api/` },
-  { segment: 'es/proyectos/task-manager-ddd', name: 'Case Study: Task Manager DDD (ES)', url: `${b}es/proyectos/task-manager-ddd/` },
-  { segment: 'en/proyectos/task-manager-ddd', name: 'Case Study: Task Manager DDD (EN)', url: `${b}en/proyectos/task-manager-ddd/` },
+  { segment: 'es/proyectos/ecommerce-platform', name: 'Case Study: E-commerce', url: `${b}es/proyectos/ecommerce-platform/` },
+  { segment: 'es/proyectos/microservicios-api', name: 'Case Study: Microservicios', url: `${b}es/proyectos/microservicios-api/` },
+  { segment: 'es/proyectos/task-manager-ddd', name: 'Case Study: Task Manager DDD', url: `${b}es/proyectos/task-manager-ddd/` },
 ];
 
 const allPages = [...pages, ...i18nPages];

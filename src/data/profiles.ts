@@ -1,11 +1,6 @@
-export type ProfileId = 'developer' | 'analista' | 'ia-engineer' | 'freelance' | 'speaker';
+import { SITE_CONFIG } from './config';
 
-// Shared URLs - update these once for all profiles
-const SHARED_URLS = {
-  github: 'https://github.com/tu-usuario',
-  linkedin: 'https://linkedin.com/in/mauricioglab',
-  email: 'tu-email@example.com'
-} as const;
+export type ProfileId = 'developer' | 'analista' | 'ia-engineer' | 'freelance' | 'speaker';
 
 export interface Profile {
   id: ProfileId;
@@ -26,10 +21,10 @@ export interface Profile {
 export const profiles: Record<ProfileId, Profile> = {
   developer: {
     id: 'developer',
-    cvUrl: '/cv-developer.pdf',
-    githubUrl: SHARED_URLS.github,
-    linkedinUrl: SHARED_URLS.linkedin,
-    email: SHARED_URLS.email,
+    cvUrl: SITE_CONFIG.cvs.developer,
+    githubUrl: SITE_CONFIG.github,
+    linkedinUrl: SITE_CONFIG.linkedin,
+    email: SITE_CONFIG.email,
     theme: {
       primary: 'blue-600',
       secondary: 'blue-100',
@@ -41,10 +36,10 @@ export const profiles: Record<ProfileId, Profile> = {
   },
   analista: {
     id: 'analista',
-    cvUrl: '/cv-analista.pdf',
-    githubUrl: SHARED_URLS.github,
-    linkedinUrl: SHARED_URLS.linkedin,
-    email: SHARED_URLS.email,
+    cvUrl: SITE_CONFIG.cvs.analista,
+    githubUrl: SITE_CONFIG.github,
+    linkedinUrl: SITE_CONFIG.linkedin,
+    email: SITE_CONFIG.email,
     theme: {
       primary: 'slate-900',
       secondary: 'slate-100',
@@ -56,10 +51,10 @@ export const profiles: Record<ProfileId, Profile> = {
   },
   'ia-engineer': {
     id: 'ia-engineer',
-    cvUrl: '/cv-ia.pdf',
-    githubUrl: SHARED_URLS.github,
-    linkedinUrl: SHARED_URLS.linkedin,
-    email: SHARED_URLS.email,
+    cvUrl: SITE_CONFIG.cvs['ia-engineer'],
+    githubUrl: SITE_CONFIG.github,
+    linkedinUrl: SITE_CONFIG.linkedin,
+    email: SITE_CONFIG.email,
     theme: {
       primary: 'emerald-600',
       secondary: 'emerald-500/10',
@@ -71,10 +66,10 @@ export const profiles: Record<ProfileId, Profile> = {
   },
   freelance: {
     id: 'freelance',
-    cvUrl: '/cv-freelance.pdf',
-    githubUrl: SHARED_URLS.github,
-    linkedinUrl: SHARED_URLS.linkedin,
-    email: SHARED_URLS.email,
+    cvUrl: SITE_CONFIG.cvs.freelance,
+    githubUrl: SITE_CONFIG.github,
+    linkedinUrl: SITE_CONFIG.linkedin,
+    email: SITE_CONFIG.email,
     theme: {
       primary: 'orange-600',
       secondary: 'orange-100',
@@ -86,10 +81,10 @@ export const profiles: Record<ProfileId, Profile> = {
   },
   speaker: {
     id: 'speaker',
-    cvUrl: '/cv-speaker.pdf',
-    githubUrl: SHARED_URLS.github,
-    linkedinUrl: SHARED_URLS.linkedin,
-    email: SHARED_URLS.email,
+    cvUrl: SITE_CONFIG.cvs.speaker,
+    githubUrl: SITE_CONFIG.github,
+    linkedinUrl: SITE_CONFIG.linkedin,
+    email: SITE_CONFIG.email,
     theme: {
       primary: 'purple-600',
       secondary: 'purple-100',

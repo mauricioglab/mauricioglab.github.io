@@ -7,6 +7,7 @@ import StatsGrid from '@components/landing/StatsGrid.astro';
 import ExperienceTimeline from '@components/landing/ExperienceTimeline.astro';
 import CTASection from '@components/landing/CTASection.astro';
 import { profiles } from '@data/profiles';
+import { SITE_CONFIG } from '@data/config';
 import { getLanguagePaths } from '@utils/i18n-paths';
 import { 
   type Lang, 
@@ -97,9 +98,8 @@ const experiences = [
 
 // CTA buttons configuration
 const ctaButtons = [
-  { text: content.hero.ctaPrimary, href: 'https://calendly.com/mauricio-gonzalez', icon: 'fas fa-calendar-alt', primary: true, external: true },
-  { text: t.cta.sendEmail, href: `mailto:${profile.email}`, icon: 'fas fa-envelope' },
-  { text: t.cta.connectLinkedIn, href: profile.linkedinUrl, icon: 'fab fa-linkedin', external: true },
+  { text: t.cta.contact, href: '#', icon: 'fas fa-envelope', primary: true, isContactTrigger: true },
+  { text: t.cta.downloadCV, href: profile.cvUrl, icon: 'fas fa-file-pdf' },
 ];
 ---
 

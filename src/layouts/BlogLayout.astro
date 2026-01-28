@@ -1,6 +1,6 @@
 ---
-import { getCollection } from 'astro:content';
-import { normalizeBaseUrl } from '../utils/blog';
+import { getCollection } from "astro:content";
+import { normalizeBaseUrl } from "../utils/blog";
 
 interface Props {
   title: string;
@@ -10,61 +10,114 @@ interface Props {
   lang?: string;
 }
 
-const { title, description, blogTitle = "Blog", blogSubtitle = "Artículos y pensamientos", lang = "es" } = Astro.props;
+const {
+  title,
+  description,
+  blogTitle = "Blog",
+  blogSubtitle = "Artículos y pensamientos",
+  lang = "es",
+} = Astro.props;
 const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
 
 // Get all categories dynamically from posts
-const posts = await getCollection('blog', ({ data }) => !data.draft);
+const posts = await getCollection("blog", ({ data }) => !data.draft);
 const allCategories = Array.from(
-  new Set(posts.flatMap(post => post.data.categories))
+  new Set(posts.flatMap((post) => post.data.categories)),
 ).sort();
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description || title} />
-    <link rel="icon" type="image/svg+xml" href={`${normalizedBase}favicon.svg`} />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href={`${normalizedBase}favicon.svg`}
+    />
     <link rel="icon" href={`${normalizedBase}favicon.ico`} />
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <slot name="head" />
   </head>
-  <body class="min-h-screen flex flex-col bg-white text-[#594a42] antialiased" style="font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 18px; line-height: 27px;">
+  <body
+    class="min-h-screen flex flex-col bg-white text-[#594a42] antialiased"
+    style="font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 18px; line-height: 27px;"
+  >
     <div class="site-container min-h-screen flex flex-col">
       <!-- Top Brown Line -->
       <div class="top-line h-1 bg-[#A09188]"></div>
-      
+
       <!-- Top Navigation Bar (like becomingminimalist.com) -->
-      <nav class="nav-primary bg-transparent border-b border-[#e5e5e5]" aria-label="Navegación principal">
+      <nav
+        class="nav-primary bg-transparent border-b border-[#e5e5e5]"
+        aria-label="Navegación principal"
+      >
         <div class="wrap max-w-[1140px] mx-auto px-5 flex justify-center">
           <ul class="menu flex flex-wrap justify-center list-none gap-0">
-            <li><a href={`${normalizedBase}blog/about/`} class="block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#594a42] hover:opacity-80" aria-label="Acerca del blog"><span>Acerca de</span></a></li>
-            <li><a href={`${normalizedBase}blog/`} class="block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#594a42] hover:opacity-80" aria-label="Lista de artículos"><span>Blog</span></a></li>
-            {allCategories.map((category) => (
-              <li key={category}>
-                <a href={`${normalizedBase}blog/category/${category.toLowerCase().replace(/\s+/g, '-')}/`} class="block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#594a42] hover:opacity-80" aria-label={`Artículos de la categoría ${category}`}>
-                  <span>{category}</span>
-                </a>
-              </li>
-            ))}
+            <li>
+              <a
+                href={`${normalizedBase}blog/about/`}
+                class="block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#594a42] hover:opacity-80"
+                aria-label="Acerca del blog"><span>Acerca de</span></a
+              >
+            </li>
+            <li>
+              <a
+                href={`${normalizedBase}blog/`}
+                class="block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#594a42] hover:opacity-80"
+                aria-label="Lista de artículos"><span>Blog</span></a
+              >
+            </li>
+            {
+              allCategories.map((category) => (
+                <li key={category}>
+                  <a
+                    href={`${normalizedBase}blog/category/${category.toLowerCase().replace(/\s+/g, "-")}/`}
+                    class="block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#594a42] hover:opacity-80"
+                    aria-label={`Artículos de la categoría ${category}`}
+                  >
+                    <span>{category}</span>
+                  </a>
+                </li>
+              ))
+            }
           </ul>
         </div>
       </nav>
 
       <!-- Header -->
-      <header class="site-header py-[30px] md:py-10 md:pb-[30px] px-0 text-center relative overflow-hidden" style="background: linear-gradient(135deg, #faf9f7 0%, #f5f4f2 50%, #faf9f7 100%);">
-        <div class="absolute inset-0 opacity-30" style="background-image: radial-gradient(circle at 20% 50%, rgba(89, 74, 66, 0.03) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(89, 74, 66, 0.02) 0%, transparent 50%);"></div>
+      <header
+        class="site-header py-[30px] md:py-10 md:pb-[30px] px-0 text-center relative overflow-hidden"
+        style="background: linear-gradient(135deg, #faf9f7 0%, #f5f4f2 50%, #faf9f7 100%);"
+      >
+        <div
+          class="absolute inset-0 opacity-30"
+          style="background-image: radial-gradient(circle at 20% 50%, rgba(89, 74, 66, 0.03) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(89, 74, 66, 0.02) 0%, transparent 50%);"
+        >
+        </div>
         <div class="wrap max-w-[1140px] mx-auto px-5 relative z-10">
           <div class="title-area mx-auto">
-            <h1 class="site-title text-[28px] md:text-4xl font-normal tracking-[0.3px] text-[#594a42] m-0">
-              <a href={`${normalizedBase}blog/`} class="text-[#594a42] hover:opacity-80">{blogTitle}</a>
+            <h1
+              class="site-title text-[28px] md:text-4xl font-normal tracking-[0.3px] text-[#594a42] m-0"
+            >
+              <a
+                href={`${normalizedBase}blog/`}
+                class="text-[#594a42] hover:opacity-80">{blogTitle}</a
+              >
             </h1>
-            <p class="site-description mt-2 text-base font-normal italic text-[#594a42] m-0">{blogSubtitle}</p>
+            <p
+              class="site-description mt-2 text-base font-normal italic text-[#594a42] m-0"
+            >
+              {blogSubtitle}
+            </p>
           </div>
         </div>
       </header>
@@ -79,10 +132,32 @@ const allCategories = Array.from(
       </div>
 
       <!-- Footer -->
-      <footer class="site-footer py-10 px-5 text-center text-lg text-[#594a42] relative overflow-hidden" style="background: linear-gradient(135deg, #faf9f7 0%, #f5f4f2 50%, #faf9f7 100%);" role="contentinfo">
-        <div class="absolute inset-0 opacity-30" style="background-image: radial-gradient(circle at 20% 50%, rgba(89, 74, 66, 0.03) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(89, 74, 66, 0.02) 0%, transparent 50%);"></div>
+      <footer
+        class="site-footer py-10 px-5 text-center text-lg text-[#594a42] relative overflow-hidden"
+        style="background: linear-gradient(135deg, #faf9f7 0%, #f5f4f2 50%, #faf9f7 100%);"
+        role="contentinfo"
+      >
+        <div
+          class="absolute inset-0 opacity-30"
+          style="background-image: radial-gradient(circle at 20% 50%, rgba(89, 74, 66, 0.03) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(89, 74, 66, 0.02) 0%, transparent 50%);"
+        >
+        </div>
         <div class="wrap max-w-[1140px] mx-auto px-5 relative z-10">
-          <p>&copy; {new Date().getFullYear()} MG Lab &middot; <a href={`${normalizedBase}blog/archives/`} class="text-[#594a42] hover:opacity-80" aria-label="Archivo de artículos">Archivo</a> &middot; <a href={`${normalizedBase}blog/search/`} class="text-[#594a42] hover:opacity-80" aria-label="Buscar artículos">Buscar</a> &middot; <a href={`${normalizedBase}blog/privacy/`} class="text-[#594a42] hover:opacity-80" aria-label="Política de privacidad">Privacidad</a></p>
+          <p>
+            &copy; {new Date().getFullYear()} MG Lab &middot; <a
+              href={`${normalizedBase}blog/archives/`}
+              class="text-[#594a42] hover:opacity-80"
+              aria-label="Archivo de artículos">Archivo</a
+            > &middot; <a
+              href={`${normalizedBase}blog/search/`}
+              class="text-[#594a42] hover:opacity-80"
+              aria-label="Buscar artículos">Buscar</a
+            > &middot; <a
+              href={`${normalizedBase}blog/privacy/`}
+              class="text-[#594a42] hover:opacity-80"
+              aria-label="Política de privacidad">Privacidad</a
+            >
+          </p>
         </div>
       </footer>
     </div>
@@ -91,9 +166,16 @@ const allCategories = Array.from(
       /* ==========================================
          RESET
          ========================================== */
-      * { margin: 0; padding: 0; box-sizing: border-box; }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-      img { max-width: 100%; height: auto; }
+      img {
+        max-width: 100%;
+        height: auto;
+      }
 
       /* ==========================================
          ENTRY / ARTICLE - Shared styles
@@ -225,6 +307,14 @@ const allCategories = Array.from(
         text-align: center;
       }
 
+      /* Featured image in header - allow max-height control */
+      /* .entry-header img {
+        height: auto !important;
+        max-height: 1000px;
+        width: auto;
+        object-fit: contain;
+      } */
+
       /* Code */
       .entry-content pre {
         margin: 28px 0;
@@ -238,7 +328,7 @@ const allCategories = Array.from(
       }
 
       .entry-content code {
-        font-family: Consolas, Monaco, 'Courier New', monospace;
+        font-family: Consolas, Monaco, "Courier New", monospace;
         font-size: 0.9em;
         background: #f5f5f5;
         padding: 2px 5px;

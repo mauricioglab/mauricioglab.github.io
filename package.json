@@ -4,8 +4,9 @@
   "version": "0.0.1",
   "scripts": {
     "build:extensions": "tsx src/utils/build-extensions.ts",
-    "dev": "npm run build:extensions && astro dev",
-    "build": "npm run build:extensions && astro build",
+    "images:optimize": "node src/utils/resize-blog-images.js",
+    "dev": "npm run images:optimize && npm run build:extensions && astro dev",
+    "build": "npm run images:optimize && npm run build:extensions && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
