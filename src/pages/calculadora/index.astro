@@ -31,12 +31,12 @@ const title = "Creatopia Calc";
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 500px;
             margin: 0 auto;
             background: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
         
         h1, h2, h3 {
@@ -45,8 +45,8 @@ const title = "Creatopia Calc";
         
         .calculator-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
             margin: 20px 0;
         }
         
@@ -192,13 +192,11 @@ const title = "Creatopia Calc";
         }
         
         .collapsible-content {
-            padding: 15px;
-            border-top: 1px solid #e5e7eb;
-            display: none;
+            display: none !important;
         }
         
         .collapsible-content.show {
-            display: block;
+            display: block !important;
         }
         
         .hidden {
@@ -266,11 +264,28 @@ const title = "Creatopia Calc";
             margin: 30px 0;
         }
         
+        .header-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
         .header img,
         .header .logo-image {
-            height: 60px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        .header h1 {
+            margin: 0;
+            line-height: 1.2;
+        }
+        
+        .header p {
+            margin: 0;
         }
         
         small {
@@ -278,7 +293,7 @@ const title = "Creatopia Calc";
             font-size: 0.9em;
         }
         
-        @media (max-width: 768px) {
+        @media (max-width: 480px) {
             .calculator-grid {
                 grid-template-columns: 1fr;
             }
@@ -304,146 +319,158 @@ const title = "Creatopia Calc";
     </style>
         <!-- Header -->
         <div class="header">
-            <Image src={calculadoraLogo} alt="Creatopia Calc" class="logo-image" />
-            <h1>{title}</h1>
-            <p>Calculadora de costos para impresión 3D</p>
+            <div class="header-title">
+                <Image src={calculadoraLogo} alt="Creatopia Calc" class="logo-image rounded-xl shadow-md" />
+                <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{title}</h1>
+            </div>
+            <p class="text-slate-500 text-sm md:text-base mt-2">Calculadora de costos para impresión 3D</p>
         </div>
 
         <!-- Formulario Principal -->
-        <section>
-            <h2>Datos de Impresión</h2>
-            <div class="calculator-grid">
-                <div class="form-group">
-                    <label for="horasImpresion">Horas:</label>
+        <section class="space-y-2">
+            <!-- Fila principal: Horas, Minutos, Gramos -->
+            <div class="flex gap-3">
+                <div class="form-group flex-1">
+                    <label for="horasImpresion">Horas</label>
                     <input type="number" id="horasImpresion" step="0.01" placeholder="0">
                 </div>
-                <div class="form-group">
-                    <label for="minutosImpresion">Minutos:</label>
+                <div class="form-group flex-1">
+                    <label for="minutosImpresion">Minutos</label>
                     <input type="number" id="minutosImpresion" value="0" placeholder="0">
                 </div>
-                <div class="form-group">
-                    <label for="gramosFilamento">Gramos:</label>
+                <div class="form-group flex-1">
+                    <label for="gramosFilamento">Gramos</label>
                     <input type="number" id="gramosFilamento" step="0.1" placeholder="0">
                 </div>
-                <div class="form-group">
-                    <label for="costoFilamento">Costo ($/kg):</label>
+            </div>
+            <!-- Fila: Costo, Cantidad, Precio ML -->
+            <div class="flex gap-3">
+                <div class="form-group flex-1">
+                    <label for="costoFilamento">$/kg</label>
                     <input type="number" id="costoFilamento" step="0.01" placeholder="20000">
                 </div>
-                <div class="form-group">
-                    <label for="cantidad">Cantidad (camas):</label>
+                <div class="form-group flex-1">
+                    <label for="cantidad">Unidades</label>
                     <input type="number" id="cantidad" value="1" min="1" placeholder="1">
                 </div>
-                <div class="form-group">
-                    <label for="precioMercadoLibre">Precio ML ($) - Opcional:</label>
+                <div class="form-group flex-1">
+                    <label for="precioMercadoLibre">Precio Meli</label>
                     <input type="number" id="precioMercadoLibre" value="0" step="0.01" placeholder="0">
                 </div>
             </div>
         </section>
 
         <!-- Botón Calcular -->
-        <section class="text-center">
+        <section class="text-center py-4">
             <button onclick="window.calcular()" class="btn-primary btn-full">🧮 Calcular</button>
         </section>
 
         <!-- Botones de Acción -->
-        <section>
-            <div class="calculator-grid">
-                <button onclick="window.toggleHistorial()" class="btn-secondary">📋 Historial</button>
-                <button onclick="window.nombrarEntrada()" class="btn-secondary">✏️ Nombrar</button>
-                <button onclick="window.toggleTestInterno()" class="btn-secondary hidden" id="testButton">🧪 Test ML</button>
-                <button onclick="window.toggleCostosFijos()" class="btn-secondary">⚙️ Configuración</button>
+        <section class="pt-2">
+            <div class="flex gap-2">
+                <button onclick="window.toggleHistorial()" class="btn-secondary flex-1 text-sm">📋 Historial</button>
+                <button onclick="window.nombrarEntrada()" class="btn-secondary flex-1 text-sm">💾 Guardar</button>
+                <button onclick="window.toggleCostosFijos()" class="btn-secondary flex-1 text-sm">⚙️ Config</button>
             </div>
+            <button onclick="window.toggleTestInterno()" class="btn-secondary hidden" id="testButton">🧪 Test ML</button>
         </section>
 
         <!-- Sección de Historial -->
-        <section id="historial" class="hidden">
-            <h2>📋 Historial de Cálculos</h2>
-            <div id="historialLista"></div>
-            <button onclick="window.limpiarHistorial()" class="btn-outline btn-full">Limpiar Historial</button>
+        <section id="historial" class="hidden mt-6">
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                <h2 class="text-lg font-semibold text-slate-800 mb-3 pb-2 border-b border-slate-200">📋 Historial de Cálculos</h2>
+                <div id="historialLista" class="mb-3"></div>
+                <button onclick="window.limpiarHistorial()" class="btn-outline btn-full text-sm">Limpiar Historial</button>
+            </div>
         </section>
 
         <!-- Sección de Configuración -->
-        <section id="costosFijos" class="hidden">
-            <h2>⚙️ Configuración</h2>
-            
-            <div style="margin-bottom: 30px;">
+        <section id="costosFijos" class="hidden mt-6">
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                <h2 class="text-lg font-semibold text-slate-800 mb-4 pb-2 border-b border-slate-200">⚙️ Configuración</h2>
+                
+                <div class="flex gap-2 mb-4">
+                    <button onclick="window.cargarReferencias()" class="btn-secondary flex-1 text-xs">Predeterminados</button>
+                    <button onclick="window.resetear()" class="btn-outline flex-1 text-xs">Borrar</button>
+                </div>
+                <div class="flex gap-2 mb-4">
+                    <button onclick="window.exportarJSON()" class="btn-secondary flex-1 text-xs">📤 Exportar</button>
+                    <button onclick="window.importarJSON()" class="btn-secondary flex-1 text-xs">📥 Importar</button>
+                </div>
+
+                <h3 class="text-sm font-semibold text-slate-600 mb-2 flex items-center gap-2">💰 Costos Fijos</h3>
                 <div class="calculator-grid">
-                    <button onclick="window.cargarReferencias()" class="btn-secondary">Valores Predeterminados</button>
-                    <button onclick="window.resetear()" class="btn-outline">Borrar Todo</button>
-                    <button onclick="window.exportarJSON()" class="btn-secondary">Exportar JSON</button>
+                    <div class="form-group">
+                        <label for="precioKwh">kWh ($/kWh):</label>
+                        <input type="number" id="precioKwh" placeholder="234">
+                    </div>
+                    <div class="form-group">
+                        <label for="consumoW">Consumo (W):</label>
+                        <input type="number" id="consumoW" placeholder="120">
+                    </div>
+                    <div class="form-group">
+                        <label for="desgasteHoras">Vida útil (h):</label>
+                        <input type="number" id="desgasteHoras" placeholder="15000">
+                    </div>
+                    <div class="form-group">
+                        <label for="valorImpresora">Valor imp. ($):</label>
+                        <input type="number" id="valorImpresora" placeholder="1363990">
+                    </div>
+                    <div class="form-group">
+                        <label for="margenError">% Error:</label>
+                        <input type="number" id="margenError" value="30" placeholder="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="comisionML">Comisión ML (%):</label>
+                        <input type="number" id="comisionML" value="30" step="1" placeholder="30">
+                    </div>
                 </div>
-            </div>
 
-            <h3>💰 Costos Fijos</h3>
-            <div class="calculator-grid">
-                <div class="form-group">
-                    <label for="precioKwh">kWh ($/kWh):</label>
-                    <input type="number" id="precioKwh" placeholder="234">
+                <h3 class="text-sm font-semibold text-slate-600 mb-2 mt-5 flex items-center gap-2">🔧 Insumos</h3>
+                <div class="calculator-grid">
+                    <div class="form-group">
+                        <label for="insumos">Insumos ($):</label>
+                        <input type="number" id="insumos" value="0" step="0.01" placeholder="0">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="consumoW">Consumo (W):</label>
-                    <input type="number" id="consumoW" placeholder="120">
-                </div>
-                <div class="form-group">
-                    <label for="desgasteHoras">Vida útil (h):</label>
-                    <input type="number" id="desgasteHoras" placeholder="15000">
-                </div>
-                <div class="form-group">
-                    <label for="valorImpresora">Valor imp. ($):</label>
-                    <input type="number" id="valorImpresora" placeholder="1363990">
-                </div>
-                <div class="form-group">
-                    <label for="margenError">% Error:</label>
-                    <input type="number" id="margenError" value="30" placeholder="30">
-                </div>
-                <div class="form-group">
-                    <label for="comisionML">Comisión ML (%):</label>
-                    <input type="number" id="comisionML" value="30" step="1" placeholder="30">
-                </div>
-            </div>
 
-            <h3>🔧 Insumos</h3>
-            <div class="calculator-grid">
-                <div class="form-group">
-                    <label for="insumos">Insumos ($):</label>
-                    <input type="number" id="insumos" value="0" step="0.01" placeholder="0">
+                <h3 class="text-sm font-semibold text-slate-600 mb-2 mt-5 flex items-center gap-2">🔗 Extras Llaveros</h3>
+                <div class="calculator-grid">
+                    <div class="form-group">
+                        <label for="precioCadena">Precio cadena:</label>
+                        <input type="number" id="precioCadena" value="0" step="0.01" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="cantidadCadenas">Cantidad:</label>
+                        <input type="number" id="cantidadCadenas" value="0" min="0" placeholder="0">
+                    </div>
                 </div>
-            </div>
 
-            <h3>🔗 Extras Llaveros (opcional)</h3>
-            <div class="calculator-grid">
-                <div class="form-group">
-                    <label for="precioCadena">Precio cadena ($/ud):</label>
-                    <input type="number" id="precioCadena" value="0" step="0.01" placeholder="0">
+                <h3 class="text-sm font-semibold text-slate-600 mb-2 mt-5 flex items-center gap-2">💸 Precios</h3>
+                <div class="calculator-grid">
+                    <div class="form-group">
+                        <label for="descuentoVentaPersona">Descuento (%):</label>
+                        <input type="number" id="descuentoVentaPersona" step="1" value="5" min="0" max="100" placeholder="5">
+                        <small class="text-slate-500 text-xs">% menos que ML Competencia</small>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="cantidadCadenas">Cantidad cadenas:</label>
-                    <input type="number" id="cantidadCadenas" value="0" min="0" placeholder="0">
+                
+                <div class="mt-4 pt-3 border-t border-slate-200">
+                    <label class="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
+                        <input type="checkbox" id="debugMode" onchange="window.toggleDebugMode()" class="rounded">
+                        🔧 Modo Debug
+                    </label>
+                    <small class="text-slate-400 text-xs">Herramientas de desarrollo</small>
                 </div>
-            </div>
-
-            <h3>💸 Precios</h3>
-            <div class="calculator-grid">
-                <div class="form-group">
-                    <label for="descuentoVentaPersona">Descuento Venta Persona (%):</label>
-                    <input type="number" id="descuentoVentaPersona" step="1" value="5" min="0" max="100" placeholder="5">
-                    <small>% menos que ML Competencia</small>
-                </div>
-            </div>
-            
-            <div style="margin-top: 30px;">
-                <label>
-                    <input type="checkbox" id="debugMode" onchange="window.toggleDebugMode()">
-                    🔧 Modo Debug
-                </label>
-                <br><small>Mostrar herramientas de desarrollo y testing</small>
             </div>
         </section>
 
         <!-- Sección de Resultados -->
-        <section id="resultados" class="hidden">
-            <h2>📊 Resultados</h2>
-            <div id="detalleResultados"></div>
+        <section id="resultados" class="hidden mt-6">
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                <h2 class="text-lg font-semibold text-blue-800 mb-3 pb-2 border-b border-blue-200">📊 Resultados</h2>
+                <div id="detalleResultados"></div>
+            </div>
         </section>
     </div>
 
@@ -464,11 +491,13 @@ const title = "Creatopia Calc";
                 toggleCostosFijos: () => void;
                 calcular: () => void;
                 showTab: (tabId: string) => void;
+                setDecision: (type: string, value: boolean) => void;
                 toggleCollapsible: (id: string, eventElement?: HTMLElement) => void;
                 guardarDatos: () => void;
                 cargarReferencias: () => void;
                 resetear: () => void;
                 exportarJSON: () => void;
+                importarJSON: () => void;
                 mostrarHistorial: () => void;
                 limpiarHistorial: () => void;
                 toggleTestInterno: () => void;
@@ -682,51 +711,53 @@ const title = "Creatopia Calc";
             const totalMLCompetenciaFinal = (precioMLCompetenciaRedondeado * cantidad) + costoCadenas;
             const totalMLSinCompetenciaFinal = (precioMLSinCompetenciaRedondeado * cantidad) + costoCadenas;
 
-            // Generar HTML de resultados
+            // Generar HTML de resultados con árbol de decisión
             let html = `
-                <!-- Pestañas de navegación -->
-                <div class="result-tabs">
-                    <button class="tab-button active" onclick="window.showTab('venta-persona', this)">
-                        💵 Venta a Persona (-${descuentoVentaPersona}%)
-                    </button>
-                    <button class="tab-button" onclick="window.showTab('ml-competencia', this)">
-                        🛒 ML Competencia (${gananciaCompetencia}%)
-                    </button>
-                    <button class="tab-button" onclick="window.showTab('ml-sin-competencia', this)">
-                        ⭐ ML Sin Competencia (${gananciaSinCompetencia}%)
-                    </button>
-                </div>
-                
-                <!-- Contenido de pestañas -->
-                <div id="venta-persona" class="tab-content active">
-                    <div class="price-final price-persona">
-                        <h3>💵 Venta a Persona (-${descuentoVentaPersona}% sobre ML Competencia)</h3>
-                        <div>📊 Suma de Costos: $${Math.round(costoTotal).toLocaleString('es-AR')}</div>
-                        <div>💰 Ganancia: $${Math.round(gananciaReal).toLocaleString('es-AR')}</div>
-                        <div style="font-size: 1.5rem; margin-top: 15px;">
-                            💵 Precio Final: $${window.formatoPrecioFinal(totalCobrarRedondeado)}
+                <!-- Árbol de decisión -->
+                <div class="decision-tree mb-4">
+                    <!-- Pregunta 1: ¿MercadoLibre? -->
+                    <div class="flex items-center justify-between p-3 bg-slate-100 rounded-lg mb-2">
+                        <span class="text-sm font-medium text-slate-700">¿Vender en MercadoLibre?</span>
+                        <div class="flex gap-2">
+                            <button id="btn-no-ml" onclick="window.setDecision('ml', false)" class="decision-btn active px-3 py-1 text-xs rounded-full bg-green-600 text-white">No</button>
+                            <button id="btn-si-ml" onclick="window.setDecision('ml', true)" class="decision-btn px-3 py-1 text-xs rounded-full bg-slate-300 text-slate-600">Sí</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Pregunta 2: ¿Hay competencia? (solo si ML=sí) -->
+                    <div id="competencia-question" class="hidden flex items-center justify-between p-3 bg-slate-100 rounded-lg mb-2">
+                        <span class="text-sm font-medium text-slate-700">¿Hay competencia en Meli?</span>
+                        <div class="flex gap-2">
+                            <button id="btn-si-comp" onclick="window.setDecision('comp', true)" class="decision-btn active px-3 py-1 text-xs rounded-full bg-orange-500 text-white">Sí</button>
+                            <button id="btn-no-comp" onclick="window.setDecision('comp', false)" class="decision-btn px-3 py-1 text-xs rounded-full bg-slate-300 text-slate-600">No</button>
                         </div>
                     </div>
                 </div>
                 
-                <div id="ml-competencia" class="tab-content">
-                    <div class="price-final price-competencia">
-                        <h3>🛒 ML Competencia (${gananciaCompetencia}%)</h3>
-                        <div>📊 Suma de Costos: $${Math.round(costoTotal).toLocaleString('es-AR')}</div>
-                        <div>💰 Ganancia: $${Math.round(gananciaMLCompetencia).toLocaleString('es-AR')}</div>
-                        <div style="font-size: 1.5rem; margin-top: 15px;">
-                            💵 Precio Final: $${window.formatoPrecioFinal(precioMLCompetenciaRedondeado)}
-                        </div>
+                <!-- Precio resultante -->
+                <div id="price-result-direct" class="price-result">
+                    <div class="text-center p-6 bg-green-50 border-2 border-green-200 rounded-xl">
+                        <div class="text-sm text-green-600 font-medium mb-1">💵 Venta Directa</div>
+                        <div class="text-4xl font-bold text-green-700">$${window.formatoPrecioFinal(totalCobrarRedondeado)}</div>
+                        <div class="text-xs text-green-500 mt-2">Costo: $${Math.round(costoTotal).toLocaleString('es-AR')} | Ganancia: $${Math.round(gananciaReal).toLocaleString('es-AR')}</div>
                     </div>
                 </div>
                 
-                <div id="ml-sin-competencia" class="tab-content">
-                    <div class="price-final price-sin-competencia">
-                        <h3>⭐ ML Sin Competencia (${gananciaSinCompetencia}%)</h3>
-                        <div>📊 Suma de Costos: $${Math.round(costoTotal).toLocaleString('es-AR')}</div>
-                        <div>💰 Ganancia: $${Math.round(gananciaMLSinCompetencia).toLocaleString('es-AR')}</div>
-                        <div style="font-size: 1.5rem; margin-top: 15px;">
-                            💵 Precio Final: $${window.formatoPrecioFinal(precioMLSinCompetenciaRedondeado)}
+                <div id="price-result-ml-comp" class="price-result hidden">
+                    <div class="text-center p-6 bg-orange-50 border-2 border-orange-200 rounded-xl">
+                        <div class="text-sm text-orange-600 font-medium mb-1">🛒 MercadoLibre (con competencia)</div>
+                        <div class="text-4xl font-bold text-orange-700">$${window.formatoPrecioFinal(precioMLCompetenciaRedondeado)}</div>
+                        <div class="text-xs text-orange-500 mt-2">Costo: $${Math.round(costoTotal).toLocaleString('es-AR')} | Ganancia: $${Math.round(gananciaMLCompetencia).toLocaleString('es-AR')}</div>
+                    </div>
+                </div>
+                
+                <div id="price-result-ml-nocomp" class="price-result hidden">
+                    <div class="text-center p-6 bg-purple-50 border-2 border-purple-200 rounded-xl">
+                        <div class="text-sm text-purple-600 font-medium mb-1">⭐ MercadoLibre (sin competencia)</div>
+                        <div class="text-4xl font-bold text-purple-700">$${window.formatoPrecioFinal(precioMLSinCompetenciaRedondeado)}</div>
+                        <div class="text-xs text-purple-500 mt-2">Costo: $${Math.round(costoTotal).toLocaleString('es-AR')} | Ganancia: $${Math.round(gananciaMLSinCompetencia).toLocaleString('es-AR')}</div>
+                        <div class="mt-3 p-2 bg-purple-100 rounded-lg text-xs text-purple-700">
+                            ⚠️ Este es el <strong>precio máximo sugerido</strong>. Podés publicar a este valor o menos según tu estrategia.
                         </div>
                     </div>
                 </div>
@@ -734,31 +765,31 @@ const title = "Creatopia Calc";
                 ${window.generarAlertaGeneral(totalCobrarRedondeado, precioMLCompetenciaRedondeado, precioMLSinCompetenciaRedondeado)}
                 
                 <!-- Desglose de costos -->
-                <div class="collapsible">
-                    <div class="collapsible-header" onclick="window.toggleCollapsible('detalle-costos', this)">
-                        <span>📊 Ver Desglose de Costos</span>
-                        <span>▼</span>
-                    </div>
-                    <div class="collapsible-content" id="detalle-costos">
-                        <div>Material (${gramos}g): $${window.formatoArgentino(costoMaterial)}</div>
-                        <div>Electricidad (${tiempoTotalHoras.toFixed(2)}h): $${window.formatoArgentino(costoElectricidad)}</div>
-                        <div>Desgaste: $${window.formatoArgentino(costoDesgaste)}</div>
-                        <div style="font-weight: bold; margin-top: 15px;">
-                            💰 Costo Base: $${window.formatoArgentino(costoBase)}
+                <div class="mt-4 border border-slate-200 rounded-lg overflow-hidden">
+                    <button class="collapsible-header w-full flex justify-between items-center p-3 bg-slate-50 hover:bg-slate-100 text-left" onclick="window.toggleCollapsible('detalle-costos', this)">
+                        <span class="text-sm font-medium text-slate-600">📊 Ver Desglose de Costos</span>
+                        <span class="text-slate-400">▼</span>
+                    </button>
+                    <div class="collapsible-content p-3 text-sm text-slate-600 border-t border-slate-200" id="detalle-costos">
+                        <div class="flex justify-between py-1"><span>Material (${gramos}g)</span><span>$${window.formatoArgentino(costoMaterial)}</span></div>
+                        <div class="flex justify-between py-1"><span>Electricidad (${tiempoTotalHoras.toFixed(2)}h)</span><span>$${window.formatoArgentino(costoElectricidad)}</span></div>
+                        <div class="flex justify-between py-1"><span>Desgaste</span><span>$${window.formatoArgentino(costoDesgaste)}</span></div>
+                        <div class="flex justify-between py-2 mt-2 border-t border-slate-200 font-semibold text-slate-700">
+                            <span>💰 Costo Base</span><span>$${window.formatoArgentino(costoBase)}</span>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Margen de error -->
-                <div class="collapsible">
-                    <div class="collapsible-header" onclick="window.toggleCollapsible('detalle-margen', this)">
-                        <span>⚠️ Ver Margen de Error</span>
-                        <span>▼</span>
-                    </div>
-                    <div class="collapsible-content" id="detalle-margen">
-                        <div>Margen de Error ${(margenErrorPct*100).toFixed(0)}%: $${window.formatoArgentino(margenError)}</div>
-                        <div style="font-weight: bold; margin-top: 15px;">
-                            Con Margen de Error: $${window.formatoArgentino(costoConMargen)}
+                <div class="mt-2 border border-slate-200 rounded-lg overflow-hidden">
+                    <button class="collapsible-header w-full flex justify-between items-center p-3 bg-slate-50 hover:bg-slate-100 text-left" onclick="window.toggleCollapsible('detalle-margen', this)">
+                        <span class="text-sm font-medium text-slate-600">⚠️ Ver Margen de Error</span>
+                        <span class="text-slate-400">▼</span>
+                    </button>
+                    <div class="collapsible-content p-3 text-sm text-slate-600 border-t border-slate-200" id="detalle-margen">
+                        <div class="flex justify-between py-1"><span>Margen de Error ${(margenErrorPct*100).toFixed(0)}%</span><span>$${window.formatoArgentino(margenError)}</span></div>
+                        <div class="flex justify-between py-2 mt-2 border-t border-slate-200 font-semibold text-slate-700">
+                            <span>Con Margen de Error</span><span>$${window.formatoArgentino(costoConMargen)}</span>
                         </div>
                     </div>
                 </div>
@@ -816,6 +847,67 @@ const title = "Creatopia Calc";
             if (detalleResultados) detalleResultados.innerHTML = html;
             if (resultados) resultados.classList.remove('hidden');
             window.guardarDatos();
+        };
+
+        // Estado de decisiones
+        let decisionState = { ml: false, comp: true };
+        
+        // Función para manejar el árbol de decisión
+        window.setDecision = function(type: string, value: boolean) {
+            if (type === 'ml') {
+                decisionState.ml = value;
+                // Actualizar botones ML
+                const btnNoMl = document.getElementById('btn-no-ml');
+                const btnSiMl = document.getElementById('btn-si-ml');
+                const compQuestion = document.getElementById('competencia-question');
+                
+                if (btnNoMl && btnSiMl) {
+                    if (value) {
+                        btnSiMl.className = 'decision-btn px-3 py-1 text-xs rounded-full bg-blue-600 text-white';
+                        btnNoMl.className = 'decision-btn px-3 py-1 text-xs rounded-full bg-slate-300 text-slate-600';
+                    } else {
+                        btnNoMl.className = 'decision-btn px-3 py-1 text-xs rounded-full bg-green-600 text-white';
+                        btnSiMl.className = 'decision-btn px-3 py-1 text-xs rounded-full bg-slate-300 text-slate-600';
+                    }
+                }
+                
+                // Mostrar/ocultar pregunta de competencia
+                if (compQuestion) {
+                    compQuestion.classList.toggle('hidden', !value);
+                }
+            } else if (type === 'comp') {
+                decisionState.comp = value;
+                // Actualizar botones competencia
+                const btnSiComp = document.getElementById('btn-si-comp');
+                const btnNoComp = document.getElementById('btn-no-comp');
+                
+                if (btnSiComp && btnNoComp) {
+                    if (value) {
+                        btnSiComp.className = 'decision-btn px-3 py-1 text-xs rounded-full bg-orange-500 text-white';
+                        btnNoComp.className = 'decision-btn px-3 py-1 text-xs rounded-full bg-slate-300 text-slate-600';
+                    } else {
+                        btnNoComp.className = 'decision-btn px-3 py-1 text-xs rounded-full bg-purple-600 text-white';
+                        btnSiComp.className = 'decision-btn px-3 py-1 text-xs rounded-full bg-slate-300 text-slate-600';
+                    }
+                }
+            }
+            
+            // Actualizar precio visible
+            const priceDirect = document.getElementById('price-result-direct');
+            const priceMLComp = document.getElementById('price-result-ml-comp');
+            const priceMLNoComp = document.getElementById('price-result-ml-nocomp');
+            
+            // Ocultar todos
+            [priceDirect, priceMLComp, priceMLNoComp].forEach(el => el?.classList.add('hidden'));
+            
+            // Mostrar el correcto
+            if (!decisionState.ml) {
+                priceDirect?.classList.remove('hidden');
+            } else if (decisionState.comp) {
+                priceMLComp?.classList.remove('hidden');
+            } else {
+                priceMLNoComp?.classList.remove('hidden');
+            }
         };
 
         // Función para mostrar pestañas
@@ -978,6 +1070,58 @@ const title = "Creatopia Calc";
             URL.revokeObjectURL(url);
         };
 
+        window.importarJSON = function() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = async (e: any) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = async (e: any) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        const confirmed = await window.showConfirmModal({
+                            title: '📥 Importar datos',
+                            message: '¿Importar estos datos? Se reemplazarán los datos actuales.',
+                            confirmText: 'Importar',
+                            cancelText: 'Cancelar'
+                        });
+                        
+                        if (confirmed) {
+                            // Importar configuración
+                            if (data.configuracion) {
+                                sessionStorage.setItem('calc3D', JSON.stringify(data.configuracion));
+                                window.cargarDatos();
+                            }
+                            
+                            // Importar historial
+                            if (data.historial && Array.isArray(data.historial)) {
+                                localStorage.setItem('historial3D', JSON.stringify(data.historial));
+                                window.mostrarHistorial();
+                            }
+                            
+                            await window.showAlertModal({
+                                title: '✅ Éxito',
+                                message: 'Datos importados correctamente',
+                                confirmText: 'OK'
+                            });
+                        }
+                    } catch (error: any) {
+                        await window.showAlertModal({
+                            title: '❌ Error',
+                            message: 'Error al importar: ' + error.message,
+                            confirmText: 'OK'
+                        });
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        };
+
         // Funciones de historial (simplificadas)
         window.cargarHistorial = function() {
             if (!localStorage.getItem('historial3D')) {
@@ -1040,13 +1184,57 @@ const title = "Creatopia Calc";
                 confirmText: 'Guardar',
                 cancelText: 'Cancelar'
             });
-            if (nombre) {
-                // Guardar en historial con nombre
+            if (nombre && nombre.trim()) {
+                // Obtener valores actuales del formulario
+                const getValue = (id: string) => parseFloat((document.getElementById(id) as HTMLInputElement)?.value || '0') || 0;
+                
+                const entrada = {
+                    costosFijos: {
+                        precioKg: getValue('costoFilamento'),
+                        precioKwh: getValue('precioKwh'),
+                        consumoW: getValue('consumoW'),
+                        desgasteHoras: getValue('desgasteHoras'),
+                        valorImpresora: getValue('valorImpresora'),
+                        margenError: getValue('margenError'),
+                        comisionML: getValue('comisionML'),
+                    },
+                    pieza: {
+                        horasImpresion: getValue('horasImpresion'),
+                        minutosImpresion: getValue('minutosImpresion'),
+                        gramosFilamento: getValue('gramosFilamento'),
+                    },
+                    produccion: {
+                        cantidad: getValue('cantidad') || 1,
+                    },
+                    extras: {
+                        insumos: getValue('insumos'),
+                        precioCadena: getValue('precioCadena'),
+                        cantidadCadenas: getValue('cantidadCadenas'),
+                    },
+                    descuentoVentaPersona: getValue('descuentoVentaPersona'),
+                };
+                
+                // Crear entrada de historial
+                const historialItem = {
+                    id: 'calc_' + Date.now(),
+                    nombre: nombre.trim(),
+                    fecha: new Date().toISOString(),
+                    datos: { entrada }
+                };
+                
+                // Guardar en historial
+                const historial = JSON.parse(localStorage.getItem('historial3D') || '[]');
+                historial.unshift(historialItem); // Agregar al inicio
+                localStorage.setItem('historial3D', JSON.stringify(historial));
+                
                 await window.showAlertModal({
                     title: '✅ Guardado',
-                    message: 'Cálculo guardado como: ' + nombre,
+                    message: 'Cálculo guardado como: ' + nombre.trim(),
                     confirmText: 'OK'
                 });
+                
+                // Actualizar vista del historial si está visible
+                window.mostrarHistorial();
             }
         };
 
