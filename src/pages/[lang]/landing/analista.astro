@@ -27,53 +27,57 @@ const { lang } = Astro.params as { lang: Lang };
 if (!isPageActive('landing-analista')) {
   Astro.response.status = 404;
 }
+
+let profile: typeof profiles.analista | undefined;
+let projects: Awaited<ReturnType<typeof getProjectsByProfile>> | undefined;
+let t: Awaited<ReturnType<typeof useTranslations<CommonTranslations>>> | undefined;
+let content: Awaited<ReturnType<typeof useTranslations<ProfileTranslations>>> | undefined;
+let methodologyCards: { icon: string; title: string; description: string; color: string }[] | undefined;
+let experiences: { role: string; company: string; items: string[] }[] | undefined;
+let ctaButtons: { text: string; href: string; icon: string; primary?: boolean; isContactTrigger?: boolean }[] | undefined;
+
+if (isPageActive('landing-analista')) {
+  profile = profiles.analista;
+  projects = getProjectsByProfile('analista', true);
+  t = await useTranslations<CommonTranslations>(lang, 'common');
+  content = await useTranslations<ProfileTranslations>(lang, 'analista');
+  methodologyCards = [
+    { icon: '📋', title: content!.methodology?.title1 || '', description: content!.methodology?.desc1 || '', color: 'slate-900' },
+    { icon: '🎨', title: content!.methodology?.title2 || '', description: content!.methodology?.desc2 || '', color: 'slate-900' },
+    { icon: '✅', title: content!.methodology?.title3 || '', description: content!.methodology?.desc3 || '', color: 'slate-900' },
+  ];
+  experiences = [
+    { role: content!.experience.role1, company: content!.experience.company1, items: content!.experience.items1 },
+    { role: content!.experience.role2, company: content!.experience.company2, items: content!.experience.items2 },
+  ];
+  ctaButtons = [
+    { text: t!.cta.contact, href: '#', icon: 'fas fa-envelope', primary: true, isContactTrigger: true },
+    { text: t!.cta.downloadCV, href: profile!.cvUrl, icon: 'fas fa-file-pdf' },
+  ];
+}
 ---
 {!isPageActive('landing-analista') ? (
   <BaseTailwind title="404 - MG Lab" description="Página no encontrada" layoutType="index">
     <NotFoundView />
   </BaseTailwind>
 ) : (
-const profile = profiles.analista;
-const projects = getProjectsByProfile('analista', true);
-const t = await useTranslations<CommonTranslations>(lang, 'common');
-const content = await useTranslations<ProfileTranslations>(lang, 'analista');
 
-// Methodology cards configuration
-const methodologyCards = [
-  { icon: '📋', title: content.methodology?.title1 || '', description: content.methodology?.desc1 || '', color: 'slate-900' },
-  { icon: '🎨', title: content.methodology?.title2 || '', description: content.methodology?.desc2 || '', color: 'slate-900' },
-  { icon: '✅', title: content.methodology?.title3 || '', description: content.methodology?.desc3 || '', color: 'slate-900' },
-];
-
-// Transform experience data for the component
-const experiences = [
-  { role: content.experience.role1, company: content.experience.company1, items: content.experience.items1 },
-  { role: content.experience.role2, company: content.experience.company2, items: content.experience.items2 },
-];
-
-// CTA buttons configuration
-const ctaButtons = [
-  { text: t.cta.contact, href: '#', icon: 'fas fa-envelope', primary: true, isContactTrigger: true },
-  { text: t.cta.downloadCV, href: profile.cvUrl, icon: 'fas fa-file-pdf' },
-];
----
-
-<ProfileLayout title={content.title} profile={profile} lang={lang}>
+<ProfileLayout title={content!.title} profile={profile!} lang={lang}>
   <!-- Hero -->
-  <HeroSection profile={profile} lang={lang} />
+  <HeroSection profile={profile!} lang={lang} />
   
   <!-- Casos de Análisis -->
   <section id="proyectos" class="py-20 bg-white dark:bg-slate-900 transition-colors">
     <div class="max-w-7xl mx-auto px-4">
       <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold mb-4 text-slate-900 dark:text-white">{t.sections.featuredProjects}</h2>
+        <h2 class="text-3xl font-bold mb-4 text-slate-900 dark:text-white">{t!.sections.featuredProjects}</h2>
         <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-          {content.projectsDescription}
+          {content!.projectsDescription}
         </p>
       </div>
       
       <div class="grid md:grid-cols-2 gap-8">
-        {projects.map((project) => (
+        {projects!.map((project) => (
           <ProjectCard 
             project={project} 
             profileId="analista"
@@ -86,27 +90,27 @@ const ctaButtons = [
   
   <!-- Metodología -->
   <FeatureCards
-    title={t.sections.methodology}
-    cards={methodologyCards}
+    title={t!.sections.methodology}
+    cards={methodologyCards!}
     columns={3}
     variant="border-left"
   />
   
   <!-- Skills -->
-  <SkillsSection profile={profile} lang={lang} />
+  <SkillsSection profile={profile!} lang={lang} />
   
   <!-- Experiencia -->
   <ExperienceTimeline 
-    title={t.sections.experience}
-    experiences={experiences}
+    title={t!.sections.experience}
+    experiences={experiences!}
     profileId="analista"
   />
   
   <!-- CTA Final -->
   <CTASection
-    title={content.ctaTitle}
-    description={content.ctaDescription}
-    buttons={ctaButtons}
+    title={content!.ctaTitle}
+    description={content!.ctaDescription}
+    buttons={ctaButtons!}
     profileId="analista"
   />
 </ProfileLayout>

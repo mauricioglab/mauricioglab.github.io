@@ -24,52 +24,56 @@ const { lang } = Astro.params as { lang: Lang };
 if (!isPageActive('landing-ia')) {
   Astro.response.status = 404;
 }
+
+let profile: typeof profiles['ia-engineer'] | undefined;
+let projects: Awaited<ReturnType<typeof getProjectsByProfile>> | undefined;
+let t: Awaited<ReturnType<typeof useTranslations<CommonTranslations>>> | undefined;
+let content: Awaited<ReturnType<typeof useTranslations<ProfileTranslations>>> | undefined;
+let backgroundCards: { icon: string; title: string; description: string }[] | undefined;
+let experiences: { role: string; company: string; items: string[] }[] | undefined;
+let ctaButtons: { text: string; href: string; icon: string; primary?: boolean; isContactTrigger?: boolean; external?: boolean }[] | undefined;
+
+if (isPageActive('landing-ia')) {
+  profile = profiles['ia-engineer'];
+  projects = getProjectsByProfile('ia-engineer', true);
+  t = await useTranslations<CommonTranslations>(lang, 'common');
+  content = await useTranslations<ProfileTranslations>(lang, 'ia-engineer');
+  backgroundCards = [
+    { icon: 'fas fa-code', title: content!.background?.title1 || '', description: content!.background?.desc1 || '' },
+    { icon: 'fas fa-brain', title: content!.background?.title2 || '', description: content!.background?.desc2 || '' },
+  ];
+  experiences = [
+    { role: content!.experience.role1, company: content!.experience.company1, items: content!.experience.items1 },
+    { role: content!.experience.role2, company: content!.experience.company2, items: content!.experience.items2 },
+  ];
+  ctaButtons = [
+    { text: t!.cta.contact, href: '#', icon: 'fas fa-envelope', primary: true, isContactTrigger: true },
+    { text: t!.cta.downloadCV, href: profile!.cvUrl, icon: 'fas fa-file-pdf' },
+  ];
+}
 ---
 {!isPageActive('landing-ia') ? (
   <BaseTailwind title="404 - MG Lab" description="Página no encontrada" layoutType="index">
     <NotFoundView />
   </BaseTailwind>
 ) : (
-const profile = profiles['ia-engineer'];
-const projects = getProjectsByProfile('ia-engineer', true);
-const t = await useTranslations<CommonTranslations>(lang, 'common');
-const content = await useTranslations<ProfileTranslations>(lang, 'ia-engineer');
 
-// Background cards configuration
-const backgroundCards = [
-  { icon: 'fas fa-code', title: content.background?.title1 || '', description: content.background?.desc1 || '' },
-  { icon: 'fas fa-brain', title: content.background?.title2 || '', description: content.background?.desc2 || '' },
-];
-
-// Transform experience data
-const experiences = [
-  { role: content.experience.role1, company: content.experience.company1, items: content.experience.items1 },
-  { role: content.experience.role2, company: content.experience.company2, items: content.experience.items2 },
-];
-
-// CTA buttons configuration
-const ctaButtons = [
-  { text: t.cta.contact, href: '#', icon: 'fas fa-envelope', primary: true, isContactTrigger: true },
-  { text: t.cta.downloadCV, href: profile.cvUrl, icon: 'fas fa-file-pdf' },
-];
----
-
-<ProfileLayout title={content.title} profile={profile} lang={lang}>
+<ProfileLayout title={content!.title} profile={profile!} lang={lang}>
   <!-- Hero -->
-  <HeroSection profile={profile} lang={lang} />
+  <HeroSection profile={profile!} lang={lang} />
   
   <!-- Proyectos IA -->
   <section id="proyectos" class="py-20 bg-slate-900 dark:bg-slate-950 transition-colors">
     <div class="max-w-7xl mx-auto px-4">
       <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold mb-4 text-emerald-500 font-mono">01. {t.sections.featuredProjects}</h2>
+        <h2 class="text-3xl font-bold mb-4 text-emerald-500 font-mono">01. {t!.sections.featuredProjects}</h2>
         <p class="text-slate-400 max-w-2xl mx-auto">
-          {content.projectsDescription}
+          {content!.projectsDescription}
         </p>
       </div>
       
       <div class="grid md:grid-cols-2 gap-8">
-        {projects.map((project) => (
+        {projects!.map((project) => (
           <ProjectCard 
             project={project} 
             profileId="ia-engineer"
@@ -83,10 +87,10 @@ const ctaButtons = [
   <!-- Background Técnico -->
   <section class="py-20 bg-slate-950 transition-colors">
     <div class="max-w-7xl mx-auto px-4">
-      <h2 class="text-3xl font-bold mb-12 text-center text-emerald-500 font-mono">02. {t.sections.background}</h2>
+      <h2 class="text-3xl font-bold mb-12 text-center text-emerald-500 font-mono">02. {t!.sections.background}</h2>
       
       <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-        {backgroundCards.map((card) => (
+        {backgroundCards!.map((card) => (
           <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl">
             <div class="text-emerald-500 text-3xl mb-4">
               <i class={card.icon}></i>
@@ -102,25 +106,25 @@ const ctaButtons = [
   </section>
   
   <!-- Skills -->
-  <SkillsSection profile={profile} lang={lang} />
+  <SkillsSection profile={profile!} lang={lang} />
   
   <!-- Experiencia - Custom dark theme version -->
   <section id="experiencia" class="py-20 bg-slate-950 transition-colors">
     <div class="max-w-7xl mx-auto px-4">
-      <h2 class="text-3xl font-bold mb-12 text-center text-emerald-500 font-mono">03. {t.sections.experience}</h2>
+      <h2 class="text-3xl font-bold mb-12 text-center text-emerald-500 font-mono">03. {t!.sections.experience}</h2>
       
       <div class="max-w-4xl mx-auto space-y-8">
-        {experiences.map((exp, idx) => (
+        {experiences!.map((exp, idx) => (
           <div class="flex gap-6">
             <div class="flex flex-col items-center">
               <div class="w-12 h-12 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold">
                 {idx + 1}
               </div>
-              {idx < experiences.length - 1 && (
+              {idx < experiences!.length - 1 && (
                 <div class="w-1 h-full bg-emerald-900 mt-2"></div>
               )}
             </div>
-            <div class={`flex-1 ${idx < experiences.length - 1 ? 'pb-8' : ''}`}>
+            <div class={`flex-1 ${idx < experiences!.length - 1 ? 'pb-8' : ''}`}>
               <div class="bg-slate-900 border border-slate-800 p-6 rounded-xl">
                 <h3 class="text-xl font-bold text-slate-100 mb-2">{exp.role}</h3>
                 <p class="text-emerald-500 font-semibold mb-3">{exp.company}</p>
@@ -144,12 +148,12 @@ const ctaButtons = [
   <section id="contacto" class="py-20 bg-gradient-to-br from-emerald-900 to-slate-900 text-white relative overflow-hidden">
     <div class="absolute inset-0 bg-emerald-500/5 backdrop-blur-3xl"></div>
     <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
-      <h2 class="text-4xl font-bold mb-6">{content.ctaTitle}</h2>
+      <h2 class="text-4xl font-bold mb-6">{content!.ctaTitle}</h2>
       <p class="text-xl mb-8 opacity-90">
-        {content.ctaDescription}
+        {content!.ctaDescription}
       </p>
       <div class="flex flex-wrap justify-center gap-4">
-        {ctaButtons.map((button, idx) => (
+        {ctaButtons!.map((button, idx) => (
           <a 
             href={button.href}
             target={button.external ? '_blank' : undefined}
