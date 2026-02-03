@@ -25,10 +25,6 @@ const getCategoryName = (categoryKey: string, profileId: string) => {
   return categories[categoryKey] || categoryKey;
 };
 
-// Get translated level
-const getLevelName = (level: string) => {
-  return skillsT.levels[level as keyof typeof skillsT.levels] || level;
-};
 ---
 
 <section id="skills" class="py-20 bg-white dark:bg-slate-900 transition-colors">
@@ -48,11 +44,6 @@ const getLevelName = (level: string) => {
               <div class="flex items-center">
                 <i class={`fas ${skill.icon} text-slate-500 dark:text-slate-400 mr-3`}></i>
                 <span class="text-sm text-slate-700 dark:text-slate-300">{skill.name}</span>
-                {skill.level === 'expert' && (
-                  <span class="ml-auto text-xs bg-blue-600 dark:bg-blue-500 text-white px-2 py-0.5 rounded">
-                    {getLevelName('expert')}
-                  </span>
-                )}
               </div>
             ))}
           </div>

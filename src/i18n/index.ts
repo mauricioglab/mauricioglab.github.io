@@ -171,11 +171,6 @@ export interface ProfileTranslations {
 
 export interface SkillsTranslations {
   categories: Record<string, Record<string, string>>;
-  levels: {
-    expert: string;
-    advanced: string;
-    intermediate: string;
-  };
 }
 
 export interface ProjectTranslations {

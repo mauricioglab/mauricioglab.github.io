@@ -1,11 +1,8 @@
 import type { ProfileId } from './profiles';
 
-export type SkillLevel = 'expert' | 'advanced' | 'intermediate';
-
 export interface Skill {
   name: string;  // Technical name (not translated)
   icon: string;
-  level: SkillLevel;
 }
 
 export interface SkillCategory {
@@ -20,39 +17,39 @@ export const skillsByProfile: SkillsByProfile = {
     {
       categoryKey: 'backend',
       skills: [
-        { name: '.NET Core 8', icon: 'fa-code', level: 'expert' },
-        { name: 'C#', icon: 'fa-code', level: 'expert' },
-        { name: 'Entity Framework', icon: 'fa-database', level: 'expert' },
-        { name: 'SQL Server', icon: 'fa-database', level: 'expert' },
-        { name: 'Redis', icon: 'fa-server', level: 'advanced' },
-        { name: 'RabbitMQ', icon: 'fa-exchange-alt', level: 'advanced' }
+        { name: '.NET Core 8', icon: 'fa-code' },
+        { name: 'C#', icon: 'fa-code' },
+        { name: 'Entity Framework', icon: 'fa-database' },
+        { name: 'SQL Server', icon: 'fa-database' },
+        { name: 'Redis', icon: 'fa-server' },
+        { name: 'RabbitMQ', icon: 'fa-exchange-alt' }
       ]
     },
     {
       categoryKey: 'frontend',
       skills: [
-        { name: 'Angular 17', icon: 'fab fa-angular', level: 'expert' },
-        { name: 'TypeScript', icon: 'fa-code', level: 'expert' },
-        { name: 'RxJS', icon: 'fa-stream', level: 'advanced' },
-        { name: 'Tailwind CSS', icon: 'fa-paint-brush', level: 'advanced' },
-        { name: 'NgRx', icon: 'fa-layer-group', level: 'advanced' }
+        { name: 'Angular 17', icon: 'fab fa-angular' },
+        { name: 'TypeScript', icon: 'fa-code' },
+        { name: 'RxJS', icon: 'fa-stream' },
+        { name: 'Tailwind CSS', icon: 'fa-paint-brush' },
+        { name: 'NgRx', icon: 'fa-layer-group' }
       ]
     },
     {
       categoryKey: 'devops',
       skills: [
-        { name: 'Docker', icon: 'fab fa-docker', level: 'advanced' },
-        { name: 'Azure', icon: 'fab fa-microsoft', level: 'advanced' },
-        { name: 'GitHub Actions', icon: 'fab fa-github', level: 'advanced' },
-        { name: 'Kubernetes', icon: 'fa-dharmachakra', level: 'intermediate' }
+        { name: 'Docker', icon: 'fab fa-docker' },
+        { name: 'Azure', icon: 'fab fa-microsoft' },
+        { name: 'GitHub Actions', icon: 'fab fa-github' },
+        { name: 'Kubernetes', icon: 'fa-dharmachakra' }
       ]
     },
     {
       categoryKey: 'testing',
       skills: [
-        { name: 'xUnit', icon: 'fa-vial', level: 'expert' },
-        { name: 'Cypress', icon: 'fa-robot', level: 'advanced' },
-        { name: 'Postman', icon: 'fa-paper-plane', level: 'advanced' }
+        { name: 'xUnit', icon: 'fa-vial' },
+        { name: 'Cypress', icon: 'fa-robot' },
+        { name: 'Postman', icon: 'fa-paper-plane' }
       ]
     }
   ],
@@ -60,38 +57,38 @@ export const skillsByProfile: SkillsByProfile = {
     {
       categoryKey: 'modeling',
       skills: [
-        { name: 'UML', icon: 'fa-project-diagram', level: 'expert' },
-        { name: 'BPMN', icon: 'fa-sitemap', level: 'expert' },
-        { name: 'C4 Model', icon: 'fa-layer-group', level: 'advanced' },
-        { name: 'Event Storming', icon: 'fa-sticky-note', level: 'advanced' },
-        { name: 'User Stories', icon: 'fa-users', level: 'expert' }
+        { name: 'UML', icon: 'fa-project-diagram' },
+        { name: 'BPMN', icon: 'fa-sitemap' },
+        { name: 'C4 Model', icon: 'fa-layer-group' },
+        { name: 'Event Storming', icon: 'fa-sticky-note' },
+        { name: 'User Stories', icon: 'fa-users' }
       ]
     },
     {
       categoryKey: 'architecture',
       skills: [
-        { name: 'Domain-Driven Design', icon: 'fa-cube', level: 'expert' },
-        { name: 'Clean Architecture', icon: 'fa-layer-group', level: 'expert' },
-        { name: 'Microservices', icon: 'fa-cubes', level: 'advanced' },
-        { name: 'CQRS', icon: 'fa-exchange-alt', level: 'advanced' },
-        { name: 'Event Sourcing', icon: 'fa-stream', level: 'advanced' }
+        { name: 'Domain-Driven Design', icon: 'fa-cube' },
+        { name: 'Clean Architecture', icon: 'fa-layer-group' },
+        { name: 'Microservices', icon: 'fa-cubes' },
+        { name: 'CQRS', icon: 'fa-exchange-alt' },
+        { name: 'Event Sourcing', icon: 'fa-stream' }
       ]
     },
     {
       categoryKey: 'tools',
       skills: [
-        { name: 'Enterprise Architect', icon: 'fa-drafting-compass', level: 'advanced' },
-        { name: 'Lucidchart', icon: 'fa-chart-line', level: 'advanced' },
-        { name: 'Miro', icon: 'fa-chalkboard', level: 'advanced' },
-        { name: 'Swagger/OpenAPI', icon: 'fa-file-code', level: 'expert' }
+        { name: 'Enterprise Architect', icon: 'fa-drafting-compass' },
+        { name: 'Lucidchart', icon: 'fa-chart-line' },
+        { name: 'Miro', icon: 'fa-chalkboard' },
+        { name: 'Swagger/OpenAPI', icon: 'fa-file-code' }
       ]
     },
     {
       categoryKey: 'technical',
       skills: [
-        { name: '.NET', icon: 'fa-code', level: 'expert' },
-        { name: 'SQL', icon: 'fa-database', level: 'expert' },
-        { name: 'Angular', icon: 'fab fa-angular', level: 'advanced' }
+        { name: '.NET', icon: 'fa-code' },
+        { name: 'SQL', icon: 'fa-database' },
+        { name: 'Angular', icon: 'fab fa-angular' }
       ]
     }
   ],
@@ -99,37 +96,37 @@ export const skillsByProfile: SkillsByProfile = {
     {
       categoryKey: 'ai',
       skills: [
-        { name: 'LangChain', icon: 'fa-link', level: 'expert' },
-        { name: 'OpenAI API', icon: 'fa-brain', level: 'expert' },
-        { name: 'RAG Architecture', icon: 'fa-search', level: 'expert' },
-        { name: 'Prompt Engineering', icon: 'fa-comment-dots', level: 'expert' },
-        { name: 'Function Calling', icon: 'fa-code', level: 'advanced' }
+        { name: 'LangChain', icon: 'fa-link' },
+        { name: 'OpenAI API', icon: 'fa-brain' },
+        { name: 'RAG Architecture', icon: 'fa-search' },
+        { name: 'Prompt Engineering', icon: 'fa-comment-dots' },
+        { name: 'Function Calling', icon: 'fa-code' }
       ]
     },
     {
       categoryKey: 'python',
       skills: [
-        { name: 'Python 3.11+', icon: 'fab fa-python', level: 'expert' },
-        { name: 'FastAPI', icon: 'fa-bolt', level: 'expert' },
-        { name: 'Pydantic', icon: 'fa-check-circle', level: 'expert' },
-        { name: 'Pandas', icon: 'fa-table', level: 'advanced' },
-        { name: 'NumPy', icon: 'fa-calculator', level: 'advanced' }
+        { name: 'Python 3.11+', icon: 'fab fa-python' },
+        { name: 'FastAPI', icon: 'fa-bolt' },
+        { name: 'Pydantic', icon: 'fa-check-circle' },
+        { name: 'Pandas', icon: 'fa-table' },
+        { name: 'NumPy', icon: 'fa-calculator' }
       ]
     },
     {
       categoryKey: 'vectordb',
       skills: [
-        { name: 'Pinecone', icon: 'fa-database', level: 'expert' },
-        { name: 'Chroma', icon: 'fa-database', level: 'advanced' },
-        { name: 'Embeddings', icon: 'fa-vector-square', level: 'expert' }
+        { name: 'Pinecone', icon: 'fa-database' },
+        { name: 'Chroma', icon: 'fa-database' },
+        { name: 'Embeddings', icon: 'fa-vector-square' }
       ]
     },
     {
       categoryKey: 'integration',
       skills: [
-        { name: '.NET Integration', icon: 'fa-plug', level: 'advanced' },
-        { name: 'REST APIs', icon: 'fa-exchange-alt', level: 'expert' },
-        { name: 'WebSockets', icon: 'fa-broadcast-tower', level: 'advanced' }
+        { name: '.NET Integration', icon: 'fa-plug' },
+        { name: 'REST APIs', icon: 'fa-exchange-alt' },
+        { name: 'WebSockets', icon: 'fa-broadcast-tower' }
       ]
     }
   ],
@@ -137,37 +134,37 @@ export const skillsByProfile: SkillsByProfile = {
     {
       categoryKey: 'frontend',
       skills: [
-        { name: 'Angular', icon: 'fab fa-angular', level: 'expert' },
-        { name: 'React', icon: 'fab fa-react', level: 'advanced' },
-        { name: 'TypeScript', icon: 'fa-code', level: 'expert' },
-        { name: 'JavaScript', icon: 'fab fa-js', level: 'expert' }
+        { name: 'Angular', icon: 'fab fa-angular' },
+        { name: 'React', icon: 'fab fa-react' },
+        { name: 'TypeScript', icon: 'fa-code' },
+        { name: 'JavaScript', icon: 'fab fa-js' }
       ]
     },
     {
       categoryKey: 'backend',
       skills: [
-        { name: '.NET Core', icon: 'fa-server', level: 'expert' },
-        { name: 'Node.js', icon: 'fab fa-node', level: 'expert' },
-        { name: 'Python', icon: 'fab fa-python', level: 'advanced' },
-        { name: 'Docker', icon: 'fab fa-docker', level: 'expert' }
+        { name: '.NET Core', icon: 'fa-server' },
+        { name: 'Node.js', icon: 'fab fa-node' },
+        { name: 'Python', icon: 'fab fa-python' },
+        { name: 'Docker', icon: 'fab fa-docker' }
       ]
     },
     {
       categoryKey: 'cloud',
       skills: [
-        { name: 'AWS', icon: 'fab fa-aws', level: 'advanced' },
-        { name: 'Azure', icon: 'fab fa-microsoft', level: 'advanced' },
-        { name: 'SQL Server', icon: 'fa-database', level: 'expert' },
-        { name: 'Git', icon: 'fab fa-git-alt', level: 'expert' }
+        { name: 'AWS', icon: 'fab fa-aws' },
+        { name: 'Azure', icon: 'fab fa-microsoft' },
+        { name: 'SQL Server', icon: 'fa-database' },
+        { name: 'Git', icon: 'fab fa-git-alt' }
       ]
     },
     {
       categoryKey: 'leadership',
       skills: [
-        { name: 'Scrum/Agile', icon: 'fa-tasks', level: 'expert' },
-        { name: 'Code Review', icon: 'fa-search', level: 'expert' },
-        { name: 'Mentorship', icon: 'fa-user-graduate', level: 'expert' },
-        { name: 'Architecture', icon: 'fa-sitemap', level: 'expert' }
+        { name: 'Scrum/Agile', icon: 'fa-tasks' },
+        { name: 'Code Review', icon: 'fa-search' },
+        { name: 'Mentorship', icon: 'fa-user-graduate' },
+        { name: 'Architecture', icon: 'fa-sitemap' }
       ]
     }
   ],
@@ -175,37 +172,37 @@ export const skillsByProfile: SkillsByProfile = {
     {
       categoryKey: 'ai',
       skills: [
-        { name: 'Prompt Engineering', icon: 'fa-comment-dots', level: 'expert' },
-        { name: 'ChatGPT/LLMs', icon: 'fa-robot', level: 'expert' },
-        { name: 'n8n Automation', icon: 'fa-cogs', level: 'expert' },
-        { name: 'Generative AI', icon: 'fa-brain', level: 'advanced' }
+        { name: 'Prompt Engineering', icon: 'fa-comment-dots' },
+        { name: 'ChatGPT/LLMs', icon: 'fa-robot' },
+        { name: 'n8n Automation', icon: 'fa-cogs' },
+        { name: 'Generative AI', icon: 'fa-brain' }
       ]
     },
     {
       categoryKey: 'programming',
       skills: [
-        { name: 'Angular', icon: 'fab fa-angular', level: 'expert' },
-        { name: 'C# / .NET', icon: 'fa-code', level: 'expert' },
-        { name: 'Python', icon: 'fab fa-python', level: 'advanced' },
-        { name: 'Databases', icon: 'fa-database', level: 'expert' }
+        { name: 'Angular', icon: 'fab fa-angular' },
+        { name: 'C# / .NET', icon: 'fa-code' },
+        { name: 'Python', icon: 'fab fa-python' },
+        { name: 'Databases', icon: 'fa-database' }
       ]
     },
     {
       categoryKey: 'soft',
       skills: [
-        { name: 'Public Speaking', icon: 'fa-microphone', level: 'expert' },
-        { name: 'Didactics', icon: 'fa-chalkboard-teacher', level: 'expert' },
-        { name: 'Facilitation', icon: 'fa-users', level: 'expert' },
-        { name: 'Storytelling', icon: 'fa-book-open', level: 'advanced' }
+        { name: 'Public Speaking', icon: 'fa-microphone' },
+        { name: 'Didactics', icon: 'fa-chalkboard-teacher' },
+        { name: 'Facilitation', icon: 'fa-users' },
+        { name: 'Storytelling', icon: 'fa-book-open' }
       ]
     },
     {
       categoryKey: 'formats',
       skills: [
-        { name: 'Talks', icon: 'fa-presentation', level: 'expert' },
-        { name: 'Workshops', icon: 'fa-laptop-code', level: 'expert' },
-        { name: 'Training', icon: 'fa-graduation-cap', level: 'expert' },
-        { name: 'Mentoring', icon: 'fa-handshake', level: 'advanced' }
+        { name: 'Talks', icon: 'fa-presentation' },
+        { name: 'Workshops', icon: 'fa-laptop-code' },
+        { name: 'Training', icon: 'fa-graduation-cap' },
+        { name: 'Mentoring', icon: 'fa-handshake' }
       ]
     }
   ],
@@ -213,37 +210,37 @@ export const skillsByProfile: SkillsByProfile = {
     {
       categoryKey: 'programming',
       skills: [
-        { name: 'Python', icon: 'fab fa-python', level: 'expert' },
-        { name: 'C# / .NET', icon: 'fa-code', level: 'expert' },
-        { name: 'JavaScript', icon: 'fab fa-js', level: 'expert' },
-        { name: 'SQL', icon: 'fa-database', level: 'expert' }
+        { name: 'Python', icon: 'fab fa-python' },
+        { name: 'C# / .NET', icon: 'fa-code' },
+        { name: 'JavaScript', icon: 'fab fa-js' },
+        { name: 'SQL', icon: 'fa-database' }
       ]
     },
     {
       categoryKey: 'ai',
       skills: [
-        { name: 'ChatGPT/LLMs', icon: 'fa-robot', level: 'expert' },
-        { name: 'Prompt Engineering', icon: 'fa-comment-dots', level: 'expert' },
-        { name: 'AI Tools', icon: 'fa-brain', level: 'advanced' },
-        { name: 'Automation', icon: 'fa-cogs', level: 'advanced' }
+        { name: 'ChatGPT/LLMs', icon: 'fa-robot' },
+        { name: 'Prompt Engineering', icon: 'fa-comment-dots' },
+        { name: 'AI Tools', icon: 'fa-brain' },
+        { name: 'Automation', icon: 'fa-cogs' }
       ]
     },
     {
       categoryKey: 'pedagogy',
       skills: [
-        { name: 'Didactics', icon: 'fa-chalkboard-teacher', level: 'expert' },
-        { name: 'Curriculum Design', icon: 'fa-book', level: 'expert' },
-        { name: 'Assessment', icon: 'fa-tasks', level: 'expert' },
-        { name: 'Mentoring', icon: 'fa-user-graduate', level: 'expert' }
+        { name: 'Didactics', icon: 'fa-chalkboard-teacher' },
+        { name: 'Curriculum Design', icon: 'fa-book' },
+        { name: 'Assessment', icon: 'fa-tasks' },
+        { name: 'Mentoring', icon: 'fa-user-graduate' }
       ]
     },
     {
       categoryKey: 'tools',
       skills: [
-        { name: 'VS Code', icon: 'fa-code', level: 'expert' },
-        { name: 'Git/GitHub', icon: 'fab fa-github', level: 'expert' },
-        { name: 'Moodle/LMS', icon: 'fa-graduation-cap', level: 'advanced' },
-        { name: 'Classroom Tools', icon: 'fa-desktop', level: 'advanced' }
+        { name: 'VS Code', icon: 'fa-code' },
+        { name: 'Git/GitHub', icon: 'fab fa-github' },
+        { name: 'Moodle/LMS', icon: 'fa-graduation-cap' },
+        { name: 'Classroom Tools', icon: 'fa-desktop' }
       ]
     }
   ]

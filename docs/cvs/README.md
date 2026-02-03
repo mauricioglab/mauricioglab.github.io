@@ -25,4 +25,3 @@ Los datos de estos CVs se utilizan en:
 
 - **Email:** mauriciogcode@gmail.com
 - **LinkedIn:** linkedin.com/in/mauriciogdev/
-- **Teléfono:** (+54) 351 513 7091

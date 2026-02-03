@@ -28,52 +28,46 @@ const totalPages = getAllPages().length;
 ---
 
 <BaseTailwind title="Admin Hub" description="Hub de administración" layoutType="admin" showPromptModal={true}>
-  <main class="min-h-screen bg-slate-900 text-white p-8">
-    <div class="max-w-4xl mx-auto">
+  <main class="min-h-screen bg-slate-900 text-white p-6">
+    <div class="max-w-6xl mx-auto">
       <!-- Header -->
-      <div class="mb-12 text-center">
-        <h1 class="text-4xl font-bold mb-2">🔐 Admin Hub</h1>
-        <p class="text-slate-400">
-          {totalPages} páginas registradas
-        </p>
-        <a 
-          href={b} 
-          class="inline-block mt-4 text-sm text-slate-500 hover:text-white transition"
-        >
-          ← Volver al inicio
-        </a>
+      <div class="mb-6 flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold">🔐 Admin Hub</h1>
+          <p class="text-slate-400 text-sm">{totalPages} páginas</p>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href={b} class="text-sm text-slate-500 hover:text-white transition">← Inicio</a>
+          <button 
+            id="logoutBtn"
+            class="px-3 py-1.5 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600/30 transition text-sm"
+          >
+            🚪 Salir
+          </button>
+        </div>
       </div>
 
-      <!-- Categories -->
-      <div class="space-y-8">
+      <!-- Categories Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         {pagesByCategory.map((group) => (
-          <section class="bg-slate-800 rounded-xl p-6">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <section class="bg-slate-800 rounded-xl p-4">
+            <h2 class="text-base font-bold mb-3 flex items-center gap-2">
               {group.category === 'public' && '🌐'}
               {group.category === 'landing' && '🚀'}
               {group.category === 'project' && '📁'}
               {group.category === 'tool' && '🛠️'}
               {group.label}
-              <span class="text-sm font-normal text-slate-500">
-                ({group.pages.length})
-              </span>
+              <span class="text-xs font-normal text-slate-500">({group.pages.length})</span>
             </h2>
             
-            <div class="grid gap-2">
+            <div class="space-y-1">
               {group.pages.map((page) => (
                 <a 
                   href={page.url}
-                  class="flex items-center justify-between p-3 rounded-lg bg-slate-700/50 hover:bg-slate-700 transition group"
+                  class="flex items-center gap-2 p-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 transition group text-sm"
                 >
-                  <span class="flex items-center gap-3">
-                    {page.icon && <span class="text-lg">{page.icon}</span>}
-                    <span class="text-slate-200 group-hover:text-white transition">
-                      {page.name}
-                    </span>
-                  </span>
-                  <span class="text-slate-500 group-hover:text-slate-300 transition text-sm">
-                    Ir →
-                  </span>
+                  {page.icon && <span>{page.icon}</span>}
+                  <span class="text-slate-200 group-hover:text-white transition truncate">{page.name}</span>
                 </a>
               ))}
             </div>
@@ -81,18 +75,6 @@ const totalPages = getAllPages().length;
         ))}
       </div>
 
-      <!-- Footer -->
-      <div class="mt-12 text-center space-y-4">
-        <button 
-          id="logoutBtn"
-          class="px-4 py-2 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600/30 transition text-sm"
-        >
-          🚪 Cerrar sesión
-        </button>
-        <p class="text-slate-600 text-sm">
-          Acceso: double-click en "Hola..." + password + día
-        </p>
-      </div>
     </div>
   </main>
 </BaseTailwind>

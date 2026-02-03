@@ -36,10 +36,5 @@
       "pedagogy": "Pedagogy",
       "tools": "Tools"
     }
-  },
-  "levels": {
-    "expert": "Expert",
-    "advanced": "Advanced",
-    "intermediate": "Intermediate"
   }
 }

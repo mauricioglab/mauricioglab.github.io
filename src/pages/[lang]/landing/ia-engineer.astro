@@ -1,5 +1,7 @@
 ---
+import BaseTailwind from '@layouts/BaseTailwind.astro';
 import ProfileLayout from '@layouts/ProfileLayout.astro';
+import NotFoundView from '@components/shared/NotFoundView.astro';
 import HeroSection from '@components/landing/HeroSection.astro';
 import ProjectCard from '@components/landing/ProjectCard.astro';
 import SkillsSection from '@components/landing/SkillsSection.astro';
@@ -7,6 +9,7 @@ import { profiles } from '@data/profiles';
 import { SITE_CONFIG } from '@data/config';
 import { getProjectsByProfile } from '@data/projects';
 import { getLanguagePaths } from '@utils/i18n-paths';
+import { isPageActive } from '@data/pages-registry';
 import { 
   type Lang, 
   useTranslations, 
@@ -17,6 +20,16 @@ import {
 export const getStaticPaths = getLanguagePaths;
 
 const { lang } = Astro.params as { lang: Lang };
+
+if (!isPageActive('landing-ia')) {
+  Astro.response.status = 404;
+}
+---
+{!isPageActive('landing-ia') ? (
+  <BaseTailwind title="404 - MG Lab" description="Página no encontrada" layoutType="index">
+    <NotFoundView />
+  </BaseTailwind>
+) : (
 const profile = profiles['ia-engineer'];
 const projects = getProjectsByProfile('ia-engineer', true);
 const t = await useTranslations<CommonTranslations>(lang, 'common');
@@ -158,3 +171,4 @@ const ctaButtons = [
     </div>
   </section>
 </ProfileLayout>
+)}

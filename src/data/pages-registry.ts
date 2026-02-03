@@ -12,6 +12,8 @@ export interface PageEntry {
   url: string;
   category: PageCategory;
   icon?: string;
+  /** false = dormida, no aparece en admin */
+  active?: boolean;
 }
 
 // Base URL helper
@@ -38,8 +40,8 @@ export const pagesRegistry: PageEntry[] = [
   // LANDINGS (solo en admin, solo español)
   // =====================
   { id: 'landing-developer', name: 'Landing Developer', url: '/es/landing/developer/', category: 'landing', icon: '💻' },
-  { id: 'landing-analista', name: 'Landing Analista', url: '/es/landing/analista/', category: 'landing', icon: '📊' },
-  { id: 'landing-ia', name: 'Landing IA Engineer', url: '/es/landing/ia-engineer/', category: 'landing', icon: '🤖' },
+  { id: 'landing-analista', name: 'Landing Analista', url: '/es/landing/analista/', category: 'landing', icon: '📊', active: false },
+  { id: 'landing-ia', name: 'Landing IA Engineer', url: '/es/landing/ia-engineer/', category: 'landing', icon: '🤖', active: false },
   { id: 'landing-freelance', name: 'Landing Freelance', url: '/es/landing/freelance/', category: 'landing', icon: '🚀' },
   { id: 'landing-speaker', name: 'Landing Speaker', url: '/es/landing/speaker/', category: 'landing', icon: '🎤' },
   { id: 'landing-docente', name: 'Landing Docente', url: '/es/landing/docente/', category: 'landing', icon: '🎓' },
@@ -68,15 +70,16 @@ export const getPublicPages = (): PageEntry[] =>
   pagesRegistry.filter(p => p.category === 'public');
 
 /**
- * Todas las páginas (para admin)
+ * Todas las páginas (para admin). Excluye las dormidas (active: false).
  */
-export const getAllPages = (): PageEntry[] => pagesRegistry;
+export const getAllPages = (): PageEntry[] => 
+  pagesRegistry.filter(p => p.active !== false);
 
 /**
- * Páginas por categoría
+ * Páginas por categoría. Excluye las dormidas.
  */
 export const getPagesByCategory = (category: PageCategory): PageEntry[] => 
-  pagesRegistry.filter(p => p.category === category);
+  pagesRegistry.filter(p => p.category === category && p.active !== false);
 
 /**
  * Obtener páginas con URLs absolutas (usando BASE_URL)
@@ -87,6 +90,14 @@ export const getPagesWithBaseUrl = (pages: PageEntry[]): PageEntry[] => {
     ...p,
     url: p.url.startsWith('/') ? `${base}${p.url.slice(1)}` : p.url
   }));
+};
+
+/**
+ * Indica si una página está activa (no dormida)
+ */
+export const isPageActive = (id: string): boolean => {
+  const entry = pagesRegistry.find(p => p.id === id);
+  return entry?.active !== false;
 };
 
 /**

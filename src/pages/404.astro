@@ -1,0 +1,10 @@
+---
+import BaseTailwind from '../layouts/BaseTailwind.astro';
+import NotFoundView from '../components/shared/NotFoundView.astro';
+
+export const prerender = true;
+---
+
+<BaseTailwind title="404 - MG Lab" description="Página no encontrada" layoutType="index">
+  <NotFoundView />
+</BaseTailwind>
