@@ -6,28 +6,229 @@ export const prerender = true;
 const base = import.meta.env.BASE_URL;
 const b = base.endsWith("/") ? base : `${base}/`;
 
-const urls = [
-	{ name: "Google", url: "https://google.com" },
-	{ name: "GitHub", url: "https://github.com" },
+const urlCategories = [
+	{
+		title: "🛠️ DESARROLLO Y PROGRAMACIÓN",
+		subcategories: [
+			{
+				name: "IDEs y Editores de Código",
+				items: [
+					{ name: "Visual Studio Code", url: "https://code.visualstudio.com/", winget: "winget install Microsoft.VisualStudioCode" },
+					{ name: "PyCharm 2025.1", url: "https://www.jetbrains.com/pycharm/download/", winget: "winget install JetBrains.PyCharm.Community" },
+					{ name: "Microsoft Visual Studio Community 2022", url: "https://visualstudio.microsoft.com/", winget: "winget install Microsoft.VisualStudio.2022.Community" },
+					{ name: "Cursor", url: "https://cursor.sh/", winget: "winget install Cursor.Cursor" },
+					{ name: "Windsurf", url: "https://codeium.com/windsurf", winget: "winget install Codeium.Windsurf" },
+					{ name: "Notepad++", url: "https://notepad-plus-plus.org/", winget: "winget install Notepad++.Notepad++" },
+					{ name: "Kate", url: "https://kate-editor.org/", winget: "winget install KDE.Kate" },
+					{ name: "Bambu Studio", url: "https://bambulab.com/en/download/studio", winget: "winget install BambuLab.BambuStudio" }
+				]
+			},
+			{
+				name: "Terminales y Shells",
+				items: [
+					{ name: "Warp", url: "https://www.warp.dev/", winget: "winget install warp.warp" },
+					{ name: "Oh My Posh", url: "https://ohmyposh.dev/", winget: "winget install JanDeDobbeleer.OhMyPosh" },
+					{ name: "starship", url: "https://starship.rs/", winget: "winget install Starship.Starship" }
+				]
+			},
+			{
+				name: "Control de Versiones",
+				items: [
+					{ name: "Git", url: "https://git-scm.com/", winget: "winget install Git.Git" },
+					{ name: "TortoiseGit", url: "https://tortoisegit.org/", winget: "winget install TortoiseGit.TortoiseGit" }
+				]
+			},
+			{
+				name: "Lenguajes y Runtimes",
+				items: [
+					{ name: "Node.js LTS", url: "https://nodejs.org/", winget: "winget install OpenJS.NodeJS.LTS" },
+					{ name: "Python 3.12.8", url: "https://www.python.org/", winget: "winget install Python.Python.3.12" },
+					{ name: "Java SE Development Kit 21", url: "https://www.oracle.com/java/technologies/downloads/", winget: "winget install Oracle.JDK.21" },
+					{ name: "Bun", url: "https://bun.sh/", winget: "winget install Oven-sh.Bun" },
+					{ name: "Microsoft .NET SDK 9.0", url: "https://dotnet.microsoft.com/", winget: "winget install Microsoft.DotNet.SDK.9" },
+					{ name: "XAMPP", url: "https://www.apachefriends.org/", winget: "winget install ApacheFriends.Xampp" }
+				]
+			}
+		]
+	},
+	{
+		title: "🗄️ BASES DE DATOS",
+		items: [
+			{ name: "MySQL Server 8.0", url: "https://dev.mysql.com/downloads/mysql/", winget: "winget install Oracle.MySQL" },
+			{ name: "MySQL Workbench 8.0 CE", url: "https://dev.mysql.com/downloads/workbench/", winget: "winget install Oracle.MySQLWorkbench" },
+			{ name: "PostgreSQL 18", url: "https://www.postgresql.org/download/", winget: "winget install PostgreSQL.PostgreSQL" },
+			{ name: "Microsoft SQL Server 2022", url: "https://www.microsoft.com/sql-server/", winget: "winget install Microsoft.SQLServer.2022.Developer" },
+			{ name: "SQL Server Management Studio", url: "https://aka.ms/ssmsfullsetup", winget: "winget install Microsoft.SQLServerManagementStudio" },
+			{ name: "DB Browser for SQLite", url: "https://sqlitebrowser.org/", winget: "winget install DBBrowserForSQLite.DBBrowserForSQLite" },
+			{ name: "SQLiteStudio", url: "https://sqlitestudio.pl/", winget: "winget install SQLiteStudio.SQLiteStudio" },
+			{ name: "DBeaver", url: "https://dbeaver.io/", winget: "winget install dbeaver.dbeaver" }
+		]
+	},
+	{
+		title: "🐳 CONTENEDORES Y VIRTUALIZACIÓN",
+		items: [
+			{ name: "Docker Desktop", url: "https://www.docker.com/products/docker-desktop/", winget: "winget install Docker.DockerDesktop" }
+		]
+	},
+	{
+		title: "🌐 NAVEGADORES WEB",
+		items: [
+			{ name: "Google Chrome", url: "https://www.google.com/chrome/", winget: "winget install Google.Chrome" },
+			{ name: "Brave", url: "https://brave.com/", winget: "winget install Brave.Brave" },
+			{ name: "Brave Beta", url: "https://brave.com/download/", winget: "winget install Brave.Brave.Beta" },
+			{ name: "Zen Browser", url: "https://zen-browser.app/", winget: "winget install Zen-Team.Zen-Browser" }
+		]
+	},
+	{
+		title: "💬 COMUNICACIÓN Y COLABORACIÓN",
+		items: [
+			{ name: "Discord", url: "https://discord.com/", winget: "winget install Discord.Discord" },
+			{ name: "Telegram for Windows", url: "https://desktop.telegram.org/", winget: "winget install Telegram.TelegramDesktop" },
+			{ name: "WhatsApp", url: "https://www.whatsapp.com/download", winget: "winget install WhatsApp.WhatsApp" },
+			{ name: "Microsoft Teams", url: "https://www.microsoft.com/microsoft-teams/", winget: "winget install Microsoft.Teams" },
+			{ name: "Slack", url: "https://slack.com/downloads/", winget: "winget install SlackTechnologies.Slack" },
+			{ name: "Zoom Workplace", url: "https://zoom.us/download", winget: "winget install Zoom.Zoom" }
+		]
+	},
+	{
+		title: "🛠️ UTILIDADES DEL SISTEMA",
+		items: [
+			{ name: "PowerToys", url: "https://github.com/microsoft/PowerToys", winget: "winget install Microsoft.PowerToys" },
+			{ name: "7-Zip", url: "https://www.7-zip.org/", winget: "winget install 7zip.7zip" },
+			{ name: "WinMerge", url: "https://winmerge.org/", winget: "winget install WinMerge.WinMerge" },
+			{ name: "TreeSize Free", url: "https://www.jam-software.com/treesize_free", winget: "winget install JAMSoftware.TreeSize.Free" },
+			{ name: "BCUninstaller", url: "https://www.bcuninstaller.com/", winget: "winget install Klocman.BulkCrapUninstaller" },
+			{ name: "AnyDesk", url: "https://anydesk.com/", winget: "winget install AnyDesk.AnyDesk" },
+			{ name: "PuTTY", url: "https://www.putty.org/", winget: "winget install PuTTY.PuTTY" },
+			{ name: "TigerVNC", url: "https://tigervnc.org/", winget: "winget install TigerVNC.TigerVNC" },
+			{ name: "SpeedCrunch", url: "https://heldercorreia.bitbucket.io/speedcrunch/", winget: "winget install SpeedCrunch.SpeedCrunch" },
+			{ name: "Greenshot", url: "https://getgreenshot.org/", winget: "winget install Greenshot.Greenshot" },
+			{ name: "Raycast", url: "https://www.raycast.com/", winget: "winget install Raycast.Raycast" }
+		]
+	},
+	{
+		title: "☁️ ALMACENAMIENTO EN LA NUBE",
+		items: [
+			{ name: "Dropbox", url: "https://www.dropbox.com/", winget: "winget install Dropbox.Dropbox" },
+			{ name: "MEGAsync", url: "https://mega.nz/sync", winget: "winget install Mega.MEGAsync" },
+			{ name: "Microsoft OneDrive", url: "https://www.microsoft.com/microsoft-365/onedrive/", winget: "(Pre-instalado en Windows)" },
+			{ name: "Box", url: "https://www.box.com/", winget: "winget install Box.Box" }
+		]
+	},
+	{
+		title: "🎨 DISEÑO Y MULTIMEDIA",
+		items: [
+			{ name: "Obsidian", url: "https://obsidian.md/", winget: "winget install Obsidian.Obsidian" },
+			{ name: "PotPlayer", url: "https://potplayer.daum.net/", winget: "winget install Daum.PotPlayer" },
+			{ name: "OBS Studio", url: "https://obsproject.com/", winget: "winget install OBSProject.OBSStudio" },
+			{ name: "Scanner X - PDF Scanner", url: "https://www.microsoft.com/store/apps/9N438MZHD3ZF", winget: "(Aplicación de Microsoft Store)" }
+		]
+	},
+	{
+		title: "📡 API Y TESTING",
+		items: [
+			{ name: "Postman", url: "https://www.postman.com/", winget: "winget install Postman.Postman" }
+		]
+	},
+	{
+		title: "🖥️ HARDWARE Y DRIVERS",
+		items: [
+			{ name: "HWiNFO", url: "https://www.hwinfo.com/", winget: "winget install REALiX.HWiNFO" },
+			{ name: "DisplayLink Graphics", url: "https://www.synaptics.com/products/displaylink-graphics", winget: "(Driver específico)" },
+			{ name: "AMD Software", url: "https://www.amd.com/support", winget: "winget install AMD.AMDSoftware" },
+			{ name: "HuionTablet", url: "https://www.huion.com/download/", winget: "(Driver específico del fabricante)" },
+			{ name: "Lenovo Vantage", url: "https://www.microsoft.com/store/apps/9WZDNCRFJ4MV", winget: "winget install Lenovo.Vantage" },
+			{ name: "HP Smart", url: "https://www.hp.com/us-en/solutions/hp-smart-app.html", winget: "winget install HP.HPSmart" }
+		]
+	},
+	{
+		title: "📝 PRODUCTIVIDAD",
+		items: [
+			{ name: "Power BI Desktop", url: "https://powerbi.microsoft.com/desktop/", winget: "winget install Microsoft.PowerBI" },
+			{ name: "Microsoft Whiteboard", url: "https://www.microsoft.com/microsoft-365/microsoft-whiteboard/", winget: "winget install Microsoft.Whiteboard" },
+			{ name: "Microsoft PC Manager", url: "https://www.microsoft.com/windows/pc-manager", winget: "winget install Microsoft.PCManager" },
+			{ name: "Logi Options+", url: "https://www.logitech.com/software/logi-options-plus.html", winget: "winget install Logitech.OptionsPlus" },
+			{ name: "Divvy (Gestor de ventanas)", url: "https://mizage.com/divvy/", winget: "" }
+		]
+	}
 ];
 ---
 
 <BaseTailwind title="URLs útiles — MG Lab" description="URLs útiles">
-	<div class="max-w-4xl mx-auto px-4 py-8">
-		<h1 class="text-3xl font-bold mb-6">URLs útiles</h1>
-		<ul class="space-y-2 mb-6">
-			{
-				urls.map((item) => (
-					<li>
-						<a href={item.url} target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 hover:underline">
-							{item.name}
-						</a>
-					</li>
-				))
-			}
-		</ul>
-		<p>
-			<small><a href={b} class="text-gray-600 hover:text-gray-800">← Inicio</a></small>
-		</p>
+	<div class="max-w-6xl mx-auto px-4 py-8">
+		<h1 class="text-4xl font-bold mb-8 text-center">URLs útiles</h1>
+		
+		{
+			urlCategories.map((category) => (
+				<div class="mb-12">
+					<h2 class="text-2xl font-semibold mb-6 text-gray-800 border-b pb-2">{category.title}</h2>
+					
+					{category.subcategories ? (
+						<div class="space-y-8">
+							{
+								category.subcategories.map((subcategory) => (
+									<div>
+										<h3 class="text-xl font-medium mb-4 text-gray-700">{subcategory.name}</h3>
+										<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+											{
+												subcategory.items.map((item) => (
+													<div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+														<div class="flex flex-col space-y-2">
+															<a 
+																href={item.url} 
+																target="_blank" 
+																rel="noopener noreferrer" 
+																class="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+															>
+																{item.name}
+															</a>
+															{item.winget && (
+																<code class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 font-mono">
+																	{item.winget}
+																</code>
+															)}
+														</div>
+													</div>
+												))
+											}
+										</div>
+									</div>
+								))
+							}
+						</div>
+					) : (
+						<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+							{
+								category.items.map((item) => (
+									<div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+										<div class="flex flex-col space-y-2">
+											<a 
+												href={item.url} 
+												target="_blank" 
+												rel="noopener noreferrer" 
+												class="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+											>
+												{item.name}
+											</a>
+											{item.winget && (
+												<code class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600 font-mono">
+													{item.winget}
+												</code>
+											)}
+										</div>
+									</div>
+								))
+							}
+						</div>
+					)}
+				</div>
+			))
+		}
+		
+		<div class="mt-12 pt-8 border-t">
+			<p>
+				<small><a href={b} class="text-gray-600 hover:text-gray-800">← Inicio</a></small>
+			</p>
+		</div>
 	</div>
 </BaseTailwind>
