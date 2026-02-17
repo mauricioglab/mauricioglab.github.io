@@ -32,6 +32,8 @@ export const prerender = true;
             <button id="add-video-btn" class="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover">+ Agregar Video</button>
             <button id="export-btn" class="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-bg-tertiary text-text-primary border border-border-primary hover:bg-border-primary" title="Exportar">📥</button>
             <button id="import-btn" class="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-bg-tertiary text-text-primary border border-border-primary hover:bg-border-primary" title="Importar">📤</button>
+            <button id="gist-sync-btn" class="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-bg-tertiary text-text-primary border border-border-primary hover:bg-border-primary" title="Sincronizar con Gist">Gist</button>
+            <span id="gist-sync-status" class="text-xs text-text-muted">Gist: desactivado</span>
             <div class="w-px h-6 bg-border-primary hidden md:block"></div>
             <button id="theme-toggle" class="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 bg-bg-tertiary text-text-primary border border-border-primary hover:bg-border-primary" title="Cambiar tema">🌙</button>
         </div>
@@ -132,6 +134,64 @@ export const prerender = true;
         </div>
     </div>
 
+    <!-- Modal Gist Sync -->
+    <div id="gist-sync-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-[1550] p-5 hidden">
+        <div class="bg-bg-secondary rounded-xl w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div class="flex justify-between items-center p-5 border-b border-border-primary">
+                <h2 class="text-xl font-semibold text-text-primary">Sincronizacion con Gist</h2>
+                <button id="close-gist-sync-modal" class="bg-transparent border-none text-2xl text-text-muted cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-all duration-200 hover:bg-bg-tertiary hover:text-text-primary">x</button>
+            </div>
+            <form id="gist-sync-form">
+            <div class="p-5 space-y-4">
+                <p class="text-sm text-text-muted">El token se usa solo en tu navegador para crear o actualizar un Secret Gist.</p>
+                <div>
+                    <label class="block text-sm font-medium text-text-primary mb-2" for="gist-token-input">GitHub Token (scope: gist)</label>
+                    <input type="password" id="gist-token-input" class="w-full px-3 py-2.5 border border-border-primary rounded-lg bg-bg-tertiary text-text-primary text-sm transition-all duration-200 focus:outline-none focus:border-accent" placeholder="ghp_xxxxxxxxxxxxxxxxx">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-2" for="gist-id-input">Gist ID (opcional)</label>
+                        <input type="text" id="gist-id-input" class="w-full px-3 py-2.5 border border-border-primary rounded-lg bg-bg-tertiary text-text-primary text-sm transition-all duration-200 focus:outline-none focus:border-accent" placeholder="Si esta vacio, crea uno nuevo">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-2" for="gist-file-input">Archivo JSON</label>
+                        <input type="text" id="gist-file-input" class="w-full px-3 py-2.5 border border-border-primary rounded-lg bg-bg-tertiary text-text-primary text-sm transition-all duration-200 focus:outline-none focus:border-accent" value="videos.json">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-2" for="gist-sync-interval">Intervalo de sync</label>
+                        <select id="gist-sync-interval" class="w-full px-3 py-2.5 border border-border-primary rounded-lg bg-bg-tertiary text-text-primary text-sm transition-all duration-200 focus:outline-none focus:border-accent">
+                            <option value="15">Cada 15 min</option>
+                            <option value="60" selected>Cada 1 hora</option>
+                            <option value="180">Cada 3 horas</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col justify-end gap-2">
+                        <label class="flex items-center gap-2 text-sm text-text-primary">
+                            <input type="checkbox" id="gist-sync-enabled" class="w-4 h-4 rounded cursor-pointer" checked>
+                            Sync automatico
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-text-primary">
+                            <input type="checkbox" id="gist-remember-token" class="w-4 h-4 rounded cursor-pointer">
+                            Recordar token
+                        </label>
+                    </div>
+                </div>
+                <div id="gist-sync-modal-status" class="text-xs text-text-muted bg-bg-tertiary border border-border-primary rounded-lg px-3 py-2">Sin configurar</div>
+            </div>
+            <div class="flex flex-wrap justify-between gap-2 p-5 border-t border-border-primary">
+                <button type="button" id="gist-disconnect-btn" class="px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 bg-red-600 text-white hover:bg-red-700">Desconectar</button>
+                <div class="flex gap-2">
+                    <button type="button" id="cancel-gist-sync" class="px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 bg-bg-tertiary text-text-primary border border-border-primary hover:bg-border-primary">Cancelar</button>
+                    <button type="button" id="gist-sync-now-btn" class="px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 bg-bg-tertiary text-text-primary border border-border-primary hover:bg-border-primary">Sync ahora</button>
+                    <button type="submit" id="save-gist-sync" class="px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 bg-accent text-white hover:bg-accent-hover">Guardar</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Video Player -->
     <div id="video-player" class="fixed inset-0 bg-black/95 z-[2000] flex flex-col md:flex-row hidden">
         <div class="flex-1 flex flex-col p-4 md:p-6">
@@ -160,6 +220,14 @@ export const prerender = true;
         // Constantes y configuración
         const STORAGE_KEY = 'video-organizer-data';
         const PLAYLIST_CACHE_KEY = 'video-organizer-playlist-cache';
+        const GIST_SYNC_CONFIG_KEY = 'video-organizer-gist-sync-config';
+        const GIST_SYNC_META_KEY = 'video-organizer-gist-sync-meta';
+        const GIST_TOKEN_SESSION_KEY = 'video-organizer-gist-token-session';
+        const GIST_TOKEN_LOCAL_KEY = 'video-organizer-gist-token-local';
+        const GIST_DEFAULT_FILENAME = 'videos.json';
+        const GIST_DEFAULT_INTERVAL_MINUTES = 60;
+        const GIST_SYNC_DEBOUNCE_MS = 10000;
+        const GITHUB_API_BASE = 'https://api.github.com';
         const YOUTUBE_REGEX = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
         const YOUTUBE_PLAYLIST_REGEX = /(?:youtube\.com\/playlist\?list=|youtube\.com\/.*[?&]list=)([a-zA-Z0-9_-]+)/;
         const UDEMY_REGEX = /udemy\.com\/course\/[^\/]+\/learn\/lecture\/(\d+)/;
@@ -177,6 +245,23 @@ export const prerender = true;
 
         // Cache de listas: { [playlistId]: { items: { videoId, title, thumbnail }[], fetchedAt } }
         let playlistCache = {};
+        let gistSyncConfig = {
+            enabled: false,
+            gistId: '',
+            fileName: GIST_DEFAULT_FILENAME,
+            intervalMinutes: GIST_DEFAULT_INTERVAL_MINUTES,
+            rememberToken: false
+        };
+        let gistSyncMeta = {
+            lastSyncedHash: '',
+            lastRemoteUpdatedAt: '',
+            lastSyncAt: 0
+        };
+        let syncIntervalHandle = null;
+        let syncDebounceHandle = null;
+        let syncInFlight = false;
+        let syncStatusTone = 'idle';
+        let lastConflictKey = '';
 
         // Elementos del DOM
         const elements = {
@@ -220,7 +305,23 @@ export const prerender = true;
             selectionActions: document.getElementById('selection-actions'),
             selectionCount: document.getElementById('selection-count'),
             deleteSelectedBtn: document.getElementById('delete-selected-btn'),
-            clearSelectionBtn: document.getElementById('clear-selection-btn')
+            clearSelectionBtn: document.getElementById('clear-selection-btn'),
+            gistSyncBtn: document.getElementById('gist-sync-btn'),
+            gistSyncStatus: document.getElementById('gist-sync-status'),
+            gistSyncModal: document.getElementById('gist-sync-modal'),
+            gistSyncForm: document.getElementById('gist-sync-form'),
+            closeGistSyncModal: document.getElementById('close-gist-sync-modal'),
+            cancelGistSync: document.getElementById('cancel-gist-sync'),
+            gistTokenInput: document.getElementById('gist-token-input'),
+            gistIdInput: document.getElementById('gist-id-input'),
+            gistFileInput: document.getElementById('gist-file-input'),
+            gistSyncInterval: document.getElementById('gist-sync-interval'),
+            gistSyncEnabled: document.getElementById('gist-sync-enabled'),
+            gistRememberToken: document.getElementById('gist-remember-token'),
+            gistSyncModalStatus: document.getElementById('gist-sync-modal-status'),
+            gistDisconnectBtn: document.getElementById('gist-disconnect-btn'),
+            gistSyncNowBtn: document.getElementById('gist-sync-now-btn'),
+            saveGistSync: document.getElementById('save-gist-sync')
         };
 
         // Utilidades
@@ -236,10 +337,51 @@ export const prerender = true;
             return div.innerHTML;
         }
 
-        function saveToStorage() {
+        function getPersistedStateSnapshot() {
+            return {
+                ...appState,
+                selectedVideo: null,
+                selectedVideoIds: []
+            };
+        }
+
+        function hashString(value) {
+            let hash = 5381;
+            const text = String(value || '');
+            for (let i = 0; i < text.length; i++) {
+                hash = ((hash << 5) + hash) + text.charCodeAt(i);
+                hash |= 0;
+            }
+            return (hash >>> 0).toString(36);
+        }
+
+        function getStoredGistToken() {
+            return localStorage.getItem(GIST_TOKEN_LOCAL_KEY) || sessionStorage.getItem(GIST_TOKEN_SESSION_KEY) || '';
+        }
+
+        function setStoredGistToken(token, rememberToken) {
+            localStorage.removeItem(GIST_TOKEN_LOCAL_KEY);
+            sessionStorage.removeItem(GIST_TOKEN_SESSION_KEY);
+            if (!token) return;
+            if (rememberToken) {
+                localStorage.setItem(GIST_TOKEN_LOCAL_KEY, token);
+            } else {
+                sessionStorage.setItem(GIST_TOKEN_SESSION_KEY, token);
+            }
+        }
+
+        function clearStoredGistToken() {
+            localStorage.removeItem(GIST_TOKEN_LOCAL_KEY);
+            sessionStorage.removeItem(GIST_TOKEN_SESSION_KEY);
+        }
+
+        function saveToStorage(options = {}) {
             try {
-                const toSave = { ...appState, selectedVideoIds: [] };
+                const toSave = getPersistedStateSnapshot();
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+                if (!options.skipAutoSync) {
+                    queueAutoSync();
+                }
             } catch (error) {
                 console.error('Error saving to storage:', error);
             }
@@ -251,6 +393,7 @@ export const prerender = true;
                 if (stored) {
                     const data = JSON.parse(stored);
                     appState = { ...appState, ...data };
+                    appState.selectedVideo = null;
                     appState.selectedVideoIds = [];
                     if (!appState.expandedCategories || typeof appState.expandedCategories !== 'object') {
                         appState.expandedCategories = {};
@@ -278,6 +421,358 @@ export const prerender = true;
             } catch (error) {
                 console.error('Error saving playlist cache:', error);
             }
+        }
+
+        function loadGistSyncConfig() {
+            try {
+                const storedConfig = localStorage.getItem(GIST_SYNC_CONFIG_KEY);
+                if (storedConfig) {
+                    gistSyncConfig = { ...gistSyncConfig, ...JSON.parse(storedConfig) };
+                }
+                const storedMeta = localStorage.getItem(GIST_SYNC_META_KEY);
+                if (storedMeta) {
+                    gistSyncMeta = { ...gistSyncMeta, ...JSON.parse(storedMeta) };
+                }
+            } catch (error) {
+                console.error('Error loading gist sync config:', error);
+            }
+        }
+
+        function saveGistSyncConfig() {
+            try {
+                localStorage.setItem(GIST_SYNC_CONFIG_KEY, JSON.stringify(gistSyncConfig));
+                localStorage.setItem(GIST_SYNC_META_KEY, JSON.stringify(gistSyncMeta));
+            } catch (error) {
+                console.error('Error saving gist sync config:', error);
+            }
+        }
+
+        function setSyncStatus(text, tone = 'idle') {
+            syncStatusTone = tone;
+            if (elements.gistSyncStatus) {
+                elements.gistSyncStatus.textContent = text;
+                elements.gistSyncStatus.classList.remove('text-text-muted', 'text-emerald-500', 'text-amber-500', 'text-red-500', 'text-accent');
+                if (tone === 'ok') elements.gistSyncStatus.classList.add('text-emerald-500');
+                else if (tone === 'warn') elements.gistSyncStatus.classList.add('text-amber-500');
+                else if (tone === 'error') elements.gistSyncStatus.classList.add('text-red-500');
+                else if (tone === 'sync') elements.gistSyncStatus.classList.add('text-accent');
+                else elements.gistSyncStatus.classList.add('text-text-muted');
+            }
+            if (elements.gistSyncModalStatus) {
+                elements.gistSyncModalStatus.textContent = text;
+            }
+        }
+
+        function fillGistSyncModal() {
+            if (elements.gistIdInput) elements.gistIdInput.value = gistSyncConfig.gistId || '';
+            if (elements.gistFileInput) elements.gistFileInput.value = gistSyncConfig.fileName || GIST_DEFAULT_FILENAME;
+            if (elements.gistSyncInterval) elements.gistSyncInterval.value = String(gistSyncConfig.intervalMinutes || GIST_DEFAULT_INTERVAL_MINUTES);
+            if (elements.gistSyncEnabled) elements.gistSyncEnabled.checked = gistSyncConfig.enabled !== false;
+            if (elements.gistRememberToken) elements.gistRememberToken.checked = !!gistSyncConfig.rememberToken;
+            if (elements.gistTokenInput) elements.gistTokenInput.value = getStoredGistToken();
+            if (gistSyncConfig.enabled && gistSyncConfig.gistId) {
+                setSyncStatus(`Gist listo: ${gistSyncConfig.gistId}`, syncStatusTone);
+            } else {
+                setSyncStatus('Gist: desactivado', 'idle');
+            }
+        }
+
+        function openGistSyncModal() {
+            fillGistSyncModal();
+            if (elements.gistSyncModal) elements.gistSyncModal.classList.remove('hidden');
+            if (elements.gistTokenInput) elements.gistTokenInput.focus();
+        }
+
+        function closeGistSyncModal() {
+            if (elements.gistSyncModal) elements.gistSyncModal.classList.add('hidden');
+        }
+
+        async function githubApiRequest(path, options = {}) {
+            const method = options.method || 'GET';
+            const token = options.token || '';
+            const body = options.body;
+            const headers = {
+                Accept: 'application/vnd.github+json',
+                ...options.headers
+            };
+            if (token) headers.Authorization = `Bearer ${token}`;
+            if (body !== undefined) headers['Content-Type'] = 'application/json';
+
+            const response = await fetch(`${GITHUB_API_BASE}${path}`, {
+                method,
+                headers,
+                body: body !== undefined ? JSON.stringify(body) : undefined
+            });
+
+            if (!response.ok) {
+                let message = `${response.status} ${response.statusText}`;
+                try {
+                    const errData = await response.json();
+                    if (errData && errData.message) message = errData.message;
+                } catch (_) {}
+                throw new Error(message);
+            }
+
+            if (response.status === 204) return null;
+            return response.json();
+        }
+
+        async function fetchGistFileData(token, gistId, fileName) {
+            const gist = await githubApiRequest(`/gists/${encodeURIComponent(gistId)}`, { token });
+            const files = gist?.files || {};
+            const targetFile = files[fileName];
+            if (!targetFile) {
+                throw new Error(`No se encontro el archivo ${fileName} en el Gist.`);
+            }
+
+            let content = targetFile.content || '';
+            if (targetFile.truncated && targetFile.raw_url) {
+                const rawResp = await fetch(targetFile.raw_url, {
+                    headers: token ? { Authorization: `Bearer ${token}` } : undefined
+                });
+                if (!rawResp.ok) {
+                    throw new Error(`No se pudo leer el raw del Gist (${rawResp.status}).`);
+                }
+                content = await rawResp.text();
+            }
+
+            return {
+                content,
+                updatedAt: gist.updated_at || ''
+            };
+        }
+
+        async function createGistWithContent(token, fileName, content) {
+            const payload = {
+                description: 'Video Organizer sync data',
+                public: false,
+                files: {
+                    [fileName]: {
+                        content
+                    }
+                }
+            };
+            return githubApiRequest('/gists', { method: 'POST', token, body: payload });
+        }
+
+        async function updateGistFileContent(token, gistId, fileName, content) {
+            const payload = {
+                files: {
+                    [fileName]: {
+                        content
+                    }
+                }
+            };
+            return githubApiRequest(`/gists/${encodeURIComponent(gistId)}`, { method: 'PATCH', token, body: payload });
+        }
+
+        function applyRemoteStateFromJson(jsonText) {
+            const data = JSON.parse(jsonText);
+            if (!data || !Array.isArray(data.categories)) {
+                throw new Error('El JSON remoto no tiene formato valido.');
+            }
+            appState = { ...appState, ...data };
+            appState.selectedVideo = null;
+            appState.selectedVideoIds = [];
+            if (!appState.expandedCategories || typeof appState.expandedCategories !== 'object') {
+                appState.expandedCategories = {};
+            }
+        }
+
+        async function runSyncCycle(options = {}) {
+            if (syncInFlight) return;
+            if (!gistSyncConfig.enabled || !gistSyncConfig.gistId) return;
+
+            const token = getStoredGistToken();
+            if (!token) {
+                setSyncStatus('Falta token de GitHub para sincronizar.', 'warn');
+                return;
+            }
+
+            syncInFlight = true;
+            setSyncStatus('Sincronizando con Gist...', 'sync');
+
+            try {
+                const localString = JSON.stringify(getPersistedStateSnapshot(), null, 2);
+                const localHash = hashString(localString);
+
+                if (options.forcePush) {
+                    const updated = await updateGistFileContent(token, gistSyncConfig.gistId, gistSyncConfig.fileName, localString);
+                    gistSyncMeta.lastSyncedHash = localHash;
+                    gistSyncMeta.lastRemoteUpdatedAt = updated?.updated_at || gistSyncMeta.lastRemoteUpdatedAt;
+                    gistSyncMeta.lastSyncAt = Date.now();
+                    saveGistSyncConfig();
+                    setSyncStatus('Cambios locales subidos a Gist.', 'ok');
+                    return;
+                }
+
+                const remote = await fetchGistFileData(token, gistSyncConfig.gistId, gistSyncConfig.fileName);
+                const remoteHash = hashString(remote.content);
+                const baseHash = gistSyncMeta.lastSyncedHash || '';
+                const localChanged = localHash !== baseHash;
+                const remoteChanged = remoteHash !== baseHash && remote.updatedAt !== gistSyncMeta.lastRemoteUpdatedAt;
+
+                if (!localChanged && remoteChanged) {
+                    applyRemoteStateFromJson(remote.content);
+                    saveToStorage({ skipAutoSync: true });
+                    render();
+                    gistSyncMeta.lastSyncedHash = remoteHash;
+                    gistSyncMeta.lastRemoteUpdatedAt = remote.updatedAt || '';
+                    gistSyncMeta.lastSyncAt = Date.now();
+                    saveGistSyncConfig();
+                    setSyncStatus('Datos remotos aplicados desde Gist.', 'ok');
+                    return;
+                }
+
+                if (localChanged && !remoteChanged) {
+                    const updated = await updateGistFileContent(token, gistSyncConfig.gistId, gistSyncConfig.fileName, localString);
+                    gistSyncMeta.lastSyncedHash = localHash;
+                    gistSyncMeta.lastRemoteUpdatedAt = updated?.updated_at || gistSyncMeta.lastRemoteUpdatedAt;
+                    gistSyncMeta.lastSyncAt = Date.now();
+                    saveGistSyncConfig();
+                    setSyncStatus('Cambios locales subidos a Gist.', 'ok');
+                    return;
+                }
+
+                if (localChanged && remoteChanged) {
+                    const conflictKey = `${localHash}:${remoteHash}:${remote.updatedAt}`;
+                    if (conflictKey !== lastConflictKey) {
+                        lastConflictKey = conflictKey;
+                        await window.showAlertModal({
+                            title: 'Conflicto de sincronizacion',
+                            message: 'Hay cambios locales y remotos al mismo tiempo. Se conserva local sin sobrescribir remoto automaticamente. Usa "Sync ahora" para forzar subida local.',
+                            confirmText: 'OK'
+                        });
+                    }
+                    setSyncStatus('Conflicto detectado (local y remoto cambiaron).', 'warn');
+                    return;
+                }
+
+                gistSyncMeta.lastSyncedHash = localHash;
+                gistSyncMeta.lastRemoteUpdatedAt = remote.updatedAt || gistSyncMeta.lastRemoteUpdatedAt;
+                gistSyncMeta.lastSyncAt = Date.now();
+                saveGistSyncConfig();
+                setSyncStatus('Sin cambios para sincronizar.', 'idle');
+            } catch (error) {
+                console.error('Sync error:', error);
+                setSyncStatus(`Error sync: ${error.message}`, 'error');
+            } finally {
+                syncInFlight = false;
+            }
+        }
+
+        function clearSyncTimers() {
+            if (syncIntervalHandle) {
+                clearInterval(syncIntervalHandle);
+                syncIntervalHandle = null;
+            }
+            if (syncDebounceHandle) {
+                clearTimeout(syncDebounceHandle);
+                syncDebounceHandle = null;
+            }
+        }
+
+        function setupAutoSyncTimer() {
+            if (!gistSyncConfig.enabled || !gistSyncConfig.gistId) return;
+            const minutes = Math.max(5, Number(gistSyncConfig.intervalMinutes || GIST_DEFAULT_INTERVAL_MINUTES));
+            syncIntervalHandle = setInterval(() => {
+                runSyncCycle();
+            }, minutes * 60 * 1000);
+        }
+
+        function queueAutoSync() {
+            if (!gistSyncConfig.enabled || !gistSyncConfig.gistId) return;
+            if (syncDebounceHandle) clearTimeout(syncDebounceHandle);
+            syncDebounceHandle = setTimeout(() => {
+                runSyncCycle();
+            }, GIST_SYNC_DEBOUNCE_MS);
+        }
+
+        async function saveGistSyncSettings() {
+            try {
+                const token = (elements.gistTokenInput?.value || '').trim();
+                const providedGistId = (elements.gistIdInput?.value || '').trim();
+                const fileName = (elements.gistFileInput?.value || '').trim() || GIST_DEFAULT_FILENAME;
+                const intervalMinutes = Number(elements.gistSyncInterval?.value || GIST_DEFAULT_INTERVAL_MINUTES);
+                const enabled = !!elements.gistSyncEnabled?.checked;
+                const rememberToken = !!elements.gistRememberToken?.checked;
+
+                if (!token) {
+                    await window.showAlertModal({
+                        title: 'Token requerido',
+                        message: 'Ingresa un GitHub token con scope gist.',
+                        confirmText: 'OK'
+                    });
+                    return;
+                }
+
+                setStoredGistToken(token, rememberToken);
+
+                const localString = JSON.stringify(getPersistedStateSnapshot(), null, 2);
+                const localHash = hashString(localString);
+                let gistId = providedGistId;
+                let updatedAt = '';
+
+                if (!gistId) {
+                    const created = await createGistWithContent(token, fileName, localString);
+                    gistId = created.id;
+                    updatedAt = created.updated_at || '';
+                } else {
+                    const updated = await updateGistFileContent(token, gistId, fileName, localString);
+                    updatedAt = updated?.updated_at || '';
+                }
+
+                gistSyncConfig = {
+                    enabled,
+                    gistId,
+                    fileName,
+                    intervalMinutes: Math.max(5, intervalMinutes),
+                    rememberToken
+                };
+
+                gistSyncMeta = {
+                    ...gistSyncMeta,
+                    lastSyncedHash: localHash,
+                    lastRemoteUpdatedAt: updatedAt,
+                    lastSyncAt: Date.now()
+                };
+
+                saveGistSyncConfig();
+                clearSyncTimers();
+                setupAutoSyncTimer();
+                if (enabled) setSyncStatus(`Gist activo: ${gistId}`, 'ok');
+                else setSyncStatus('Gist configurado pero sync desactivado.', 'idle');
+                closeGistSyncModal();
+            } catch (error) {
+                console.error('Error saving gist settings:', error);
+                await window.showAlertModal({
+                    title: 'Error de Gist',
+                    message: error.message || 'No se pudo guardar la configuracion.',
+                    confirmText: 'OK'
+                });
+                setSyncStatus('Error al configurar Gist.', 'error');
+            }
+        }
+
+        async function disconnectGistSync() {
+            const confirmed = await window.showConfirmModal({
+                title: 'Desconectar Gist',
+                message: 'Se desactivara la sincronizacion automatica en este navegador.',
+                confirmText: 'Desconectar',
+                cancelText: 'Cancelar'
+            });
+            if (!confirmed) return;
+
+            gistSyncConfig.enabled = false;
+            gistSyncConfig.gistId = '';
+            gistSyncMeta.lastSyncedHash = '';
+            gistSyncMeta.lastRemoteUpdatedAt = '';
+            gistSyncMeta.lastSyncAt = 0;
+            clearStoredGistToken();
+            saveGistSyncConfig();
+            clearSyncTimers();
+            setSyncStatus('Gist: desactivado', 'idle');
+            fillGistSyncModal();
         }
 
         function validateVideoUrl(url) {
@@ -1557,6 +2052,30 @@ export const prerender = true;
             if (elements.importBtn) {
                 elements.importBtn.addEventListener('click', importData);
             }
+            if (elements.gistSyncBtn) {
+                elements.gistSyncBtn.addEventListener('click', openGistSyncModal);
+            }
+            if (elements.closeGistSyncModal) {
+                elements.closeGistSyncModal.addEventListener('click', closeGistSyncModal);
+            }
+            if (elements.cancelGistSync) {
+                elements.cancelGistSync.addEventListener('click', closeGistSyncModal);
+            }
+            if (elements.saveGistSync) {
+                elements.saveGistSync.addEventListener('click', saveGistSyncSettings);
+            }
+            if (elements.gistSyncForm) {
+                elements.gistSyncForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    saveGistSyncSettings();
+                });
+            }
+            if (elements.gistDisconnectBtn) {
+                elements.gistDisconnectBtn.addEventListener('click', disconnectGistSync);
+            }
+            if (elements.gistSyncNowBtn) {
+                elements.gistSyncNowBtn.addEventListener('click', () => runSyncCycle({ forcePush: true }));
+            }
             if (elements.deleteSelectedBtn) {
                 elements.deleteSelectedBtn.addEventListener('click', deleteSelectedVideos);
             }
@@ -1594,6 +2113,9 @@ export const prerender = true;
                     if (elements.videoPlayer && !elements.videoPlayer.classList.contains('hidden')) {
                         closeVideoPlayer();
                     }
+                    if (elements.gistSyncModal && !elements.gistSyncModal.classList.contains('hidden')) {
+                        closeGistSyncModal();
+                    }
                 }
             });
 
@@ -1613,6 +2135,18 @@ export const prerender = true;
                     }
                 });
             }
+            if (elements.gistSyncModal) {
+                elements.gistSyncModal.addEventListener('click', (e) => {
+                    if (e.target === elements.gistSyncModal) {
+                        closeGistSyncModal();
+                    }
+                });
+            }
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    runSyncCycle();
+                }
+            });
         }
 
         // Inicialización
@@ -1651,9 +2185,26 @@ export const prerender = true;
             elements.selectionCount = document.getElementById('selection-count');
             elements.deleteSelectedBtn = document.getElementById('delete-selected-btn');
             elements.clearSelectionBtn = document.getElementById('clear-selection-btn');
+            elements.gistSyncBtn = document.getElementById('gist-sync-btn');
+            elements.gistSyncStatus = document.getElementById('gist-sync-status');
+            elements.gistSyncModal = document.getElementById('gist-sync-modal');
+            elements.gistSyncForm = document.getElementById('gist-sync-form');
+            elements.closeGistSyncModal = document.getElementById('close-gist-sync-modal');
+            elements.cancelGistSync = document.getElementById('cancel-gist-sync');
+            elements.gistTokenInput = document.getElementById('gist-token-input');
+            elements.gistIdInput = document.getElementById('gist-id-input');
+            elements.gistFileInput = document.getElementById('gist-file-input');
+            elements.gistSyncInterval = document.getElementById('gist-sync-interval');
+            elements.gistSyncEnabled = document.getElementById('gist-sync-enabled');
+            elements.gistRememberToken = document.getElementById('gist-remember-token');
+            elements.gistSyncModalStatus = document.getElementById('gist-sync-modal-status');
+            elements.gistDisconnectBtn = document.getElementById('gist-disconnect-btn');
+            elements.gistSyncNowBtn = document.getElementById('gist-sync-now-btn');
+            elements.saveGistSync = document.getElementById('save-gist-sync');
 
             loadFromStorage();
             loadPlaylistCache();
+            loadGistSyncConfig();
             applyTheme();
             // Inicializar clases de botones de vista
             if (appState.currentView === 'board') {
@@ -1672,9 +2223,13 @@ export const prerender = true;
                 }
             }
             
+            fillGistSyncModal();
+            clearSyncTimers();
+            setupAutoSyncTimer();
             setupEventListeners();
             setupDragDrop();
             render();
+            runSyncCycle();
         }
 
         // Iniciar la aplicación cuando el DOM esté listo

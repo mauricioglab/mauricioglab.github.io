@@ -1,0 +1,8 @@
+---
+import VideosPage from '../../videos/index.astro';
+import { getLanguagePaths } from '@utils/i18n-paths';
+
+export const getStaticPaths = getLanguagePaths;
+---
+
+<VideosPage />
