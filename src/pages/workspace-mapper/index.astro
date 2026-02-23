@@ -27,58 +27,52 @@ const title = "Workspace Mapper";
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- Panel Izquierdo: Dispositivos -->
+            <!-- Panel Izquierdo -->
             <aside class="lg:col-span-3 space-y-4">
-                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-4 border border-slate-200 dark:border-slate-700">
-                    <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-2">
-                        💻 Dispositivos
-                    </h2>
-                    <div id="palette-devices" class="space-y-2 min-h-[120px]">
-                        <!-- Se llenan por JS -->
-                    </div>
-                    <button onclick="window.addDevice()" class="mt-2 w-full py-2 px-3 text-sm bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg text-slate-600 dark:text-slate-300 transition-colors">
-                        + Agregar dispositivo
+                <div class="collapsible-panel bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700" data-panel="devices">
+                    <button type="button" class="panel-header w-full flex items-center justify-between p-4 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-t-xl transition-colors" onclick="window.togglePanel('devices')">
+                        <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">💻 Dispositivos</h2>
+                        <span class="panel-chevron text-slate-400 transition-transform duration-200">▼</span>
                     </button>
+                    <div class="panel-content p-4 pt-0">
+                        <div id="palette-devices" class="space-y-2 min-h-[120px]"></div>
+                        <button onclick="window.addDevice()" class="mt-2 w-full py-2 px-3 text-sm bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg text-slate-600 dark:text-slate-300 transition-colors">+ Agregar dispositivo</button>
+                    </div>
                 </div>
 
-                <!-- Panel: Editores -->
-                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-4 border border-slate-200 dark:border-slate-700">
-                    <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-2">
-                        ⌨️ Editores / IDEs
-                    </h2>
-                    <div id="palette-editors" class="space-y-2 min-h-[120px]">
-                        <!-- Se llenan por JS -->
-                    </div>
-                    <button onclick="window.addEditor()" class="mt-2 w-full py-2 px-3 text-sm bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg text-slate-600 dark:text-slate-300 transition-colors">
-                        + Agregar editor
+                <div class="collapsible-panel bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700" data-panel="editors">
+                    <button type="button" class="panel-header w-full flex items-center justify-between p-4 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-t-xl transition-colors" onclick="window.togglePanel('editors')">
+                        <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">⌨️ Editores / IDEs</h2>
+                        <span class="panel-chevron text-slate-400 transition-transform duration-200">▼</span>
                     </button>
+                    <div class="panel-content p-4 pt-0">
+                        <div id="palette-editors" class="space-y-2 min-h-[120px]"></div>
+                        <button onclick="window.addEditor()" class="mt-2 w-full py-2 px-3 text-sm bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg text-slate-600 dark:text-slate-300 transition-colors">+ Agregar editor</button>
+                    </div>
                 </div>
 
-                <!-- Panel: Proyectos -->
-                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-4 border border-slate-200 dark:border-slate-700">
-                    <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-2">
-                        📁 Proyectos
-                    </h2>
-                    <div id="palette-projects" class="space-y-2 min-h-[120px]">
-                        <!-- Se llenan por JS -->
-                    </div>
-                    <button onclick="window.addProject()" class="mt-2 w-full py-2 px-3 text-sm bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg text-slate-600 dark:text-slate-300 transition-colors">
-                        + Agregar proyecto
+                <div class="collapsible-panel bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700" data-panel="projects">
+                    <button type="button" class="panel-header w-full flex items-center justify-between p-4 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-t-xl transition-colors" onclick="window.togglePanel('projects')">
+                        <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">📁 Proyectos</h2>
+                        <span class="panel-chevron text-slate-400 transition-transform duration-200">▼</span>
                     </button>
+                    <div class="panel-content p-4 pt-0">
+                        <div id="palette-projects" class="space-y-2 min-h-[120px]"></div>
+                        <button onclick="window.addProject()" class="mt-2 w-full py-2 px-3 text-sm bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg text-slate-600 dark:text-slate-300 transition-colors">+ Agregar proyecto</button>
+                    </div>
                 </div>
             </aside>
 
             <!-- Área principal: Mapeo -->
             <main class="lg:col-span-9">
-                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 border border-slate-200 dark:border-slate-700">
-                    <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-4 flex items-center gap-2">
-                        🗺️ Mapeo
-                    </h2>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">
-                        Arrastra un dispositivo aquí para crear su workspace. Luego arrastra editores y proyectos para asignarlos.
-                    </p>
-                    <div id="workspace-area" class="space-y-4 min-h-[200px]">
-                        <!-- Se llenan por JS -->
+                <div class="collapsible-panel bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700" data-panel="mapping">
+                    <button type="button" class="panel-header w-full flex items-center justify-between p-6 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-t-xl transition-colors" onclick="window.togglePanel('mapping')">
+                        <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">🗺️ Mapeo</h2>
+                        <span class="panel-chevron text-slate-400 transition-transform duration-200">▼</span>
+                    </button>
+                    <div class="panel-content p-6 pt-0">
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Arrastra un dispositivo aquí para crear su workspace. Luego arrastra editores y proyectos para asignarlos.</p>
+                        <div id="workspace-area" class="space-y-4 min-h-[200px]"></div>
                     </div>
                 </div>
             </main>
@@ -109,10 +103,23 @@ const title = "Workspace Mapper";
         background-color: rgb(55 48 163 / 0.3);
         border-color: rgb(129 140 248);
     }
+    .collapsible-panel.collapsed .panel-content {
+        display: none;
+    }
+    .collapsible-panel.collapsed .panel-header {
+        border-radius: 0 0 0.75rem 0.75rem;
+    }
+    .collapsible-panel.collapsed .panel-chevron {
+        transform: rotate(-90deg);
+    }
 </style>
 
 <script define:vars={{}}>
     const STORAGE_KEY = 'workspaceMapper';
+
+    const DEVICE_ICONS = ['🖥️', '💻', '📱', '🖨️', '⌨️', '🖱️', '📟', '💾', '🏠', '🖲️'];
+    const EDITOR_ICONS = ['⚡', '🚀', '🏄', '🔧', '📝', '⌨️', '💡', '🎯', '🔨', '🐛'];
+    const PROJECT_ICONS = ['📊', '🔌', '📁', '📂', '🗂️', '📋', '📄', '🎨', '🧪', '🏗️'];
     
     const defaultDevices = [
         { id: 'dev_pc', name: 'PC', icon: '🖥️' },
@@ -136,9 +143,10 @@ const title = "Workspace Mapper";
         devices: [],
         editors: [],
         projects: [],
-        // deviceEditorProjects: { [deviceId]: { [editorId]: [projectId, ...] } }
         deviceEditorProjects: {},
         workspaceDevices: [],
+        comments: {},
+        collapsedPanels: { devices: false, editors: false, projects: false, mapping: false },
     };
 
     function migrateMappingsToDeviceEditorProjects(mappings) {
@@ -167,6 +175,8 @@ const title = "Workspace Mapper";
                     projects: parsed.projects?.length ? parsed.projects : defaultProjects.map(p => ({ ...p })),
                     deviceEditorProjects,
                     workspaceDevices: parsed.workspaceDevices || defaultDevices.map(d => d.id),
+                    comments: parsed.comments || {},
+                    collapsedPanels: { ...{ devices: false, editors: false, projects: false, mapping: false }, ...parsed.collapsedPanels },
                 };
             } else {
                 state = {
@@ -175,6 +185,8 @@ const title = "Workspace Mapper";
                     projects: defaultProjects.map(p => ({ ...p })),
                     deviceEditorProjects: {},
                     workspaceDevices: defaultDevices.map(d => d.id),
+                    comments: {},
+                    collapsedPanels: { devices: false, editors: false, projects: false, mapping: false },
                 };
             }
         } catch (e) {
@@ -184,6 +196,8 @@ const title = "Workspace Mapper";
                 projects: defaultProjects.map(p => ({ ...p })),
                 deviceEditorProjects: {},
                 workspaceDevices: defaultDevices.map(d => d.id),
+                comments: {},
+                collapsedPanels: { devices: false, editors: false, projects: false, mapping: false },
             };
         }
     }
@@ -208,6 +222,7 @@ const title = "Workspace Mapper";
                     <span>${d.icon || '💻'}</span>
                     <span class="text-sm font-medium text-slate-700 dark:text-slate-200 flex-1">${d.name}</span>
                     <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onclick="event.stopPropagation()">
+                        <button onclick="event.stopPropagation(); window.editDeviceIcon('${d.id}')" class="p-1 text-slate-500 hover:text-indigo-600 rounded" title="Cambiar icono">🎨</button>
                         <button onclick="event.stopPropagation(); window.editDevice('${d.id}')" class="p-1 text-slate-500 hover:text-indigo-600 rounded" title="Editar">✏️</button>
                         <button onclick="event.stopPropagation(); window.deleteDevice('${d.id}')" class="p-1 text-slate-500 hover:text-red-500 rounded" title="Eliminar">🗑️</button>
                     </div>
@@ -221,6 +236,7 @@ const title = "Workspace Mapper";
                     <span>${e.icon || '⌨️'}</span>
                     <span class="text-sm font-medium text-slate-700 dark:text-slate-200 flex-1">${e.name}</span>
                     <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onclick="event.stopPropagation()">
+                        <button onclick="event.stopPropagation(); window.editEditorIcon('${e.id}')" class="p-1 text-slate-500 hover:text-violet-600 rounded" title="Cambiar icono">🎨</button>
                         <button onclick="event.stopPropagation(); window.editEditor('${e.id}')" class="p-1 text-slate-500 hover:text-violet-600 rounded" title="Editar">✏️</button>
                         <button onclick="event.stopPropagation(); window.deleteEditor('${e.id}')" class="p-1 text-slate-500 hover:text-red-500 rounded" title="Eliminar">🗑️</button>
                     </div>
@@ -234,6 +250,7 @@ const title = "Workspace Mapper";
                     <span>${p.icon || '📁'}</span>
                     <span class="text-sm font-medium text-slate-700 dark:text-slate-200 flex-1">${p.name}</span>
                     <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onclick="event.stopPropagation()">
+                        <button onclick="event.stopPropagation(); window.editProjectIcon('${p.id}')" class="p-1 text-slate-500 hover:text-emerald-600 rounded" title="Cambiar icono">🎨</button>
                         <button onclick="event.stopPropagation(); window.editProject('${p.id}')" class="p-1 text-slate-500 hover:text-emerald-600 rounded" title="Editar">✏️</button>
                         <button onclick="event.stopPropagation(); window.deleteProject('${p.id}')" class="p-1 text-slate-500 hover:text-red-500 rounded" title="Eliminar">🗑️</button>
                     </div>
@@ -248,59 +265,81 @@ const title = "Workspace Mapper";
     function getEditor(id) { return state.editors.find(e => e.id === id); }
     function getProject(id) { return state.projects.find(p => p.id === id); }
 
+    function getComment(key) { return state.comments[key] || ''; }
+    function setComment(key, text) {
+        if (text?.trim()) state.comments[key] = text.trim();
+        else delete state.comments[key];
+    }
+    function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
     function renderWorkspace() {
         const area = document.getElementById('workspace-area');
         if (!area) return;
 
         const dep = state.deviceEditorProjects || {};
 
-        let html = state.workspaceDevices.map(deviceId => {
+        let html = '<div class="grid gap-4" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));">';
+        html += state.workspaceDevices.map(deviceId => {
             const device = getDevice(deviceId);
             if (!device) return '';
             const deviceEditors = dep[deviceId] || {};
             const editorIds = Object.keys(deviceEditors);
+            const deviceComment = getComment('d:' + deviceId);
             return `
-                <div class="border-2 border-slate-200 dark:border-slate-600 rounded-xl p-4 bg-slate-50 dark:bg-slate-800/50" data-device-id="${deviceId}">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                <div class="border-2 border-slate-200 dark:border-slate-600 rounded-xl p-3 bg-slate-50 dark:bg-slate-800/50 min-w-0" data-device-id="${deviceId}">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2 text-sm">
                             ${device.icon || '💻'} ${device.name}
                         </h3>
                         <div class="flex gap-1">
+                            <button onclick="window.setDeviceComment('${deviceId}')" class="p-1 ${deviceComment ? 'text-amber-500' : 'text-slate-400'} hover:text-amber-500 text-sm" title="${deviceComment ? esc(deviceComment) : 'Agregar comentario'}">💬</button>
+                            <button onclick="window.editDeviceIcon('${deviceId}')" class="p-1 text-slate-400 hover:text-indigo-500 text-sm" title="Cambiar icono">🎨</button>
                             <button onclick="window.editDevice('${deviceId}')" class="p-1 text-slate-400 hover:text-indigo-500 text-sm" title="Editar">✏️</button>
                             <button onclick="window.removeDeviceFromWorkspace('${deviceId}')" class="p-1 text-slate-400 hover:text-red-500 text-sm" title="Quitar del workspace">✕</button>
                         </div>
                     </div>
-                    <div class="space-y-3">
+                    ${deviceComment ? `<p class="text-xs text-slate-500 dark:text-slate-400 mb-2 pl-1 border-l-2 border-amber-300 dark:border-amber-600 line-clamp-2">${esc(deviceComment)}</p>` : ''}
+                    <div class="space-y-2">
                         ${editorIds.map(editorId => {
                             const editor = getEditor(editorId);
                             if (!editor) return '';
                             const projectIds = deviceEditors[editorId] || [];
+                            const editorComment = getComment('e:' + deviceId + '_' + editorId);
                             return `
-                                <div class="border-2 border-violet-200 dark:border-violet-700 rounded-lg p-3 bg-white dark:bg-slate-700/50" data-device-id="${deviceId}" data-editor-id="${editorId}">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <span class="font-medium text-violet-600 dark:text-violet-400 flex items-center gap-2">${editor.icon || '⌨️'} ${editor.name}</span>
+                                <div class="border-2 border-violet-200 dark:border-violet-700 rounded-lg p-2 bg-white dark:bg-slate-700/50" data-device-id="${deviceId}" data-editor-id="${editorId}">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="font-medium text-violet-600 dark:text-violet-400 flex items-center gap-2 text-sm">${editor.icon || '⌨️'} ${editor.name}</span>
                                         <div class="flex gap-1">
+                                            <button onclick="window.setEditorComment('${deviceId}', '${editorId}')" class="p-1 ${editorComment ? 'text-amber-500' : 'text-slate-400'} hover:text-amber-500 text-xs" title="${editorComment ? esc(editorComment) : 'Agregar comentario'}">💬</button>
+                                            <button onclick="window.editEditorIcon('${editorId}')" class="p-1 text-slate-400 hover:text-violet-500 text-xs" title="Cambiar icono">🎨</button>
                                             <button onclick="window.removeEditorFromDevice('${deviceId}', '${editorId}')" class="p-1 text-slate-400 hover:text-red-500 text-xs" title="Quitar editor">✕</button>
                                         </div>
                                     </div>
-                                    <div class="projects-box min-h-[44px] rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-600 p-2 flex flex-wrap gap-2 drop-zone"
+                                    ${editorComment ? `<p class="text-xs text-slate-500 dark:text-slate-400 mb-1 pl-1 border-l-2 border-amber-300 dark:border-amber-600 line-clamp-2">${esc(editorComment)}</p>` : ''}
+                                    <div class="projects-box min-h-[36px] rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-600 p-1.5 flex flex-wrap gap-1.5 drop-zone"
                                          data-device-id="${deviceId}" data-editor-id="${editorId}" data-accepts="project">
                                         ${projectIds.map(projectId => {
                                             const proj = getProject(projectId);
                                             if (!proj) return '';
+                                            const projectComment = getComment('p:' + deviceId + '_' + editorId + '_' + projectId);
                                             return `
-                                                <span class="inline-flex items-center gap-1 px-2 py-1 bg-emerald-100 dark:bg-emerald-900/50 rounded-md text-sm text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                                                    ${proj.icon || '📁'} ${proj.name}
-                                                    <button onclick="event.stopPropagation(); window.removeProjectFromEditor('${deviceId}', '${editorId}', '${projectId}')" class="ml-0.5 text-emerald-500 hover:text-red-500 text-xs" title="Quitar">✕</button>
-                                                </span>
+                                                <div class="flex flex-col gap-0.5">
+                                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-emerald-100 dark:bg-emerald-900/50 rounded-md text-xs text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 w-fit">
+                                                        ${proj.icon || '📁'} ${proj.name}
+                                                        <button onclick="event.stopPropagation(); window.setProjectComment('${deviceId}', '${editorId}', '${projectId}')" class="ml-0.5 ${projectComment ? 'text-amber-500' : 'text-emerald-500 opacity-60'} hover:text-amber-500 text-xs" title="${projectComment ? esc(projectComment) : 'Agregar comentario'}">💬</button>
+                                                        <button onclick="event.stopPropagation(); window.editProjectIcon('${projectId}')" class="ml-0.5 text-emerald-500 opacity-60 hover:text-amber-500 text-xs" title="Cambiar icono">🎨</button>
+                                                        <button onclick="event.stopPropagation(); window.removeProjectFromEditor('${deviceId}', '${editorId}', '${projectId}')" class="ml-0.5 text-emerald-500 hover:text-red-500 text-xs" title="Quitar">✕</button>
+                                                    </span>
+                                                    ${projectComment ? `<span class="text-[10px] text-slate-500 dark:text-slate-400 pl-1 border-l-2 border-amber-300 dark:border-amber-600">${esc(projectComment)}</span>` : ''}
+                                                </div>
                                             `;
                                         }).join('')}
-                                        ${projectIds.length === 0 ? '<span class="text-slate-400 dark:text-slate-500 text-xs self-center">Arrastra proyectos aquí</span>' : ''}
+                                        ${projectIds.length === 0 ? '<span class="text-slate-400 dark:text-slate-500 text-xs self-center">Arrastra aquí</span>' : ''}
                                     </div>
                                 </div>
                             `;
                         }).join('')}
-                        <div class="drop-zone flex items-center gap-2 py-3 px-3 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg text-slate-500 dark:text-slate-400 text-sm"
+                        <div class="drop-zone flex items-center gap-2 py-2 px-2 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg text-slate-500 dark:text-slate-400 text-xs"
                              data-device-id="${deviceId}" data-accepts="editor">
                             Arrastra editor aquí
                         </div>
@@ -308,13 +347,12 @@ const title = "Workspace Mapper";
                 </div>
             `;
         }).join('');
-
         html += `
-            <div class="drop-zone flex items-center justify-center py-6 px-4 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl text-slate-500 dark:text-slate-400"
+            <div class="drop-zone col-span-full flex items-center justify-center py-6 px-4 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl text-slate-500 dark:text-slate-400"
                  data-type="add-device" data-accepts="device">
                 Arrastra un dispositivo aquí para agregarlo al workspace
             </div>
-        `;
+        </div>`;
 
         area.innerHTML = html;
         attachDropListeners();
@@ -389,30 +427,66 @@ const title = "Workspace Mapper";
     }
 
     window.addDevice = async function() {
-        const name = await window.showPromptModal?.({ title: 'Nuevo dispositivo', inputType: 'text', placeholder: 'Ej: MacBook', confirmText: 'Agregar', cancelText: 'Cancelar' });
+        const name = await window.showPromptModal?.({ title: 'Nuevo dispositivo', inputType: 'text', placeholder: 'Ej: MacBook', confirmText: 'Siguiente', cancelText: 'Cancelar' });
         if (!name?.trim()) return;
+        const icon = await window.showSelectModal?.({ title: 'Elige un icono', message: 'Selecciona el icono para este dispositivo', options: DEVICE_ICONS.map(i => ({ value: i, label: i })), gridLayout: true, cancelText: 'Cancelar' });
+        if (!icon) return;
         const id = generateId('dev');
-        state.devices.push({ id, name: name.trim(), icon: '💻' });
+        state.devices.push({ id, name: name.trim(), icon: icon });
         saveState();
         renderPalettes();
     };
 
     window.addEditor = async function() {
-        const name = await window.showPromptModal?.({ title: 'Nuevo editor', inputType: 'text', placeholder: 'Ej: Zed', confirmText: 'Agregar', cancelText: 'Cancelar' });
+        const name = await window.showPromptModal?.({ title: 'Nuevo editor', inputType: 'text', placeholder: 'Ej: Zed', confirmText: 'Siguiente', cancelText: 'Cancelar' });
         if (!name?.trim()) return;
+        const icon = await window.showSelectModal?.({ title: 'Elige un icono', message: 'Selecciona el icono para este editor', options: EDITOR_ICONS.map(i => ({ value: i, label: i })), gridLayout: true, cancelText: 'Cancelar' });
+        if (!icon) return;
         const id = generateId('ed');
-        state.editors.push({ id, name: name.trim(), icon: '⌨️' });
+        state.editors.push({ id, name: name.trim(), icon: icon });
         saveState();
         renderPalettes();
     };
 
     window.addProject = async function() {
-        const name = await window.showPromptModal?.({ title: 'Nuevo proyecto', inputType: 'text', placeholder: 'Ej: Dashboard', confirmText: 'Agregar', cancelText: 'Cancelar' });
+        const name = await window.showPromptModal?.({ title: 'Nuevo proyecto', inputType: 'text', placeholder: 'Ej: Dashboard', confirmText: 'Siguiente', cancelText: 'Cancelar' });
         if (!name?.trim()) return;
+        const icon = await window.showSelectModal?.({ title: 'Elige un icono', message: 'Selecciona el icono para este proyecto', options: PROJECT_ICONS.map(i => ({ value: i, label: i })), gridLayout: true, cancelText: 'Cancelar' });
+        if (!icon) return;
         const id = generateId('proj');
-        state.projects.push({ id, name: name.trim(), icon: '📁' });
+        state.projects.push({ id, name: name.trim(), icon: icon });
         saveState();
         renderPalettes();
+    };
+
+    window.setDeviceComment = async function(deviceId) {
+        const key = 'd:' + deviceId;
+        const text = await window.showPromptModal?.({ title: 'Comentario (dispositivo)', inputType: 'text', placeholder: 'Escribe un comentario...', defaultValue: getComment(key), confirmText: 'Guardar', cancelText: 'Cancelar' });
+        if (text !== null) {
+            setComment(key, text);
+            saveState();
+            renderWorkspace();
+        }
+    };
+
+    window.setEditorComment = async function(deviceId, editorId) {
+        const key = 'e:' + deviceId + '_' + editorId;
+        const text = await window.showPromptModal?.({ title: 'Comentario (editor)', inputType: 'text', placeholder: 'Escribe un comentario...', defaultValue: getComment(key), confirmText: 'Guardar', cancelText: 'Cancelar' });
+        if (text !== null) {
+            setComment(key, text);
+            saveState();
+            renderWorkspace();
+        }
+    };
+
+    window.setProjectComment = async function(deviceId, editorId, projectId) {
+        const key = 'p:' + deviceId + '_' + editorId + '_' + projectId;
+        const text = await window.showPromptModal?.({ title: 'Comentario (proyecto)', inputType: 'text', placeholder: 'Escribe un comentario...', defaultValue: getComment(key), confirmText: 'Guardar', cancelText: 'Cancelar' });
+        if (text !== null) {
+            setComment(key, text);
+            saveState();
+            renderWorkspace();
+        }
     };
 
     window.removeEditorFromDevice = function(deviceId, editorId) {
@@ -435,40 +509,88 @@ const title = "Workspace Mapper";
         renderWorkspace();
     };
 
-    window.editDevice = async function(id) {
+    window.editDeviceIcon = async function(id) {
         const device = getDevice(id);
         if (!device) return;
-        const name = await window.showPromptModal?.({ title: 'Editar dispositivo', inputType: 'text', placeholder: 'Nombre', defaultValue: device.name, confirmText: 'Guardar', cancelText: 'Cancelar' });
-        if (name?.trim()) {
-            device.name = name.trim();
+        const opts = [...new Set([device.icon, ...DEVICE_ICONS])].map(i => ({ value: i, label: i }));
+        const icon = await window.showSelectModal?.({ title: 'Cambiar icono', message: 'Selecciona un icono para ' + device.name, options: opts, gridLayout: true, selectedValue: device.icon, cancelText: 'Cancelar' });
+        if (icon) {
+            device.icon = icon;
             saveState();
             renderPalettes();
             renderWorkspace();
         }
+    };
+
+    window.editEditorIcon = async function(id) {
+        const editor = getEditor(id);
+        if (!editor) return;
+        const opts = [...new Set([editor.icon, ...EDITOR_ICONS])].map(i => ({ value: i, label: i }));
+        const icon = await window.showSelectModal?.({ title: 'Cambiar icono', message: 'Selecciona un icono para ' + editor.name, options: opts, gridLayout: true, selectedValue: editor.icon, cancelText: 'Cancelar' });
+        if (icon) {
+            editor.icon = icon;
+            saveState();
+            renderPalettes();
+            renderWorkspace();
+        }
+    };
+
+    window.editProjectIcon = async function(id) {
+        const project = getProject(id);
+        if (!project) return;
+        const opts = [...new Set([project.icon, ...PROJECT_ICONS])].map(i => ({ value: i, label: i }));
+        const icon = await window.showSelectModal?.({ title: 'Cambiar icono', message: 'Selecciona un icono para ' + project.name, options: opts, gridLayout: true, selectedValue: project.icon, cancelText: 'Cancelar' });
+        if (icon) {
+            project.icon = icon;
+            saveState();
+            renderPalettes();
+            renderWorkspace();
+        }
+    };
+
+    window.editDevice = async function(id) {
+        const device = getDevice(id);
+        if (!device) return;
+        const name = await window.showPromptModal?.({ title: 'Editar dispositivo', inputType: 'text', placeholder: 'Nombre', defaultValue: device.name, confirmText: 'Siguiente', cancelText: 'Cancelar' });
+        if (!name?.trim()) return;
+        const deviceIconOpts = [...new Set([device.icon, ...DEVICE_ICONS])].map(i => ({ value: i, label: i }));
+        const icon = await window.showSelectModal?.({ title: 'Elige un icono', message: 'Selecciona el icono', options: deviceIconOpts, gridLayout: true, selectedValue: device.icon, cancelText: 'Cancelar' });
+        if (!icon) return;
+        device.name = name.trim();
+        device.icon = icon;
+        saveState();
+        renderPalettes();
+        renderWorkspace();
     };
 
     window.editEditor = async function(id) {
         const editor = getEditor(id);
         if (!editor) return;
-        const name = await window.showPromptModal?.({ title: 'Editar editor', inputType: 'text', placeholder: 'Nombre', defaultValue: editor.name, confirmText: 'Guardar', cancelText: 'Cancelar' });
-        if (name?.trim()) {
-            editor.name = name.trim();
-            saveState();
-            renderPalettes();
-            renderWorkspace();
-        }
+        const name = await window.showPromptModal?.({ title: 'Editar editor', inputType: 'text', placeholder: 'Nombre', defaultValue: editor.name, confirmText: 'Siguiente', cancelText: 'Cancelar' });
+        if (!name?.trim()) return;
+        const editorIconOpts = [...new Set([editor.icon, ...EDITOR_ICONS])].map(i => ({ value: i, label: i }));
+        const icon = await window.showSelectModal?.({ title: 'Elige un icono', message: 'Selecciona el icono', options: editorIconOpts, gridLayout: true, selectedValue: editor.icon, cancelText: 'Cancelar' });
+        if (!icon) return;
+        editor.name = name.trim();
+        editor.icon = icon;
+        saveState();
+        renderPalettes();
+        renderWorkspace();
     };
 
     window.editProject = async function(id) {
         const project = getProject(id);
         if (!project) return;
-        const name = await window.showPromptModal?.({ title: 'Editar proyecto', inputType: 'text', placeholder: 'Nombre', defaultValue: project.name, confirmText: 'Guardar', cancelText: 'Cancelar' });
-        if (name?.trim()) {
-            project.name = name.trim();
-            saveState();
-            renderPalettes();
-            renderWorkspace();
-        }
+        const name = await window.showPromptModal?.({ title: 'Editar proyecto', inputType: 'text', placeholder: 'Nombre', defaultValue: project.name, confirmText: 'Siguiente', cancelText: 'Cancelar' });
+        if (!name?.trim()) return;
+        const projectIconOpts = [...new Set([project.icon, ...PROJECT_ICONS])].map(i => ({ value: i, label: i }));
+        const icon = await window.showSelectModal?.({ title: 'Elige un icono', message: 'Selecciona el icono', options: projectIconOpts, gridLayout: true, selectedValue: project.icon, cancelText: 'Cancelar' });
+        if (!icon) return;
+        project.name = name.trim();
+        project.icon = icon;
+        saveState();
+        renderPalettes();
+        renderWorkspace();
     };
 
     window.deleteDevice = async function(id) {
@@ -477,6 +599,9 @@ const title = "Workspace Mapper";
             state.devices = state.devices.filter(d => d.id !== id);
             state.workspaceDevices = state.workspaceDevices.filter(did => did !== id);
             delete state.deviceEditorProjects[id];
+            for (const k of Object.keys(state.comments)) {
+                if (k === 'd:' + id || k.startsWith('e:' + id + '_') || k.startsWith('p:' + id + '_')) delete state.comments[k];
+            }
             saveState();
             renderPalettes();
             renderWorkspace();
@@ -492,6 +617,9 @@ const title = "Workspace Mapper";
                 if (Object.keys(state.deviceEditorProjects[deviceId]).length === 0) {
                     delete state.deviceEditorProjects[deviceId];
                 }
+            }
+            for (const k of Object.keys(state.comments)) {
+                if ((k.startsWith('e:') && k.endsWith('_' + id)) || (k.startsWith('p:') && k.includes('_' + id + '_'))) delete state.comments[k];
             }
             saveState();
             renderPalettes();
@@ -514,6 +642,9 @@ const title = "Workspace Mapper";
                     delete state.deviceEditorProjects[deviceId];
                 }
             }
+            for (const k of Object.keys(state.comments)) {
+                if (k.startsWith('p:') && k.endsWith('_' + id)) delete state.comments[k];
+            }
             saveState();
             renderPalettes();
             renderWorkspace();
@@ -527,10 +658,27 @@ const title = "Workspace Mapper";
         renderWorkspace();
     };
 
+    window.togglePanel = function(panelId) {
+        state.collapsedPanels[panelId] = !(state.collapsedPanels[panelId] ?? false);
+        const el = document.querySelector(`.collapsible-panel[data-panel="${panelId}"]`);
+        if (el) {
+            el.classList.toggle('collapsed', state.collapsedPanels[panelId]);
+        }
+        saveState();
+    };
+
+    function applyCollapsedState() {
+        for (const [panelId, collapsed] of Object.entries(state.collapsedPanels || {})) {
+            const el = document.querySelector(`.collapsible-panel[data-panel="${panelId}"]`);
+            if (el) el.classList.toggle('collapsed', !!collapsed);
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         loadState();
         renderPalettes();
         renderWorkspace();
+        applyCollapsedState();
     });
 </script>
 </BaseTailwind>
