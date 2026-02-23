@@ -34,6 +34,7 @@ export const pagesRegistry: PageEntry[] = [
   { id: 'videos', name: 'Videos', url: '/videos/', category: 'public', icon: '🎬' },
   { id: 'extensions', name: 'Extensiones', url: '/extensions/', category: 'public', icon: '🧩' },
   { id: 'urls', name: 'URLs Útiles', url: '/urls/', category: 'public', icon: '🔗' },
+  { id: 'noticias', name: 'Noticias IA', url: '/noticias/', category: 'public', icon: '📰' },
   { id: 'main', name: 'Main (Retro)', url: '/main/', category: 'public', icon: '🏠' },
 
   // =====================
@@ -50,6 +51,7 @@ export const pagesRegistry: PageEntry[] = [
   // HERRAMIENTAS (solo en admin)
   // =====================
   { id: 'calculadora', name: 'Calculadora', url: '/calculadora/', category: 'tool', icon: '🧮' },
+  { id: 'workspace-mapper', name: 'Workspace Mapper', url: '/workspace-mapper/', category: 'tool', icon: '🖥️' },
 
   // =====================
   // CASE STUDIES (solo en admin)

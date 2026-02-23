@@ -1,0 +1,536 @@
+---
+// Workspace Mapper - Mapeo de dispositivos, editores y proyectos
+import BaseTailwind from '@layouts/BaseTailwind.astro';
+
+export const prerender = true;
+
+const title = "Workspace Mapper";
+---
+
+<BaseTailwind 
+    title={title}
+    description="Mapea dispositivos, editores e IDEs con tus proyectos"
+    lang="es"
+    layoutType="tool"
+    showPromptModal={true}
+>
+<div class="min-h-screen bg-slate-50 dark:bg-slate-900 py-6 px-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+                🖥️ Workspace Mapper
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-2">
+                Arrastra y asigna editores con proyectos a cada dispositivo
+            </p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Panel Izquierdo: Dispositivos -->
+            <aside class="lg:col-span-3 space-y-4">
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-4 border border-slate-200 dark:border-slate-700">
+                    <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-2">
+                        💻 Dispositivos
+                    </h2>
+                    <div id="palette-devices" class="space-y-2 min-h-[120px]">
+                        <!-- Se llenan por JS -->
+                    </div>
+                    <button onclick="window.addDevice()" class="mt-2 w-full py-2 px-3 text-sm bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg text-slate-600 dark:text-slate-300 transition-colors">
+                        + Agregar dispositivo
+                    </button>
+                </div>
+
+                <!-- Panel: Editores -->
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-4 border border-slate-200 dark:border-slate-700">
+                    <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-2">
+                        ⌨️ Editores / IDEs
+                    </h2>
+                    <div id="palette-editors" class="space-y-2 min-h-[120px]">
+                        <!-- Se llenan por JS -->
+                    </div>
+                    <button onclick="window.addEditor()" class="mt-2 w-full py-2 px-3 text-sm bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg text-slate-600 dark:text-slate-300 transition-colors">
+                        + Agregar editor
+                    </button>
+                </div>
+
+                <!-- Panel: Proyectos -->
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-4 border border-slate-200 dark:border-slate-700">
+                    <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-2">
+                        📁 Proyectos
+                    </h2>
+                    <div id="palette-projects" class="space-y-2 min-h-[120px]">
+                        <!-- Se llenan por JS -->
+                    </div>
+                    <button onclick="window.addProject()" class="mt-2 w-full py-2 px-3 text-sm bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg text-slate-600 dark:text-slate-300 transition-colors">
+                        + Agregar proyecto
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Área principal: Mapeo -->
+            <main class="lg:col-span-9">
+                <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 border border-slate-200 dark:border-slate-700">
+                    <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-4 flex items-center gap-2">
+                        🗺️ Mapeo
+                    </h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">
+                        Arrastra un dispositivo aquí para crear su workspace. Luego arrastra editores y proyectos para asignarlos.
+                    </p>
+                    <div id="workspace-area" class="space-y-4 min-h-[200px]">
+                        <!-- Se llenan por JS -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+<style>
+    .draggable {
+        cursor: grab;
+        user-select: none;
+    }
+    .draggable:active {
+        cursor: grabbing;
+    }
+    .draggable.dragging {
+        opacity: 0.5;
+    }
+    .drop-zone {
+        min-height: 48px;
+        transition: background-color 0.2s, border-color 0.2s;
+    }
+    .drop-zone.drag-over {
+        background-color: rgb(224 231 255);
+        border-color: rgb(99 102 241);
+    }
+    .dark .drop-zone.drag-over {
+        background-color: rgb(55 48 163 / 0.3);
+        border-color: rgb(129 140 248);
+    }
+</style>
+
+<script define:vars={{}}>
+    const STORAGE_KEY = 'workspaceMapper';
+    
+    const defaultDevices = [
+        { id: 'dev_pc', name: 'PC', icon: '🖥️' },
+        { id: 'dev_notebook', name: 'Notebook', icon: '💻' },
+    ];
+    
+    const defaultEditors = [
+        { id: 'ed_cursor', name: 'Cursor', icon: '⚡' },
+        { id: 'ed_antigravity', name: 'Antigravity', icon: '🚀' },
+        { id: 'ed_windsurf', name: 'Windsurf', icon: '🏄' },
+        { id: 'ed_trae', name: 'Trae', icon: '🔧' },
+        { id: 'ed_vscode', name: 'VS Code', icon: '📝' },
+    ];
+    
+    const defaultProjects = [
+        { id: 'proj_dashboard', name: 'Dashboard', icon: '📊' },
+        { id: 'proj_api', name: 'API', icon: '🔌' },
+    ];
+
+    let state = {
+        devices: [],
+        editors: [],
+        projects: [],
+        // deviceEditorProjects: { [deviceId]: { [editorId]: [projectId, ...] } }
+        deviceEditorProjects: {},
+        workspaceDevices: [],
+    };
+
+    function migrateMappingsToDeviceEditorProjects(mappings) {
+        const dep = {};
+        for (const m of mappings || []) {
+            if (!dep[m.deviceId]) dep[m.deviceId] = {};
+            if (!dep[m.deviceId][m.editorId]) dep[m.deviceId][m.editorId] = [];
+            if (!dep[m.deviceId][m.editorId].includes(m.projectId)) {
+                dep[m.deviceId][m.editorId].push(m.projectId);
+            }
+        }
+        return dep;
+    }
+
+    function loadState() {
+        try {
+            const saved = sessionStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                const deviceEditorProjects = parsed.deviceEditorProjects && Object.keys(parsed.deviceEditorProjects).length > 0
+                    ? parsed.deviceEditorProjects
+                    : migrateMappingsToDeviceEditorProjects(parsed.mappings);
+                state = {
+                    devices: parsed.devices?.length ? parsed.devices : defaultDevices.map(d => ({ ...d })),
+                    editors: parsed.editors?.length ? parsed.editors : defaultEditors.map(e => ({ ...e })),
+                    projects: parsed.projects?.length ? parsed.projects : defaultProjects.map(p => ({ ...p })),
+                    deviceEditorProjects,
+                    workspaceDevices: parsed.workspaceDevices || defaultDevices.map(d => d.id),
+                };
+            } else {
+                state = {
+                    devices: defaultDevices.map(d => ({ ...d })),
+                    editors: defaultEditors.map(e => ({ ...e })),
+                    projects: defaultProjects.map(p => ({ ...p })),
+                    deviceEditorProjects: {},
+                    workspaceDevices: defaultDevices.map(d => d.id),
+                };
+            }
+        } catch (e) {
+            state = {
+                devices: defaultDevices.map(d => ({ ...d })),
+                editors: defaultEditors.map(e => ({ ...e })),
+                projects: defaultProjects.map(p => ({ ...p })),
+                deviceEditorProjects: {},
+                workspaceDevices: defaultDevices.map(d => d.id),
+            };
+        }
+    }
+
+    function saveState() {
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function generateId(prefix) {
+        return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+    }
+
+    function renderPalettes() {
+        const devicesEl = document.getElementById('palette-devices');
+        const editorsEl = document.getElementById('palette-editors');
+        const projectsEl = document.getElementById('palette-projects');
+
+        if (devicesEl) {
+            devicesEl.innerHTML = state.devices.map(d => `
+                <div class="draggable group px-3 py-2 bg-indigo-100 dark:bg-indigo-900/40 rounded-lg border border-indigo-200 dark:border-indigo-800 flex items-center gap-2"
+                     draggable="true" data-type="device" data-id="${d.id}">
+                    <span>${d.icon || '💻'}</span>
+                    <span class="text-sm font-medium text-slate-700 dark:text-slate-200 flex-1">${d.name}</span>
+                    <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onclick="event.stopPropagation()">
+                        <button onclick="event.stopPropagation(); window.editDevice('${d.id}')" class="p-1 text-slate-500 hover:text-indigo-600 rounded" title="Editar">✏️</button>
+                        <button onclick="event.stopPropagation(); window.deleteDevice('${d.id}')" class="p-1 text-slate-500 hover:text-red-500 rounded" title="Eliminar">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        if (editorsEl) {
+            editorsEl.innerHTML = state.editors.map(e => `
+                <div class="draggable group px-3 py-2 bg-violet-100 dark:bg-violet-900/40 rounded-lg border border-violet-200 dark:border-violet-800 flex items-center gap-2"
+                     draggable="true" data-type="editor" data-id="${e.id}">
+                    <span>${e.icon || '⌨️'}</span>
+                    <span class="text-sm font-medium text-slate-700 dark:text-slate-200 flex-1">${e.name}</span>
+                    <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onclick="event.stopPropagation()">
+                        <button onclick="event.stopPropagation(); window.editEditor('${e.id}')" class="p-1 text-slate-500 hover:text-violet-600 rounded" title="Editar">✏️</button>
+                        <button onclick="event.stopPropagation(); window.deleteEditor('${e.id}')" class="p-1 text-slate-500 hover:text-red-500 rounded" title="Eliminar">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        if (projectsEl) {
+            projectsEl.innerHTML = state.projects.map(p => `
+                <div class="draggable group px-3 py-2 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg border border-emerald-200 dark:border-emerald-800 flex items-center gap-2"
+                     draggable="true" data-type="project" data-id="${p.id}">
+                    <span>${p.icon || '📁'}</span>
+                    <span class="text-sm font-medium text-slate-700 dark:text-slate-200 flex-1">${p.name}</span>
+                    <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onclick="event.stopPropagation()">
+                        <button onclick="event.stopPropagation(); window.editProject('${p.id}')" class="p-1 text-slate-500 hover:text-emerald-600 rounded" title="Editar">✏️</button>
+                        <button onclick="event.stopPropagation(); window.deleteProject('${p.id}')" class="p-1 text-slate-500 hover:text-red-500 rounded" title="Eliminar">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        attachDragListeners();
+    }
+
+    function getDevice(id) { return state.devices.find(d => d.id === id); }
+    function getEditor(id) { return state.editors.find(e => e.id === id); }
+    function getProject(id) { return state.projects.find(p => p.id === id); }
+
+    function renderWorkspace() {
+        const area = document.getElementById('workspace-area');
+        if (!area) return;
+
+        const dep = state.deviceEditorProjects || {};
+
+        let html = state.workspaceDevices.map(deviceId => {
+            const device = getDevice(deviceId);
+            if (!device) return '';
+            const deviceEditors = dep[deviceId] || {};
+            const editorIds = Object.keys(deviceEditors);
+            return `
+                <div class="border-2 border-slate-200 dark:border-slate-600 rounded-xl p-4 bg-slate-50 dark:bg-slate-800/50" data-device-id="${deviceId}">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                            ${device.icon || '💻'} ${device.name}
+                        </h3>
+                        <div class="flex gap-1">
+                            <button onclick="window.editDevice('${deviceId}')" class="p-1 text-slate-400 hover:text-indigo-500 text-sm" title="Editar">✏️</button>
+                            <button onclick="window.removeDeviceFromWorkspace('${deviceId}')" class="p-1 text-slate-400 hover:text-red-500 text-sm" title="Quitar del workspace">✕</button>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        ${editorIds.map(editorId => {
+                            const editor = getEditor(editorId);
+                            if (!editor) return '';
+                            const projectIds = deviceEditors[editorId] || [];
+                            return `
+                                <div class="border-2 border-violet-200 dark:border-violet-700 rounded-lg p-3 bg-white dark:bg-slate-700/50" data-device-id="${deviceId}" data-editor-id="${editorId}">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="font-medium text-violet-600 dark:text-violet-400 flex items-center gap-2">${editor.icon || '⌨️'} ${editor.name}</span>
+                                        <div class="flex gap-1">
+                                            <button onclick="window.removeEditorFromDevice('${deviceId}', '${editorId}')" class="p-1 text-slate-400 hover:text-red-500 text-xs" title="Quitar editor">✕</button>
+                                        </div>
+                                    </div>
+                                    <div class="projects-box min-h-[44px] rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-600 p-2 flex flex-wrap gap-2 drop-zone"
+                                         data-device-id="${deviceId}" data-editor-id="${editorId}" data-accepts="project">
+                                        ${projectIds.map(projectId => {
+                                            const proj = getProject(projectId);
+                                            if (!proj) return '';
+                                            return `
+                                                <span class="inline-flex items-center gap-1 px-2 py-1 bg-emerald-100 dark:bg-emerald-900/50 rounded-md text-sm text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                                                    ${proj.icon || '📁'} ${proj.name}
+                                                    <button onclick="event.stopPropagation(); window.removeProjectFromEditor('${deviceId}', '${editorId}', '${projectId}')" class="ml-0.5 text-emerald-500 hover:text-red-500 text-xs" title="Quitar">✕</button>
+                                                </span>
+                                            `;
+                                        }).join('')}
+                                        ${projectIds.length === 0 ? '<span class="text-slate-400 dark:text-slate-500 text-xs self-center">Arrastra proyectos aquí</span>' : ''}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                        <div class="drop-zone flex items-center gap-2 py-3 px-3 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg text-slate-500 dark:text-slate-400 text-sm"
+                             data-device-id="${deviceId}" data-accepts="editor">
+                            Arrastra editor aquí
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        html += `
+            <div class="drop-zone flex items-center justify-center py-6 px-4 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl text-slate-500 dark:text-slate-400"
+                 data-type="add-device" data-accepts="device">
+                Arrastra un dispositivo aquí para agregarlo al workspace
+            </div>
+        `;
+
+        area.innerHTML = html;
+        attachDropListeners();
+    }
+
+    let draggedData = null;
+
+    function attachDragListeners() {
+        document.querySelectorAll('.draggable').forEach(el => {
+            el.addEventListener('dragstart', (e) => {
+                if (e.target.closest('button')) {
+                    e.preventDefault();
+                    return;
+                }
+                draggedData = { type: el.dataset.type, id: el.dataset.id };
+                el.classList.add('dragging');
+                e.dataTransfer.setData('text/plain', JSON.stringify(draggedData));
+                e.dataTransfer.effectAllowed = 'move';
+            });
+            el.addEventListener('dragend', () => {
+                el.classList.remove('dragging');
+                draggedData = null;
+            });
+        });
+    }
+
+    function attachDropListeners() {
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const accepts = (zone.dataset.accepts || '').split(',');
+                if (draggedData && accepts.includes(draggedData.type)) {
+                    zone.classList.add('drag-over');
+                    e.dataTransfer.dropEffect = 'move';
+                }
+            });
+            zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.classList.remove('drag-over');
+                if (!draggedData) return;
+                const data = JSON.parse(e.dataTransfer.getData('text/plain') || '{}');
+                if (!data.type || !data.id) return;
+
+                if (zone.dataset.type === 'add-device' && data.type === 'device') {
+                    if (!state.workspaceDevices.includes(data.id)) {
+                        state.workspaceDevices.push(data.id);
+                        saveState();
+                        renderWorkspace();
+                    }
+                } else if (data.type === 'editor' && zone.dataset.deviceId) {
+                    const deviceId = zone.dataset.deviceId;
+                    if (!state.deviceEditorProjects[deviceId]) state.deviceEditorProjects[deviceId] = {};
+                    if (!state.deviceEditorProjects[deviceId][data.id]) {
+                        state.deviceEditorProjects[deviceId][data.id] = [];
+                        saveState();
+                        renderWorkspace();
+                    }
+                } else if (data.type === 'project' && zone.dataset.deviceId && zone.dataset.editorId) {
+                    const deviceId = zone.dataset.deviceId;
+                    const editorId = zone.dataset.editorId;
+                    if (!state.deviceEditorProjects[deviceId]) state.deviceEditorProjects[deviceId] = {};
+                    if (!state.deviceEditorProjects[deviceId][editorId]) state.deviceEditorProjects[deviceId][editorId] = [];
+                    if (!state.deviceEditorProjects[deviceId][editorId].includes(data.id)) {
+                        state.deviceEditorProjects[deviceId][editorId].push(data.id);
+                        saveState();
+                        renderWorkspace();
+                    }
+                }
+            });
+        });
+    }
+
+    window.addDevice = async function() {
+        const name = await window.showPromptModal?.({ title: 'Nuevo dispositivo', inputType: 'text', placeholder: 'Ej: MacBook', confirmText: 'Agregar', cancelText: 'Cancelar' });
+        if (!name?.trim()) return;
+        const id = generateId('dev');
+        state.devices.push({ id, name: name.trim(), icon: '💻' });
+        saveState();
+        renderPalettes();
+    };
+
+    window.addEditor = async function() {
+        const name = await window.showPromptModal?.({ title: 'Nuevo editor', inputType: 'text', placeholder: 'Ej: Zed', confirmText: 'Agregar', cancelText: 'Cancelar' });
+        if (!name?.trim()) return;
+        const id = generateId('ed');
+        state.editors.push({ id, name: name.trim(), icon: '⌨️' });
+        saveState();
+        renderPalettes();
+    };
+
+    window.addProject = async function() {
+        const name = await window.showPromptModal?.({ title: 'Nuevo proyecto', inputType: 'text', placeholder: 'Ej: Dashboard', confirmText: 'Agregar', cancelText: 'Cancelar' });
+        if (!name?.trim()) return;
+        const id = generateId('proj');
+        state.projects.push({ id, name: name.trim(), icon: '📁' });
+        saveState();
+        renderPalettes();
+    };
+
+    window.removeEditorFromDevice = function(deviceId, editorId) {
+        if (!state.deviceEditorProjects[deviceId]) return;
+        delete state.deviceEditorProjects[deviceId][editorId];
+        if (Object.keys(state.deviceEditorProjects[deviceId]).length === 0) {
+            delete state.deviceEditorProjects[deviceId];
+        }
+        saveState();
+        renderWorkspace();
+    };
+
+    window.removeProjectFromEditor = function(deviceId, editorId, projectId) {
+        if (!state.deviceEditorProjects[deviceId]?.[editorId]) return;
+        state.deviceEditorProjects[deviceId][editorId] = state.deviceEditorProjects[deviceId][editorId].filter(id => id !== projectId);
+        if (state.deviceEditorProjects[deviceId][editorId].length === 0) {
+            delete state.deviceEditorProjects[deviceId][editorId];
+        }
+        saveState();
+        renderWorkspace();
+    };
+
+    window.editDevice = async function(id) {
+        const device = getDevice(id);
+        if (!device) return;
+        const name = await window.showPromptModal?.({ title: 'Editar dispositivo', inputType: 'text', placeholder: 'Nombre', defaultValue: device.name, confirmText: 'Guardar', cancelText: 'Cancelar' });
+        if (name?.trim()) {
+            device.name = name.trim();
+            saveState();
+            renderPalettes();
+            renderWorkspace();
+        }
+    };
+
+    window.editEditor = async function(id) {
+        const editor = getEditor(id);
+        if (!editor) return;
+        const name = await window.showPromptModal?.({ title: 'Editar editor', inputType: 'text', placeholder: 'Nombre', defaultValue: editor.name, confirmText: 'Guardar', cancelText: 'Cancelar' });
+        if (name?.trim()) {
+            editor.name = name.trim();
+            saveState();
+            renderPalettes();
+            renderWorkspace();
+        }
+    };
+
+    window.editProject = async function(id) {
+        const project = getProject(id);
+        if (!project) return;
+        const name = await window.showPromptModal?.({ title: 'Editar proyecto', inputType: 'text', placeholder: 'Nombre', defaultValue: project.name, confirmText: 'Guardar', cancelText: 'Cancelar' });
+        if (name?.trim()) {
+            project.name = name.trim();
+            saveState();
+            renderPalettes();
+            renderWorkspace();
+        }
+    };
+
+    window.deleteDevice = async function(id) {
+        const confirmed = await window.showConfirmModal?.({ title: 'Eliminar dispositivo', message: '¿Eliminar este dispositivo? Se quitará del workspace y sus asignaciones.', confirmText: 'Eliminar', cancelText: 'Cancelar' });
+        if (confirmed) {
+            state.devices = state.devices.filter(d => d.id !== id);
+            state.workspaceDevices = state.workspaceDevices.filter(did => did !== id);
+            delete state.deviceEditorProjects[id];
+            saveState();
+            renderPalettes();
+            renderWorkspace();
+        }
+    };
+
+    window.deleteEditor = async function(id) {
+        const confirmed = await window.showConfirmModal?.({ title: 'Eliminar editor', message: '¿Eliminar este editor? Se eliminarán sus asignaciones en todos los dispositivos.', confirmText: 'Eliminar', cancelText: 'Cancelar' });
+        if (confirmed) {
+            state.editors = state.editors.filter(e => e.id !== id);
+            for (const deviceId of Object.keys(state.deviceEditorProjects)) {
+                delete state.deviceEditorProjects[deviceId][id];
+                if (Object.keys(state.deviceEditorProjects[deviceId]).length === 0) {
+                    delete state.deviceEditorProjects[deviceId];
+                }
+            }
+            saveState();
+            renderPalettes();
+            renderWorkspace();
+        }
+    };
+
+    window.deleteProject = async function(id) {
+        const confirmed = await window.showConfirmModal?.({ title: 'Eliminar proyecto', message: '¿Eliminar este proyecto? Se eliminarán sus asignaciones en todos los editores.', confirmText: 'Eliminar', cancelText: 'Cancelar' });
+        if (confirmed) {
+            state.projects = state.projects.filter(p => p.id !== id);
+            for (const deviceId of Object.keys(state.deviceEditorProjects)) {
+                for (const editorId of Object.keys(state.deviceEditorProjects[deviceId])) {
+                    state.deviceEditorProjects[deviceId][editorId] = state.deviceEditorProjects[deviceId][editorId].filter(pid => pid !== id);
+                    if (state.deviceEditorProjects[deviceId][editorId].length === 0) {
+                        delete state.deviceEditorProjects[deviceId][editorId];
+                    }
+                }
+                if (Object.keys(state.deviceEditorProjects[deviceId]).length === 0) {
+                    delete state.deviceEditorProjects[deviceId];
+                }
+            }
+            saveState();
+            renderPalettes();
+            renderWorkspace();
+        }
+    };
+
+    window.removeDeviceFromWorkspace = function(deviceId) {
+        state.workspaceDevices = state.workspaceDevices.filter(id => id !== deviceId);
+        delete state.deviceEditorProjects[deviceId];
+        saveState();
+        renderWorkspace();
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadState();
+        renderPalettes();
+        renderWorkspace();
+    });
+</script>
+</BaseTailwind>

@@ -1,0 +1,180 @@
+---
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+
+export const prerender = true;
+
+const base = import.meta.env.BASE_URL;
+const b = base.endsWith("/") ? base : `${base}/`;
+
+function getSourceName(url: string): string {
+	if (url.includes('openai.com')) return 'OpenAI';
+	if (url.includes('blog.google')) return 'Gemini';
+	if (url.includes('reddit.com/r/artificial')) return 'Reddit IA';
+	if (url.includes('reddit.com/r/MachineLearning')) return 'Reddit ML';
+	return 'Otro';
+}
+
+// --- Google Translate (googleapis, sin API key) ---
+async function translateToEs(text: string): Promise<string> {
+	if (!text.trim()) return '';
+	try {
+		const res = await fetch(
+			`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=es&dt=t&q=${encodeURIComponent(text)}`,
+			{ signal: AbortSignal.timeout(5000) }
+		);
+		const data = await res.json();
+		if (Array.isArray(data?.[0])) {
+			return data[0].map((s: any) => s[0] || '').join('');
+		}
+	} catch (e) {
+		console.warn('Translate failed for:', text.substring(0, 40), e);
+	}
+	return text;
+}
+
+// --- RSS Feed parsing ---
+interface NewsItem {
+	title: string;
+	link: string;
+	pubDate: Date;
+	description: string;
+	source: string;
+}
+
+async function fetchRSSFeed(url: string, limit: number = 8): Promise<NewsItem[]> {
+	try {
+		const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+		const text = await response.text();
+		const items: NewsItem[] = [];
+		const itemMatches = text.match(/<item>([\s\S]*?)<\/item>/g) || [];
+
+		for (const itemMatch of itemMatches.slice(0, limit)) {
+			const titleMatch = itemMatch.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/) ||
+				itemMatch.match(/<title>(.*?)<\/title>/);
+			const linkMatch = itemMatch.match(/<link>(.*?)<\/link>/);
+			const pubDateMatch = itemMatch.match(/<pubDate>(.*?)<\/pubDate>/) ||
+				itemMatch.match(/<dc:date>(.*?)<\/dc:date>/);
+			const descMatch = itemMatch.match(/<description><!\[CDATA\[([\s\S]*?)\]\]><\/description>/) ||
+				itemMatch.match(/<description>([\s\S]*?)<\/description>/);
+
+			if (titleMatch && linkMatch) {
+				items.push({
+					title: titleMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/, '$1').trim(),
+					link: linkMatch[1].trim(),
+					pubDate: pubDateMatch ? new Date(pubDateMatch[1]) : new Date(),
+					description: descMatch
+						? descMatch[1]
+							.replace(/<!\[CDATA\[(.*?)\]\]>/, '$1')
+							.replace(/&lt;[^&]*&gt;/g, '')
+							.replace(/<[^>]*>/g, '')
+							.trim().substring(0, 150)
+						: '',
+					source: url
+				});
+			}
+		}
+		return items;
+	} catch {
+		return [];
+	}
+}
+
+// 1. Fetch todos los feeds en paralelo
+const feeds = [
+	'https://openai.com/news/rss.xml',
+	'https://blog.google/products/gemini/rss/',
+	'https://www.reddit.com/r/artificial/.rss',
+];
+
+const feedResults = await Promise.allSettled(
+	feeds.map(url => fetchRSSFeed(url, 8))
+);
+
+const noticias: NewsItem[] = feedResults
+	.filter((r): r is PromiseFulfilledResult<NewsItem[]> => r.status === 'fulfilled')
+	.flatMap(r => r.value)
+	.sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime())
+	.slice(0, 15);
+
+// 2. Traducir TODOS los títulos y descripciones en paralelo (lotes de 6 items = 12 requests)
+for (let i = 0; i < noticias.length; i += 6) {
+	const batch = noticias.slice(i, i + 6);
+	await Promise.allSettled(
+		batch.flatMap((item, j) => [
+			translateToEs(item.title).then(t => { noticias[i + j].title = t; }),
+			item.description
+				? translateToEs(item.description).then(d => { noticias[i + j].description = d; })
+				: Promise.resolve()
+		])
+	);
+}
+---
+
+<BaseTailwind title="Noticias IA — MG Lab" description="Noticias sobre Inteligencia Artificial">
+	<div class="max-w-4xl mx-auto px-4 py-8">
+		<h1 class="text-3xl font-light mb-6 text-center text-gray-800">Noticias IA</h1>
+
+		<div class="mb-6 text-center">
+			<p class="text-gray-500 text-sm">
+				Fuentes independientes y oficiales
+			</p>
+			<p class="text-xs text-gray-400 mt-1">
+				💡 Títulos y descripciones traducidos automáticamente
+			</p>
+			<div class="flex flex-wrap justify-center gap-1 mt-2">
+				<span class="text-xs text-gray-400">OpenAI</span>
+				<span class="text-xs text-gray-400">•</span>
+				<span class="text-xs text-gray-400">Gemini</span>
+				<span class="text-xs text-gray-400">•</span>
+				<span class="text-xs text-gray-400">Reddit IA</span>
+			</div>
+		</div>
+
+		{noticias.length > 0 ? (
+			<div class="space-y-3">
+				{noticias.map((item) => (
+					<article class="border-b border-gray-100 pb-3 hover:bg-gray-50 transition-colors px-2 py-1">
+						<div class="flex flex-col space-y-1">
+							<h3 class="text-base font-normal leading-tight">
+								<a
+									href={item.link}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="text-gray-800 hover:text-blue-600 transition-colors"
+								>
+									{item.title}
+								</a>
+							</h3>
+
+							{item.description && (
+								<p class="text-sm text-gray-500 line-clamp-2">
+									{item.description}
+								</p>
+							)}
+
+							<div class="flex items-center text-xs text-gray-400 space-x-3">
+								<time datetime={item.pubDate.toISOString()}>
+									{item.pubDate.toLocaleDateString('es-AR', {
+										day: '2-digit',
+										month: '2-digit'
+									})}
+								</time>
+								<span class="text-blue-500">{getSourceName(item.source)}</span>
+							</div>
+						</div>
+					</article>
+				))}
+			</div>
+		) : (
+			<div class="text-center py-12">
+				<p class="text-gray-400 text-sm">No se encontraron noticias recientes</p>
+			</div>
+		)}
+
+		<div class="mt-8 pt-4 border-t border-gray-100">
+			<p>
+				<small><a href={b} class="text-gray-400 hover:text-gray-600 text-sm">← Inicio</a></small>
+			</p>
+		</div>
+	</div>
+</BaseTailwind>
