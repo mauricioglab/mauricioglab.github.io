@@ -1,0 +1,168 @@
+---
+import BaseTailwind from '@layouts/BaseTailwind.astro';
+import NavBar from '@components/nutricion/NavBar.astro';
+import IngredientToggle from '@components/nutricion/IngredientToggle.astro';
+import ingredients from '@data/nutricion/ingredients.json';
+
+export const prerender = true;
+
+const title = 'NutriApp';
+const basePath = `${import.meta.env.BASE_URL}nutricion/`;
+
+const categories = {
+  heladera: 'Heladera',
+  alacena: 'Alacena',
+  frutas_verduras: 'Frutas y verduras',
+  panificados: 'Panificados',
+  carnes: 'Carnes',
+  frutos_secos: 'Frutos secos',
+};
+
+const groupedIngredients = Object.keys(categories).map((cat) => ({
+  name: categories[cat as keyof typeof categories],
+  items: ingredients.filter((i: any) => i.category === cat),
+}));
+---
+<BaseTailwind title={title} description="Planificador de comidas y lista de compras" lang="es" layoutType="tool" showPromptModal={true}>
+  <div class="mx-auto w-full max-w-md bg-white min-h-screen pb-24 relative shadow-sm">
+    <NavBar basePath={basePath} />
+
+    <main class="w-full px-4 pt-6 pb-24">
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">¿Qué tenés en casa?</h2>
+      <p class="text-gray-500 text-sm mb-6">Marcá lo que tenés y poné la cantidad aproximada.</p>
+
+      <form id="ingredientsForm">
+        {groupedIngredients.map(group => (
+          <div class="mb-4 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden category-accordion">
+            <button type="button" class="w-full px-4 py-3 flex justify-between items-center bg-gray-50 hover:bg-[#f0fdf4] transition-colors focus:outline-none accordion-header">
+              <span class="font-bold text-gray-700">{group.name}</span>
+              <span class="text-gray-500 transform transition-transform duration-200 accordion-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              </span>
+            </button>
+            <div class="accordion-content hidden p-3 pb-1">
+              {group.items.map((item: any) => (
+                <IngredientToggle id={item.id} name={item.name} unit={item.unit} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </form>
+    </main>
+
+    <div class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 z-10 w-full max-w-md mx-auto">
+      <button id="btnNext" class="w-full bg-[#E8734A] hover:bg-[#d6643c] text-white font-bold py-3 px-4 rounded-lg shadow transition-colors active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#E8734A] focus:ring-offset-2">Ver qué puedo hacer -></button>
+    </div>
+  </div>
+
+  <script define:vars={{ basePath }}>
+    const stored = localStorage.getItem('nutriapp_have');
+    const have = stored ? JSON.parse(stored) : {};
+
+    Object.keys(have).forEach(id => {
+      const qty = have[id];
+      const checkbox = document.querySelector(`.ingredient-checkbox[data-id="${id}"]`);
+      const qtyInput = document.querySelector(`.ingredient-qty[data-id="${id}"]`);
+      const toggleBox = checkbox ? checkbox.closest('.ingredient-box') : null;
+      const qtyBox = toggleBox ? toggleBox.querySelector('.ingredient-qty-box') : null;
+
+      if (checkbox) {
+        checkbox.checked = true;
+        if (toggleBox) {
+          toggleBox.classList.add('border-[#2E7D5E]', 'bg-[#f0fdf4]');
+          toggleBox.classList.remove('border-gray-200', 'bg-white');
+        }
+        if (qtyBox) qtyBox.classList.remove('hidden');
+        if (qtyInput) qtyInput.value = qty.toString();
+      }
+    });
+
+    document.querySelectorAll('.accordion-header').forEach(header => {
+      header.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        const container = target ? target.closest('.category-accordion') : null;
+        const content = container ? container.querySelector('.accordion-content') : null;
+        const icon = container ? container.querySelector('.accordion-icon') : null;
+
+        if (!target || !content) return;
+        content.classList.toggle('hidden');
+
+        if (content.classList.contains('hidden')) {
+          if (icon) icon.classList.remove('rotate-180');
+          target.classList.remove('bg-[#f0fdf4]');
+          target.classList.add('bg-gray-50');
+        } else {
+          if (icon) icon.classList.add('rotate-180');
+          target.classList.add('bg-[#f0fdf4]');
+          target.classList.remove('bg-gray-50');
+        }
+      });
+    });
+
+    document.querySelectorAll('.ingredient-checkbox').forEach(cb => {
+      cb.addEventListener('change', (e) => {
+        const target = e.target;
+        const box = target ? target.closest('.ingredient-box') : null;
+        const qtyBox = box ? box.querySelector('.ingredient-qty-box') : null;
+        const qtyInput = box ? box.querySelector('.ingredient-qty') : null;
+
+        if (target && target.checked) {
+          if (box) {
+            box.classList.add('border-[#2E7D5E]', 'bg-[#f0fdf4]');
+            box.classList.remove('border-gray-200', 'bg-white');
+          }
+          if (qtyBox) qtyBox.classList.remove('hidden');
+          if (qtyInput) qtyInput.focus();
+        } else {
+          if (box) {
+            box.classList.remove('border-[#2E7D5E]', 'bg-[#f0fdf4]');
+            box.classList.add('border-gray-200', 'bg-white');
+          }
+          if (qtyBox) qtyBox.classList.add('hidden');
+          if (qtyInput) qtyInput.value = '';
+        }
+      });
+    });
+
+    document.querySelectorAll('.qty-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const target = e.currentTarget;
+        const id = target ? target.dataset.id : null;
+        const step = parseFloat((target && target.dataset.step) || '1');
+        const isPlus = target ? target.classList.contains('qty-plus') : false;
+
+        const input = document.querySelector(`.ingredient-qty[data-id="${id}"]`);
+        if (!input) return;
+
+        let currentVal = parseFloat(input.value) || 0;
+        if (isPlus) {
+          currentVal += step;
+        } else {
+          currentVal -= step;
+          if (currentVal < 0) currentVal = 0;
+        }
+
+        input.value = currentVal.toString();
+      });
+    });
+
+    document.getElementById('btnNext')?.addEventListener('click', () => {
+      const data = {};
+      document.querySelectorAll('.ingredient-checkbox:checked').forEach(cb => {
+        const id = cb.dataset.id;
+        const input = document.querySelector(`.ingredient-qty[data-id="${id}"]`);
+        const val = parseFloat(input ? input.value : '');
+        if (!isNaN(val) && val > 0) {
+          data[id] = val;
+        } else {
+          data[id] = 1;
+        }
+      });
+      localStorage.setItem('nutriapp_have', JSON.stringify(data));
+      window.location.href = `${basePath}posibilidades/`;
+    });
+  </script>
+</BaseTailwind>

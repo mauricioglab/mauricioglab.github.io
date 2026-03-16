@@ -1,0 +1,419 @@
+---
+import BaseTailwind from '@layouts/BaseTailwind.astro';
+import NavBar from '@components/nutricion/NavBar.astro';
+import MealCard from '@components/nutricion/MealCard.astro';
+import mealsData from '@data/nutricion/meals.json';
+import ingredientsData from '@data/nutricion/ingredients.json';
+
+export const prerender = true;
+
+const title = 'NutriApp - Posibilidades';
+const basePath = `${import.meta.env.BASE_URL}nutricion/`;
+---
+<BaseTailwind title={title} description="Elegí comidas según lo que ya tenés" lang="es" layoutType="tool" showPromptModal={true}>
+  <div class="mx-auto w-full max-w-md bg-white min-h-screen pb-24 relative shadow-sm">
+    <NavBar basePath={basePath} />
+
+    <main class="w-full px-4 pt-6 pb-24">
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">¿Qué podés cocinar?</h2>
+      <p class="text-gray-500 text-sm mb-6">Elegí qué comidas vas a hacer esta semana.</p>
+
+      <div class="mb-6 -mx-2 overflow-x-auto px-2">
+        <ul class="flex text-[13px] font-medium text-center bg-white rounded-lg p-1 border border-gray-200 shadow-sm min-w-max" id="tabsList">
+          <li class="flex-none" data-tab="tab-0"><a class="cursor-pointer inline-block w-full py-2 px-3 rounded-md transition-colors bg-[#2E7D5E] text-white">Listas ya</a></li>
+          <li class="flex-none" data-tab="tab-1"><a class="cursor-pointer inline-block w-full py-2 px-3 rounded-md text-gray-500 transition-colors hover:text-gray-700 hover:bg-gray-50">Falta 1</a></li>
+          <li class="flex-none" data-tab="tab-2"><a class="cursor-pointer inline-block w-full py-2 px-3 rounded-md text-gray-500 transition-colors hover:text-gray-700 hover:bg-gray-50">Falta 2</a></li>
+          <li class="flex-none" data-tab="tab-3"><a class="cursor-pointer inline-block w-full py-2 px-3 rounded-md text-gray-500 transition-colors hover:text-gray-700 hover:bg-gray-50">Falta 3</a></li>
+          <li class="flex-none" data-tab="tab-more"><a class="cursor-pointer inline-block w-full py-2 px-3 rounded-md text-gray-500 transition-colors hover:text-gray-700 hover:bg-gray-50">Falta más</a></li>
+        </ul>
+      </div>
+
+      <div id="tab-0" class="tab-content"></div>
+      <div id="tab-1" class="tab-content hidden"></div>
+      <div id="tab-2" class="tab-content hidden"></div>
+      <div id="tab-3" class="tab-content hidden"></div>
+      <div id="tab-more" class="tab-content hidden"></div>
+
+      <div id="all-cards" class="hidden">
+        {mealsData.map((meal) => (
+          <MealCard meal={meal} />
+        ))}
+      </div>
+
+      <div id="empty-state" class="text-center text-gray-500 mt-10 hidden">
+        <p class="mb-4">Parece que no tenés ingredientes marcados o nada coincide.</p>
+        <a href={basePath} class="inline-block px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors">Volver a revisar la alacena</a>
+      </div>
+    </main>
+
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-10 w-full max-w-md mx-auto">
+      <div id="selected-summary" class="hidden px-4 pt-3 pb-2 border-b border-gray-100 max-h-36 overflow-y-auto">
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5">Tu menú esta semana</p>
+        <ul id="selected-summary-list" class="flex flex-col gap-1"></ul>
+      </div>
+      <div class="p-4">
+        <button id="btnNext" class="w-full bg-[#E8734A] hover:bg-[#d6643c] text-white font-bold py-3 px-4 rounded-lg shadow transition-colors active:scale-95 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 disabled:shadow-none" disabled>Generar lista de compras -></button>
+      </div>
+    </div>
+  </div>
+
+  <script define:vars={{ mealsData, ingredientsData, basePath }}>
+    window.mealsData = mealsData;
+    window.ingredientsMap = ingredientsData.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
+    window.nutriBasePath = basePath;
+  </script>
+  <script>
+    const storedHave = localStorage.getItem('nutriapp_have');
+    const have = storedHave ? JSON.parse(storedHave) : {};
+
+    const storedSelected = localStorage.getItem('nutriapp_selected');
+    let selectedMeals = storedSelected ? JSON.parse(storedSelected) : {};
+
+    const meals = window.mealsData;
+    const ingredientsMap = window.ingredientsMap;
+    const basePath = window.nutriBasePath || '/nutricion/';
+
+    function getMissingIngredients(meal) {
+      return meal.ingredients.filter((ing) => !have[ing.id] || have[ing.id] <= 0);
+    }
+
+    const tabLinks = document.querySelectorAll('#tabsList li');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        tabLinks.forEach(l => {
+          const a = l.querySelector('a');
+          a?.classList.remove('bg-[#2E7D5E]', 'text-white');
+          a?.classList.add('text-gray-500', 'hover:text-gray-700', 'hover:bg-gray-50');
+        });
+        tabContents.forEach(c => c.classList.add('hidden'));
+
+        const activeA = link.querySelector('a');
+        activeA?.classList.remove('text-gray-500', 'hover:text-gray-700', 'hover:bg-gray-50');
+        activeA?.classList.add('bg-[#2E7D5E]', 'text-white');
+
+        const target = document.getElementById(link.dataset.tab || '');
+        if (target) target.classList.remove('hidden');
+      });
+    });
+
+    const allCardsContainer = document.getElementById('all-cards');
+    const tab0 = document.getElementById('tab-0');
+    const tab1 = document.getElementById('tab-1');
+    const tab2 = document.getElementById('tab-2');
+    const tab3 = document.getElementById('tab-3');
+    const tabMore = document.getElementById('tab-more');
+
+    const freqBtnActiveClasses = ['bg-[#2E7D5E]', 'text-white', 'border-[#2E7D5E]', 'is-active-btn'];
+    const freqBtnInactiveClasses = ['text-gray-600', 'bg-white', 'border-gray-300'];
+
+    const sortedMeals = meals.map((meal) => {
+      const missing = getMissingIngredients(meal);
+      const cardElement = allCardsContainer?.querySelector(`.meal-card[data-id="${meal.id}"]`);
+      if (!cardElement) return null;
+
+      const missingInfoEl = cardElement.querySelector('.missing-info');
+      if (missing.length === 0) {
+        if (missingInfoEl) missingInfoEl.innerHTML = '<span class="text-green-600 font-medium">¡Tenés todo!</span>';
+      } else if (missing.length === 1) {
+        const missingIng = ingredientsMap[missing[0].id];
+        if (missingInfoEl) missingInfoEl.innerHTML = `<span class="text-amber-500">Falta ${missingIng ? missingIng.name.toLowerCase() : missing[0].id}</span>`;
+      } else {
+        const missingNames = missing.map((m) => {
+          const ing = ingredientsMap[m.id];
+          return ing ? ing.name.toLowerCase() : m.id;
+        }).join(', ');
+        if (missingInfoEl) missingInfoEl.innerHTML = `<span class="text-red-400">Falta: ${missingNames}</span>`;
+      }
+
+      if (selectedMeals[meal.id]) {
+        const freq = selectedMeals[meal.id];
+        cardElement.classList.add('is-selected', 'border-[#2E7D5E]', 'bg-[#f0fdf4]');
+        cardElement.classList.remove('border-gray-200', 'bg-white');
+        cardElement.querySelector('.frequency-selector')?.classList.remove('hidden');
+
+        cardElement.querySelectorAll('.freq-btn').forEach(b => {
+          b.classList.remove(...freqBtnActiveClasses);
+          b.classList.add(...freqBtnInactiveClasses);
+        });
+        const btn = cardElement.querySelector(`.freq-btn[data-val="${freq}"]`);
+        if (btn) {
+          btn.classList.add(...freqBtnActiveClasses);
+          btn.classList.remove(...freqBtnInactiveClasses);
+        }
+      } else {
+        cardElement.querySelector(`.freq-btn[data-val="1"]`)?.classList.add('is-active-btn');
+      }
+
+      return {
+        meal,
+        missingCount: missing.length,
+        element: cardElement,
+        isSelected: !!selectedMeals[meal.id],
+      };
+    }).filter(Boolean);
+
+    sortedMeals.sort((a, b) => {
+      if (a.isSelected && !b.isSelected) return -1;
+      if (!a.isSelected && b.isSelected) return 1;
+      return 0;
+    });
+
+    const tabsMap = {
+      '0': tab0,
+      '1': tab1,
+      '2': tab2,
+      '3': tab3,
+      'more': tabMore,
+    };
+
+    const categorizedByMissing = {
+      '0': [],
+      '1': [],
+      '2': [],
+      '3': [],
+      'more': [],
+    };
+
+    sortedMeals.forEach((item) => {
+      if (item.missingCount === 0) categorizedByMissing['0'].push(item);
+      else if (item.missingCount === 1) categorizedByMissing['1'].push(item);
+      else if (item.missingCount === 2) categorizedByMissing['2'].push(item);
+      else if (item.missingCount === 3) categorizedByMissing['3'].push(item);
+      else categorizedByMissing['more'].push(item);
+    });
+
+    Object.keys(categorizedByMissing).forEach(missingKey => {
+      const items = categorizedByMissing[missingKey];
+      const tabContainer = tabsMap[missingKey];
+      if (!tabContainer || items.length === 0) return;
+
+      const byCategory = {};
+      items.forEach((item) => {
+        const cat = item.meal.category || 'Otros';
+        if (!byCategory[cat]) byCategory[cat] = [];
+        byCategory[cat].push(item);
+      });
+
+      const categories = Object.keys(byCategory).sort();
+
+      categories.forEach(categoryName => {
+        const catDiv = document.createElement('div');
+        catDiv.className = 'mb-4 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden';
+
+        const headerBtn = document.createElement('button');
+        headerBtn.type = 'button';
+        headerBtn.className = 'w-full px-4 py-3 flex justify-between items-center bg-gray-50 hover:bg-[#f0fdf4] transition-colors focus:outline-none';
+
+        const titleSpan = document.createElement('span');
+        titleSpan.className = 'font-bold text-gray-700';
+        titleSpan.textContent = `${categoryName} (${byCategory[categoryName].length})`;
+
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'text-gray-500 transform transition-transform duration-200 rotate-180';
+        iconSpan.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>';
+
+        headerBtn.appendChild(titleSpan);
+        headerBtn.appendChild(iconSpan);
+        catDiv.appendChild(headerBtn);
+
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'p-3 flex flex-col gap-3 hidden';
+
+        byCategory[categoryName].forEach(item => {
+          item.element.classList.remove('mb-4');
+          contentDiv.appendChild(item.element);
+        });
+
+        catDiv.appendChild(contentDiv);
+        tabContainer.appendChild(catDiv);
+
+        headerBtn.addEventListener('click', () => {
+          contentDiv.classList.toggle('hidden');
+          if (contentDiv.classList.contains('hidden')) {
+            iconSpan.classList.remove('rotate-180');
+            headerBtn.classList.remove('bg-[#f0fdf4]');
+            headerBtn.classList.add('bg-gray-50');
+          } else {
+            iconSpan.classList.add('rotate-180');
+            headerBtn.classList.add('bg-[#f0fdf4]');
+            headerBtn.classList.remove('bg-gray-50');
+          }
+        });
+      });
+    });
+
+    document.querySelectorAll('.meal-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target.classList.contains('freq-btn')) return;
+
+        const cardEl = e.currentTarget;
+        const id = cardEl.dataset.id;
+        const isSelected = cardEl.classList.contains('is-selected');
+        const freqSelector = cardEl.querySelector('.frequency-selector');
+
+        if (isSelected) {
+          cardEl.classList.remove('is-selected', 'border-[#2E7D5E]', 'bg-[#f0fdf4]');
+          cardEl.classList.add('border-gray-200', 'bg-white');
+          freqSelector?.classList.add('hidden');
+          delete selectedMeals[id];
+        } else {
+          cardEl.classList.add('is-selected', 'border-[#2E7D5E]', 'bg-[#f0fdf4]');
+          cardEl.classList.remove('border-gray-200', 'bg-white');
+          freqSelector?.classList.remove('hidden');
+          let foundActive = false;
+          cardEl.querySelectorAll('.freq-btn').forEach(btn => {
+            if (btn.classList.contains('is-active-btn')) {
+              foundActive = true;
+              btn.classList.add(...freqBtnActiveClasses);
+              btn.classList.remove(...freqBtnInactiveClasses);
+            }
+          });
+          if (!foundActive) {
+            const defaultBtn = cardEl.querySelector('.freq-btn[data-val="1"]');
+            defaultBtn?.classList.add(...freqBtnActiveClasses);
+            defaultBtn?.classList.remove(...freqBtnInactiveClasses);
+          }
+          const activeBtn = cardEl.querySelector('.freq-btn.is-active-btn');
+          const freq = parseInt(activeBtn?.dataset.val || '1', 10);
+          selectedMeals[id] = freq;
+        }
+
+        updateNextButton();
+        saveSelection();
+      });
+    });
+
+    document.querySelectorAll('.freq-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const targetBtn = e.currentTarget;
+        const id = targetBtn.dataset.meal;
+        const val = parseInt(targetBtn.dataset.val || '0', 10);
+
+        const card = targetBtn.closest('.meal-card');
+        const freqSelector = card.querySelector('.frequency-selector');
+
+        if (val === 0) {
+          card.classList.remove('is-selected', 'border-[#2E7D5E]', 'bg-[#f0fdf4]');
+          card.classList.add('border-gray-200', 'bg-white');
+          freqSelector?.classList.add('hidden');
+          card.querySelectorAll('.freq-btn').forEach(b => {
+            b.classList.remove(...freqBtnActiveClasses);
+            b.classList.add(...freqBtnInactiveClasses);
+          });
+          delete selectedMeals[id];
+        } else {
+          card.querySelectorAll('.freq-btn').forEach(b => {
+            b.classList.remove(...freqBtnActiveClasses);
+            b.classList.add(...freqBtnInactiveClasses);
+          });
+          targetBtn.classList.add(...freqBtnActiveClasses);
+          targetBtn.classList.remove(...freqBtnInactiveClasses);
+          selectedMeals[id] = val;
+        }
+
+        updateNextButton();
+        saveSelection();
+      });
+    });
+
+    function saveSelection() {
+      localStorage.setItem('nutriapp_selected', JSON.stringify(selectedMeals));
+    }
+
+    function updateSummary() {
+      const summaryPanel = document.getElementById('selected-summary');
+      const summaryList = document.getElementById('selected-summary-list');
+      if (!summaryPanel || !summaryList) return;
+
+      const ids = Object.keys(selectedMeals);
+      summaryList.innerHTML = '';
+
+      if (ids.length === 0) {
+        summaryPanel.classList.add('hidden');
+        return;
+      }
+
+      summaryPanel.classList.remove('hidden');
+
+      const groups = [
+        { label: 'Desayunos/Mer.', cats: ['Desayuno', 'Merienda'], color: 'bg-amber-400' },
+        { label: 'Snacks/Viandas', cats: ['Snack', 'Vianda'], color: 'bg-blue-400' },
+        { label: 'Alm./Cenas', cats: ['Almuerzo/Cena'], color: 'bg-[#2E7D5E]' },
+      ];
+
+      const groupCounts = groups.map(g => {
+        let count = 0;
+        ids.forEach(mealId => {
+          const meal = meals.find((m) => m.id === mealId);
+          if (meal && g.cats.includes(meal.category)) {
+            count += selectedMeals[mealId];
+          }
+        });
+        return { ...g, count };
+      });
+
+      const maxCount = Math.max(...groupCounts.map(g => g.count), 1);
+
+      const trafficDiv = document.createElement('div');
+      trafficDiv.className = 'flex gap-2 mb-2';
+      groupCounts.forEach(g => {
+        const barH = Math.round((g.count / maxCount) * 100);
+        const col = document.createElement('div');
+        col.className = 'flex-1 flex flex-col items-center gap-1';
+        col.innerHTML = `
+          <div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="${g.color} h-full rounded-full transition-all duration-300" style="width:${g.count > 0 ? Math.max(barH, 10) : 0}%"></div>
+          </div>
+          <span class="text-[10px] text-gray-500 font-medium leading-tight text-center">${g.label} <strong class="${g.count > 0 ? 'text-gray-800' : 'text-gray-400'}">${g.count}</strong></span>
+        `;
+        trafficDiv.appendChild(col);
+      });
+      summaryList.appendChild(trafficDiv);
+
+      const hr = document.createElement('div');
+      hr.className = 'border-t border-gray-100 mb-1.5 mt-0.5';
+      summaryList.appendChild(hr);
+
+      ids.forEach(mealId => {
+        const meal = meals.find((m) => m.id === mealId);
+        const freq = selectedMeals[mealId];
+        if (!meal) return;
+
+        const li = document.createElement('li');
+        li.className = 'flex justify-between items-center text-sm text-gray-700';
+        li.innerHTML = `
+          <span class="flex-1 truncate">${meal.name}</span>
+          <span class="ml-2 flex-none text-xs font-semibold text-[#2E7D5E] bg-[#f0fdf4] border border-[#2E7D5E]/20 px-1.5 py-0.5 rounded">${freq}x/sem</span>
+        `;
+        summaryList.appendChild(li);
+      });
+    }
+
+    function updateNextButton() {
+      const btnNext = document.getElementById('btnNext');
+      const hasSelection = Object.keys(selectedMeals).length > 0;
+      if (hasSelection) {
+        btnNext?.removeAttribute('disabled');
+      } else {
+        btnNext?.setAttribute('disabled', 'true');
+      }
+      updateSummary();
+    }
+
+    document.getElementById('btnNext')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (Object.keys(selectedMeals).length > 0) {
+        window.location.href = `${basePath}lista/`;
+      }
+    });
+
+    updateNextButton();
+    if (meals.length === 0) {
+      document.getElementById('empty-state')?.classList.remove('hidden');
+    }
+  </script>
+</BaseTailwind>

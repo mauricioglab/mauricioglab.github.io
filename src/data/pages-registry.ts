@@ -51,6 +51,7 @@ export const pagesRegistry: PageEntry[] = [
   // HERRAMIENTAS (solo en admin)
   // =====================
   { id: 'calculadora', name: 'Calculadora', url: '/calculadora/', category: 'tool', icon: '🧮' },
+  { id: 'nutricion', name: 'Nutrición', url: '/nutricion/', category: 'tool', icon: '🥗' },
   { id: 'workspace-mapper', name: 'Workspace Mapper', url: '/workspace-mapper/', category: 'tool', icon: '🖥️' },
 
   // =====================

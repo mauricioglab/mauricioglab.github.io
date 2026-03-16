@@ -1,0 +1,370 @@
+[
+  {
+    "id": "aceitunas_queso_jamon",
+    "name": "Aceitunas, queso y jamón",
+    "category": "Vianda",
+    "ingredients": [
+      { "id": "aceitunas", "qty": 60, "unit": "g" },
+      { "id": "queso_cremoso", "qty": 60, "unit": "g" },
+      { "id": "jamon", "qty": 60, "unit": "g" },
+      { "id": "tomate", "qty": 4, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "yogurt_fruta_frutos_secos",
+    "name": "Yogurt con fruta y frutos secos",
+    "category": "Vianda",
+    "ingredients": [
+      { "id": "yogurt", "qty": 1, "unit": "unidad" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" },
+      { "id": "frutos_secos", "qty": 30, "unit": "g" }
+    ]
+  },
+  {
+    "id": "manzana_pasta_mani_semillas",
+    "name": "Manzana con pasta de maní y semillas",
+    "category": "Vianda",
+    "ingredients": [
+      { "id": "fruta", "qty": 1, "unit": "unidad" },
+      { "id": "pasta_mani", "qty": 30, "unit": "g" },
+      { "id": "semillas", "qty": 15, "unit": "g" }
+    ]
+  },
+  {
+    "id": "crackers_semillas",
+    "name": "Crackers de semillas",
+    "category": "Vianda",
+    "ingredients": [
+      { "id": "semillas", "qty": 50, "unit": "g" }
+    ]
+  },
+  {
+    "id": "frutos_secos_fruta_cacao",
+    "name": "Frutos secos, fruta y cacao amargo",
+    "category": "Vianda",
+    "ingredients": [
+      { "id": "frutos_secos", "qty": 40, "unit": "g" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" },
+      { "id": "cacao_amargo", "qty": 20, "unit": "g" }
+    ]
+  },
+  {
+    "id": "sandwich_integral_jamon",
+    "name": "Sandwich integral con jamón, queso y fruta",
+    "category": "Vianda",
+    "ingredients": [
+      { "id": "pan_integral", "qty": 2, "unit": "unidad" },
+      { "id": "jamon", "qty": 60, "unit": "g" },
+      { "id": "queso_fetas", "qty": 40, "unit": "g" },
+      { "id": "tomate", "qty": 1, "unit": "unidad" },
+      { "id": "vegetales", "qty": 0.5, "unit": "atado" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "panqueques_avena_fruta",
+    "name": "Panqueques de avena con fruta",
+    "category": "Vianda",
+    "ingredients": [
+      { "id": "avena", "qty": 60, "unit": "g" },
+      { "id": "huevo", "qty": 2, "unit": "unidad" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "trufas_avena_huevo",
+    "name": "Trufas de avena, coco y pasta de maní",
+    "category": "Snack",
+    "ingredients": [
+      { "id": "avena", "qty": 50, "unit": "g" },
+      { "id": "pasta_mani", "qty": 30, "unit": "g" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" },
+      { "id": "huevo", "qty": 1, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "queso_frutos_secos_galletas",
+    "name": "Queso, frutos secos y fruta con galletas",
+    "category": "Snack",
+    "ingredients": [
+      { "id": "queso_cremoso", "qty": 60, "unit": "g" },
+      { "id": "frutos_secos", "qty": 30, "unit": "g" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" },
+      { "id": "semillas", "qty": 40, "unit": "g" }
+    ]
+  },
+  {
+    "id": "queso_fruta_zanahoria",
+    "name": "Queso, fruta y zanahoria",
+    "category": "Snack",
+    "ingredients": [
+      { "id": "queso_cremoso", "qty": 60, "unit": "g" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" },
+      { "id": "zanahoria", "qty": 2, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "huevo_jamon_frutos_secos",
+    "name": "Huevo, jamón, almendras y untable de girasol",
+    "category": "Snack",
+    "ingredients": [
+      { "id": "huevo", "qty": 2, "unit": "unidad" },
+      { "id": "jamon", "qty": 60, "unit": "g" },
+      { "id": "frutos_secos", "qty": 30, "unit": "g" },
+      { "id": "semillas", "qty": 20, "unit": "g" }
+    ]
+  },
+  {
+    "id": "huevo_fruta_queso_galletas",
+    "name": "Huevo, fruta, queso y galletas de semillas",
+    "category": "Snack",
+    "ingredients": [
+      { "id": "huevo", "qty": 2, "unit": "unidad" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" },
+      { "id": "queso_cremoso", "qty": 50, "unit": "g" },
+      { "id": "semillas", "qty": 40, "unit": "g" }
+    ]
+  },
+  {
+    "id": "yogurt_fruta_granola",
+    "name": "Yogurt natural con fruta y granola",
+    "category": "Desayuno",
+    "ingredients": [
+      { "id": "yogurt", "qty": 1, "unit": "unidad" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" },
+      { "id": "avena", "qty": 30, "unit": "g" }
+    ]
+  },
+  {
+    "id": "tostadas_jamon_queso_huevo",
+    "name": "Tostadas integrales con jamón, queso y huevo",
+    "category": "Desayuno",
+    "ingredients": [
+      { "id": "pan_integral", "qty": 2, "unit": "unidad" },
+      { "id": "jamon", "qty": 60, "unit": "g" },
+      { "id": "queso_fetas", "qty": 40, "unit": "g" },
+      { "id": "tomate", "qty": 1, "unit": "unidad" },
+      { "id": "huevo", "qty": 1, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "huevo_revuelto_espinaca",
+    "name": "Huevo revuelto con espinaca y fruta",
+    "category": "Desayuno",
+    "ingredients": [
+      { "id": "huevo", "qty": 3, "unit": "unidad" },
+      { "id": "vegetales", "qty": 0.5, "unit": "atado" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "tostadas_queso_untable_huevo",
+    "name": "Tostadas con queso cremoso, huevo y fruta",
+    "category": "Desayuno",
+    "ingredients": [
+      { "id": "pan_integral", "qty": 2, "unit": "unidad" },
+      { "id": "queso_cremoso", "qty": 60, "unit": "g" },
+      { "id": "huevo", "qty": 1, "unit": "unidad" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "bruschetas_tomate_queso",
+    "name": "Bruschetas con tomate y queso",
+    "category": "Desayuno",
+    "ingredients": [
+      { "id": "pan_integral", "qty": 2, "unit": "unidad" },
+      { "id": "tomate", "qty": 2, "unit": "unidad" },
+      { "id": "queso_fetas", "qty": 60, "unit": "g" }
+    ]
+  },
+  {
+    "id": "galletas_avena_cacao",
+    "name": "Galletas de avena y cacao con fruta",
+    "category": "Desayuno",
+    "ingredients": [
+      { "id": "avena", "qty": 60, "unit": "g" },
+      { "id": "cacao_amargo", "qty": 15, "unit": "g" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "sandwich_huevo_queso_verdes",
+    "name": "Sandwich con huevo, queso y vegetales",
+    "category": "Desayuno",
+    "ingredients": [
+      { "id": "pan_integral", "qty": 2, "unit": "unidad" },
+      { "id": "huevo", "qty": 2, "unit": "unidad" },
+      { "id": "queso_fetas", "qty": 50, "unit": "g" },
+      { "id": "vegetales", "qty": 0.5, "unit": "atado" },
+      { "id": "frutos_secos", "qty": 30, "unit": "g" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "huevos_frutos_secos_queso",
+    "name": "Huevos, frutos secos, queso y fruta",
+    "category": "Merienda",
+    "ingredients": [
+      { "id": "huevo", "qty": 3, "unit": "unidad" },
+      { "id": "frutos_secos", "qty": 40, "unit": "g" },
+      { "id": "queso_cremoso", "qty": 50, "unit": "g" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "chia_pudding_cacao_banana",
+    "name": "Chia pudding con yogurt, cacao y banana",
+    "category": "Merienda",
+    "ingredients": [
+      { "id": "yogurt", "qty": 1, "unit": "unidad" },
+      { "id": "semillas", "qty": 25, "unit": "g" },
+      { "id": "cacao_amargo", "qty": 15, "unit": "g" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "omelette_jamon_queso",
+    "name": "Omelette de jamón y queso",
+    "category": "Almuerzo/Cena",
+    "ingredients": [
+      { "id": "huevo", "qty": 3, "unit": "unidad" },
+      { "id": "jamon", "qty": 60, "unit": "g" },
+      { "id": "queso_cremoso", "qty": 40, "unit": "g" }
+    ]
+  },
+  {
+    "id": "quesadillas_jamon_tomate",
+    "name": "Quesadillas con jamón, queso y tomate",
+    "category": "Almuerzo/Cena",
+    "ingredients": [
+      { "id": "pan_integral", "qty": 1, "unit": "unidad" },
+      { "id": "queso_cremoso", "qty": 60, "unit": "g" },
+      { "id": "jamon", "qty": 60, "unit": "g" },
+      { "id": "tomate", "qty": 1, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "atun_tomate_huevo",
+    "name": "Atún con tomate y huevo",
+    "category": "Almuerzo/Cena",
+    "ingredients": [
+      { "id": "atun", "qty": 1, "unit": "lata" },
+      { "id": "tomate", "qty": 1, "unit": "unidad" },
+      { "id": "huevo", "qty": 2, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "carne_molida_lentejas_zapallito",
+    "name": "Salteado de carne molida con lentejas",
+    "category": "Almuerzo/Cena",
+    "ingredients": [
+      { "id": "carne_molida", "qty": 150, "unit": "g" },
+      { "id": "lentejas", "qty": 80, "unit": "g" },
+      { "id": "zapallito", "qty": 2, "unit": "unidad" },
+      { "id": "cebolla", "qty": 1, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "pechuga_arroz_ensalada",
+    "name": "Pechuga a la plancha con arroz y ensalada",
+    "category": "Almuerzo/Cena",
+    "ingredients": [
+      { "id": "pollo", "qty": 150, "unit": "g" },
+      { "id": "arroz", "qty": 80, "unit": "g" },
+      { "id": "vegetales", "qty": 1, "unit": "atado" }
+    ]
+  },
+  {
+    "id": "tarta_atun_vegetales",
+    "name": "Tarta integral de atún y vegetales",
+    "category": "Almuerzo/Cena",
+    "ingredients": [
+      { "id": "pan_integral", "qty": 2, "unit": "unidad" },
+      { "id": "atun", "qty": 1, "unit": "lata" },
+      { "id": "vegetales", "qty": 1, "unit": "atado" },
+      { "id": "huevo", "qty": 2, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "lentejas_arroz_calabaza",
+    "name": "Lentejas con arroz y calabaza asada",
+    "category": "Almuerzo/Cena",
+    "ingredients": [
+      { "id": "lentejas", "qty": 100, "unit": "g" },
+      { "id": "arroz", "qty": 60, "unit": "g" },
+      { "id": "vegetales", "qty": 1, "unit": "atado" },
+      { "id": "calabaza", "qty": 150, "unit": "g" }
+    ]
+  },
+  {
+    "id": "atun_huevo_queso_vegetales",
+    "name": "Atún, huevo, queso y vegetales",
+    "category": "Almuerzo/Cena",
+    "ingredients": [
+      { "id": "atun", "qty": 1, "unit": "lata" },
+      { "id": "huevo", "qty": 2, "unit": "unidad" },
+      { "id": "queso_cremoso", "qty": 50, "unit": "g" },
+      { "id": "vegetales", "qty": 0.5, "unit": "atado" }
+    ]
+  },
+  {
+    "id": "panqueques_harina_almendras",
+    "name": "Panqueques de harina de almendras con maní y fruta",
+    "category": "Almuerzo/Cena",
+    "lowCarb": true,
+    "ingredients": [
+      { "id": "harina_almendras", "qty": 50, "unit": "g" },
+      { "id": "huevo", "qty": 2, "unit": "unidad" },
+      { "id": "pasta_mani", "qty": 30, "unit": "g" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "omelette_jamon_queso_sin_h",
+    "name": "Omelette con jamón, queso y vegetales",
+    "category": "Almuerzo/Cena",
+    "lowCarb": true,
+    "ingredients": [
+      { "id": "huevo", "qty": 3, "unit": "unidad" },
+      { "id": "jamon", "qty": 60, "unit": "g" },
+      { "id": "queso_cremoso", "qty": 40, "unit": "g" },
+      { "id": "vegetales", "qty": 0.5, "unit": "atado" }
+    ]
+  },
+  {
+    "id": "atun_pollo_huevo_vegetales",
+    "name": "Atún o pollo con huevo y vegetales",
+    "category": "Almuerzo/Cena",
+    "lowCarb": true,
+    "ingredients": [
+      { "id": "atun", "qty": 1, "unit": "lata" },
+      { "id": "huevo", "qty": 2, "unit": "unidad" },
+      { "id": "vegetales", "qty": 0.5, "unit": "atado" }
+    ]
+  },
+  {
+    "id": "yogurt_chia_fruta",
+    "name": "Yogurt natural con chía y fruta",
+    "category": "Almuerzo/Cena",
+    "lowCarb": true,
+    "ingredients": [
+      { "id": "yogurt", "qty": 1, "unit": "unidad" },
+      { "id": "semillas", "qty": 20, "unit": "g" },
+      { "id": "fruta", "qty": 1, "unit": "unidad" }
+    ]
+  },
+  {
+    "id": "zapallitos_rellenos_carne",
+    "name": "Zapallitos rellenos con carne y queso",
+    "category": "Almuerzo/Cena",
+    "lowCarb": true,
+    "ingredients": [
+      { "id": "zapallito", "qty": 3, "unit": "unidad" },
+      { "id": "carne_molida", "qty": 150, "unit": "g" },
+      { "id": "pimiento", "qty": 1, "unit": "unidad" },
+      { "id": "cebolla", "qty": 1, "unit": "unidad" },
+      { "id": "queso_cremoso", "qty": 50, "unit": "g" }
+    ]
+  }
+]

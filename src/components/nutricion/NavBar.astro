@@ -1,0 +1,21 @@
+---
+const { basePath = '/nutricion/' } = Astro.props;
+---
+<nav class="w-full bg-[#2E7D5E] px-4 py-3 flex items-center justify-between shadow-md sticky top-0 z-50">
+  <a href={basePath} class="text-white text-xl font-bold flex items-center gap-2 tracking-tight">
+    🥗 NutriApp
+  </a>
+  <button id="resetBtn" class="text-xs text-white border border-white/60 px-3 py-1.5 rounded-md hover:bg-white/10 active:bg-white/20 transition-colors">
+    Empezar de nuevo
+  </button>
+</nav>
+
+<script define:vars={{ basePath }}>
+  document.getElementById('resetBtn')?.addEventListener('click', () => {
+    if (confirm('¿Seguro quieres borrar todos los datos y empezar de nuevo?')) {
+      localStorage.removeItem('nutriapp_have');
+      localStorage.removeItem('nutriapp_selected');
+      window.location.href = basePath;
+    }
+  });
+</script>

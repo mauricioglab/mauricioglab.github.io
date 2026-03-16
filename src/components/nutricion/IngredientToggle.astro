@@ -1,0 +1,18 @@
+---
+const { id, name, unit } = Astro.props;
+const stepValue = unit === 'g' || unit === 'ml' ? '100' : '1';
+---
+<div class="ingredient-box flex items-center mb-2 p-3 border border-gray-200 rounded-lg transition-colors bg-white">
+  <label class="flex items-center flex-1 cursor-pointer mr-2">
+    <input type="checkbox" class="ingredient-checkbox peer mr-3 w-4 h-4 text-[#2E7D5E] rounded focus:ring-[#2E7D5E]" data-id={id} />
+    <span class="text-gray-700 peer-checked:font-bold peer-checked:text-[#2E7D5E] select-none text-sm">{name}</span>
+  </label>
+  <div class="ingredient-qty-box hidden flex items-stretch h-8">
+    <button type="button" class="qty-btn qty-minus w-8 bg-gray-100 hover:bg-gray-200 border border-r-0 border-gray-300 rounded-l flex justify-center items-center text-gray-600 active:bg-gray-300 transition-colors" data-id={id} data-step={stepValue}>-</button>
+    <input class="ingredient-qty w-12 text-center text-sm border-y border-x-0 border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#2E7D5E] focus:border-[#2E7D5E] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none m-0" type="number" min="0" step={stepValue} data-id={id} placeholder="0" />
+    <button type="button" class="qty-btn qty-plus w-8 bg-gray-100 hover:bg-gray-200 border border-l-0 border-gray-300 flex justify-center items-center text-gray-600 active:bg-gray-300 transition-colors" data-id={id} data-step={stepValue}>+</button>
+    <span class="bg-gray-50 border border-l-0 border-gray-300 px-2 py-1 text-xs text-gray-500 rounded-r flex items-center min-w-[2.5rem] justify-center">
+      {unit}
+    </span>
+  </div>
+</div>

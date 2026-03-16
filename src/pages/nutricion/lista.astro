@@ -1,0 +1,219 @@
+---
+import BaseTailwind from '@layouts/BaseTailwind.astro';
+import NavBar from '@components/nutricion/NavBar.astro';
+import mealsData from '@data/nutricion/meals.json';
+import ingredientsData from '@data/nutricion/ingredients.json';
+
+export const prerender = true;
+
+const title = 'NutriApp - Lista';
+const basePath = `${import.meta.env.BASE_URL}nutricion/`;
+---
+<BaseTailwind title={title} description="Generá tu lista de compras según menú y porciones" lang="es" layoutType="tool" showPromptModal={true}>
+  <div class="mx-auto w-full max-w-md bg-white min-h-screen pb-24 relative shadow-sm">
+    <NavBar basePath={basePath} />
+
+    <main class="w-full px-4 pt-6 pb-24">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-gray-800 m-0">Tu lista de compras</h2>
+        <button id="btnCopy" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-sm font-medium rounded-md transition-colors text-gray-700 flex items-center gap-1 shadow-sm">Copiar</button>
+      </div>
+
+      <p class="text-gray-500 text-sm mb-4">Marcá lo que vas metiendo al changuito.</p>
+
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 mb-6">
+        <p class="text-sm font-bold text-gray-700 mb-2">¿Para cuántas personas?</p>
+        <div class="flex gap-2">
+          {[1, 2, 3, 4, 5, 6].map(n => (
+            <button type="button" class="persons-btn flex-1 py-2 rounded-lg border border-gray-300 text-sm font-semibold text-gray-600 transition-colors hover:bg-[#f0fdf4] hover:border-[#2E7D5E] hover:text-[#2E7D5E]" data-val={n}>{n}</button>
+          ))}
+        </div>
+      </div>
+
+      <div id="shopping-lists-container"></div>
+
+      <div id="celebration-state" class="text-center hidden mt-10">
+        <span class="text-5xl block mb-4">🎉</span>
+        <h3 class="text-2xl font-bold text-gray-800 mb-2">¡Tenés todo!</h3>
+        <p class="text-gray-600 mb-6">No necesitás comprar nada para las comidas que elegiste.</p>
+        <a href={basePath} class="inline-block px-5 py-2.5 bg-[#f0fdf4] text-[#2E7D5E] hover:bg-[#d1fae5] font-bold rounded-lg transition-colors border border-[#2E7D5E]/20 text-center">Volver al inicio</a>
+      </div>
+    </main>
+  </div>
+
+  <script define:vars={{ mealsData, ingredientsData }}>
+    window.mealsData = mealsData;
+    window.ingredientsData = ingredientsData;
+    window.ingredientsMap = ingredientsData.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
+  </script>
+  <script>
+    const storeLabels = {
+      super: 'Supermercado',
+      verduleria: 'Verdulería',
+      panaderia: 'Panadería / Dietética',
+    };
+
+    const have = JSON.parse(localStorage.getItem('nutriapp_have') || '{}');
+    const selected = JSON.parse(localStorage.getItem('nutriapp_selected') || '{}');
+    const mealsMap = window.mealsData.reduce((acc, m) => ({ ...acc, [m.id]: m }), {});
+
+    const container = document.getElementById('shopping-lists-container');
+    const celebration = document.getElementById('celebration-state');
+    const btnCopy = document.getElementById('btnCopy');
+    const ingredientsMap = window.ingredientsMap;
+
+    let currentPersons = 1;
+
+    function buildList(persons) {
+      currentPersons = persons;
+      const required = {};
+
+      Object.keys(selected).forEach(mealId => {
+        const freq = selected[mealId];
+        const meal = mealsMap[mealId];
+        if (meal) {
+          meal.ingredients.forEach((ing) => {
+            if (!required[ing.id]) required[ing.id] = 0;
+            required[ing.id] += ing.qty * freq * persons;
+          });
+        }
+      });
+
+      const toBuy = [];
+      Object.keys(required).forEach(ingId => {
+        const needed = required[ingId];
+        const available = have[ingId] || 0;
+        const diff = needed - available;
+
+        if (diff > 0) {
+          const ing = ingredientsMap[ingId];
+          if (ing) {
+            const packagesNeeded = Math.ceil(diff / ing.packagingQty);
+            const totalUnitsBought = packagesNeeded * ing.packagingQty;
+            const store = ing.stores[0];
+            toBuy.push({ ...ing, store, packagesNeeded, totalUnitsBought });
+          }
+        }
+      });
+
+      return toBuy;
+    }
+
+    function renderList(toBuy) {
+      container.innerHTML = '';
+
+      if (toBuy.length === 0) {
+        celebration.classList.remove('hidden');
+        btnCopy.classList.add('hidden');
+      } else {
+        celebration.classList.add('hidden');
+        btnCopy.classList.remove('hidden');
+
+        const byStore = {};
+        toBuy.forEach(item => {
+          if (!byStore[item.store]) byStore[item.store] = [];
+          byStore[item.store].push(item);
+        });
+
+        Object.keys(storeLabels).forEach(storeKey => {
+          if (byStore[storeKey] && byStore[storeKey].length > 0) {
+            const items = byStore[storeKey];
+
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-4';
+
+            const h3 = document.createElement('h3');
+            h3.className = 'text-lg font-bold text-[#2E7D5E] border-b-2 border-gray-100 pb-2 mb-3 tracking-snug';
+            h3.textContent = `🛒 ${storeLabels[storeKey].toUpperCase()}`;
+            groupDiv.appendChild(h3);
+
+            items.forEach(item => {
+              const lbl = document.createElement('label');
+              lbl.className = 'group flex items-start mb-3 p-2 -mx-2 rounded hover:bg-gray-50 cursor-pointer transition-colors';
+
+              const cb = document.createElement('input');
+              cb.type = 'checkbox';
+              cb.className = 'shopping-checkbox mt-1 mr-3 w-4 h-4 rounded text-[#2E7D5E] focus:ring-[#2E7D5E] border-gray-300 peer';
+
+              const textSpan = document.createElement('span');
+              textSpan.className = 'text-gray-700 select-none peer-checked:line-through peer-checked:text-gray-400 block';
+
+              let qtyText = `${item.packagesNeeded} ${item.packagingLabel}`;
+              if (item.packagesNeeded > 1 && !item.packagingLabel.endsWith('s')) {
+                qtyText += 's';
+              }
+              if (item.packagingQty > 1 || item.unit !== 'unidad') {
+                qtyText += ` (${item.totalUnitsBought}${item.unit === 'unidad' ? ' unidades' : item.unit})`;
+              }
+
+              textSpan.innerHTML = `${item.name}: <strong class="text-gray-900">${qtyText}</strong>`;
+
+              lbl.appendChild(cb);
+              lbl.appendChild(textSpan);
+
+              cb.addEventListener('change', () => {
+                textSpan.classList.toggle('line-through', cb.checked);
+                textSpan.classList.toggle('text-gray-400', cb.checked);
+                textSpan.classList.toggle('text-gray-700', !cb.checked);
+              });
+
+              groupDiv.appendChild(lbl);
+            });
+
+            container.appendChild(groupDiv);
+          }
+        });
+
+        btnCopy.onclick = () => {
+          const currentByStore = {};
+          toBuy.forEach(item => {
+            if (!currentByStore[item.store]) currentByStore[item.store] = [];
+            currentByStore[item.store].push(item);
+          });
+          let textToCopy = `Para ${currentPersons} persona${currentPersons > 1 ? 's' : ''}:\n\n`;
+          Object.keys(storeLabels).forEach(storeKey => {
+            if (currentByStore[storeKey] && currentByStore[storeKey].length > 0) {
+              textToCopy += `🛒 ${storeLabels[storeKey].toUpperCase()}\n`;
+              currentByStore[storeKey].forEach(item => {
+                let qtyText = `${item.packagesNeeded} ${item.packagingLabel}`;
+                if (item.packagesNeeded > 1 && !item.packagingLabel.endsWith('s')) qtyText += 's';
+                if (item.packagingQty > 1 || item.unit !== 'unidad') qtyText += ` (${item.totalUnitsBought}${item.unit === 'unidad' ? ' unidades' : item.unit})`;
+                textToCopy += `- ${item.name}: ${qtyText}\n`;
+              });
+              textToCopy += '\n';
+            }
+          });
+          navigator.clipboard.writeText(textToCopy).then(() => {
+            const orig = btnCopy.textContent;
+            btnCopy.textContent = '¡Copiado!';
+            btnCopy.classList.add('bg-green-100', 'text-green-800');
+            btnCopy.classList.remove('bg-gray-100', 'text-gray-700');
+            setTimeout(() => {
+              btnCopy.textContent = orig;
+              btnCopy.classList.remove('bg-green-100', 'text-green-800');
+              btnCopy.classList.add('bg-gray-100', 'text-gray-700');
+            }, 2000);
+          });
+        };
+      }
+    }
+
+    const personBtns = document.querySelectorAll('.persons-btn');
+    function setActivePerson(n) {
+      personBtns.forEach(btn => {
+        const isActive = parseInt(btn.dataset.val || '1', 10) === n;
+        btn.classList.toggle('bg-[#2E7D5E]', isActive);
+        btn.classList.toggle('text-white', isActive);
+        btn.classList.toggle('border-[#2E7D5E]', isActive);
+        btn.classList.toggle('text-gray-600', !isActive);
+        btn.classList.toggle('border-gray-300', !isActive);
+      });
+      renderList(buildList(n));
+    }
+    personBtns.forEach(btn => {
+      btn.addEventListener('click', () => setActivePerson(parseInt(btn.dataset.val || '1', 10)));
+    });
+
+    setActivePerson(1);
+  </script>
+</BaseTailwind>
