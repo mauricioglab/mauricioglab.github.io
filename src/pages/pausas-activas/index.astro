@@ -7,12 +7,12 @@ const title = 'Pausas Activas';
   <link slot="head" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <div id="pa-root" class="relative min-h-screen overflow-x-hidden font-['Syne',sans-serif] bg-[#07070e] text-[#eeeef8]">
     <div aria-hidden="true" class="pointer-events-none fixed inset-0 z-0" style="background: radial-gradient(ellipse 60% 40% at 75% 10%, rgba(251,146,60,0.06) 0%, transparent 60%), radial-gradient(ellipse 50% 30% at 15% 85%, rgba(251,146,60,0.04) 0%, transparent 60%)"></div>
-    <header class="relative z-10 flex items-center gap-6 border-b border-[#1f1f38] px-10 py-8">
+    <header class="relative z-10 flex items-center max-sm:items-start max-sm:flex-col gap-6 max-sm:gap-4 border-b border-[#1f1f38] px-10 max-sm:px-6 py-8 max-sm:py-6">
       <div class="flex flex-col">
-        <span class="font-['Bebas_Neue',sans-serif] text-[2.8rem] leading-none tracking-[2px] text-[#fb923c]">PAUSAS ACTIVAS</span>
-        <span class="text-[0.7rem] font-semibold uppercase tracking-[4px] text-[#5a5a7a]">Movilidad de Escritorio · 11 hs y 16 hs</span>
+        <span class="font-['Bebas_Neue',sans-serif] text-[2.8rem] max-sm:text-[2.2rem] leading-none tracking-[2px] text-[#fb923c]">PAUSAS ACTIVAS</span>
+        <span class="text-[0.7rem] max-sm:text-[0.6rem] font-semibold uppercase tracking-[4px] text-[#5a5a7a]">Movilidad de Escritorio · 11 hs y 16 hs</span>
       </div>
-      <div class="ml-auto flex items-center gap-3">
+      <div class="ml-auto max-sm:ml-0 flex max-sm:flex-col items-center max-sm:items-start gap-3">
         <div id="pa-time-btns" class="flex gap-2">
           <button data-slot="11" class="pa-time-btn flex items-center gap-2 rounded-xl border border-[#fb923c] bg-[rgba(251,146,60,0.1)] px-4 py-2 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#fb923c] cursor-pointer transition-all duration-200 shadow-[0_0_16px_rgba(251,146,60,0.2)]">☀️ <span>11 hs</span></button>
           <button data-slot="16" class="pa-time-btn flex items-center gap-2 rounded-xl border border-[#1f1f38] bg-[#111120] px-4 py-2 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#5a5a7a] cursor-pointer transition-all duration-200 hover:border-[#fb923c] hover:text-[#eeeef8]">🌇 <span>16 hs</span></button>
@@ -20,23 +20,26 @@ const title = 'Pausas Activas';
         <div class="rounded-full border border-[#1f1f38] bg-[#111120] px-4 py-1.5 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#5a5a7a]">2 Vueltas · 8 Reps</div>
       </div>
     </header>
-    <main class="relative z-10 mx-auto max-w-[1100px] px-8 py-10">
-      <div class="mb-8 flex items-start gap-4 rounded-2xl border border-[rgba(251,146,60,0.15)] bg-[rgba(251,146,60,0.05)] p-5">
-        <div id="pa-banner-emoji" class="text-[2rem] leading-none">☀️</div>
-        <div class="flex flex-col gap-1">
-          <div id="pa-banner-title" class="font-['Bebas_Neue',sans-serif] text-[1.1rem] tracking-[2px] text-[#fb923c]">PAUSA DE LAS 11 HS · EN EL ESCRITORIO</div>
-          <div class="text-[0.78rem] font-semibold leading-relaxed text-[#5a5a7a]">Controlá el movimiento. Despacio. Sentí cada parte del cuerpo que vas movilizando.</div>
+    <main class="relative z-10 mx-auto max-w-[1100px] px-8 max-sm:px-5 py-10 max-sm:py-6">
+      <div class="mb-8 flex max-sm:flex-col items-start gap-4 max-sm:gap-3 rounded-2xl border border-[rgba(251,146,60,0.15)] bg-[rgba(251,146,60,0.05)] p-5 max-sm:p-4">
+        <div class="flex items-center gap-3">
+          <div id="pa-banner-emoji" class="text-[2rem] max-sm:text-[1.5rem] leading-none">☀️</div>
+          <div class="ml-auto rounded-lg border border-[rgba(251,146,60,0.2)] bg-[rgba(251,146,60,0.08)] px-3 py-1.5 text-[0.65rem] max-sm:text-[0.6rem] font-bold uppercase tracking-[2px] text-[#fb923c] sm:hidden">10 SEG PAUSA</div>
         </div>
-        <div class="ml-auto shrink-0 rounded-lg border border-[rgba(251,146,60,0.2)] bg-[rgba(251,146,60,0.08)] px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[2px] text-[#fb923c]">10 SEG PAUSA</div>
+        <div class="flex flex-col gap-1">
+          <div id="pa-banner-title" class="font-['Bebas_Neue',sans-serif] text-[1.1rem] max-sm:text-[1rem] tracking-[2px] text-[#fb923c]">PAUSA DE LAS 11 HS · EN EL ESCRITORIO</div>
+          <div class="text-[0.78rem] max-sm:text-[0.7rem] font-semibold leading-relaxed text-[#5a5a7a]">Controlá el movimiento. Despacio. Sentí cada parte del cuerpo que vas movilizando.</div>
+        </div>
+        <div class="ml-auto shrink-0 max-sm:hidden rounded-lg border border-[rgba(251,146,60,0.2)] bg-[rgba(251,146,60,0.08)] px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[2px] text-[#fb923c]">10 SEG PAUSA</div>
       </div>
-      <div class="mb-5 flex items-center justify-between">
-        <div class="font-['Bebas_Neue',sans-serif] text-[1.8rem] tracking-[2px] text-[#eeeef8]">EJERCICIOS EN SILLA</div>
-        <div class="rounded-lg border border-[#1f1f38] bg-[#111120] px-3.5 py-1.5 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#fb923c]">2 SERIES · 4 EJERCICIOS</div>
+      <div class="mb-5 flex max-sm:flex-col max-sm:items-start max-sm:gap-3 items-center justify-between">
+        <div class="font-['Bebas_Neue',sans-serif] text-[1.8rem] max-sm:text-[1.5rem] tracking-[2px] text-[#eeeef8]">EJERCICIOS EN SILLA</div>
+        <div class="rounded-lg border border-[#1f1f38] bg-[#111120] px-3.5 py-1.5 text-[0.7rem] max-sm:text-[0.6rem] font-bold uppercase tracking-[3px] text-[#fb923c]">2 SERIES · 4 EJERCICIOS</div>
       </div>
       <div id="pa-exercises-grid" class="mb-10 grid grid-cols-4 gap-4 max-sm:grid-cols-2"></div>
-      <div class="flex justify-center">
-        <button id="pa-start-btn" class="flex cursor-pointer items-center gap-4 rounded-2xl border-0 bg-[#fb923c] px-14 py-4 font-['Bebas_Neue',sans-serif] text-[1.5rem] tracking-[3px] text-[#07070e] shadow-[0_0_30px_rgba(251,146,60,0.2)] transition-all duration-200 hover:scale-[1.04] hover:shadow-[0_0_50px_rgba(251,146,60,0.4)]">
-          <svg viewBox="0 0 24 24" fill="currentColor" class="h-[22px] w-[22px]"><path d="M8 5v14l11-7z"/></svg>
+      <div class="flex flex-col items-center max-w-full">
+        <button id="pa-start-btn" class="flex w-full max-w-[400px] justify-center cursor-pointer items-center gap-4 rounded-2xl border-0 bg-[#fb923c] px-14 max-sm:px-6 py-4 font-['Bebas_Neue',sans-serif] text-[1.5rem] max-sm:text-[1.2rem] tracking-[3px] text-[#07070e] shadow-[0_0_30px_rgba(251,146,60,0.2)] transition-all duration-200 hover:scale-[1.04] hover:shadow-[0_0_50px_rgba(251,146,60,0.4)]">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="h-[22px] w-[22px] max-sm:h-[18px] max-sm:w-[18px]"><path d="M8 5v14l11-7z"/></svg>
           INICIAR PAUSA
         </button>
       </div>
@@ -46,26 +49,26 @@ const title = 'Pausas Activas';
       <div class="relative z-10 h-1 w-full bg-[#1f1f38]">
         <div id="pa-progress-fill" class="h-full bg-[#fb923c] transition-[width] duration-500" style="width:0%"></div>
       </div>
-      <div class="relative z-10 flex items-center justify-between border-b border-[#1f1f38] px-8 py-5">
-        <div class="flex items-center gap-8">
+      <div class="relative z-10 flex items-center justify-between border-b border-[#1f1f38] px-8 max-sm:px-4 py-5 max-sm:py-3">
+        <div class="flex flex-wrap items-center gap-8 max-sm:gap-4">
           <div class="flex flex-col gap-0.5">
             <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Vuelta</span>
-            <span id="pa-ov-serie" class="font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[1px] text-[#eeeef8]">—</span>
+            <span id="pa-ov-serie" class="font-['Bebas_Neue',sans-serif] text-[1.4rem] max-sm:text-[1.2rem] tracking-[1px] text-[#eeeef8]">—</span>
           </div>
-          <div class="flex flex-col gap-1.5">
+          <div class="flex flex-col gap-1.5 max-sm:hidden">
             <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Vueltas completadas</span>
             <div id="pa-series-dots" class="flex items-center gap-1.5"></div>
           </div>
-          <div class="flex flex-col gap-1.5">
+          <div class="flex flex-col gap-1.5 max-sm:hidden">
             <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Ejercicios en esta vuelta</span>
             <div id="pa-ex-dots" class="flex items-center gap-1.5"></div>
           </div>
         </div>
-        <button id="pa-close-overlay" class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-[10px] border border-[#1f1f38] bg-[#111120] text-[1.2rem] text-[#5a5a7a] transition-all duration-200 hover:border-[#eeeef8] hover:text-[#eeeef8]">✕</button>
+        <button id="pa-close-overlay" class="flex shrink-0 h-10 w-10 max-sm:h-8 max-sm:w-8 cursor-pointer items-center justify-center rounded-[10px] border border-[#1f1f38] bg-[#111120] text-[1.2rem] max-sm:text-[1rem] text-[#5a5a7a] transition-all duration-200 hover:border-[#eeeef8] hover:text-[#eeeef8]">✕</button>
       </div>
-      <div id="pa-ov-content" class="relative z-10 flex flex-1 items-center justify-center gap-12 px-8 py-6 max-sm:flex-col max-sm:gap-6">
-        <div class="flex flex-0 flex-col items-center gap-4" style="flex:0 0 280px">
-          <div id="pa-ov-ref-frame" class="relative flex h-[260px] w-[260px] flex-col items-center justify-center gap-2 overflow-hidden rounded-[20px] border-2 border-[rgba(251,146,60,0.2)] bg-[#0a0a15] transition-[border-color] duration-300">
+      <div id="pa-ov-content" class="relative z-10 flex flex-1 items-center justify-center gap-12 max-sm:gap-4 px-8 max-sm:px-4 py-6 max-sm:py-4 max-sm:flex-col max-sm:justify-start overflow-y-auto w-full">
+        <div class="flex flex-col items-center gap-4" style="flex:0 0 280px">
+          <div id="pa-ov-ref-frame" class="relative flex h-[260px] w-[260px] flex-col items-center justify-center gap-2 overflow-hidden rounded-[20px] border-2 border-[rgba(251,146,60,0.2)] bg-[#0a0a15] transition-[border-color] duration-300 max-sm:h-[200px] max-sm:w-[200px]">
             <div id="pa-ex-number" class="font-['Bebas_Neue',sans-serif] text-[6rem] leading-none text-[rgba(251,146,60,0.15)]">1</div>
             <a id="pa-yt-link" href="#" target="_blank" rel="noopener noreferrer" class="absolute bottom-4 flex items-center gap-2 rounded-lg border border-[rgba(251,146,60,0.2)] bg-[rgba(251,146,60,0.1)] px-3 py-2 text-[0.65rem] font-bold uppercase tracking-[2px] text-[#fb923c] transition-all duration-200 hover:bg-[rgba(251,146,60,0.2)]">
               <svg viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
@@ -74,25 +77,25 @@ const title = 'Pausas Activas';
             <div id="pa-rest-icon" class="hidden text-[4rem]">⏸</div>
           </div>
         </div>
-        <div class="flex max-w-[400px] flex-1 flex-col gap-6">
+        <div class="flex w-full max-w-[400px] flex-1 flex-col gap-6 max-sm:gap-4">
           <div id="pa-ov-chip" class="inline-flex w-fit items-center gap-1.5 rounded-md border border-[rgba(251,146,60,0.2)] bg-[rgba(251,146,60,0.1)] px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[3px] text-[#fb923c]">Ejercicio</div>
           <div class="flex flex-col gap-0.5">
-            <div id="pa-ov-exname" class="font-['Bebas_Neue',sans-serif] text-[clamp(2rem,4vw,3rem)] leading-none tracking-[1px] text-[#eeeef8]">—</div>
+            <div id="pa-ov-exname" class="font-['Bebas_Neue',sans-serif] text-[clamp(2rem,4vw,3rem)] leading-none tracking-[1px] text-[#eeeef8] max-sm:text-[2rem]">—</div>
             <div id="pa-ov-exnote" class="text-[0.75rem] font-semibold uppercase tracking-[2px] text-[#fb923c]"></div>
           </div>
           <div id="pa-reps-display" class="flex items-baseline gap-2.5">
-            <div id="pa-ov-reps-val" class="font-['Bebas_Neue',sans-serif] text-[5rem] leading-none text-[#fb923c]">8</div>
-            <div id="pa-ov-reps-unit" class="mb-2 self-end text-[0.75rem] font-bold uppercase tracking-[3px] text-[#5a5a7a]">REPETICIONES</div>
+            <div id="pa-ov-reps-val" class="font-['Bebas_Neue',sans-serif] text-[5rem] max-sm:text-[4rem] leading-none text-[#fb923c]">8</div>
+            <div id="pa-ov-reps-unit" class="mb-2 self-end text-[0.75rem] max-sm:text-[0.6rem] font-bold uppercase tracking-[3px] text-[#5a5a7a]">REPETICIONES</div>
           </div>
           <div id="pa-cue-box" class="rounded-xl border border-[#1f1f38] bg-[#111120] px-4 py-3 text-[0.78rem] font-medium leading-relaxed text-[#5a5a7a]">Controlá el movimiento. Despacio.</div>
           <button id="pa-action-btn" class="w-full cursor-pointer rounded-[14px] border-0 bg-[#fb923c] px-10 py-3.5 font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[2px] text-[#07070e] shadow-[0_0_20px_rgba(251,146,60,0.2)] transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(251,146,60,0.4)]">✓ LISTO</button>
         </div>
       </div>
-      <div id="pa-done-screen" class="relative z-10 hidden flex-1 flex-col items-center justify-center gap-6 p-8 text-center">
-        <div id="pa-done-emoji" class="text-[5rem]">☀️</div>
-        <div class="font-['Bebas_Neue',sans-serif] text-[4rem] tracking-[2px] text-[#fb923c]">¡PAUSA COMPLETADA!</div>
-        <div id="pa-done-sub" class="max-w-[400px] text-[0.9rem] font-medium leading-relaxed text-[#5a5a7a]"></div>
-        <button id="pa-done-close-btn" class="w-full max-w-[300px] cursor-pointer rounded-[14px] border-0 bg-[#fb923c] px-10 py-3.5 font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[2px] text-[#07070e] transition-all duration-200 hover:scale-[1.02]">VOLVER AL INICIO</button>
+      <div id="pa-done-screen" class="relative z-10 hidden flex-1 flex-col items-center justify-center gap-6 max-sm:gap-4 p-8 max-sm:p-4 text-center">
+        <div id="pa-done-emoji" class="text-[5rem] max-sm:text-[4rem]">☀️</div>
+        <div class="font-['Bebas_Neue',sans-serif] text-[4rem] max-sm:text-[2.5rem] tracking-[2px] text-[#fb923c]">¡PAUSA COMPLETADA!</div>
+        <div id="pa-done-sub" class="max-w-[400px] text-[0.9rem] max-sm:text-[0.8rem] font-medium leading-relaxed text-[#5a5a7a]"></div>
+        <button id="pa-done-close-btn" class="w-full max-w-[300px] cursor-pointer rounded-[14px] border-0 bg-[#fb923c] px-10 max-sm:px-6 py-3.5 max-sm:py-3 font-['Bebas_Neue',sans-serif] text-[1.4rem] max-sm:text-[1.2rem] tracking-[2px] text-[#07070e] transition-all duration-200 hover:scale-[1.02]">VOLVER AL INICIO</button>
       </div>
       <div id="pa-countdown-screen" class="absolute inset-0 z-10 hidden flex-col items-center justify-center gap-4 bg-[#07070e]">
         <div id="pa-cd-number" class="font-['Bebas_Neue',sans-serif] text-[12rem] leading-none text-[#fb923c]">3</div>

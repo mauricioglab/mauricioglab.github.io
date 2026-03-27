@@ -35,22 +35,22 @@ const gifBase = `${basePath}entrenamiento/`;
     ></div>
 
     <!-- ── HEADER ── -->
-    <header class="relative z-10 flex items-center gap-6 border-b border-[#1f1f38] px-10 py-8">
+    <header class="relative z-10 flex items-center max-sm:items-start max-sm:flex-col gap-6 max-sm:gap-4 border-b border-[#1f1f38] px-10 max-sm:px-6 py-8 max-sm:py-6">
       <div class="flex flex-col">
-        <span class="font-['Bebas_Neue',sans-serif] text-[2.8rem] leading-none tracking-[2px] text-[#b8ff00]">
+        <span class="font-['Bebas_Neue',sans-serif] text-[2.8rem] max-sm:text-[2.2rem] leading-none tracking-[2px] text-[#b8ff00]">
           ENTRENAMIENTO
         </span>
-        <span class="text-[0.7rem] font-semibold uppercase tracking-[4px] text-[#5a5a7a]">
+        <span class="text-[0.7rem] max-sm:text-[0.6rem] font-semibold uppercase tracking-[4px] text-[#5a5a7a]">
           Fuerza · Resistencia · Movilidad
         </span>
       </div>
-      <div class="ml-auto rounded-full border border-[#1f1f38] bg-[#111120] px-4 py-1.5 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#5a5a7a]">
+      <div class="ml-auto max-sm:ml-0 rounded-full border border-[#1f1f38] bg-[#111120] px-4 py-1.5 text-[0.7rem] max-sm:text-[0.6rem] font-bold uppercase tracking-[3px] text-[#5a5a7a]">
         5 Semanas · 5 Días
       </div>
     </header>
 
     <!-- ── MAIN ── -->
-    <main class="relative z-10 mx-auto max-w-[1100px] px-8 py-10">
+    <main class="relative z-10 mx-auto max-w-[1100px] px-8 max-sm:px-5 py-10 max-sm:py-6">
 
       <!-- SELECTORS -->
       <div class="mb-12 grid grid-cols-2 gap-6 max-sm:grid-cols-1">
@@ -95,9 +95,9 @@ const gifBase = `${basePath}entrenamiento/`;
       </div>
 
       <!-- Exercises header -->
-      <div class="mb-5 flex items-center justify-between">
-        <div id="ent-day-title" class="font-['Bebas_Neue',sans-serif] text-[1.8rem] tracking-[2px] text-[#eeeef8]">DÍA 1</div>
-        <div id="ent-series-info" class="rounded-lg border border-[#1f1f38] bg-[#111120] px-3.5 py-1.5 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#b8ff00]">
+      <div class="mb-5 flex max-sm:flex-col max-sm:items-start max-sm:gap-3 items-center justify-between">
+        <div id="ent-day-title" class="font-['Bebas_Neue',sans-serif] text-[1.8rem] max-sm:text-[1.5rem] tracking-[2px] text-[#eeeef8]">DÍA 1</div>
+        <div id="ent-series-info" class="rounded-lg border border-[#1f1f38] bg-[#111120] px-3.5 py-1.5 text-[0.7rem] max-sm:text-[0.6rem] font-bold uppercase tracking-[3px] text-[#b8ff00]">
           3 SERIES · 30 SEG PAUSA
         </div>
       </div>
@@ -106,12 +106,12 @@ const gifBase = `${basePath}entrenamiento/`;
       <div id="ent-exercises-grid" class="mb-10 grid grid-cols-3 gap-4 max-sm:grid-cols-1"></div>
 
       <!-- Start button -->
-      <div class="flex justify-center">
+      <div class="flex flex-col items-center max-w-full">
         <button
           id="ent-start-btn"
-          class="flex cursor-pointer items-center gap-4 rounded-2xl border-0 bg-[#b8ff00] px-14 py-4 font-['Bebas_Neue',sans-serif] text-[1.5rem] tracking-[3px] text-black shadow-[0_0_30px_rgba(184,255,0,0.2)] transition-all duration-200 hover:scale-[1.04] hover:shadow-[0_0_50px_rgba(184,255,0,0.4)]"
+          class="flex w-full max-w-[400px] justify-center cursor-pointer items-center gap-4 rounded-2xl border-0 bg-[#b8ff00] px-14 max-sm:px-6 py-4 font-['Bebas_Neue',sans-serif] text-[1.5rem] max-sm:text-[1.2rem] tracking-[3px] text-black shadow-[0_0_30px_rgba(184,255,0,0.2)] transition-all duration-200 hover:scale-[1.04] hover:shadow-[0_0_50px_rgba(184,255,0,0.4)]"
         >
-          <svg viewBox="0 0 24 24" fill="currentColor" class="h-[22px] w-[22px]"><path d="M8 5v14l11-7z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor" class="h-[22px] w-[22px] max-sm:h-[18px] max-sm:w-[18px]"><path d="M8 5v14l11-7z"/></svg>
           INICIAR ENTRENAMIENTO
         </button>
       </div>
@@ -133,32 +133,32 @@ const gifBase = `${basePath}entrenamiento/`;
       </div>
 
       <!-- Overlay header -->
-      <div class="relative z-10 flex items-center justify-between border-b border-[#1f1f38] px-8 py-5">
-        <div class="flex items-center gap-8">
+      <div class="relative z-10 flex items-center justify-between border-b border-[#1f1f38] px-8 max-sm:px-4 py-5 max-sm:py-3">
+        <div class="flex flex-wrap items-center gap-8 max-sm:gap-4">
           <!-- Serie -->
           <div class="flex flex-col gap-0.5">
             <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Vuelta</span>
-            <span id="ent-ov-serie" class="font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[1px] text-[#eeeef8]">—</span>
+            <span id="ent-ov-serie" class="font-['Bebas_Neue',sans-serif] text-[1.4rem] max-sm:text-[1.2rem] tracking-[1px] text-[#eeeef8]">—</span>
           </div>
           <!-- Round dots -->
-          <div class="flex flex-col gap-1.5">
+          <div class="flex flex-col gap-1.5 max-sm:hidden">
             <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Vueltas completadas</span>
             <div id="ent-series-dots" class="flex items-center gap-1.5"></div>
           </div>
           <!-- Ex dots -->
-          <div class="flex flex-col gap-1.5">
+          <div class="flex flex-col gap-1.5 max-sm:hidden">
             <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Ejercicios en esta serie</span>
             <div id="ent-ex-dots" class="flex items-center gap-1.5"></div>
           </div>
         </div>
         <button
           id="ent-close-overlay"
-          class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-[10px] border border-[#1f1f38] bg-[#111120] text-[1.2rem] text-[#5a5a7a] transition-all duration-200 hover:border-[#eeeef8] hover:text-[#eeeef8]"
+          class="flex shrink-0 h-10 w-10 max-sm:h-8 max-sm:w-8 cursor-pointer items-center justify-center rounded-[10px] border border-[#1f1f38] bg-[#111120] text-[1.2rem] max-sm:text-[1rem] text-[#5a5a7a] transition-all duration-200 hover:border-[#eeeef8] hover:text-[#eeeef8]"
         >✕</button>
       </div>
 
       <!-- Workout content -->
-      <div id="ent-ov-content" class="relative z-10 flex flex-1 items-center justify-center gap-12 px-8 py-6 max-sm:flex-col max-sm:gap-6">
+      <div id="ent-ov-content" class="relative z-10 flex flex-1 items-center justify-center gap-12 max-sm:gap-4 px-8 max-sm:px-4 py-6 max-sm:py-4 max-sm:flex-col max-sm:justify-start overflow-y-auto w-full">
 
         <!-- GIF panel -->
         <div class="flex flex-0 flex-col items-center gap-4" style="flex:0 0 280px">
@@ -171,7 +171,7 @@ const gifBase = `${basePath}entrenamiento/`;
         </div>
 
         <!-- Info panel -->
-        <div class="flex max-w-[400px] flex-1 flex-col gap-6">
+        <div class="flex w-full max-w-[400px] flex-1 flex-col gap-6 max-sm:gap-4">
           <!-- State chip -->
           <div
             id="ent-ov-chip"
@@ -186,8 +186,8 @@ const gifBase = `${basePath}entrenamiento/`;
 
           <!-- Reps display -->
           <div id="ent-reps-display" class="flex items-baseline gap-2.5">
-            <div id="ent-ov-reps-val" class="font-['Bebas_Neue',sans-serif] text-[5rem] leading-none text-[#b8ff00]">—</div>
-            <div id="ent-ov-reps-unit" class="mb-2 self-end text-[0.75rem] font-bold uppercase tracking-[3px] text-[#5a5a7a]">REPS</div>
+            <div id="ent-ov-reps-val" class="font-['Bebas_Neue',sans-serif] text-[5rem] max-sm:text-[4rem] leading-none text-[#b8ff00]">—</div>
+            <div id="ent-ov-reps-unit" class="mb-2 self-end text-[0.75rem] max-sm:text-[0.6rem] font-bold uppercase tracking-[3px] text-[#5a5a7a]">REPS</div>
           </div>
 
           <!-- Timer display (hidden by default) -->
@@ -221,16 +221,16 @@ const gifBase = `${basePath}entrenamiento/`;
       <!-- Done screen (hidden by default) -->
       <div
         id="ent-done-screen"
-        class="relative z-10 hidden flex-1 flex-col items-center justify-center gap-6 p-8 text-center"
+        class="relative z-10 hidden flex-1 flex-col items-center justify-center gap-6 max-sm:gap-4 p-8 max-sm:p-4 text-center"
       >
-        <div class="text-[5rem]">🏆</div>
-        <div class="font-['Bebas_Neue',sans-serif] text-[4rem] tracking-[2px] text-[#b8ff00]">¡COMPLETADO!</div>
-        <div id="ent-done-sub" class="max-w-[400px] text-[0.9rem] font-medium leading-relaxed text-[#5a5a7a]">
+        <div class="text-[5rem] max-sm:text-[4rem]">🏆</div>
+        <div class="font-['Bebas_Neue',sans-serif] text-[4rem] max-sm:text-[2.5rem] tracking-[2px] text-[#b8ff00]">¡COMPLETADO!</div>
+        <div id="ent-done-sub" class="max-w-[400px] text-[0.9rem] max-sm:text-[0.8rem] font-medium leading-relaxed text-[#5a5a7a]">
           Excelente trabajo. Descansá y volvé mañana con energía.
         </div>
         <button
           id="ent-done-close-btn"
-          class="w-full max-w-[300px] cursor-pointer rounded-[14px] border-0 bg-[#b8ff00] px-10 py-3.5 font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[2px] text-black transition-all duration-200 hover:scale-[1.02]"
+          class="w-full max-w-[300px] cursor-pointer rounded-[14px] border-0 bg-[#b8ff00] px-10 max-sm:px-6 py-3.5 max-sm:py-3 font-['Bebas_Neue',sans-serif] text-[1.4rem] max-sm:text-[1.2rem] tracking-[2px] text-black transition-all duration-200 hover:scale-[1.02]"
         >VOLVER AL INICIO</button>
       </div>
 
