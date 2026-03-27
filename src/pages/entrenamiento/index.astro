@@ -1,0 +1,753 @@
+---
+import BaseTailwind from '@layouts/BaseTailwind.astro';
+
+export const prerender = true;
+
+const title = 'Entrenamiento';
+const basePath = import.meta.env.BASE_URL;
+const gifBase = `${basePath}entrenamiento/`;
+---
+
+<BaseTailwind
+  title={title}
+  description="Plan de entrenamiento · 5 semanas · 5 días"
+  lang="es"
+  layoutType="tool"
+  showPromptModal={false}
+>
+  <link
+    slot="head"
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Root -->
+  <div
+    id="ent-root"
+    class="relative min-h-screen overflow-x-hidden font-['Syne',sans-serif] bg-[#07070e] text-[#eeeef8]"
+  >
+
+    <!-- Ambient gradient (decorative) -->
+    <div
+      aria-hidden="true"
+      class="pointer-events-none fixed inset-0 z-0"
+      style="background: radial-gradient(ellipse 60% 40% at 80% 10%, rgba(184,255,0,0.06) 0%, transparent 60%), radial-gradient(ellipse 50% 30% at 10% 90%, rgba(255,107,53,0.05) 0%, transparent 60%)"
+    ></div>
+
+    <!-- ── HEADER ── -->
+    <header class="relative z-10 flex items-center gap-6 border-b border-[#1f1f38] px-10 py-8">
+      <div class="flex flex-col">
+        <span class="font-['Bebas_Neue',sans-serif] text-[2.8rem] leading-none tracking-[2px] text-[#b8ff00]">
+          ENTRENAMIENTO
+        </span>
+        <span class="text-[0.7rem] font-semibold uppercase tracking-[4px] text-[#5a5a7a]">
+          Fuerza · Resistencia · Movilidad
+        </span>
+      </div>
+      <div class="ml-auto rounded-full border border-[#1f1f38] bg-[#111120] px-4 py-1.5 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#5a5a7a]">
+        5 Semanas · 5 Días
+      </div>
+    </header>
+
+    <!-- ── MAIN ── -->
+    <main class="relative z-10 mx-auto max-w-[1100px] px-8 py-10">
+
+      <!-- SELECTORS -->
+      <div class="mb-12 grid grid-cols-2 gap-6 max-sm:grid-cols-1">
+
+        <!-- Day -->
+        <div class="flex flex-col gap-3">
+          <span class="text-[0.65rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Día de entrenamiento</span>
+          <div id="ent-day-btns" class="flex flex-wrap gap-2">
+            {[1,2,3,4,5].map(d => (
+              <button
+                data-day={d}
+                class={`ent-day-btn flex h-14 w-14 flex-col items-center justify-center rounded-xl border border-[#1f1f38] font-['Bebas_Neue',sans-serif] text-[1.6rem] leading-none tracking-[1px] cursor-pointer transition-all duration-200 ${d === 1 ? 'bg-[#b8ff00] border-[#b8ff00] text-black shadow-[0_0_20px_rgba(184,255,0,0.3)]' : 'bg-[#111120] text-[#5a5a7a] hover:border-[#6a9400] hover:text-[#eeeef8] hover:bg-[#16162a]'}`}
+              >
+                {d}
+                <span class="font-['Syne',sans-serif] text-[0.5rem] font-semibold uppercase tracking-[2px] mt-[-2px]">DÍA</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Week -->
+        <div class="flex flex-col gap-3">
+          <span class="text-[0.65rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Semana / Dificultad</span>
+          <div id="ent-week-btns" class="flex flex-wrap gap-2">
+            {[
+              { w: 0, label: 'S1', stars: '⭐' },
+              { w: 1, label: 'S2', stars: '⭐⭐' },
+              { w: 2, label: 'S3', stars: '⭐⭐⭐' },
+              { w: 3, label: 'S4', stars: '⭐⭐⭐⭐' },
+              { w: 4, label: 'S5', stars: '⭐⭐⭐⭐⭐' },
+            ].map(({ w, label, stars }) => (
+              <button
+                data-week={w}
+                class={`ent-week-btn flex items-center gap-1 rounded-[10px] border border-[#1f1f38] px-[1.1rem] py-2 font-['Bebas_Neue',sans-serif] text-[1.1rem] tracking-[1px] cursor-pointer transition-all duration-200 ${w === 0 ? 'bg-[#b8ff00] border-[#b8ff00] text-black shadow-[0_0_20px_rgba(184,255,0,0.3)]' : 'bg-[#111120] text-[#5a5a7a] hover:border-[#6a9400] hover:text-[#eeeef8] hover:bg-[#16162a]'}`}
+              >
+                {label}
+                <span class="flex gap-px text-[0.55rem]">{stars}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Exercises header -->
+      <div class="mb-5 flex items-center justify-between">
+        <div id="ent-day-title" class="font-['Bebas_Neue',sans-serif] text-[1.8rem] tracking-[2px] text-[#eeeef8]">DÍA 1</div>
+        <div id="ent-series-info" class="rounded-lg border border-[#1f1f38] bg-[#111120] px-3.5 py-1.5 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#b8ff00]">
+          3 SERIES · 30 SEG PAUSA
+        </div>
+      </div>
+
+      <!-- Exercises grid -->
+      <div id="ent-exercises-grid" class="mb-10 grid grid-cols-3 gap-4 max-sm:grid-cols-1"></div>
+
+      <!-- Start button -->
+      <div class="flex justify-center">
+        <button
+          id="ent-start-btn"
+          class="flex cursor-pointer items-center gap-4 rounded-2xl border-0 bg-[#b8ff00] px-14 py-4 font-['Bebas_Neue',sans-serif] text-[1.5rem] tracking-[3px] text-black shadow-[0_0_30px_rgba(184,255,0,0.2)] transition-all duration-200 hover:scale-[1.04] hover:shadow-[0_0_50px_rgba(184,255,0,0.4)]"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" class="h-[22px] w-[22px]"><path d="M8 5v14l11-7z"/></svg>
+          INICIAR ENTRENAMIENTO
+        </button>
+      </div>
+    </main>
+
+    <!-- ── OVERLAY ── -->
+    <div
+      id="ent-overlay"
+      class="fixed inset-0 z-[200] hidden flex-col overflow-hidden bg-[#07070e]"
+    >
+      <!-- Ambient overlay bg (JS swaps this style) -->
+      <div id="ent-overlay-bg" aria-hidden="true" class="pointer-events-none absolute inset-0"
+        style="background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(184,255,0,0.04) 0%, transparent 70%)"
+      ></div>
+
+      <!-- Progress bar -->
+      <div class="relative z-10 h-1 w-full bg-[#1f1f38]">
+        <div id="ent-progress-fill" class="h-full bg-[#b8ff00] transition-[width] duration-500" style="width:0%"></div>
+      </div>
+
+      <!-- Overlay header -->
+      <div class="relative z-10 flex items-center justify-between border-b border-[#1f1f38] px-8 py-5">
+        <div class="flex items-center gap-8">
+          <!-- Serie -->
+          <div class="flex flex-col gap-0.5">
+            <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Serie</span>
+            <span id="ent-ov-serie" class="font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[1px] text-[#eeeef8]">—</span>
+          </div>
+          <!-- Series dots -->
+          <div class="flex flex-col gap-1.5">
+            <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Series completadas</span>
+            <div id="ent-series-dots" class="flex items-center gap-1.5"></div>
+          </div>
+          <!-- Ex dots -->
+          <div class="flex flex-col gap-1.5">
+            <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Ejercicios en esta serie</span>
+            <div id="ent-ex-dots" class="flex items-center gap-1.5"></div>
+          </div>
+        </div>
+        <button
+          id="ent-close-overlay"
+          class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-[10px] border border-[#1f1f38] bg-[#111120] text-[1.2rem] text-[#5a5a7a] transition-all duration-200 hover:border-[#eeeef8] hover:text-[#eeeef8]"
+        >✕</button>
+      </div>
+
+      <!-- Workout content -->
+      <div id="ent-ov-content" class="relative z-10 flex flex-1 items-center justify-center gap-12 px-8 py-6 max-sm:flex-col max-sm:gap-6">
+
+        <!-- GIF panel -->
+        <div class="flex flex-0 flex-col items-center gap-4" style="flex:0 0 280px">
+          <div
+            id="ent-ov-gif-frame"
+            class="relative flex h-[260px] w-[260px] items-center justify-center overflow-hidden rounded-[20px] border-2 border-[#1f1f38] bg-[#0a0a15] transition-[border-color] duration-300 max-sm:h-[200px] max-sm:w-[200px]"
+          >
+            <div id="ent-rest-icon" class="hidden text-[4rem]">💤</div>
+          </div>
+        </div>
+
+        <!-- Info panel -->
+        <div class="flex max-w-[400px] flex-1 flex-col gap-6">
+          <!-- State chip -->
+          <div
+            id="ent-ov-chip"
+            class="inline-flex w-fit items-center gap-1.5 rounded-md border border-[rgba(184,255,0,0.2)] bg-[rgba(184,255,0,0.1)] px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[3px] text-[#b8ff00]"
+          >Ejercicio</div>
+
+          <!-- Exercise name -->
+          <div class="flex flex-col gap-0.5">
+            <div id="ent-ov-exname" class="font-['Bebas_Neue',sans-serif] text-[clamp(2rem,4vw,3.2rem)] leading-none tracking-[1px] text-[#eeeef8] max-sm:text-[2rem]">—</div>
+            <div id="ent-ov-exnote" class="text-[0.75rem] font-semibold uppercase tracking-[2px] text-[#ff6b35]"></div>
+          </div>
+
+          <!-- Reps display -->
+          <div id="ent-reps-display" class="flex items-baseline gap-2.5">
+            <div id="ent-ov-reps-val" class="font-['Bebas_Neue',sans-serif] text-[5rem] leading-none text-[#b8ff00]">—</div>
+            <div id="ent-ov-reps-unit" class="mb-2 self-end text-[0.75rem] font-bold uppercase tracking-[3px] text-[#5a5a7a]">REPS</div>
+          </div>
+
+          <!-- Timer display (hidden by default) -->
+          <div id="ent-timer-display" class="hidden flex-col gap-4">
+            <svg width="120" height="120" viewBox="0 0 120 120" class="block">
+              <circle cx="60" cy="60" r="52" fill="none" stroke="#1f1f38" stroke-width="6"/>
+              <circle
+                id="ent-timer-arc"
+                cx="60" cy="60" r="52" fill="none"
+                stroke="#b8ff00" stroke-width="6"
+                stroke-linecap="round"
+                stroke-dasharray="326.7" stroke-dashoffset="0"
+                transform="rotate(-90 60 60)"
+                style="transition: stroke-dashoffset 1s linear"
+              />
+              <text x="60" y="68" text-anchor="middle"
+                font-family="'Bebas Neue',sans-serif" font-size="32" fill="#eeeef8"
+                id="ent-timer-text">0</text>
+            </svg>
+            <div id="ent-timer-label" class="font-['Bebas_Neue',sans-serif] text-[1rem] tracking-[2px] text-[#5a5a7a]">SEGUNDOS</div>
+          </div>
+
+          <!-- Action button -->
+          <button
+            id="ent-action-btn"
+            class="w-full cursor-pointer rounded-[14px] border-0 bg-[#b8ff00] px-10 py-3.5 font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[2px] text-black shadow-[0_0_20px_rgba(184,255,0,0.2)] transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(184,255,0,0.4)]"
+          >✓ LISTO</button>
+        </div>
+      </div>
+
+      <!-- Done screen (hidden by default) -->
+      <div
+        id="ent-done-screen"
+        class="relative z-10 hidden flex-1 flex-col items-center justify-center gap-6 p-8 text-center"
+      >
+        <div class="text-[5rem]">🏆</div>
+        <div class="font-['Bebas_Neue',sans-serif] text-[4rem] tracking-[2px] text-[#b8ff00]">¡COMPLETADO!</div>
+        <div id="ent-done-sub" class="max-w-[400px] text-[0.9rem] font-medium leading-relaxed text-[#5a5a7a]">
+          Excelente trabajo. Descansá y volvé mañana con energía.
+        </div>
+        <button
+          id="ent-done-close-btn"
+          class="w-full max-w-[300px] cursor-pointer rounded-[14px] border-0 bg-[#b8ff00] px-10 py-3.5 font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[2px] text-black transition-all duration-200 hover:scale-[1.02]"
+        >VOLVER AL INICIO</button>
+      </div>
+
+      <!-- 3-2-1 Countdown (hidden by default) -->
+      <div
+        id="ent-countdown-screen"
+        class="absolute inset-0 z-10 hidden flex-col items-center justify-center gap-4 bg-[#07070e]"
+      >
+        <div
+          id="ent-cd-number"
+          class="font-['Bebas_Neue',sans-serif] text-[12rem] leading-none text-[#b8ff00]"
+          style="animation: entPulseCount 1s ease-out"
+        >3</div>
+        <div class="text-[0.8rem] font-semibold uppercase tracking-[6px] text-[#5a5a7a]">Prepárate</div>
+      </div>
+
+    </div><!-- #ent-overlay -->
+
+  </div><!-- #ent-root -->
+
+  <!-- Keyframe for countdown (minimal, single rule — unavoidable for JS animation) -->
+  <style>
+    @keyframes entPulseCount {
+      from { transform: scale(1.5); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    .ent-cd-animate { animation: entPulseCount 1s ease-out; }
+  </style>
+
+  <script define:vars={{ gifBase }}>
+  // ── DATA ──────────────────────────────────────────────────────────────────
+  const workouts = {
+    1: {
+      label: 'DÍA 1',
+      exercises: [
+        { name: 'Bolitas Abdominales', gif: '1bolitas.gif',  type: 'reps' },
+        { name: 'Press de Hombros',    gif: '1press.gif',    type: 'reps', note: '5 kg' },
+        { name: 'Jumping Jacks',       gif: '1jumping.gif',  type: 'reps' },
+      ],
+      weeks: [
+        { series: 3, values: [6,  8,  8]  },
+        { series: 4, values: [6,  8,  8]  },
+        { series: 3, values: [8,  10, 10] },
+        { series: 4, values: [8,  10, 10] },
+        { series: 3, values: [10, 12, 12] },
+      ],
+    },
+    2: {
+      label: 'DÍA 2',
+      exercises: [
+        { name: 'Cuadrupedia Despegando Rodillas', gif: '2cuadrupedia.gif', type: 'time' },
+        { name: 'Sentadilla con Mancuerna',        gif: '2sentadilla.gif',  type: 'reps', note: '10 kg' },
+        { name: 'Mountain Climbers',               gif: '2climbers.gif',   type: 'reps' },
+      ],
+      weeks: [
+        { series: 3, values: [15, 8,  12] },
+        { series: 4, values: [15, 8,  12] },
+        { series: 3, values: [20, 10, 15] },
+        { series: 4, values: [20, 10, 15] },
+        { series: 3, values: [25, 12, 18] },
+      ],
+    },
+    3: {
+      label: 'DÍA 3',
+      exercises: [
+        { name: 'Bicho Muerto',                 gif: '3bicho.gif',    type: 'reps' },
+        { name: 'Remos en Plancha sobre Silla', gif: '3remos.gif',    type: 'reps', note: '5 kg · por lado' },
+        { name: 'Subo y Bajo Escalón',          gif: '3repiques.gif', type: 'reps' },
+      ],
+      weeks: [
+        { series: 3, values: [8,  6,  12] },
+        { series: 4, values: [8,  6,  12] },
+        { series: 3, values: [10, 8,  16] },
+        { series: 4, values: [10, 8,  16] },
+        { series: 3, values: [12, 10, 20] },
+      ],
+    },
+    4: {
+      label: 'DÍA 4',
+      exercises: [
+        { name: 'Bird Dog',                  gif: '4bird.gif',       type: 'reps' },
+        { name: 'Buenos Días con Mancuerna', gif: '4buenosdias.gif', type: 'reps' },
+        { name: 'Sprowl con Silla',          gif: '4sprwol.gif',     type: 'reps' },
+      ],
+      weeks: [
+        { series: 3, values: [8,  8,  6]  },
+        { series: 4, values: [8,  8,  6]  },
+        { series: 3, values: [10, 10, 8]  },
+        { series: 4, values: [10, 10, 8]  },
+        { series: 3, values: [12, 12, 10] },
+      ],
+    },
+    5: {
+      label: 'DÍA 5',
+      exercises: [
+        { name: 'Hollow',                               gif: '5hollow.gif',    type: 'time' },
+        { name: 'Flexiones en Plano Inclinado / Pared', gif: '5flrexiones.gif', type: 'reps' },
+        { name: 'Rodillas Arriba en el Lugar',          gif: '5rodillas.gif',  type: 'reps' },
+      ],
+      weeks: [
+        { series: 3, values: [8,  6,  12] },
+        { series: 4, values: [8,  6,  12] },
+        { series: 3, values: [10, 8,  16] },
+        { series: 4, values: [10, 8,  16] },
+        { series: 3, values: [12, 10, 20] },
+      ],
+    },
+  };
+
+  // ── STATE ─────────────────────────────────────────────────────────────────
+  let selectedDay   = 1;
+  let selectedWeek  = 0;
+  let wkState       = null;
+  let timerInterval = null;
+  const TOTAL_ARC   = 326.7;
+
+  // Tailwind-based colour tokens (used from JS for dynamic classes)
+  const CL = {
+    btnActive:   'bg-[#b8ff00] border-[#b8ff00] text-black shadow-[0_0_20px_rgba(184,255,0,0.3)]',
+    btnInactive: 'bg-[#111120] text-[#5a5a7a] hover:border-[#6a9400] hover:text-[#eeeef8] hover:bg-[#16162a]',
+    chipExercise:'inline-flex w-fit items-center gap-1.5 rounded-md border border-[rgba(184,255,0,0.2)] bg-[rgba(184,255,0,0.1)] px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[3px] text-[#b8ff00]',
+    chipRest:    'inline-flex w-fit items-center gap-1.5 rounded-md border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.1)] px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[3px] text-[#93c5fd]',
+    chipDone:    'inline-flex w-fit items-center gap-1.5 rounded-md border border-[rgba(184,255,0,0.3)] bg-[rgba(184,255,0,0.15)] px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[3px] text-[#b8ff00]',
+    actionReady: 'w-full cursor-pointer rounded-[14px] border-0 bg-[#b8ff00] px-10 py-3.5 font-[\'Bebas_Neue\',sans-serif] text-[1.4rem] tracking-[2px] text-black shadow-[0_0_20px_rgba(184,255,0,0.2)] transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(184,255,0,0.4)]',
+    actionRest:  'w-full cursor-pointer rounded-[14px] border-0 bg-[#3b82f6] px-10 py-3.5 font-[\'Bebas_Neue\',sans-serif] text-[1.4rem] tracking-[2px] text-white shadow-[0_0_20px_rgba(59,130,246,0.2)] transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(59,130,246,0.4)]',
+    repsValExercise: 'font-[\'Bebas_Neue\',sans-serif] text-[5rem] leading-none text-[#b8ff00]',
+    repsValRest:     'font-[\'Bebas_Neue\',sans-serif] text-[5rem] leading-none text-[#93c5fd]',
+  };
+
+  // ── ELEMENTS ──────────────────────────────────────────────────────────────
+  const overlay       = document.getElementById('ent-overlay');
+  const overlayBg     = document.getElementById('ent-overlay-bg');
+  const ovChip        = document.getElementById('ent-ov-chip');
+  const ovExname      = document.getElementById('ent-ov-exname');
+  const ovExnote      = document.getElementById('ent-ov-exnote');
+  const ovRepsVal     = document.getElementById('ent-ov-reps-val');
+  const ovRepsUnit    = document.getElementById('ent-ov-reps-unit');
+  const repsDisplay   = document.getElementById('ent-reps-display');
+  const timerDisplay  = document.getElementById('ent-timer-display');
+  const timerArc      = document.getElementById('ent-timer-arc');
+  const timerText     = document.getElementById('ent-timer-text');
+  const timerLabel    = document.getElementById('ent-timer-label');
+  const actionBtn     = document.getElementById('ent-action-btn');
+  const progressFill  = document.getElementById('ent-progress-fill');
+  const ovSerie       = document.getElementById('ent-ov-serie');
+  const seriesDots    = document.getElementById('ent-series-dots');
+  const exDots        = document.getElementById('ent-ex-dots');
+  const ovGifFrame    = document.getElementById('ent-ov-gif-frame');
+  const restIcon      = document.getElementById('ent-rest-icon');
+  const ovContent     = document.getElementById('ent-ov-content');
+  const doneScreen    = document.getElementById('ent-done-screen');
+  const cdScreen      = document.getElementById('ent-countdown-screen');
+  const cdNumber      = document.getElementById('ent-cd-number');
+
+  // ── GIF PRELOAD ───────────────────────────────────────────────────────────
+  const allGifs = [
+    '1bolitas.gif','1jumping.gif','1press.gif',
+    '2climbers.gif','2cuadrupedia.gif','2sentadilla.gif',
+    '3bicho.gif','3remos.gif','3repiques.gif',
+    '4bird.gif','4buenosdias.gif','4sprwol.gif',
+    '5flrexiones.gif','5hollow.gif','5rodillas.gif',
+  ];
+
+  const gifImgMap = {};
+  const startBtn  = document.getElementById('ent-start-btn');
+  startBtn.innerHTML = 'CARGANDO GIFS...';
+  startBtn.disabled  = true;
+  startBtn.style.opacity = '0.5';
+
+  let loaded = 0;
+  Promise.all(
+    allGifs.map(filename =>
+      fetch(`${gifBase}${filename}`)
+        .then(r => r.blob())
+        .then(blob => {
+          const url = URL.createObjectURL(blob);
+          const img = document.createElement('img');
+          img.src = url; img.alt = filename;
+          img.className = 'absolute inset-0 hidden h-full w-full object-cover';
+          ovGifFrame.appendChild(img);
+          gifImgMap[filename] = img;
+          loaded++;
+          startBtn.textContent = `CARGANDO... ${loaded}/${allGifs.length}`;
+        })
+        .catch(() => {
+          const img = document.createElement('img');
+          img.src = `${gifBase}${filename}`; img.alt = filename;
+          img.className = 'absolute inset-0 hidden h-full w-full object-cover';
+          ovGifFrame.appendChild(img);
+          gifImgMap[filename] = img;
+          loaded++;
+        })
+    )
+  ).then(() => {
+    startBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" class="h-[22px] w-[22px]"><path d="M8 5v14l11-7z"/></svg> INICIAR ENTRENAMIENTO';
+    startBtn.disabled = false;
+    startBtn.style.opacity = '1';
+  });
+
+  // ── HELPERS ───────────────────────────────────────────────────────────────
+  let currentGifShown = null;
+  function showGif(filename) {
+    if (currentGifShown) currentGifShown.classList.add('hidden');
+    restIcon.classList.add('hidden');
+    const img = gifImgMap[filename];
+    if (img) { img.classList.remove('hidden'); currentGifShown = img; }
+  }
+  function hideGif() {
+    if (currentGifShown) { currentGifShown.classList.add('hidden'); currentGifShown = null; }
+    restIcon.classList.remove('hidden');
+  }
+  function gifSrc(filename) {
+    const img = gifImgMap[filename];
+    return img ? img.src : `${gifBase}${filename}`;
+  }
+  function clearTimer() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  }
+  function playBeep() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      [[0, 880],[0.18, 1100],[0.36, 1320]].forEach(([when, freq]) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = 'sine'; osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.4, ctx.currentTime + when);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + when + 0.15);
+        osc.start(ctx.currentTime + when);
+        osc.stop(ctx.currentTime + when + 0.15);
+      });
+    } catch(e) {}
+  }
+
+  // Mode helpers using inline style (gradient) — only the bg gradient changes with mode
+  function setOverlayMode(mode) {
+    if (mode === 'rest') {
+      overlayBg.style.background = 'radial-gradient(ellipse 70% 50% at 50% 50%, rgba(59,130,246,0.08) 0%, transparent 70%)';
+      ovGifFrame.style.borderColor = 'rgba(59,130,246,0.3)';
+    } else if (mode === 'done') {
+      overlayBg.style.background = 'radial-gradient(ellipse 70% 50% at 50% 50%, rgba(184,255,0,0.1) 0%, transparent 70%)';
+      ovGifFrame.style.borderColor = '#1f1f38';
+    } else {
+      overlayBg.style.background = 'radial-gradient(ellipse 70% 50% at 50% 50%, rgba(184,255,0,0.04) 0%, transparent 70%)';
+      ovGifFrame.style.borderColor = '#1f1f38';
+    }
+  }
+
+  // ── RENDER CARDS ──────────────────────────────────────────────────────────
+  function renderCards() {
+    const w  = workouts[selectedDay];
+    const wk = w.weeks[selectedWeek];
+    document.getElementById('ent-day-title').textContent   = w.label;
+    document.getElementById('ent-series-info').textContent = `${wk.series} SERIES · 30 SEG PAUSA`;
+
+    const grid = document.getElementById('ent-exercises-grid');
+    grid.innerHTML = '';
+    w.exercises.forEach((ex, i) => {
+      const val  = wk.values[i];
+      const unit = ex.type === 'time' ? 'SEG' : 'REPS';
+      const card = document.createElement('div');
+      card.className = 'overflow-hidden rounded-2xl border border-[#1f1f38] bg-[#111120] transition-all duration-200 hover:-translate-y-1 hover:border-[#6a9400]';
+      card.innerHTML = `
+        <div class="relative aspect-square w-full overflow-hidden bg-[#0a0a15]">
+          <img src="${gifSrc(ex.gif)}" alt="${ex.name}" loading="lazy" class="h-full w-full object-cover"
+            onerror="this.parentElement.innerHTML='<div class=\\'flex h-full w-full flex-col items-center justify-center gap-2 text-[0.7rem] font-semibold uppercase tracking-[2px] text-[#5a5a7a]\\'><svg width=\\'40\\' height=\\'40\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1.5\\' opacity=\\'0.3\\'><path d=\\'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z\\'/><path d=\\'M21 12a9 9 0 11-18 0 9 9 0 0118 0z\\'/></svg><span>GIF</span></div>'">
+          <div class="absolute left-2 top-2 flex h-7 w-7 items-center justify-center rounded-md border border-[#1f1f38] bg-black/75 font-['Bebas_Neue',sans-serif] text-[1.2rem] text-[#b8ff00]">${i+1}</div>
+        </div>
+        <div class="p-4">
+          <div class="mb-2.5 min-h-[2.4em] text-[0.85rem] font-bold leading-snug text-[#eeeef8]">${ex.name}</div>
+          <div class="flex items-center gap-2 font-['Bebas_Neue',sans-serif] text-[1.6rem] tracking-[1px] text-[#b8ff00]">
+            <span>${val}</span>
+            <span class="mb-[-4px] self-end text-[0.6rem] font-['Syne',sans-serif] font-semibold uppercase tracking-[2px] text-[#5a5a7a]">${unit}</span>
+          </div>
+          ${ex.note ? `<div class="mt-1 text-[0.65rem] font-semibold uppercase tracking-[2px] text-[#ff6b35]">⚡ ${ex.note}</div>` : ''}
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  // ── SELECTOR EVENTS ───────────────────────────────────────────────────────
+  document.getElementById('ent-day-btns').addEventListener('click', e => {
+    const btn = e.target.closest('.ent-day-btn');
+    if (!btn) return;
+    selectedDay = +btn.dataset.day;
+    document.querySelectorAll('.ent-day-btn').forEach(b => {
+      b.className = b.className.replace(CL.btnActive, '').replace(CL.btnInactive, '').trim();
+      b.className += ' ' + (b === btn ? CL.btnActive : CL.btnInactive);
+    });
+    renderCards();
+  });
+
+  document.getElementById('ent-week-btns').addEventListener('click', e => {
+    const btn = e.target.closest('.ent-week-btn');
+    if (!btn) return;
+    selectedWeek = +btn.dataset.week;
+    document.querySelectorAll('.ent-week-btn').forEach(b => {
+      b.className = b.className.replace(CL.btnActive, '').replace(CL.btnInactive, '').trim();
+      b.className += ' ' + (b === btn ? CL.btnActive : CL.btnInactive);
+    });
+    renderCards();
+  });
+
+  // ── WORKOUT ENGINE ────────────────────────────────────────────────────────
+  function startWorkout() {
+    const w  = workouts[selectedDay];
+    const wk = w.weeks[selectedWeek];
+    wkState = {
+      exercises: w.exercises, week: wk,
+      currentSerie: 0, currentEx: 0, phase: 'exercise',
+      totalSteps: wk.series * w.exercises.length,
+    };
+    overlay.classList.remove('hidden');
+    overlay.classList.add('flex');
+    setOverlayMode('exercise');
+    doneScreen.classList.add('hidden');
+    doneScreen.classList.remove('flex');
+    ovContent.classList.remove('hidden');
+    ovContent.classList.add('flex');
+    startCountdown(() => showCurrentStep());
+  }
+
+  function startCountdown(cb) {
+    cdScreen.classList.remove('hidden');
+    cdScreen.classList.add('flex');
+    let n = 3;
+    cdNumber.textContent = n;
+    cdNumber.style.animation = 'none';
+    void cdNumber.offsetWidth;
+    cdNumber.style.animation = 'entPulseCount 1s ease-out';
+    const iv = setInterval(() => {
+      n--;
+      if (n <= 0) {
+        clearInterval(iv);
+        cdScreen.classList.add('hidden');
+        cdScreen.classList.remove('flex');
+        cb();
+      } else {
+        cdNumber.textContent = n;
+        cdNumber.style.animation = 'none';
+        void cdNumber.offsetWidth;
+        cdNumber.style.animation = 'entPulseCount 1s ease-out';
+      }
+    }, 1000);
+  }
+
+  function updateDots() {
+    const { week, currentSerie, currentEx, phase } = wkState;
+    seriesDots.innerHTML = '';
+    for (let i = 0; i < week.series; i++) {
+      const d = document.createElement('div');
+      d.className = 'h-2 w-2 rounded-full border border-[#1f1f38] bg-[#1f1f38] transition-all duration-300';
+      if (i < currentSerie)  { d.className = 'h-2 w-2 rounded-full bg-[#6a9400] border-[#6a9400] transition-all duration-300'; }
+      if (i === currentSerie){ d.className = 'h-2 w-2 rounded-full bg-[#b8ff00] border-[#b8ff00] shadow-[0_0_8px_rgba(184,255,0,0.5)] transition-all duration-300'; }
+      seriesDots.appendChild(d);
+    }
+    exDots.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+      const d = document.createElement('div');
+      let cls = 'h-1 w-7 rounded-sm bg-[#1f1f38] transition-all duration-300';
+      if (phase === 'exercise' && i < currentEx)  cls = 'h-1 w-7 rounded-sm bg-[#6a9400] transition-all duration-300';
+      if (phase === 'exercise' && i === currentEx) cls = 'h-1 w-7 rounded-sm bg-[#b8ff00] transition-all duration-300';
+      if (phase !== 'exercise') cls = 'h-1 w-7 rounded-sm bg-[#6a9400] transition-all duration-300';
+      d.className = cls;
+      exDots.appendChild(d);
+    }
+    ovSerie.textContent = `${currentSerie + 1} / ${week.series}`;
+  }
+
+  function updateProgress() {
+    const { week, currentSerie, currentEx, totalSteps } = wkState;
+    progressFill.style.width = ((currentSerie * 3 + currentEx) / totalSteps * 100) + '%';
+  }
+
+  function showCurrentStep() {
+    clearTimer();
+    const { exercises, week, currentSerie, currentEx } = wkState;
+    const ex = exercises[currentEx];
+    const val = week.values[currentEx];
+    const isTime = ex.type === 'time';
+
+    setOverlayMode('exercise');
+    ovChip.className   = CL.chipExercise;
+    ovChip.textContent = `Ejercicio ${currentEx + 1} de 3`;
+    ovExname.textContent = ex.name;
+    ovExnote.textContent = ex.note ? `⚡ ${ex.note}` : '';
+    showGif(ex.gif);
+    updateDots();
+    updateProgress();
+    ovRepsVal.className = CL.repsValExercise;
+
+    if (isTime) {
+      repsDisplay.classList.add('hidden'); repsDisplay.classList.remove('flex');
+      timerDisplay.classList.remove('hidden'); timerDisplay.classList.add('flex');
+      timerLabel.textContent = 'SEGUNDOS';
+      timerArc.style.stroke  = '#b8ff00';
+      startTimerCountdown(val, () => afterExercise());
+      actionBtn.textContent = '⏭ SALTAR';
+      actionBtn.className   = CL.actionReady;
+      actionBtn.onclick = () => { clearTimer(); afterExercise(); };
+    } else {
+      timerDisplay.classList.add('hidden'); timerDisplay.classList.remove('flex');
+      repsDisplay.classList.remove('hidden'); repsDisplay.classList.add('flex');
+      ovRepsVal.textContent  = val;
+      ovRepsUnit.textContent = 'REPETICIONES';
+      actionBtn.textContent  = '✓ LISTO';
+      actionBtn.className    = CL.actionReady;
+      actionBtn.onclick = () => afterExercise();
+    }
+  }
+
+  function startTimerCountdown(seconds, cb) {
+    let remaining = seconds;
+    timerText.textContent = remaining;
+    timerArc.style.transition = 'none';
+    timerArc.style.strokeDashoffset = '0';
+    timerInterval = setInterval(() => {
+      remaining--;
+      timerText.textContent = remaining;
+      const p = 1 - (remaining / seconds);
+      timerArc.style.transition = 'stroke-dashoffset 1s linear';
+      timerArc.style.strokeDashoffset = (TOTAL_ARC * p).toString();
+      if (remaining <= 0) { clearTimer(); cb(); }
+    }, 1000);
+  }
+
+  function afterExercise() {
+    clearTimer();
+    const { exercises, week, currentSerie, currentEx } = wkState;
+    const isLastSerie = currentSerie >= week.series - 1;
+    const isLastEx    = currentEx >= exercises.length - 1;
+    if (isLastSerie && isLastEx) {
+      progressFill.style.width = '100%';
+      showDone();
+    } else if (!isLastSerie) {
+      showSeriesRest();
+    } else {
+      showExRest();
+    }
+  }
+
+  function showSeriesRest() {
+    clearTimer(); hideGif();
+    setOverlayMode('rest');
+    ovChip.className   = CL.chipRest;
+    ovChip.textContent = '⏸ Descanso entre series';
+    const ex = wkState.exercises[wkState.currentEx];
+    ovExname.textContent = `Serie ${wkState.currentSerie + 1} completada · ${ex.name}`;
+    ovExnote.textContent = '';
+    timerDisplay.classList.add('hidden'); timerDisplay.classList.remove('flex');
+    repsDisplay.classList.remove('hidden'); repsDisplay.classList.add('flex');
+    ovRepsVal.className    = CL.repsValRest;
+    ovRepsUnit.textContent = 'SEGUNDOS DE PAUSA';
+    timerArc.style.stroke  = '#3b82f6';
+    showRestTimer(30, () => { wkState.currentSerie++; showCurrentStep(); });
+  }
+
+  function showExRest() {
+    clearTimer(); hideGif();
+    setOverlayMode('rest');
+    ovChip.className   = CL.chipRest;
+    ovChip.textContent = '⏸ Descanso';
+    const nextEx = wkState.exercises[wkState.currentEx + 1];
+    ovExname.textContent = `A continuación: ${nextEx.name}`;
+    ovExnote.textContent = '';
+    timerDisplay.classList.add('hidden'); timerDisplay.classList.remove('flex');
+    repsDisplay.classList.remove('hidden'); repsDisplay.classList.add('flex');
+    ovRepsVal.className    = CL.repsValRest;
+    ovRepsUnit.textContent = 'SEGUNDOS DE PAUSA';
+    timerArc.style.stroke  = '#3b82f6';
+    showRestTimer(30, () => {
+      wkState.currentEx++;
+      wkState.currentSerie = 0;
+      showCurrentStep();
+    });
+  }
+
+  function showRestTimer(seconds, cb) {
+    let remaining = seconds;
+    ovRepsVal.textContent = remaining;
+    actionBtn.textContent = '⏭ SALTAR DESCANSO';
+    actionBtn.className   = CL.actionRest;
+    timerInterval = setInterval(() => {
+      remaining--;
+      ovRepsVal.textContent = remaining;
+      if (remaining <= 0) { clearTimer(); playBeep(); cb(); }
+    }, 1000);
+    actionBtn.onclick = () => { clearTimer(); cb(); };
+  }
+
+  function showDone() {
+    setOverlayMode('done');
+    ovContent.classList.add('hidden'); ovContent.classList.remove('flex');
+    doneScreen.classList.remove('hidden'); doneScreen.classList.add('flex');
+    const wk = wkState.week;
+    document.getElementById('ent-done-sub').textContent =
+      `Completaste ${wk.series} series · ${wkState.exercises.length * wk.series} ejercicios totales. ¡Excelente trabajo!`;
+  }
+
+  // ── EVENT LISTENERS ───────────────────────────────────────────────────────
+  document.getElementById('ent-start-btn').addEventListener('click', startWorkout);
+
+  function closeOverlay() {
+    clearTimer();
+    overlay.classList.add('hidden'); overlay.classList.remove('flex');
+    ovContent.classList.remove('hidden'); ovContent.classList.add('flex');
+    doneScreen.classList.add('hidden'); doneScreen.classList.remove('flex');
+    cdScreen.classList.add('hidden'); cdScreen.classList.remove('flex');
+    progressFill.style.width = '0%';
+    hideGif(); restIcon.classList.add('hidden');
+    wkState = null;
+  }
+  document.getElementById('ent-close-overlay').addEventListener('click', closeOverlay);
+  document.getElementById('ent-done-close-btn').addEventListener('click', closeOverlay);
+
+  // ── INIT ──────────────────────────────────────────────────────────────────
+  renderCards();
+  </script>
+
+</BaseTailwind>
