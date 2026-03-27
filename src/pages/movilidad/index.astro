@@ -1,0 +1,633 @@
+---
+import BaseTailwind from '@layouts/BaseTailwind.astro';
+
+export const prerender = true;
+
+const title = 'Movilidad';
+---
+
+<BaseTailwind
+  title={title}
+  description="Rutina de movilidad · Inicio y fin de día"
+  lang="es"
+  layoutType="tool"
+  showPromptModal={false}
+>
+  <link
+    slot="head"
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Root -->
+  <div
+    id="mob-root"
+    class="relative min-h-screen overflow-x-hidden font-['Syne',sans-serif] bg-[#07070e] text-[#eeeef8]"
+  >
+
+    <!-- Ambient gradient -->
+    <div
+      aria-hidden="true"
+      class="pointer-events-none fixed inset-0 z-0"
+      style="background: radial-gradient(ellipse 60% 40% at 20% 10%, rgba(138,180,248,0.06) 0%, transparent 60%), radial-gradient(ellipse 50% 30% at 85% 85%, rgba(184,255,0,0.04) 0%, transparent 60%)"
+    ></div>
+
+    <!-- ── HEADER ── -->
+    <header class="relative z-10 flex items-center gap-6 border-b border-[#1f1f38] px-10 py-8">
+      <div class="flex flex-col">
+        <span class="font-['Bebas_Neue',sans-serif] text-[2.8rem] leading-none tracking-[2px] text-[#8ab4f8]">
+          MOVILIDAD
+        </span>
+        <span class="text-[0.7rem] font-semibold uppercase tracking-[4px] text-[#5a5a7a]">
+          Inicio y Fin de Día · Columna · Cadera
+        </span>
+      </div>
+      <div class="ml-auto flex items-center gap-3">
+        <!-- Mode toggle -->
+        <div id="mob-mode-btns" class="flex gap-2">
+          <button
+            data-mode="morning"
+            class="mob-mode-btn flex items-center gap-2 rounded-xl border border-[#1f1f38] bg-[#111120] px-4 py-2 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#5a5a7a] cursor-pointer transition-all duration-200 hover:border-[#8ab4f8] hover:text-[#eeeef8]"
+          >
+            🌅 <span>Mañana</span>
+          </button>
+          <button
+            data-mode="night"
+            class="mob-mode-btn flex items-center gap-2 rounded-xl border border-[#8ab4f8] bg-[rgba(138,180,248,0.1)] px-4 py-2 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#8ab4f8] cursor-pointer transition-all duration-200 shadow-[0_0_16px_rgba(138,180,248,0.2)]"
+          >
+            🌙 <span>Noche</span>
+          </button>
+        </div>
+        <div class="rounded-full border border-[#1f1f38] bg-[#111120] px-4 py-1.5 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#5a5a7a]">
+          2 Vueltas · 6 Reps
+        </div>
+      </div>
+    </header>
+
+    <!-- ── MAIN ── -->
+    <main class="relative z-10 mx-auto max-w-[1100px] px-8 py-10">
+
+      <!-- Context banner -->
+      <div id="mob-context-banner" class="mb-8 flex items-start gap-4 rounded-2xl border border-[rgba(138,180,248,0.15)] bg-[rgba(138,180,248,0.05)] p-5">
+        <div id="mob-banner-emoji" class="text-[2rem] leading-none">🌙</div>
+        <div class="flex flex-col gap-1">
+          <div id="mob-banner-title" class="font-['Bebas_Neue',sans-serif] text-[1.1rem] tracking-[2px] text-[#8ab4f8]">ANTES DE IRTE A DORMIR · EN LA CAMA</div>
+          <div id="mob-banner-note" class="text-[0.78rem] font-semibold leading-relaxed text-[#5a5a7a]">
+            Controlá el movimiento. Despacio. Sentí vértebra a vértebra. No hay apuro.
+          </div>
+        </div>
+        <div class="ml-auto rounded-lg border border-[rgba(138,180,248,0.2)] bg-[rgba(138,180,248,0.08)] px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[2px] text-[#8ab4f8]">
+          10 SEG PAUSA
+        </div>
+      </div>
+
+      <!-- Exercises header -->
+      <div class="mb-5 flex items-center justify-between">
+        <div class="font-['Bebas_Neue',sans-serif] text-[1.8rem] tracking-[2px] text-[#eeeef8]">RUTINA DE MOVILIDAD</div>
+        <div class="rounded-lg border border-[#1f1f38] bg-[#111120] px-3.5 py-1.5 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#8ab4f8]">
+          2 VUELTAS · 5 EJERCICIOS
+        </div>
+      </div>
+
+      <!-- Exercises grid -->
+      <div id="mob-exercises-grid" class="mb-10 grid grid-cols-3 gap-4 max-sm:grid-cols-1"></div>
+
+      <!-- Start button -->
+      <div class="flex justify-center">
+        <button
+          id="mob-start-btn"
+          class="flex cursor-pointer items-center gap-4 rounded-2xl border-0 bg-[#8ab4f8] px-14 py-4 font-['Bebas_Neue',sans-serif] text-[1.5rem] tracking-[3px] text-[#07070e] shadow-[0_0_30px_rgba(138,180,248,0.2)] transition-all duration-200 hover:scale-[1.04] hover:shadow-[0_0_50px_rgba(138,180,248,0.4)]"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" class="h-[22px] w-[22px]"><path d="M8 5v14l11-7z"/></svg>
+          INICIAR RUTINA
+        </button>
+      </div>
+    </main>
+
+    <!-- ── OVERLAY ── -->
+    <div
+      id="mob-overlay"
+      class="fixed inset-0 z-[200] hidden flex-col overflow-hidden bg-[#07070e]"
+    >
+      <div id="mob-overlay-bg" aria-hidden="true" class="pointer-events-none absolute inset-0"
+        style="background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(138,180,248,0.05) 0%, transparent 70%)"
+      ></div>
+
+      <!-- Progress bar -->
+      <div class="relative z-10 h-1 w-full bg-[#1f1f38]">
+        <div id="mob-progress-fill" class="h-full bg-[#8ab4f8] transition-[width] duration-500" style="width:0%"></div>
+      </div>
+
+      <!-- Overlay header -->
+      <div class="relative z-10 flex items-center justify-between border-b border-[#1f1f38] px-8 py-5">
+        <div class="flex items-center gap-8">
+          <div class="flex flex-col gap-0.5">
+            <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Vuelta</span>
+            <span id="mob-ov-serie" class="font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[1px] text-[#eeeef8]">—</span>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Vueltas completadas</span>
+            <div id="mob-series-dots" class="flex items-center gap-1.5"></div>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Ejercicios en esta vuelta</span>
+            <div id="mob-ex-dots" class="flex items-center gap-1.5"></div>
+          </div>
+        </div>
+        <button
+          id="mob-close-overlay"
+          class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-[10px] border border-[#1f1f38] bg-[#111120] text-[1.2rem] text-[#5a5a7a] transition-all duration-200 hover:border-[#eeeef8] hover:text-[#eeeef8]"
+        >✕</button>
+      </div>
+
+      <!-- Workout content -->
+      <div id="mob-ov-content" class="relative z-10 flex flex-1 items-center justify-center gap-12 px-8 py-6 max-sm:flex-col max-sm:gap-6">
+
+        <!-- Reference panel -->
+        <div class="flex flex-col items-center gap-4" style="flex:0 0 280px">
+          <div
+            id="mob-ov-ref-frame"
+            class="relative flex h-[260px] w-[260px] flex-col items-center justify-center gap-4 overflow-hidden rounded-[20px] border-2 border-[rgba(138,180,248,0.2)] bg-[#0a0a15] transition-[border-color] duration-300 max-sm:h-[200px] max-sm:w-[200px]"
+          >
+            <div id="mob-ex-number" class="font-['Bebas_Neue',sans-serif] text-[6rem] leading-none text-[rgba(138,180,248,0.15)]">1</div>
+            <a
+              id="mob-yt-link"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="absolute bottom-4 flex items-center gap-2 rounded-lg border border-[rgba(138,180,248,0.2)] bg-[rgba(138,180,248,0.1)] px-3 py-2 text-[0.65rem] font-bold uppercase tracking-[2px] text-[#8ab4f8] transition-all duration-200 hover:bg-[rgba(138,180,248,0.2)]"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
+              Ver referencia
+            </a>
+            <div id="mob-rest-icon" class="hidden text-[4rem]">💤</div>
+          </div>
+        </div>
+
+        <!-- Info panel -->
+        <div class="flex max-w-[400px] flex-1 flex-col gap-6">
+          <div id="mob-ov-chip" class="inline-flex w-fit items-center gap-1.5 rounded-md border border-[rgba(138,180,248,0.2)] bg-[rgba(138,180,248,0.1)] px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[3px] text-[#8ab4f8]">
+            Ejercicio
+          </div>
+
+          <div class="flex flex-col gap-0.5">
+            <div id="mob-ov-exname" class="font-['Bebas_Neue',sans-serif] text-[clamp(2rem,4vw,3rem)] leading-none tracking-[1px] text-[#eeeef8] max-sm:text-[2rem]">—</div>
+            <div id="mob-ov-exnote" class="text-[0.75rem] font-semibold uppercase tracking-[2px] text-[#8ab4f8]"></div>
+          </div>
+
+          <!-- Reps display -->
+          <div id="mob-reps-display" class="flex items-baseline gap-2.5">
+            <div id="mob-ov-reps-val" class="font-['Bebas_Neue',sans-serif] text-[5rem] leading-none text-[#8ab4f8]">6</div>
+            <div id="mob-ov-reps-unit" class="mb-2 self-end text-[0.75rem] font-bold uppercase tracking-[3px] text-[#5a5a7a]">REPS</div>
+          </div>
+
+          <!-- Cue box -->
+          <div id="mob-cue-box" class="rounded-xl border border-[#1f1f38] bg-[#111120] px-4 py-3 text-[0.78rem] font-medium leading-relaxed text-[#5a5a7a]">
+            Controlá el movimiento. Despacio. Sentí vértebra a vértebra.
+          </div>
+
+          <!-- Action button -->
+          <button
+            id="mob-action-btn"
+            class="w-full cursor-pointer rounded-[14px] border-0 bg-[#8ab4f8] px-10 py-3.5 font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[2px] text-[#07070e] shadow-[0_0_20px_rgba(138,180,248,0.2)] transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(138,180,248,0.4)]"
+          >✓ LISTO</button>
+        </div>
+      </div>
+
+      <!-- Done screen -->
+      <div id="mob-done-screen" class="relative z-10 hidden flex-1 flex-col items-center justify-center gap-6 p-8 text-center">
+        <div id="mob-done-emoji" class="text-[5rem]">🌙</div>
+        <div class="font-['Bebas_Neue',sans-serif] text-[4rem] tracking-[2px] text-[#8ab4f8]">¡COMPLETADO!</div>
+        <div id="mob-done-sub" class="max-w-[400px] text-[0.9rem] font-medium leading-relaxed text-[#5a5a7a]">
+          Excelente trabajo. Tu cuerpo lo va a agradecer. Buenas noches.
+        </div>
+        <button
+          id="mob-done-close-btn"
+          class="w-full max-w-[300px] cursor-pointer rounded-[14px] border-0 bg-[#8ab4f8] px-10 py-3.5 font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[2px] text-[#07070e] transition-all duration-200 hover:scale-[1.02]"
+        >VOLVER AL INICIO</button>
+      </div>
+
+      <!-- 3-2-1 Countdown -->
+      <div id="mob-countdown-screen" class="absolute inset-0 z-10 hidden flex-col items-center justify-center gap-4 bg-[#07070e]">
+        <div id="mob-cd-number" class="font-['Bebas_Neue',sans-serif] text-[12rem] leading-none text-[#8ab4f8]" style="animation: mobPulseCount 1s ease-out">3</div>
+        <div class="text-[0.8rem] font-semibold uppercase tracking-[6px] text-[#5a5a7a]">Prepárate</div>
+      </div>
+
+    </div><!-- #mob-overlay -->
+
+  </div><!-- #mob-root -->
+
+  <style>
+    @keyframes mobPulseCount {
+      from { transform: scale(1.5); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+  </style>
+
+  <script>
+  // ── DATA ──────────────────────────────────────────────────────────────────
+  const ROUTINES = {
+    night: {
+      label: 'ANTES DE IRTE A DORMIR',
+      emoji: '🌙',
+      banner: 'ANTES DE IRTE A DORMIR · EN LA CAMA',
+      bannerNote: 'Controlá el movimiento. Despacio. Sentí vértebra a vértebra. No hay apuro.',
+      doneMsg: 'Tu cuerpo lo va a agradecer. Buenas noches.',
+      series: 2,
+      reps: 6,
+      restSeconds: 10,
+      exercises: [
+        {
+          name: 'Gato Bueno / Gato Malo',
+          note: 'En cuadrupedia',
+          cue: 'Inspirá en la flexión (gato bueno), exhalá en la extensión (gato malo). Sentí cada vértebra.',
+          url: 'https://youtube.com/shorts/wqW9xj_Zqso',
+        },
+        {
+          name: 'Rodilla al Pecho con Pierna Cruzada',
+          note: 'Acostado · por lado',
+          cue: 'Mantené la espalda en contacto con la cama. Respirá profundo mientras llevás la rodilla al pecho.',
+          url: 'https://youtube.com/shorts/msztsdZTnjw',
+        },
+        {
+          name: 'Movilidad Lumbar Acostada',
+          note: 'Acostado en la cama',
+          cue: 'Movimiento lento y controlado. Sentí la zona lumbar apoyarse y despegarse.',
+          url: 'https://drive.google.com/file/d/1n90nnQk1g5RnNlyqXpAVDY-yM-TQqH8m/view?usp=sharing',
+        },
+        {
+          name: 'Rotaciones Torácicas en Cuadrupedia',
+          note: 'En cuadrupedia · por lado',
+          cue: 'Rotá desde la columna torácica, no desde el hombro. Seguí tu codo con la mirada.',
+          url: 'https://youtube.com/shorts/v55my0wsSqo',
+        },
+        {
+          name: 'Ranitas a 1 Pierna',
+          note: 'Por lado',
+          cue: 'Abrí la cadera gradualmente sin forzar. Respirá relajando en cada repetición.',
+          url: 'https://youtube.com/shorts/W91ZA42rxhs',
+        },
+      ],
+    },
+    morning: {
+      label: 'ACTIVACIÓN DE LA MAÑANA',
+      emoji: '🌅',
+      banner: 'ACTIVACIÓN DE LA MAÑANA · ANTES DE EMPEZAR EL DÍA',
+      bannerNote: 'Activá el cuerpo de forma progresiva. Respiración profunda. Sin apuro.',
+      doneMsg: 'Arrancás el día con el cuerpo activado. ¡A trabajar!',
+      series: 2,
+      reps: 6,
+      restSeconds: 10,
+      exercises: [
+        {
+          name: 'Gato Bueno / Gato Malo',
+          note: 'En cuadrupedia',
+          cue: 'Despertá la columna. Movimiento lento y progresivo para activar la movilidad de la mañana.',
+          url: 'https://youtube.com/shorts/wqW9xj_Zqso',
+        },
+        {
+          name: 'Rotaciones Torácicas en Cuadrupedia',
+          note: 'En cuadrupedia · por lado',
+          cue: 'Activá la columna torácica. Seguí el movimiento con la mirada.',
+          url: 'https://youtube.com/shorts/v55my0wsSqo',
+        },
+        {
+          name: 'Rodilla al Pecho con Pierna Cruzada',
+          note: 'Acostado · por lado',
+          cue: 'Soltá la tensión acumulada durante el sueño. Respiración profunda en cada rep.',
+          url: 'https://youtube.com/shorts/msztsdZTnjw',
+        },
+        {
+          name: 'Movilidad Lumbar Acostada',
+          note: 'Acostado',
+          cue: 'Activá la zona lumbar antes de pararte. Movimiento controlado vértebra a vértebra.',
+          url: 'https://drive.google.com/file/d/1n90nnQk1g5RnNlyqXpAVDY-yM-TQqH8m/view?usp=sharing',
+        },
+        {
+          name: 'Ranitas a 1 Pierna',
+          note: 'Por lado',
+          cue: 'Abrí la cadera para preparar el cuerpo para el movimiento del día.',
+          url: 'https://youtube.com/shorts/W91ZA42rxhs',
+        },
+      ],
+    },
+  };
+
+  // ── STATE ─────────────────────────────────────────────────────────────────
+  let selectedMode  = 'night';
+  let wkState       = null;
+  let timerInterval = null;
+
+  const CL = {
+    chip:     'inline-flex w-fit items-center gap-1.5 rounded-md border border-[rgba(138,180,248,0.2)] bg-[rgba(138,180,248,0.1)] px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[3px] text-[#8ab4f8]',
+    chipRest: 'inline-flex w-fit items-center gap-1.5 rounded-md border border-[rgba(250,204,21,0.2)] bg-[rgba(250,204,21,0.1)] px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[3px] text-[#facc15]',
+    actionReady: "w-full cursor-pointer rounded-[14px] border-0 bg-[#8ab4f8] px-10 py-3.5 font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[2px] text-[#07070e] shadow-[0_0_20px_rgba(138,180,248,0.2)] transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(138,180,248,0.4)]",
+    actionRest:  "w-full cursor-pointer rounded-[14px] border-0 bg-[#facc15] px-10 py-3.5 font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[2px] text-[#07070e] shadow-[0_0_20px_rgba(250,204,21,0.2)] transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(250,204,21,0.4)]",
+    repsValExercise: "font-['Bebas_Neue',sans-serif] text-[5rem] leading-none text-[#8ab4f8]",
+    repsValRest:     "font-['Bebas_Neue',sans-serif] text-[5rem] leading-none text-[#facc15]",
+    modeActive:   'mob-mode-btn flex items-center gap-2 rounded-xl border border-[#8ab4f8] bg-[rgba(138,180,248,0.1)] px-4 py-2 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#8ab4f8] cursor-pointer transition-all duration-200 shadow-[0_0_16px_rgba(138,180,248,0.2)]',
+    modeInactive: 'mob-mode-btn flex items-center gap-2 rounded-xl border border-[#1f1f38] bg-[#111120] px-4 py-2 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#5a5a7a] cursor-pointer transition-all duration-200 hover:border-[#8ab4f8] hover:text-[#eeeef8]',
+  };
+
+  // ── ELEMENTS ──────────────────────────────────────────────────────────────
+  const overlay      = document.getElementById('mob-overlay');
+  const ovChip       = document.getElementById('mob-ov-chip');
+  const ovExname     = document.getElementById('mob-ov-exname');
+  const ovExnote     = document.getElementById('mob-ov-exnote');
+  const ovRepsVal    = document.getElementById('mob-ov-reps-val');
+  const ovRepsUnit   = document.getElementById('mob-ov-reps-unit');
+  const repsDisplay  = document.getElementById('mob-reps-display');
+  const cueBox       = document.getElementById('mob-cue-box');
+  const actionBtn    = document.getElementById('mob-action-btn');
+  const progressFill = document.getElementById('mob-progress-fill');
+  const ovSerie      = document.getElementById('mob-ov-serie');
+  const seriesDots   = document.getElementById('mob-series-dots');
+  const exDots       = document.getElementById('mob-ex-dots');
+  const exNumber     = document.getElementById('mob-ex-number');
+  const ytLink       = document.getElementById('mob-yt-link');
+  const restIcon     = document.getElementById('mob-rest-icon');
+  const ovContent    = document.getElementById('mob-ov-content');
+  const doneScreen   = document.getElementById('mob-done-screen');
+  const doneEmoji    = document.getElementById('mob-done-emoji');
+  const cdScreen     = document.getElementById('mob-countdown-screen');
+  const cdNumber     = document.getElementById('mob-cd-number');
+  const bannerEmoji  = document.getElementById('mob-banner-emoji');
+  const bannerTitle  = document.getElementById('mob-banner-title');
+  const bannerNote   = document.getElementById('mob-banner-note');
+
+  // ── HELPERS ───────────────────────────────────────────────────────────────
+  function clearTimer() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  }
+  function playBeep() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      [[0, 880],[0.18, 1100],[0.36, 1320]].forEach(([when, freq]) => {
+        const osc = ctx.createOscillator(); const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = 'sine'; osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.4, ctx.currentTime + when);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + when + 0.15);
+        osc.start(ctx.currentTime + when); osc.stop(ctx.currentTime + when + 0.15);
+      });
+    } catch(e) {}
+  }
+
+  function showExRef(ex, idx) {
+    restIcon.classList.add('hidden');
+    exNumber.textContent = idx + 1;
+    exNumber.classList.remove('hidden');
+    ytLink.href = ex.url;
+    ytLink.classList.remove('hidden');
+  }
+  function showRestState() {
+    exNumber.classList.add('hidden');
+    ytLink.classList.add('hidden');
+    restIcon.classList.remove('hidden');
+  }
+
+  // ── RENDER CARDS ──────────────────────────────────────────────────────────
+  function renderCards() {
+    const r    = ROUTINES[selectedMode];
+    const grid = document.getElementById('mob-exercises-grid');
+    grid.innerHTML = '';
+    r.exercises.forEach((ex, i) => {
+      const card = document.createElement('div');
+      card.className = 'overflow-hidden rounded-2xl border border-[#1f1f38] bg-[#111120] transition-all duration-200 hover:-translate-y-1 hover:border-[rgba(138,180,248,0.3)]';
+      card.innerHTML = `
+        <div class="relative aspect-square w-full overflow-hidden bg-[#0a0a15] flex flex-col items-center justify-center gap-3">
+          <div class="font-['Bebas_Neue',sans-serif] text-[5rem] leading-none text-[rgba(138,180,248,0.12)]">${i+1}</div>
+          <a href="${ex.url}" target="_blank" rel="noopener noreferrer"
+            class="absolute bottom-3 flex items-center gap-2 rounded-lg border border-[rgba(138,180,248,0.2)] bg-[rgba(138,180,248,0.08)] px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[2px] text-[#8ab4f8] transition-all duration-200 hover:bg-[rgba(138,180,248,0.2)]">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-3.5 w-3.5"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
+            Ver referencia
+          </a>
+          <div class="absolute left-2 top-2 flex h-7 w-7 items-center justify-center rounded-md border border-[#1f1f38] bg-black/75 font-['Bebas_Neue',sans-serif] text-[1.2rem] text-[#8ab4f8]">${i+1}</div>
+        </div>
+        <div class="p-4">
+          <div class="mb-2.5 min-h-[2.4em] text-[0.85rem] font-bold leading-snug text-[#eeeef8]">${ex.name}</div>
+          <div class="flex items-center gap-2 font-['Bebas_Neue',sans-serif] text-[1.6rem] tracking-[1px] text-[#8ab4f8]">
+            <span>${r.reps}</span>
+            <span class="mb-[-4px] self-end text-[0.6rem] font-['Syne',sans-serif] font-semibold uppercase tracking-[2px] text-[#5a5a7a]">REPS</span>
+          </div>
+          ${ex.note ? `<div class="mt-1 text-[0.65rem] font-semibold uppercase tracking-[2px] text-[rgba(138,180,248,0.6)]">↳ ${ex.note}</div>` : ''}
+        </div>`;
+      grid.appendChild(card);
+    });
+
+    // Update banner
+    bannerEmoji.textContent = r.emoji;
+    bannerTitle.textContent = r.banner;
+    bannerNote.textContent  = r.bannerNote;
+  }
+
+  // ── MODE TOGGLE ───────────────────────────────────────────────────────────
+  document.getElementById('mob-mode-btns').addEventListener('click', e => {
+    const btn = e.target.closest('.mob-mode-btn');
+    if (!btn) return;
+    selectedMode = btn.dataset.mode;
+    document.querySelectorAll('.mob-mode-btn').forEach(b => {
+      b.className = b === btn ? CL.modeActive : CL.modeInactive;
+    });
+    doneEmoji.textContent = ROUTINES[selectedMode].emoji;
+    renderCards();
+  });
+
+  // ── WORKOUT ENGINE ────────────────────────────────────────────────────────
+  function startWorkout() {
+    const r = ROUTINES[selectedMode];
+    wkState = {
+      exercises: r.exercises, series: r.series,
+      reps: r.reps, restSeconds: r.restSeconds,
+      currentRound: 0, currentEx: 0, phase: 'exercise',
+      totalSteps: r.series * r.exercises.length,
+    };
+    overlay.classList.remove('hidden'); overlay.classList.add('flex');
+    doneScreen.classList.add('hidden'); doneScreen.classList.remove('flex');
+    ovContent.classList.remove('hidden'); ovContent.classList.add('flex');
+    startCountdown(() => showCurrentStep());
+  }
+
+  function startCountdown(cb) {
+    cdScreen.classList.remove('hidden'); cdScreen.classList.add('flex');
+    let n = 3;
+    cdNumber.textContent = n;
+    cdNumber.style.animation = 'none'; void cdNumber.offsetWidth;
+    cdNumber.style.animation = 'mobPulseCount 1s ease-out';
+    const iv = setInterval(() => {
+      n--;
+      if (n <= 0) {
+        clearInterval(iv);
+        cdScreen.classList.add('hidden'); cdScreen.classList.remove('flex');
+        cb();
+      } else {
+        cdNumber.textContent = n;
+        cdNumber.style.animation = 'none'; void cdNumber.offsetWidth;
+        cdNumber.style.animation = 'mobPulseCount 1s ease-out';
+      }
+    }, 1000);
+  }
+
+  function updateDots() {
+    const { series, currentRound, currentEx, exercises, phase } = wkState;
+    seriesDots.innerHTML = '';
+    for (let i = 0; i < series; i++) {
+      const d = document.createElement('div');
+      if (i < currentRound)        d.className = 'h-2 w-2 rounded-full bg-[rgba(138,180,248,0.5)]';
+      else if (i === currentRound) d.className = 'h-2 w-2 rounded-full bg-[#8ab4f8] shadow-[0_0_8px_rgba(138,180,248,0.5)]';
+      else                         d.className = 'h-2 w-2 rounded-full border border-[#1f1f38] bg-[#1f1f38]';
+      seriesDots.appendChild(d);
+    }
+    exDots.innerHTML = '';
+    for (let i = 0; i < exercises.length; i++) {
+      const d = document.createElement('div');
+      if (phase === 'exercise' && i < currentEx)        d.className = 'h-1 w-7 rounded-sm bg-[rgba(138,180,248,0.4)]';
+      else if (phase === 'exercise' && i === currentEx) d.className = 'h-1 w-7 rounded-sm bg-[#8ab4f8]';
+      else if (phase !== 'exercise')                    d.className = 'h-1 w-7 rounded-sm bg-[rgba(138,180,248,0.4)]';
+      else                                              d.className = 'h-1 w-7 rounded-sm bg-[#1f1f38]';
+      exDots.appendChild(d);
+    }
+    ovSerie.textContent = `${currentRound + 1} / ${series}`;
+  }
+
+  function updateProgress() {
+    const { exercises, currentRound, currentEx, totalSteps } = wkState;
+    progressFill.style.width = ((currentRound * exercises.length + currentEx) / totalSteps * 100) + '%';
+  }
+
+  function showCurrentStep() {
+    clearTimer();
+    const { exercises, reps, currentRound, currentEx } = wkState;
+    const ex = exercises[currentEx];
+    wkState.phase = 'exercise';
+
+    ovChip.className     = CL.chip;
+    ovChip.textContent   = `Ejercicio ${currentEx + 1} de ${exercises.length}`;
+    ovExname.textContent = ex.name;
+    ovExnote.textContent = ex.note ? `↳ ${ex.note}` : '';
+    cueBox.textContent   = ex.cue;
+    showExRef(ex, currentEx);
+    updateDots();
+    updateProgress();
+
+    repsDisplay.classList.remove('hidden'); repsDisplay.classList.add('flex');
+    ovRepsVal.className    = CL.repsValExercise;
+    ovRepsVal.textContent  = reps;
+    ovRepsUnit.textContent = 'REPETICIONES';
+    actionBtn.textContent  = '✓ LISTO';
+    actionBtn.className    = CL.actionReady;
+    actionBtn.onclick = () => afterExercise();
+  }
+
+  function afterExercise() {
+    clearTimer();
+    const { exercises, series, currentRound, currentEx } = wkState;
+    const isLastEx    = currentEx >= exercises.length - 1;
+    const isLastRound = currentRound >= series - 1;
+
+    if (isLastEx && isLastRound) {
+      progressFill.style.width = '100%';
+      showDone();
+    } else if (isLastEx) {
+      // Full lap done → rest between rounds
+      showCircuitRest();
+    } else {
+      // Next exercise in this lap → short rest (10s) then continue
+      showExRest();
+    }
+  }
+
+  function showExRest() {
+    clearTimer();
+    wkState.phase = 'rest';
+    const nextEx = wkState.exercises[wkState.currentEx + 1];
+    showRestState();
+    ovChip.className     = CL.chipRest;
+    ovChip.textContent   = '⏸ Descanso · 10 segundos';
+    ovExname.textContent = `A continuación: ${nextEx.name}`;
+    ovExnote.textContent = nextEx.note ? `↳ ${nextEx.note}` : '';
+    cueBox.textContent   = 'Respirá. Relajate. Preparate para el siguiente ejercicio.';
+
+    repsDisplay.classList.remove('hidden'); repsDisplay.classList.add('flex');
+    ovRepsVal.className    = CL.repsValRest;
+    ovRepsUnit.textContent = 'SEGUNDOS';
+    actionBtn.textContent  = '⏭ SALTAR';
+    actionBtn.className    = CL.actionRest;
+
+    let remaining = wkState.restSeconds;
+    ovRepsVal.textContent = remaining;
+    timerInterval = setInterval(() => {
+      remaining--;
+      ovRepsVal.textContent = remaining;
+      if (remaining <= 0) {
+        clearTimer(); playBeep();
+        wkState.currentEx++;
+        showCurrentStep();
+      }
+    }, 1000);
+    actionBtn.onclick = () => { clearTimer(); wkState.currentEx++; showCurrentStep(); };
+    updateDots();
+  }
+
+  function showCircuitRest() {
+    clearTimer();
+    wkState.phase = 'rest';
+    showRestState();
+    ovChip.className     = CL.chipRest;
+    ovChip.textContent   = `⏸ Vuelta ${wkState.currentRound + 1} completada`;
+    ovExname.textContent = `A continuación: vuelta ${wkState.currentRound + 2}`;
+    ovExnote.textContent = `Desde: ${wkState.exercises[0].name}`;
+    cueBox.textContent   = 'Respirá profundo. Tomá el descanso que necesitás antes de la próxima vuelta.';
+
+    repsDisplay.classList.remove('hidden'); repsDisplay.classList.add('flex');
+    ovRepsVal.className    = CL.repsValRest;
+    ovRepsUnit.textContent = 'SEGUNDOS';
+    actionBtn.textContent  = '⏭ SALTAR DESCANSO';
+    actionBtn.className    = CL.actionRest;
+
+    let remaining = 30;
+    ovRepsVal.textContent = remaining;
+    timerInterval = setInterval(() => {
+      remaining--;
+      ovRepsVal.textContent = remaining;
+      if (remaining <= 0) {
+        clearTimer(); playBeep();
+        wkState.currentRound++; wkState.currentEx = 0;
+        showCurrentStep();
+      }
+    }, 1000);
+    actionBtn.onclick = () => {
+      clearTimer(); wkState.currentRound++; wkState.currentEx = 0; showCurrentStep();
+    };
+    updateDots();
+  }
+
+  function showDone() {
+    ovContent.classList.add('hidden'); ovContent.classList.remove('flex');
+    doneScreen.classList.remove('hidden'); doneScreen.classList.add('flex');
+    doneEmoji.textContent = ROUTINES[selectedMode].emoji;
+    document.getElementById('mob-done-sub').textContent =
+      `Completaste ${wkState.series} vueltas · ${wkState.exercises.length * wkState.series} ejercicios totales. ${ROUTINES[selectedMode].doneMsg}`;
+  }
+
+  // ── EVENTS ────────────────────────────────────────────────────────────────
+  document.getElementById('mob-start-btn').addEventListener('click', startWorkout);
+
+  function closeOverlay() {
+    clearTimer();
+    overlay.classList.add('hidden'); overlay.classList.remove('flex');
+    ovContent.classList.remove('hidden'); ovContent.classList.add('flex');
+    doneScreen.classList.add('hidden'); doneScreen.classList.remove('flex');
+    cdScreen.classList.add('hidden'); cdScreen.classList.remove('flex');
+    progressFill.style.width = '0%';
+    restIcon.classList.add('hidden');
+    wkState = null;
+  }
+  document.getElementById('mob-close-overlay').addEventListener('click', closeOverlay);
+  document.getElementById('mob-done-close-btn').addEventListener('click', closeOverlay);
+
+  // ── INIT ──────────────────────────────────────────────────────────────────
+  renderCards();
+  </script>
+
+</BaseTailwind>

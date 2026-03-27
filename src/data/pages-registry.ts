@@ -53,6 +53,8 @@ export const pagesRegistry: PageEntry[] = [
   { id: 'calculadora', name: 'Calculadora', url: '/calculadora/', category: 'tool', icon: '🧮' },
   { id: 'nutricion', name: 'Nutrición', url: '/nutricion/', category: 'tool', icon: '🥗' },
   { id: 'entrenamiento', name: 'Entrenamiento', url: '/entrenamiento/', category: 'tool', icon: '🏋️' },
+  { id: 'movilidad', name: 'Movilidad', url: '/movilidad/', category: 'tool', icon: '🧘' },
+  { id: 'pausas-activas', name: 'Pausas Activas', url: '/pausas-activas/', category: 'tool', icon: '☀️' },
   { id: 'workspace-mapper', name: 'Workspace Mapper', url: '/workspace-mapper/', category: 'tool', icon: '🖥️' },
 
   // =====================

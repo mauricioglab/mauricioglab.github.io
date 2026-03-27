@@ -1,0 +1,305 @@
+---
+import BaseTailwind from '@layouts/BaseTailwind.astro';
+export const prerender = true;
+const title = 'Pausas Activas';
+---
+<BaseTailwind title={title} description="Pausas activas · 11 hs y 16 hs" lang="es" layoutType="tool" showPromptModal={false}>
+  <link slot="head" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <div id="pa-root" class="relative min-h-screen overflow-x-hidden font-['Syne',sans-serif] bg-[#07070e] text-[#eeeef8]">
+    <div aria-hidden="true" class="pointer-events-none fixed inset-0 z-0" style="background: radial-gradient(ellipse 60% 40% at 75% 10%, rgba(251,146,60,0.06) 0%, transparent 60%), radial-gradient(ellipse 50% 30% at 15% 85%, rgba(251,146,60,0.04) 0%, transparent 60%)"></div>
+    <header class="relative z-10 flex items-center gap-6 border-b border-[#1f1f38] px-10 py-8">
+      <div class="flex flex-col">
+        <span class="font-['Bebas_Neue',sans-serif] text-[2.8rem] leading-none tracking-[2px] text-[#fb923c]">PAUSAS ACTIVAS</span>
+        <span class="text-[0.7rem] font-semibold uppercase tracking-[4px] text-[#5a5a7a]">Movilidad de Escritorio · 11 hs y 16 hs</span>
+      </div>
+      <div class="ml-auto flex items-center gap-3">
+        <div id="pa-time-btns" class="flex gap-2">
+          <button data-slot="11" class="pa-time-btn flex items-center gap-2 rounded-xl border border-[#fb923c] bg-[rgba(251,146,60,0.1)] px-4 py-2 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#fb923c] cursor-pointer transition-all duration-200 shadow-[0_0_16px_rgba(251,146,60,0.2)]">☀️ <span>11 hs</span></button>
+          <button data-slot="16" class="pa-time-btn flex items-center gap-2 rounded-xl border border-[#1f1f38] bg-[#111120] px-4 py-2 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#5a5a7a] cursor-pointer transition-all duration-200 hover:border-[#fb923c] hover:text-[#eeeef8]">🌇 <span>16 hs</span></button>
+        </div>
+        <div class="rounded-full border border-[#1f1f38] bg-[#111120] px-4 py-1.5 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#5a5a7a]">2 Vueltas · 8 Reps</div>
+      </div>
+    </header>
+    <main class="relative z-10 mx-auto max-w-[1100px] px-8 py-10">
+      <div class="mb-8 flex items-start gap-4 rounded-2xl border border-[rgba(251,146,60,0.15)] bg-[rgba(251,146,60,0.05)] p-5">
+        <div id="pa-banner-emoji" class="text-[2rem] leading-none">☀️</div>
+        <div class="flex flex-col gap-1">
+          <div id="pa-banner-title" class="font-['Bebas_Neue',sans-serif] text-[1.1rem] tracking-[2px] text-[#fb923c]">PAUSA DE LAS 11 HS · EN EL ESCRITORIO</div>
+          <div class="text-[0.78rem] font-semibold leading-relaxed text-[#5a5a7a]">Controlá el movimiento. Despacio. Sentí cada parte del cuerpo que vas movilizando.</div>
+        </div>
+        <div class="ml-auto shrink-0 rounded-lg border border-[rgba(251,146,60,0.2)] bg-[rgba(251,146,60,0.08)] px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[2px] text-[#fb923c]">10 SEG PAUSA</div>
+      </div>
+      <div class="mb-5 flex items-center justify-between">
+        <div class="font-['Bebas_Neue',sans-serif] text-[1.8rem] tracking-[2px] text-[#eeeef8]">EJERCICIOS EN SILLA</div>
+        <div class="rounded-lg border border-[#1f1f38] bg-[#111120] px-3.5 py-1.5 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#fb923c]">2 SERIES · 4 EJERCICIOS</div>
+      </div>
+      <div id="pa-exercises-grid" class="mb-10 grid grid-cols-4 gap-4 max-sm:grid-cols-2"></div>
+      <div class="flex justify-center">
+        <button id="pa-start-btn" class="flex cursor-pointer items-center gap-4 rounded-2xl border-0 bg-[#fb923c] px-14 py-4 font-['Bebas_Neue',sans-serif] text-[1.5rem] tracking-[3px] text-[#07070e] shadow-[0_0_30px_rgba(251,146,60,0.2)] transition-all duration-200 hover:scale-[1.04] hover:shadow-[0_0_50px_rgba(251,146,60,0.4)]">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="h-[22px] w-[22px]"><path d="M8 5v14l11-7z"/></svg>
+          INICIAR PAUSA
+        </button>
+      </div>
+    </main>
+    <div id="pa-overlay" class="fixed inset-0 z-[200] hidden flex-col overflow-hidden bg-[#07070e]">
+      <div aria-hidden="true" class="pointer-events-none absolute inset-0" style="background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(251,146,60,0.05) 0%, transparent 70%)"></div>
+      <div class="relative z-10 h-1 w-full bg-[#1f1f38]">
+        <div id="pa-progress-fill" class="h-full bg-[#fb923c] transition-[width] duration-500" style="width:0%"></div>
+      </div>
+      <div class="relative z-10 flex items-center justify-between border-b border-[#1f1f38] px-8 py-5">
+        <div class="flex items-center gap-8">
+          <div class="flex flex-col gap-0.5">
+            <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Vuelta</span>
+            <span id="pa-ov-serie" class="font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[1px] text-[#eeeef8]">—</span>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Vueltas completadas</span>
+            <div id="pa-series-dots" class="flex items-center gap-1.5"></div>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Ejercicios en esta vuelta</span>
+            <div id="pa-ex-dots" class="flex items-center gap-1.5"></div>
+          </div>
+        </div>
+        <button id="pa-close-overlay" class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-[10px] border border-[#1f1f38] bg-[#111120] text-[1.2rem] text-[#5a5a7a] transition-all duration-200 hover:border-[#eeeef8] hover:text-[#eeeef8]">✕</button>
+      </div>
+      <div id="pa-ov-content" class="relative z-10 flex flex-1 items-center justify-center gap-12 px-8 py-6 max-sm:flex-col max-sm:gap-6">
+        <div class="flex flex-0 flex-col items-center gap-4" style="flex:0 0 280px">
+          <div id="pa-ov-ref-frame" class="relative flex h-[260px] w-[260px] flex-col items-center justify-center gap-2 overflow-hidden rounded-[20px] border-2 border-[rgba(251,146,60,0.2)] bg-[#0a0a15] transition-[border-color] duration-300">
+            <div id="pa-ex-number" class="font-['Bebas_Neue',sans-serif] text-[6rem] leading-none text-[rgba(251,146,60,0.15)]">1</div>
+            <a id="pa-yt-link" href="#" target="_blank" rel="noopener noreferrer" class="absolute bottom-4 flex items-center gap-2 rounded-lg border border-[rgba(251,146,60,0.2)] bg-[rgba(251,146,60,0.1)] px-3 py-2 text-[0.65rem] font-bold uppercase tracking-[2px] text-[#fb923c] transition-all duration-200 hover:bg-[rgba(251,146,60,0.2)]">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
+              Ver referencia
+            </a>
+            <div id="pa-rest-icon" class="hidden text-[4rem]">⏸</div>
+          </div>
+        </div>
+        <div class="flex max-w-[400px] flex-1 flex-col gap-6">
+          <div id="pa-ov-chip" class="inline-flex w-fit items-center gap-1.5 rounded-md border border-[rgba(251,146,60,0.2)] bg-[rgba(251,146,60,0.1)] px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[3px] text-[#fb923c]">Ejercicio</div>
+          <div class="flex flex-col gap-0.5">
+            <div id="pa-ov-exname" class="font-['Bebas_Neue',sans-serif] text-[clamp(2rem,4vw,3rem)] leading-none tracking-[1px] text-[#eeeef8]">—</div>
+            <div id="pa-ov-exnote" class="text-[0.75rem] font-semibold uppercase tracking-[2px] text-[#fb923c]"></div>
+          </div>
+          <div id="pa-reps-display" class="flex items-baseline gap-2.5">
+            <div id="pa-ov-reps-val" class="font-['Bebas_Neue',sans-serif] text-[5rem] leading-none text-[#fb923c]">8</div>
+            <div id="pa-ov-reps-unit" class="mb-2 self-end text-[0.75rem] font-bold uppercase tracking-[3px] text-[#5a5a7a]">REPETICIONES</div>
+          </div>
+          <div id="pa-cue-box" class="rounded-xl border border-[#1f1f38] bg-[#111120] px-4 py-3 text-[0.78rem] font-medium leading-relaxed text-[#5a5a7a]">Controlá el movimiento. Despacio.</div>
+          <button id="pa-action-btn" class="w-full cursor-pointer rounded-[14px] border-0 bg-[#fb923c] px-10 py-3.5 font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[2px] text-[#07070e] shadow-[0_0_20px_rgba(251,146,60,0.2)] transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(251,146,60,0.4)]">✓ LISTO</button>
+        </div>
+      </div>
+      <div id="pa-done-screen" class="relative z-10 hidden flex-1 flex-col items-center justify-center gap-6 p-8 text-center">
+        <div id="pa-done-emoji" class="text-[5rem]">☀️</div>
+        <div class="font-['Bebas_Neue',sans-serif] text-[4rem] tracking-[2px] text-[#fb923c]">¡PAUSA COMPLETADA!</div>
+        <div id="pa-done-sub" class="max-w-[400px] text-[0.9rem] font-medium leading-relaxed text-[#5a5a7a]"></div>
+        <button id="pa-done-close-btn" class="w-full max-w-[300px] cursor-pointer rounded-[14px] border-0 bg-[#fb923c] px-10 py-3.5 font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[2px] text-[#07070e] transition-all duration-200 hover:scale-[1.02]">VOLVER AL INICIO</button>
+      </div>
+      <div id="pa-countdown-screen" class="absolute inset-0 z-10 hidden flex-col items-center justify-center gap-4 bg-[#07070e]">
+        <div id="pa-cd-number" class="font-['Bebas_Neue',sans-serif] text-[12rem] leading-none text-[#fb923c]">3</div>
+        <div class="text-[0.8rem] font-semibold uppercase tracking-[6px] text-[#5a5a7a]">Prepárate</div>
+      </div>
+    </div>
+  </div>
+  <style>
+    @keyframes paPulseCount { from { transform: scale(1.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  </style>
+  <script>
+  const SLOTS = {
+    '11': { label: 'PAUSA DE LAS 11 HS', emoji: '☀️', banner: 'PAUSA DE LAS 11 HS · EN EL ESCRITORIO', doneMsg: 'Bien. Seguí con energía. Ya falta poco para el almuerzo.' },
+    '16': { label: 'PAUSA DE LAS 16 HS', emoji: '🌇', banner: 'PAUSA DE LAS 16 HS · EN EL ESCRITORIO', doneMsg: 'Perfecto. Terminás el día con el cuerpo suelto.' },
+  };
+  const EXERCISES = [
+    { name: 'Flexión de Cuello y Columna Sentado', note: 'En silla', cue: 'Dejá caer la cabeza lentamente. Sentí cada vértebra. Respirá profundo en la posición final.', url: 'https://youtube.com/shorts/lBm6oUekF3k' },
+    { name: 'Rotación de Tronco Sentado', note: 'En silla · por lado', cue: 'Rotá desde la cadera, no solo los hombros. Mantené los pies apoyados en el suelo.', url: 'https://youtube.com/shorts/WbYwRcR6sHc' },
+    { name: 'Extensión Lumbar en Silla', note: 'En silla · manos en nuca', cue: 'Extendé la columna sobre el respaldo. Abrí el pecho. Respirá en extensión, exhalá al volver.', url: 'https://drive.google.com/file/d/1e2kXPpSIneV42tkC7zcfjxaKfqCrbZXe/view?usp=drive_link' },
+    { name: 'Elevación de Rodillas Sentado', note: 'En silla · alternado', cue: 'Activá el core al elevating cada rodilla. Movimiento controlado. Espalda recta contra el respaldo.', url: 'https://drive.google.com/file/d/1yUSHYe3JyDYBAEM4BFWmvK6iFfM8DgJT/view?usp=drive_link' },
+  ];
+  const SERIES = 2, REPS = 8, REST = 10;
+  let selectedSlot = '11', wkState = null, timerInterval = null;
+  const CL = {
+    chip:     'inline-flex w-fit items-center gap-1.5 rounded-md border border-[rgba(251,146,60,0.2)] bg-[rgba(251,146,60,0.1)] px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[3px] text-[#fb923c]',
+    chipRest: 'inline-flex w-fit items-center gap-1.5 rounded-md border border-[rgba(250,204,21,0.2)] bg-[rgba(250,204,21,0.1)] px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[3px] text-[#facc15]',
+    actionReady: "w-full cursor-pointer rounded-[14px] border-0 bg-[#fb923c] px-10 py-3.5 font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[2px] text-[#07070e] shadow-[0_0_20px_rgba(251,146,60,0.2)] transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(251,146,60,0.4)]",
+    actionRest:  "w-full cursor-pointer rounded-[14px] border-0 bg-[#facc15] px-10 py-3.5 font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[2px] text-[#07070e] shadow-[0_0_20px_rgba(250,204,21,0.2)] transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(250,204,21,0.4)]",
+    repsVal:     "font-['Bebas_Neue',sans-serif] text-[5rem] leading-none text-[#fb923c]",
+    repsValRest: "font-['Bebas_Neue',sans-serif] text-[5rem] leading-none text-[#facc15]",
+    slotActive:   "pa-time-btn flex items-center gap-2 rounded-xl border border-[#fb923c] bg-[rgba(251,146,60,0.1)] px-4 py-2 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#fb923c] cursor-pointer transition-all duration-200 shadow-[0_0_16px_rgba(251,146,60,0.2)]",
+    slotInactive: "pa-time-btn flex items-center gap-2 rounded-xl border border-[#1f1f38] bg-[#111120] px-4 py-2 text-[0.7rem] font-bold uppercase tracking-[3px] text-[#5a5a7a] cursor-pointer transition-all duration-200 hover:border-[#fb923c] hover:text-[#eeeef8]",
+  };
+  const overlay      = document.getElementById('pa-overlay');
+  const ovChip       = document.getElementById('pa-ov-chip');
+  const ovExname     = document.getElementById('pa-ov-exname');
+  const ovExnote     = document.getElementById('pa-ov-exnote');
+  const ovRepsVal    = document.getElementById('pa-ov-reps-val');
+  const ovRepsUnit   = document.getElementById('pa-ov-reps-unit');
+  const cueBox       = document.getElementById('pa-cue-box');
+  const actionBtn    = document.getElementById('pa-action-btn');
+  const progressFill = document.getElementById('pa-progress-fill');
+  const ovSerie      = document.getElementById('pa-ov-serie');
+  const seriesDots   = document.getElementById('pa-series-dots');
+  const exDots       = document.getElementById('pa-ex-dots');
+  const exNumber     = document.getElementById('pa-ex-number');
+  const ytLink       = document.getElementById('pa-yt-link');
+  const restIcon     = document.getElementById('pa-rest-icon');
+  const ovContent    = document.getElementById('pa-ov-content');
+  const doneScreen   = document.getElementById('pa-done-screen');
+  const cdScreen     = document.getElementById('pa-countdown-screen');
+  const cdNumber     = document.getElementById('pa-cd-number');
+
+  function clearTimer() { if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } }
+  function playBeep() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      [[0,880],[0.18,1100],[0.36,1320]].forEach(([w,f]) => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination); o.type = 'sine'; o.frequency.value = f;
+        g.gain.setValueAtTime(0.4,ctx.currentTime+w); g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+w+0.15);
+        o.start(ctx.currentTime+w); o.stop(ctx.currentTime+w+0.15);
+      });
+    } catch(e){}
+  }
+  function showExRef(ex, idx) { restIcon.classList.add('hidden'); exNumber.textContent=idx+1; exNumber.classList.remove('hidden'); ytLink.href=ex.url; ytLink.classList.remove('hidden'); }
+  function showRestState() { exNumber.classList.add('hidden'); ytLink.classList.add('hidden'); restIcon.classList.remove('hidden'); }
+
+  function renderCards() {
+    const grid = document.getElementById('pa-exercises-grid');
+    grid.innerHTML = '';
+    EXERCISES.forEach((ex, i) => {
+      const card = document.createElement('div');
+      card.className = 'overflow-hidden rounded-2xl border border-[#1f1f38] bg-[#111120] transition-all duration-200 hover:-translate-y-1 hover:border-[rgba(251,146,60,0.3)]';
+      card.innerHTML = `
+        <div class="relative aspect-square w-full overflow-hidden bg-[#0a0a15] flex flex-col items-center justify-center">
+          <div class="font-['Bebas_Neue',sans-serif] text-[5rem] leading-none text-[rgba(251,146,60,0.12)]">${i+1}</div>
+          <a href="${ex.url}" target="_blank" rel="noopener noreferrer" class="absolute bottom-3 flex items-center gap-1.5 rounded-lg border border-[rgba(251,146,60,0.2)] bg-[rgba(251,146,60,0.08)] px-3 py-1.5 text-[0.6rem] font-bold uppercase tracking-[2px] text-[#fb923c] transition-all duration-200 hover:bg-[rgba(251,146,60,0.2)]">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-3.5 w-3.5"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
+            Ver referencia
+          </a>
+          <div class="absolute left-2 top-2 flex h-7 w-7 items-center justify-center rounded-md border border-[#1f1f38] bg-black/75 font-['Bebas_Neue',sans-serif] text-[1.2rem] text-[#fb923c]">${i+1}</div>
+        </div>
+        <div class="p-4">
+          <div class="mb-2.5 min-h-[2.8em] text-[0.82rem] font-bold leading-snug text-[#eeeef8]">${ex.name}</div>
+          <div class="flex items-center gap-2 font-['Bebas_Neue',sans-serif] text-[1.6rem] tracking-[1px] text-[#fb923c]">
+            <span>${REPS}</span>
+            <span class="mb-[-4px] self-end text-[0.6rem] font-['Syne',sans-serif] font-semibold uppercase tracking-[2px] text-[#5a5a7a]">REPS</span>
+          </div>
+          ${ex.note ? `<div class="mt-1 text-[0.65rem] font-semibold uppercase tracking-[2px] text-[rgba(251,146,60,0.6)]">↳ ${ex.note}</div>` : ''}
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  document.getElementById('pa-time-btns').addEventListener('click', e => {
+    const btn = e.target.closest('.pa-time-btn');
+    if (!btn) return;
+    selectedSlot = btn.dataset.slot;
+    document.querySelectorAll('.pa-time-btn').forEach(b => { b.className = b === btn ? CL.slotActive : CL.slotInactive; });
+    const s = SLOTS[selectedSlot];
+    document.getElementById('pa-banner-emoji').textContent = s.emoji;
+    document.getElementById('pa-banner-title').textContent = s.banner;
+    document.getElementById('pa-done-emoji').textContent   = s.emoji;
+  });
+
+  function startWorkout() {
+    wkState = { currentRound: 0, currentEx: 0, phase: 'exercise', totalSteps: SERIES * EXERCISES.length };
+    overlay.classList.remove('hidden'); overlay.classList.add('flex');
+    doneScreen.classList.add('hidden'); doneScreen.classList.remove('flex');
+    ovContent.classList.remove('hidden'); ovContent.classList.add('flex');
+    startCountdown(() => showCurrentStep());
+  }
+
+  function startCountdown(cb) {
+    cdScreen.classList.remove('hidden'); cdScreen.classList.add('flex');
+    let n = 3; cdNumber.textContent = n;
+    cdNumber.style.animation = 'none'; void cdNumber.offsetWidth; cdNumber.style.animation = 'paPulseCount 1s ease-out';
+    const iv = setInterval(() => {
+      n--;
+      if (n <= 0) { clearInterval(iv); cdScreen.classList.add('hidden'); cdScreen.classList.remove('flex'); cb(); }
+      else { cdNumber.textContent = n; cdNumber.style.animation = 'none'; void cdNumber.offsetWidth; cdNumber.style.animation = 'paPulseCount 1s ease-out'; }
+    }, 1000);
+  }
+
+  function updateDots() {
+    const { currentRound, currentEx, phase } = wkState;
+    seriesDots.innerHTML = '';
+    for (let i = 0; i < SERIES; i++) {
+      const d = document.createElement('div');
+      if (i < currentRound) d.className = 'h-2 w-2 rounded-full bg-[rgba(251,146,60,0.4)]';
+      else if (i === currentRound) d.className = 'h-2 w-2 rounded-full bg-[#fb923c] shadow-[0_0_8px_rgba(251,146,60,0.5)]';
+      else d.className = 'h-2 w-2 rounded-full border border-[#1f1f38] bg-[#1f1f38]';
+      seriesDots.appendChild(d);
+    }
+    exDots.innerHTML = '';
+    for (let i = 0; i < EXERCISES.length; i++) {
+      const d = document.createElement('div');
+      if (phase === 'exercise' && i < currentEx) d.className = 'h-1 w-7 rounded-sm bg-[rgba(251,146,60,0.4)]';
+      else if (phase === 'exercise' && i === currentEx) d.className = 'h-1 w-7 rounded-sm bg-[#fb923c]';
+      else if (phase !== 'exercise') d.className = 'h-1 w-7 rounded-sm bg-[rgba(251,146,60,0.4)]';
+      else d.className = 'h-1 w-7 rounded-sm bg-[#1f1f38]';
+      exDots.appendChild(d);
+    }
+    ovSerie.textContent = `${currentRound + 1} / ${SERIES}`;
+  }
+
+  function updateProgress() {
+    progressFill.style.width = ((wkState.currentRound * EXERCISES.length + wkState.currentEx) / wkState.totalSteps * 100) + '%';
+  }
+
+  function showCurrentStep() {
+    clearTimer();
+    const ex = EXERCISES[wkState.currentEx];
+    wkState.phase = 'exercise';
+    ovChip.className = CL.chip; ovChip.textContent = `Ejercicio ${wkState.currentEx + 1} de ${EXERCISES.length}`;
+    ovExname.textContent = ex.name; ovExnote.textContent = ex.note ? `↳ ${ex.note}` : '';
+    cueBox.textContent = ex.cue; showExRef(ex, wkState.currentEx);
+    updateDots(); updateProgress();
+    ovRepsVal.className = CL.repsVal; ovRepsVal.textContent = REPS; ovRepsUnit.textContent = 'REPETICIONES';
+    actionBtn.textContent = '✓ LISTO'; actionBtn.className = CL.actionReady;
+    actionBtn.onclick = () => afterExercise();
+  }
+
+  function afterExercise() {
+    clearTimer();
+    const isLastEx    = wkState.currentEx >= EXERCISES.length - 1;
+    const isLastRound = wkState.currentRound >= SERIES - 1;
+    if (isLastEx && isLastRound) { progressFill.style.width = '100%'; showDone(); }
+    else if (isLastEx) {
+      showRest(30, () => { wkState.currentRound++; wkState.currentEx = 0; showCurrentStep(); },
+        `Vuelta ${wkState.currentRound + 1} completada`, `A continuación: vuelta ${wkState.currentRound + 2}`);
+    } else {
+      showRest(REST, () => { wkState.currentEx++; showCurrentStep(); },
+        `⏸ Descanso · ${REST} segundos`, `A continuación: ${EXERCISES[wkState.currentEx + 1].name}`);
+    }
+  }
+
+  function showRest(seconds, cb, title, subtitle) {
+    clearTimer(); wkState.phase = 'rest'; showRestState();
+    ovChip.className = CL.chipRest; ovChip.textContent = title;
+    ovExname.textContent = subtitle; ovExnote.textContent = '';
+    cueBox.textContent = 'Respirá. Relajate. Ya falta poco.';
+    ovRepsVal.className = CL.repsValRest; ovRepsUnit.textContent = 'SEGUNDOS';
+    actionBtn.textContent = '⏭ SALTAR'; actionBtn.className = CL.actionRest;
+    let remaining = seconds; ovRepsVal.textContent = remaining;
+    timerInterval = setInterval(() => { remaining--; ovRepsVal.textContent = remaining; if (remaining <= 0) { clearTimer(); playBeep(); cb(); } }, 1000);
+    actionBtn.onclick = () => { clearTimer(); cb(); };
+    updateDots();
+  }
+
+  function showDone() {
+    ovContent.classList.add('hidden'); ovContent.classList.remove('flex');
+    doneScreen.classList.remove('hidden'); doneScreen.classList.add('flex');
+    document.getElementById('pa-done-sub').textContent = `Completaste ${SERIES} vueltas · ${EXERCISES.length * SERIES} ejercicios. ${SLOTS[selectedSlot].doneMsg}`;
+  }
+
+  document.getElementById('pa-start-btn').addEventListener('click', startWorkout);
+  function closeOverlay() {
+    clearTimer(); overlay.classList.add('hidden'); overlay.classList.remove('flex');
+    ovContent.classList.remove('hidden'); ovContent.classList.add('flex');
+    doneScreen.classList.add('hidden'); doneScreen.classList.remove('flex');
+    cdScreen.classList.add('hidden'); cdScreen.classList.remove('flex');
+    progressFill.style.width = '0%'; showRestState(); restIcon.classList.add('hidden'); wkState = null;
+  }
+  document.getElementById('pa-close-overlay').addEventListener('click', closeOverlay);
+  document.getElementById('pa-done-close-btn').addEventListener('click', closeOverlay);
+  renderCards();
+  </script>
+</BaseTailwind>

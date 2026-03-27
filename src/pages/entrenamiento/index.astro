@@ -137,12 +137,12 @@ const gifBase = `${basePath}entrenamiento/`;
         <div class="flex items-center gap-8">
           <!-- Serie -->
           <div class="flex flex-col gap-0.5">
-            <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Serie</span>
+            <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Vuelta</span>
             <span id="ent-ov-serie" class="font-['Bebas_Neue',sans-serif] text-[1.4rem] tracking-[1px] text-[#eeeef8]">—</span>
           </div>
-          <!-- Series dots -->
+          <!-- Round dots -->
           <div class="flex flex-col gap-1.5">
-            <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Series completadas</span>
+            <span class="text-[0.6rem] font-bold uppercase tracking-[4px] text-[#5a5a7a]">Vueltas completadas</span>
             <div id="ent-series-dots" class="flex items-center gap-1.5"></div>
           </div>
           <!-- Ex dots -->
@@ -540,7 +540,7 @@ const gifBase = `${basePath}entrenamiento/`;
     const wk = w.weeks[selectedWeek];
     wkState = {
       exercises: w.exercises, week: wk,
-      currentSerie: 0, currentEx: 0, phase: 'exercise',
+      currentRound: 0, currentEx: 0, phase: 'exercise',
       totalSteps: wk.series * w.exercises.length,
     };
     overlay.classList.remove('hidden');
@@ -578,43 +578,44 @@ const gifBase = `${basePath}entrenamiento/`;
   }
 
   function updateDots() {
-    const { week, currentSerie, currentEx, phase } = wkState;
+    const { week, currentRound, currentEx, phase } = wkState;
+    // Round dots: how many complete circuit laps
     seriesDots.innerHTML = '';
     for (let i = 0; i < week.series; i++) {
       const d = document.createElement('div');
-      d.className = 'h-2 w-2 rounded-full border border-[#1f1f38] bg-[#1f1f38] transition-all duration-300';
-      if (i < currentSerie)  { d.className = 'h-2 w-2 rounded-full bg-[#6a9400] border-[#6a9400] transition-all duration-300'; }
-      if (i === currentSerie){ d.className = 'h-2 w-2 rounded-full bg-[#b8ff00] border-[#b8ff00] shadow-[0_0_8px_rgba(184,255,0,0.5)] transition-all duration-300'; }
+      if (i < currentRound)   d.className = 'h-2 w-2 rounded-full bg-[#6a9400] border-[#6a9400] transition-all duration-300';
+      else if (i === currentRound) d.className = 'h-2 w-2 rounded-full bg-[#b8ff00] border-[#b8ff00] shadow-[0_0_8px_rgba(184,255,0,0.5)] transition-all duration-300';
+      else                    d.className = 'h-2 w-2 rounded-full border border-[#1f1f38] bg-[#1f1f38] transition-all duration-300';
       seriesDots.appendChild(d);
     }
+    // Exercise dots: position within the current round
     exDots.innerHTML = '';
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < wkState.exercises.length; i++) {
       const d = document.createElement('div');
-      let cls = 'h-1 w-7 rounded-sm bg-[#1f1f38] transition-all duration-300';
-      if (phase === 'exercise' && i < currentEx)  cls = 'h-1 w-7 rounded-sm bg-[#6a9400] transition-all duration-300';
-      if (phase === 'exercise' && i === currentEx) cls = 'h-1 w-7 rounded-sm bg-[#b8ff00] transition-all duration-300';
-      if (phase !== 'exercise') cls = 'h-1 w-7 rounded-sm bg-[#6a9400] transition-all duration-300';
-      d.className = cls;
+      if (phase === 'exercise' && i < currentEx)   d.className = 'h-1 w-7 rounded-sm bg-[#6a9400] transition-all duration-300';
+      else if (phase === 'exercise' && i === currentEx) d.className = 'h-1 w-7 rounded-sm bg-[#b8ff00] transition-all duration-300';
+      else if (phase !== 'exercise')               d.className = 'h-1 w-7 rounded-sm bg-[#6a9400] transition-all duration-300';
+      else                                         d.className = 'h-1 w-7 rounded-sm bg-[#1f1f38] transition-all duration-300';
       exDots.appendChild(d);
     }
-    ovSerie.textContent = `${currentSerie + 1} / ${week.series}`;
+    ovSerie.textContent = `${currentRound + 1} / ${week.series}`;
   }
 
   function updateProgress() {
-    const { week, currentSerie, currentEx, totalSteps } = wkState;
-    progressFill.style.width = ((currentSerie * 3 + currentEx) / totalSteps * 100) + '%';
+    const { exercises, currentRound, currentEx, totalSteps } = wkState;
+    progressFill.style.width = ((currentRound * exercises.length + currentEx) / totalSteps * 100) + '%';
   }
 
   function showCurrentStep() {
     clearTimer();
-    const { exercises, week, currentSerie, currentEx } = wkState;
+    const { exercises, week, currentRound, currentEx } = wkState;
     const ex = exercises[currentEx];
     const val = week.values[currentEx];
     const isTime = ex.type === 'time';
 
     setOverlayMode('exercise');
     ovChip.className   = CL.chipExercise;
-    ovChip.textContent = `Ejercicio ${currentEx + 1} de 3`;
+    ovChip.textContent = `Ejercicio ${currentEx + 1} de ${exercises.length}`;
     ovExname.textContent = ex.name;
     ovExnote.textContent = ex.note ? `⚡ ${ex.note}` : '';
     showGif(ex.gif);
@@ -657,53 +658,45 @@ const gifBase = `${basePath}entrenamiento/`;
     }, 1000);
   }
 
+  // ── CIRCUIT MODE: no rest between exercises, rest only between rounds ────
   function afterExercise() {
     clearTimer();
-    const { exercises, week, currentSerie, currentEx } = wkState;
-    const isLastSerie = currentSerie >= week.series - 1;
+    const { exercises, week, currentRound, currentEx } = wkState;
     const isLastEx    = currentEx >= exercises.length - 1;
-    if (isLastSerie && isLastEx) {
+    const isLastRound = currentRound >= week.series - 1;
+
+    if (isLastEx && isLastRound) {
+      // All rounds done
       progressFill.style.width = '100%';
       showDone();
-    } else if (!isLastSerie) {
-      showSeriesRest();
+    } else if (isLastEx) {
+      // Completed one full circuit lap → rest before next round
+      showCircuitRest();
     } else {
-      showExRest();
+      // More exercises in this lap → go directly, no rest
+      wkState.currentEx++;
+      showCurrentStep();
     }
   }
 
-  function showSeriesRest() {
+  function showCircuitRest() {
     clearTimer(); hideGif();
     setOverlayMode('rest');
     ovChip.className   = CL.chipRest;
-    ovChip.textContent = '⏸ Descanso entre series';
-    const ex = wkState.exercises[wkState.currentEx];
-    ovExname.textContent = `Serie ${wkState.currentSerie + 1} completada · ${ex.name}`;
-    ovExnote.textContent = '';
-    timerDisplay.classList.add('hidden'); timerDisplay.classList.remove('flex');
-    repsDisplay.classList.remove('hidden'); repsDisplay.classList.add('flex');
-    ovRepsVal.className    = CL.repsValRest;
-    ovRepsUnit.textContent = 'SEGUNDOS DE PAUSA';
-    timerArc.style.stroke  = '#3b82f6';
-    showRestTimer(30, () => { wkState.currentSerie++; showCurrentStep(); });
-  }
-
-  function showExRest() {
-    clearTimer(); hideGif();
-    setOverlayMode('rest');
-    ovChip.className   = CL.chipRest;
-    ovChip.textContent = '⏸ Descanso';
-    const nextEx = wkState.exercises[wkState.currentEx + 1];
-    ovExname.textContent = `A continuación: ${nextEx.name}`;
-    ovExnote.textContent = '';
+    ovChip.textContent = '⏸ Descanso entre vueltas';
+    const completedRound = wkState.currentRound + 1;
+    const totalRounds    = wkState.week.series;
+    const nextEx         = wkState.exercises[0]; // first exercise of next round
+    ovExname.textContent = `Vuelta ${completedRound} / ${totalRounds} completada`;
+    ovExnote.textContent = `A continuación: ${nextEx.name}`;
     timerDisplay.classList.add('hidden'); timerDisplay.classList.remove('flex');
     repsDisplay.classList.remove('hidden'); repsDisplay.classList.add('flex');
     ovRepsVal.className    = CL.repsValRest;
     ovRepsUnit.textContent = 'SEGUNDOS DE PAUSA';
     timerArc.style.stroke  = '#3b82f6';
     showRestTimer(30, () => {
-      wkState.currentEx++;
-      wkState.currentSerie = 0;
+      wkState.currentRound++;
+      wkState.currentEx = 0;
       showCurrentStep();
     });
   }
