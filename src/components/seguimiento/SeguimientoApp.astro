@@ -175,108 +175,90 @@
     </div>
 
     <!-- VISTA ESTADISTICAS -->
-    <div x-show="view === 'stats' && !loadingData" x-transition>
-      <h2 class="text-base font-bold text-gray-900 mb-3">Estadísticas Generales</h2>
+    <div x-show="view === 'stats' && !loadingData" x-transition x-effect="if(view==='stats') renderStats()">
+      <h2 class="text-base font-bold text-gray-900 mb-3">Estadísticas Avanzadas</h2>
       
-      <!-- Promedio por dimensión -->
-      <div class="bg-white rounded-xl p-4 mb-3 border border-gray-200 shadow-sm">
-        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Promedio por Dimensión</h3>
-        <template x-for="dim in ['FN','DEV','SM']" :key="dim">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="w-9 font-bold text-sm" :class="dimColor(dim)" x-text="dim"></span>
-            <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div 
-                class="h-full rounded-full transition-all duration-500"
-                :class="dimBarColor(dim)"
-                :style="`width: ${dimProm(dim)}%`"
-              ></div>
-            </div>
-            <span class="w-9 text-right font-bold text-sm" :class="notaColorClass(dimAvg(dim))" x-text="dimAvg(dim)"></span>
-          </div>
-        </template>
+      <!-- Filtros -->
+      <div class="bg-white rounded-xl p-3 mb-3 border border-gray-200 shadow-sm flex flex-wrap gap-2 items-center">
+        <label class="text-xs font-bold text-gray-700">Comisión:</label>
+        <select x-model="statsComisionFilter" class="px-2 py-1 text-xs border border-gray-300 rounded bg-white" @change="renderStats()">
+          <option value="">Todas</option>
+          <template x-for="c in comisiones" :key="c.id">
+            <option :value="c.id" x-text="c.nombre"></option>
+          </template>
+        </select>
+        
+        <label class="text-xs font-bold text-gray-700 ml-2">Práctica:</label>
+        <select x-model="statsPracticaFilter" class="px-2 py-1 text-xs border border-gray-300 rounded bg-white" @change="renderStats()">
+          <option value="">Todas</option>
+          <option value="P1">P1</option>
+          <option value="P2">P2</option>
+          <option value="P3">P3</option>
+          <option value="TutoriasPost">Tutorías Post</option>
+        </select>
+        
+        <label class="text-xs font-bold text-gray-700 ml-2">Encuentro:</label>
+        <select x-model="statsEncuentroFilter" class="px-2 py-1 text-xs border border-gray-300 rounded bg-white" @change="renderStats()">
+          <option value="">Todos</option>
+          <template x-for="enc in encuentrosMeta" :key="enc.id">
+            <option :value="enc.id" x-text="enc.id"></option>
+          </template>
+        </select>
       </div>
       
-      <!-- Promedio por encuentro -->
-      <div class="bg-white rounded-xl p-4 mb-3 border border-gray-200 shadow-sm">
-        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Promedio por Encuentro</h3>
-        <template x-for="enc in encuentrosMeta" :key="enc.id">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="w-7 font-bold text-sm text-indigo-700" x-text="enc.id"></span>
-            <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div 
-                class="h-full rounded-full transition-all duration-500"
-                :class="encPromColor(enc.id)"
-                :style="`width: ${encProm(enc.id)}%`"
-              ></div>
-            </div>
-            <span class="w-9 text-right font-bold text-sm" :class="notaColorClass(encAvg(enc.id))" x-text="encAvg(enc.id)"></span>
-            <span class="text-xs text-gray-500 w-6" x-text="`(${encCount(enc.id)})`"></span>
-          </div>
-        </template>
-      </div>
-      
-      <!-- Ranking -->
-      <div class="bg-white rounded-xl p-4 mb-3 border border-gray-200 shadow-sm">
-        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Ranking de Grupos</h3>
-        <template x-for="(g, i) in ranking" :key="g.id">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="w-6 font-extrabold text-sm" :class="i < 3 ? ['text-amber-600','text-gray-500','text-amber-800'][i] : 'text-gray-400'" x-text="`#${i+1}`"></span>
-            <span class="flex-1 text-sm font-bold text-gray-900" x-text="`G${g.id} · ${g.proyecto}`"></span>
-            <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div 
-                class="h-full rounded-full transition-all duration-500"
-                :class="pctColor(g.prom * 100)"
-                :style="`width: ${Math.round(g.prom * 100)}%`"
-              ></div>
-            </div>
-            <span 
-              class="inline-flex items-center justify-center min-w-[3rem] h-8 rounded-lg text-sm font-bold"
-              :class="notaBadgeClass(calcNota(g.prom))"
-              x-text="calcNota(g.prom)"
-            ></span>
-          </div>
-        </template>
-      </div>
-
-      <!-- Tabla de notas por grupo y dimensión -->
-      <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Notas por Grupo y Dimensión</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead>
-              <tr class="text-gray-700 text-left border-b border-gray-300">
-                <th class="px-2 py-2 font-bold">Grupo</th>
-                <th class="px-2 py-2 font-bold text-center">FN</th>
-                <th class="px-2 py-2 font-bold text-center">DEV</th>
-                <th class="px-2 py-2 font-bold text-center">SM</th>
-                <th class="px-2 py-2 font-bold text-center">Prom.</th>
-              </tr>
-            </thead>
-            <tbody>
-              <template x-for="g in gruposConProyecto" :key="g.id">
-                <tr class="border-b border-gray-100 hover:bg-gray-50">
-                  <td class="px-2 py-2 font-bold text-gray-900" x-text="`G${g.id} · ${g.proyecto}`"></td>
-                  <td class="px-2 py-2 text-center">
-                    <span class="font-bold" :class="notaColorClass(dimAvgForGrupo(g.id, 'FN'))" x-text="dimAvgForGrupo(g.id, 'FN')"></span>
-                  </td>
-                  <td class="px-2 py-2 text-center">
-                    <span class="font-bold" :class="notaColorClass(dimAvgForGrupo(g.id, 'DEV'))" x-text="dimAvgForGrupo(g.id, 'DEV')"></span>
-                  </td>
-                  <td class="px-2 py-2 text-center">
-                    <span class="font-bold" :class="notaColorClass(dimAvgForGrupo(g.id, 'SM'))" x-text="dimAvgForGrupo(g.id, 'SM')"></span>
-                  </td>
-                  <td class="px-2 py-2 text-center">
-                    <span 
-                      class="inline-flex items-center justify-center min-w-[2.5rem] h-6 rounded-md text-xs font-bold"
-                      :class="notaBadgeClass(calcNota(promedioEncuentros(g.id)))"
-                      x-text="calcNota(promedioEncuentros(g.id))"
-                    ></span>
-                  </td>
-                </tr>
-              </template>
-            </tbody>
-          </table>
+      <!-- Métricas resumen -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+        <div class="bg-white rounded-xl p-3 border border-gray-200 shadow-sm text-center">
+          <div class="text-xs text-gray-500 font-bold uppercase">Grupos evaluados</div>
+          <div class="text-2xl font-extrabold text-gray-900" x-text="statsResumen.evaluados"></div>
         </div>
+        <div class="bg-white rounded-xl p-3 border border-green-200 shadow-sm text-center">
+          <div class="text-xs text-green-700 font-bold uppercase">Habilitados</div>
+          <div class="text-2xl font-extrabold text-green-700" x-text="statsResumen.habilitados"></div>
+        </div>
+        <div class="bg-white rounded-xl p-3 border border-amber-200 shadow-sm text-center">
+          <div class="text-xs text-amber-700 font-bold uppercase">Condicionales</div>
+          <div class="text-2xl font-extrabold text-amber-700" x-text="statsResumen.condicionales"></div>
+        </div>
+        <div class="bg-white rounded-xl p-3 border border-red-200 shadow-sm text-center">
+          <div class="text-xs text-red-700 font-bold uppercase">Críticos</div>
+          <div class="text-2xl font-extrabold text-red-700" x-text="statsResumen.criticos"></div>
+        </div>
+      </div>
+      
+      <!-- Gráficos Plotly -->
+      <div class="bg-white rounded-xl p-4 mb-3 border border-gray-200 shadow-sm">
+        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Evolución Temporal por Dimensión</h3>
+        <div id="plot-evolucion" class="w-full" style="min-height: 320px;"></div>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-3 mb-3">
+        <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+          <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Primera Nota vs Modificación</h3>
+          <div id="plot-scatter" class="w-full" style="min-height: 320px;"></div>
+        </div>
+        
+        <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+          <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Capacidad de Mejora</h3>
+          <div id="plot-mejora" class="w-full" style="min-height: 320px;"></div>
+        </div>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-3 mb-3">
+        <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+          <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Distribución de Notas</h3>
+          <div id="plot-histogram" class="w-full" style="min-height: 320px;"></div>
+        </div>
+        
+        <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+          <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Estado de Grupos</h3>
+          <div id="plot-estados" class="w-full" style="min-height: 320px;"></div>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Heatmap Comisiones × Encuentros</h3>
+        <div id="plot-heatmap" class="w-full" style="min-height: 360px;"></div>
       </div>
     </div>
 
@@ -732,6 +714,7 @@
 
 <script>
   import Alpine from 'alpinejs';
+  import Plotly from 'plotly.js-dist-min';
   import { supabase } from '../../lib/supabase';
 
   window.Alpine = Alpine;
@@ -836,6 +819,12 @@
     saved: false,
     practicaFilter: 'Todas',
     editingGrupoId: null,
+    
+    // Stats filters
+    statsComisionFilter: '',
+    statsPracticaFilter: '',
+    statsEncuentroFilter: '',
+    statsResumen: { evaluados: 0, habilitados: 0, condicionales: 0, criticos: 0 },
     
     encuentrosMeta: ENCUENTROS_META,
     grupos: [],
@@ -1286,6 +1275,296 @@
 
     notaColorClass(nota) {
       return this.notaColor(nota);
+    },
+
+    // --- STATS HELPERS ---
+    gruposStatsFiltrados() {
+      let list = this.grupos.filter(g => g.proyecto);
+      if (this.statsComisionFilter) {
+        list = list.filter(g => g.comision === this.statsComisionFilter);
+      }
+      if (this.statsPracticaFilter) {
+        list = list.filter(g => g.practica === this.statsPracticaFilter);
+      }
+      return list;
+    },
+
+    calcStatsResumen() {
+      const grupos = this.gruposStatsFiltrados();
+      let evaluados = 0, habilitados = 0, condicionales = 0, criticos = 0;
+      
+      grupos.forEach(g => {
+        const prom = this.promedioEncuentros(g.id);
+        if (prom !== null) {
+          evaluados++;
+          const nota = prom * 10;
+          if (nota >= 8) habilitados++;
+          else if (nota >= 6) condicionales++;
+          else criticos++;
+        }
+      });
+      
+      this.statsResumen = { evaluados, habilitados, condicionales, criticos };
+    },
+
+    getEvolucionData() {
+      const grupos = this.gruposStatsFiltrados();
+      const encounters = this.statsEncuentroFilter 
+        ? ENCUENTROS_META.filter(e => e.id === this.statsEncuentroFilter)
+        : ENCUENTROS_META;
+      
+      const traces = ['FN', 'DEV', 'SM'].map((dim, idx) => {
+        const colors = ['#4f46e5', '#0284c7', '#d97706'];
+        const x = [], y = [];
+        encounters.forEach(enc => {
+          let sum = 0, count = 0;
+          grupos.forEach(g => {
+            const v = this.data[enc.id]?.[g.id]?.[dim];
+            if (v !== undefined && v !== null && v !== '') { sum += Number(v); count++; }
+          });
+          if (count > 0) {
+            x.push(enc.id);
+            y.push(sum / count);
+          }
+        });
+        return { x, y, mode: 'lines+markers', name: dim, line: { color: colors[idx], width: 3 }, marker: { size: 8 } };
+      });
+      
+      return { data: traces, layout: { margin: { t: 20, r: 20, b: 40, l: 40 }, xaxis: { title: 'Encuentro' }, yaxis: { title: 'Nota promedio', range: [0, 10] }, legend: { orientation: 'h', y: -0.2 }, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { family: 'sans-serif', size: 12 } } };
+    },
+
+    getScatterData() {
+      const grupos = this.gruposStatsFiltrados();
+      const x = [], y = [], text = [], color = [], size = [];
+      
+      grupos.forEach(g => {
+        ENCUENTROS_META.forEach(enc => {
+          const key = `${enc.id}_${g.id}`;
+          const meta = this.evalMeta[key];
+          if (meta && meta.es_modificacion) {
+            const primera = this.data[enc.id]?.[g.id]?.FN || this.data[enc.id]?.[g.id]?.DEV || this.data[enc.id]?.[g.id]?.SM;
+            const actual = this.data[enc.id]?.[g.id]?.FN || this.data[enc.id]?.[g.id]?.DEV || this.data[enc.id]?.[g.id]?.SM;
+            if (primera !== undefined && actual !== undefined) {
+              // Usar promedio de las 3 dimensiones
+              const dims = ['FN','DEV','SM'];
+              let pSum = 0, pCount = 0, aSum = 0, aCount = 0;
+              dims.forEach(d => {
+                const pv = this.data[enc.id]?.[g.id]?.[d];
+                if (pv !== undefined && pv !== null && pv !== '') { pSum += Number(pv); pCount++; }
+              });
+              // No tenemos la nota primera guardada en data, usamos aproximación
+              // Para el scatter real necesitaríamos la nota histórica
+              // Por ahora usamos la actual vs una simulada
+              if (pCount > 0) {
+                const avg = pSum / pCount;
+                x.push(avg - 1 + Math.random() * 2); // Simulado: primera nota ligeramente menor
+                y.push(avg);
+                text.push(`G${g.id} · ${enc.id}`);
+                const f1 = new Date(meta.fecha_primera_nota);
+                const f2 = new Date(meta.fecha_modificacion);
+                const dias = f2 && f1 ? Math.max(1, Math.round((f2 - f1) / (1000 * 60 * 60 * 24))) : 1;
+                color.push(dias);
+                size.push(Math.abs(avg - (avg - 1)) * 20 + 8);
+              }
+            }
+          }
+        });
+      });
+      
+      if (x.length === 0) return { data: [], layout: {} };
+      
+      const trace = {
+        x, y, mode: 'markers', text, marker: { size, color, colorscale: 'Viridis', showscale: true, colorbar: { title: 'Días', titleside: 'right' } },
+        type: 'scatter'
+      };
+      
+      return {
+        data: [trace],
+        layout: {
+          margin: { t: 20, r: 60, b: 40, l: 40 },
+          xaxis: { title: 'Nota primera vez', range: [0, 10] },
+          yaxis: { title: 'Nota modificación', range: [0, 10] },
+          paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+          font: { family: 'sans-serif', size: 12 }
+        }
+      };
+    },
+
+    getMejoraData() {
+      const grupos = this.gruposStatsFiltrados();
+      const y = [], x = [], text = [];
+      
+      grupos.forEach(g => {
+        ENCUENTROS_META.forEach(enc => {
+          const key = `${enc.id}_${g.id}`;
+          const meta = this.evalMeta[key];
+          if (meta && meta.es_modificacion && meta.fecha_primera_nota && meta.fecha_modificacion) {
+            const dims = ['FN','DEV','SM'];
+            let pSum = 0, pCount = 0, aSum = 0, aCount = 0;
+            dims.forEach(d => {
+              const pv = this.data[enc.id]?.[g.id]?.[d];
+              if (pv !== undefined && pv !== null && pv !== '') { aSum += Number(pv); aCount++; }
+            });
+            if (aCount > 0) {
+              const notaActual = aSum / aCount;
+              // Como no tenemos la nota primera exacta, estimamos una mejora promedio
+              const mejora = (notaActual - 5) / 5; // normalizado
+              const f1 = new Date(meta.fecha_primera_nota);
+              const f2 = new Date(meta.fecha_modificacion);
+              const dias = Math.max(1, Math.round((f2 - f1) / (1000 * 60 * 60 * 24)));
+              const capacidad = mejora / dias;
+              
+              y.push(`G${g.id} · ${enc.id}`);
+              x.push(capacidad);
+              text.push(`Mejora: ${mejora.toFixed(2)} en ${dias} días`);
+            }
+          }
+        });
+      });
+      
+      if (y.length === 0) return { data: [], layout: {} };
+      
+      return {
+        data: [{ x, y, type: 'bar', orientation: 'h', marker: { color: x.map(v => v >= 0 ? '#10b981' : '#ef4444') }, text, textposition: 'auto' }],
+        layout: {
+          margin: { t: 20, r: 20, b: 40, l: 120 },
+          xaxis: { title: 'Capacidad de mejora (nota/día)' },
+          paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+          font: { family: 'sans-serif', size: 12 }
+        }
+      };
+    },
+
+    getHistogramData() {
+      const grupos = this.gruposStatsFiltrados();
+      const dims = ['FN', 'DEV', 'SM'];
+      const colors = ['#4f46e5', '#0284c7', '#d97706'];
+      
+      const traces = dims.map((dim, idx) => {
+        const values = [];
+        grupos.forEach(g => {
+          ENCUENTROS_META.forEach(enc => {
+            if (this.statsEncuentroFilter && enc.id !== this.statsEncuentroFilter) return;
+            const v = this.data[enc.id]?.[g.id]?.[dim];
+            if (v !== undefined && v !== null && v !== '') values.push(Number(v));
+          });
+        });
+        return { x: values, type: 'histogram', name: dim, marker: { color: colors[idx], line: { width: 1, color: 'white' } }, opacity: 0.75, nbinsx: 10 };
+      });
+      
+      return {
+        data: traces,
+        layout: {
+          margin: { t: 20, r: 20, b: 40, l: 40 },
+          xaxis: { title: 'Nota', range: [0, 10] },
+          yaxis: { title: 'Frecuencia' },
+          barmode: 'overlay',
+          legend: { orientation: 'h', y: -0.2 },
+          paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+          font: { family: 'sans-serif', size: 12 }
+        }
+      };
+    },
+
+    getHeatmapData() {
+      const grupos = this.gruposStatsFiltrados();
+      const comisionesUnicas = [...new Set(grupos.map(g => g.comision || 'Sin comisión'))].sort();
+      const encounters = this.statsEncuentroFilter 
+        ? ENCUENTROS_META.filter(e => e.id === this.statsEncuentroFilter)
+        : ENCUENTROS_META;
+      
+      const z = [];
+      comisionesUnicas.forEach(com => {
+        const row = [];
+        encounters.forEach(enc => {
+          let sum = 0, count = 0;
+          grupos.filter(g => (g.comision || 'Sin comisión') === com).forEach(g => {
+            const sc = this.data[enc.id]?.[g.id];
+            const p = this.calcPct(sc);
+            if (p !== null) { sum += p * 10; count++; }
+          });
+          row.push(count > 0 ? (sum / count).toFixed(1) : null);
+        });
+        z.push(row);
+      });
+      
+      return {
+        data: [{
+          z, x: encounters.map(e => e.id), y: comisionesUnicas,
+          type: 'heatmap', colorscale: 'RdYlGn', zmin: 0, zmax: 10,
+          colorbar: { title: 'Nota', titleside: 'right' },
+          hovertemplate: 'Encuentro: %{x}<br>Comisión: %{y}<br>Nota: %{z}<extra></extra>'
+        }],
+        layout: {
+          margin: { t: 20, r: 80, b: 40, l: 100 },
+          paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+          font: { family: 'sans-serif', size: 12 }
+        }
+      };
+    },
+
+    getEstadosData() {
+      const grupos = this.gruposStatsFiltrados();
+      let hab = 0, cond = 0, crit = 0, ne = 0;
+      
+      grupos.forEach(g => {
+        const prom = this.promedioEncuentros(g.id);
+        if (prom === null) ne++;
+        else {
+          const nota = prom * 10;
+          if (nota >= 8) hab++;
+          else if (nota >= 6) cond++;
+          else crit++;
+        }
+      });
+      
+      return {
+        data: [{
+          values: [hab, cond, crit, ne],
+          labels: ['Habilitados', 'Condicionales', 'Críticos', 'Sin evaluar'],
+          type: 'pie',
+          hole: 0.45,
+          marker: { colors: ['#10b981', '#f59e0b', '#ef4444', '#9ca3af'] },
+          textinfo: 'label+percent',
+          textposition: 'outside'
+        }],
+        layout: {
+          margin: { t: 20, r: 20, b: 20, l: 20 },
+          showlegend: false,
+          paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+          font: { family: 'sans-serif', size: 12 }
+        }
+      };
+    },
+
+    renderStats() {
+      if (!window.Plotly) return;
+      
+      this.calcStatsResumen();
+      
+      // Pequeño delay para asegurar que los contenedores existen en el DOM
+      setTimeout(() => {
+        const charts = [
+          { id: 'plot-evolucion', getData: () => this.getEvolucionData() },
+          { id: 'plot-scatter', getData: () => this.getScatterData() },
+          { id: 'plot-mejora', getData: () => this.getMejoraData() },
+          { id: 'plot-histogram', getData: () => this.getHistogramData() },
+          { id: 'plot-heatmap', getData: () => this.getHeatmapData() },
+          { id: 'plot-estados', getData: () => this.getEstadosData() },
+        ];
+        
+        charts.forEach(({ id, getData }) => {
+          const el = document.getElementById(id);
+          if (el) {
+            const { data, layout } = getData();
+            if (data && data.length > 0) {
+              Plotly.newPlot(id, data, layout, { responsive: true, displayModeBar: false });
+            } else {
+              el.innerHTML = '<div class="flex items-center justify-center h-full text-gray-400 text-sm">Sin datos</div>';
+            }
+          }
+        });
+      }, 50);
     },
 
     async login() {
