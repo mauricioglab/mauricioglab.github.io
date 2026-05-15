@@ -527,22 +527,4 @@ window.initSurvey = function(containerId) {
     }
   });
 
-  const container = document.getElementById(containerId);
-  console.log('Container element:', container);
-  if (container) {
-    try {
-      if (renderFn) {
-        renderFn(survey, container);
-        console.log('Survey rendered successfully');
-      } else {
-        console.error('render function not found');
-        container.innerHTML = '<p class="text-red-600 text-center p-4">Error al cargar el formulario. Recargá la página.</p>';
-      }
-    } catch (e) {
-      console.error('Error rendering survey:', e);
-      container.innerHTML = '<p class="text-red-600 text-center p-4">Error al cargar el formulario. Recargá la página.</p>';
-    }
-  } else {
-    console.error('Container not found:', containerId);
-  }
 };
