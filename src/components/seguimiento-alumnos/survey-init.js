@@ -51,6 +51,7 @@ function getSurveySchema() {
             name: "pp2_mes_regularizada",
             title: "¿Cuándo la regularizaste?",
             visibleIf: "{pp2_estado} = 'regularizada' or {pp2_estado} = 'aprobada'",
+            isRequired: true,
             choices: generarMeses()
           }
         ]
@@ -79,6 +80,7 @@ function getSurveySchema() {
             name: "pp3_mes_regularizada",
             title: "¿Cuándo la regularizaste?",
             visibleIf: "{pp3_estado} = 'regularizada' or {pp3_estado} = 'aprobada'",
+            isRequired: true,
             choices: generarMeses()
           }
         ]
@@ -420,6 +422,7 @@ window.initSurvey = function(containerId) {
   const schema = getSurveySchema();
   const survey = new Model(schema);
 
+  survey.locale = 'es';
   survey.platform = 'js-ui';
   survey.render(container);
 
