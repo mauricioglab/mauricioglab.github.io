@@ -1,14 +1,40 @@
----
-import 'survey-core/survey-core.min.css';
----
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/survey-core@2.5.24/survey.min.css" is:inline>
 
 <div id="survey-container" class="max-w-2xl mx-auto"></div>
 <div id="survey-result"></div>
 
-<script>
-  import { initSurvey } from './alumno-form.js';
-  
-  document.addEventListener('DOMContentLoaded', () => {
-    initSurvey('survey-container');
-  });
+<script is:inline src="https://cdn.jsdelivr.net/npm/survey-core@2.5.24/survey.core.min.js"></script>
+<script is:inline src="https://cdn.jsdelivr.net/npm/survey-js-ui@2.5.24/survey-js-ui.min.js"></script>
+<script is:inline src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.4/dist/umd/supabase.min.js"></script>
+<script is:inline src="/scripts/seguimiento/survey-init.js"></script>
+
+<script is:inline>
+(function() {
+  function waitForSurvey(callback, attempts) {
+    if (attempts === undefined) attempts = 0;
+    if (attempts > 100) {
+      console.error('SurveyJS timeout loading');
+      return;
+    }
+    if (typeof Survey === 'undefined' || typeof render !== 'function' || typeof window.initSurvey !== 'function') {
+      setTimeout(function() { waitForSurvey(callback, attempts + 1); }, 50);
+      return;
+    }
+    callback();
+  }
+
+  function runInit() {
+    try {
+      window.initSurvey('survey-container');
+    } catch (e) {
+      console.error('Error initializing survey:', e);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { waitForSurvey(runInit); });
+  } else {
+    waitForSurvey(runInit);
+  }
+})();
 </script>

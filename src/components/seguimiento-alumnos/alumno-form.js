@@ -1,5 +1,5 @@
-import { Model } from "survey-core";
-import { render } from "survey-js-ui";
+const Model = window.SurveyCore?.Model || window.Survey?.Model;
+const render = window.renderSurvey;
 import { getSurveySchema } from "../../data/survey-schema.js";
 import { calcularElegibilidad } from "../../data/eligibility-rules.js";
 import { supabase } from "../../lib/supabase.js";
@@ -125,6 +125,7 @@ function buildResumenHTML(survey) {
 }
 
 export function initSurvey(containerId) {
+  console.log('initSurvey called, containerId:', containerId);
   const schema = getSurveySchema();
   const survey = new Model(schema);
 
@@ -227,8 +228,17 @@ export function initSurvey(containerId) {
   });
 
   const container = document.getElementById(containerId);
+  console.log('Container element:', container);
   if (container) {
-    currentContainer = render(survey, container);
+    try {
+      currentContainer = render(survey, container);
+      console.log('Survey rendered successfully');
+    } catch (e) {
+      console.error('Error rendering survey:', e);
+      container.innerHTML = '<p class="text-red-600 text-center p-4">Error al cargar el formulario. Recargá la página.</p>';
+    }
+  } else {
+    console.error('Container not found:', containerId);
   }
 
   return { survey, container: currentContainer };
