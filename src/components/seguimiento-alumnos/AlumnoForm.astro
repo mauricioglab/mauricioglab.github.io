@@ -16,7 +16,7 @@
       console.error('SurveyJS timeout loading');
       return;
     }
-    if (typeof Survey === 'undefined' || typeof render !== 'function' || typeof window.initSurvey !== 'function') {
+    if (typeof Survey === 'undefined' || typeof SurveyUI === 'undefined' || typeof window.initSurvey !== 'function') {
       setTimeout(function() { waitForSurvey(callback, attempts + 1); }, 50);
       return;
     }

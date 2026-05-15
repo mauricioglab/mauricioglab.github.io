@@ -405,7 +405,6 @@ window.initSurvey = function(containerId) {
   console.log('initSurvey called, containerId:', containerId);
 
   const Model = window.SurveyCore?.Model || window.Survey?.Model;
-  const renderFn = window.renderSurvey;
 
   if (!Model) {
     console.error('SurveyJS Model not found');
@@ -414,6 +413,9 @@ window.initSurvey = function(containerId) {
 
   const schema = getSurveySchema();
   const survey = new Model(schema);
+
+  survey.platform = 'js-ui';
+  survey.render(containerId);
 
   survey.applyTheme({
     cssVariables: {
