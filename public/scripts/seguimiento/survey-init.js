@@ -19,12 +19,12 @@ function getSurveySchema() {
         name: "datos_personales",
         title: "Datos personales",
         elements: [
-          { type: "text", name: "nombre_completo", title: "Nombre completo", isRequired: true, placeholder: "Ej: García, María" },
-          { type: "text", name: "dni", title: "DNI", placeholder: "Ej: 12345678", validators: [{ type: "numeric" }] },
-          { type: "text", name: "email", title: "Email", inputType: "email", placeholder: "Ej: maria@email.com" },
-          { type: "text", name: "telefono", title: "Teléfono", placeholder: "Ej: 261 555-1234" },
+          { type: "text", name: "nombre_completo", title: "Nombre completo", isRequired: true, placeholder: "Ej: García, María", validators: [{ type: "regex", regex: "^([a-zA-ZáéíóúÁÉÍÓÚñÑ]{3,}\\s+)+[a-zA-ZáéíóúÁÉÍÓÚñÑ]{3,}$", text: "Ingresá al menos nombre y apellido (mínimo 3 letras cada uno)" }] },
+          { type: "text", name: "dni", title: "DNI", placeholder: "Ej: 12345678", validators: [{ type: "regex", regex: "^\\d{7,8}$", text: "El DNI debe tener 7 u 8 dígitos numéricos" }], startWithNewLine: false },
+          { type: "text", name: "email", title: "Email", inputType: "email", placeholder: "Ej: maria@email.com", validators: [{ type: "regex", regex: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$", text: "Ingresá un email válido" }] },
+          { type: "text", name: "telefono", title: "Teléfono", placeholder: "Ej: 261 555-1234", startWithNewLine: false },
           { type: "text", name: "usuario_teams", title: "Usuario de Microsoft Teams", isRequired: true, placeholder: "Ej: maria.garcia@institucion.edu.ar", description: "Lo necesitamos para contactarte." },
-          { type: "text", name: "comision", title: "Comisión", placeholder: "Ej: 51NMS" }
+          { type: "text", name: "comision", title: "Comisión", placeholder: "Ej: 51NMS", startWithNewLine: false }
         ]
       },
       {
@@ -87,6 +87,7 @@ function getSurveySchema() {
         name: "materias",
         title: "Materias pendientes",
         description: "¿Tenés materias que debés cursar, recursar o rendir final?",
+        visibleIf: "{pp2_estado} = 'regularizada' or {pp2_estado} = 'aprobada' or {pp2_estado} = 'debe_recursar'",
         elements: [
           {
             type: "boolean",
