@@ -352,12 +352,12 @@
                   <span class="text-xs text-gray-600 ml-1 font-medium" x-text="int.rol"></span>
                 </div>
                 <div class="flex gap-1" x-show="canEdit">
-                  <template x-for="opt in ['Presente','Ausente','Justificado']" :key="opt">
+                  <template x-for="opt in ['Presente (Presencial)','Presente (Virtual)','Ausente','Justificado']" :key="opt">
                     <button 
                       @click="setAsist(int.nombre, localAsist[activeE]?.[int.nombre] === opt ? '' : opt)"
                       class="w-7 h-7 rounded-md border text-xs flex items-center justify-center transition font-bold"
                       :class="localAsist[activeE]?.[int.nombre] === opt ? asistBtnClass(opt) : 'border-gray-300 text-gray-400 bg-white'"
-                      x-text="opt === 'Presente' ? '✓' : opt === 'Ausente' ? '✕' : '−'"
+                      x-text="opt === 'Presente (Presencial)' ? 'P' : opt === 'Presente (Virtual)' ? 'V' : opt === 'Ausente' ? '✕' : '−'"
                     ></button>
                   </template>
                 </div>
@@ -560,11 +560,19 @@
                     class="w-full px-2 py-1 text-xs border border-gray-300 rounded text-gray-900 focus:outline-none focus:ring-1 focus:ring-indigo-600"
                     required
                   >
-                  <input 
+                  <select 
                     x-model="int.rol"
-                    placeholder="Rol (opcional)"
-                    class="w-full px-2 py-1 text-xs border border-gray-300 rounded text-gray-900 focus:outline-none focus:ring-1 focus:ring-indigo-600"
+                    class="w-full px-2 py-1 text-xs border border-gray-300 rounded text-gray-900 focus:outline-none focus:ring-1 focus:ring-indigo-600 bg-white"
                   >
+                    <option value="">Seleccionar rol...</option>
+                    <option value="Funcional">Funcional</option>
+                    <option value="Desarrollador">Desarrollador</option>
+                    <option value="Scrum">Scrum</option>
+                    <option value="Funcional/Desarrollador">Funcional/Desarrollador</option>
+                    <option value="Funcional/Scrum">Funcional/Scrum</option>
+                    <option value="Desarrollador/Scrum">Desarrollador/Scrum</option>
+                    <option value="Funcional/Desarrollador/Scrum">Funcional/Desarrollador/Scrum</option>
+                  </select>
                   <input 
                     x-model="int.observacion"
                     placeholder="Observación (opcional)"
@@ -803,7 +811,8 @@
 
     asistBtnClass(val) {
       const map = {
-        Presente: "border-green-600 text-green-700 bg-green-100",
+        "Presente (Presencial)": "border-green-600 text-green-700 bg-green-100",
+        "Presente (Virtual)": "border-sky-600 text-sky-700 bg-sky-100",
         Ausente: "border-red-600 text-red-700 bg-red-100",
         Justificado: "border-amber-600 text-amber-700 bg-amber-100"
       };
@@ -812,7 +821,8 @@
 
     asistTextClass(val) {
       const map = {
-        Presente: "text-green-700 font-bold",
+        "Presente (Presencial)": "text-green-700 font-bold",
+        "Presente (Virtual)": "text-sky-700 font-bold",
         Ausente: "text-red-700 font-bold",
         Justificado: "text-amber-700 font-bold"
       };
