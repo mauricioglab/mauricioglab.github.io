@@ -8,7 +8,8 @@
 CREATE TABLE IF NOT EXISTS grupos (
   id INT PRIMARY KEY,
   proyecto TEXT NOT NULL,
-  comision TEXT
+  comision TEXT,
+  practica TEXT NOT NULL DEFAULT 'P2' CHECK (practica IN ('P1','P2','P3','TutoriasPost'))
 );
 
 CREATE TABLE IF NOT EXISTS integrantes (
@@ -126,6 +127,25 @@ CREATE POLICY "Admin insert profiles" ON profiles
     )
   );
 
+-- Staff puede escribir grupos e integrantes
+DROP POLICY IF EXISTS "Staff write grupos" ON grupos;
+CREATE POLICY "Staff write grupos" ON grupos 
+  FOR ALL USING (
+    auth.uid() IN (
+      SELECT id FROM profiles 
+      WHERE role IN ('profesor_practica','director','admin')
+    )
+  );
+
+DROP POLICY IF EXISTS "Staff write integrantes" ON integrantes;
+CREATE POLICY "Staff write integrantes" ON integrantes 
+  FOR ALL USING (
+    auth.uid() IN (
+      SELECT id FROM profiles 
+      WHERE role IN ('profesor_practica','director','admin')
+    )
+  );
+
 -- 3. SEED DATOS
 -- ============================================
 
@@ -165,25 +185,31 @@ INSERT INTO criterios (encuentro_meta_id, dimension, descripcion) VALUES
 ('E7', 'SM', 'Cierre de sprints y lecciones aprendidas.')
 ON CONFLICT DO NOTHING;
 
+-- Actualizar grupos existentes a P2 si la columna se acaba de agregar
+UPDATE grupos SET practica = 'P2' WHERE practica IS NULL OR practica = '';
+
 -- Grupos
-INSERT INTO grupos (id, proyecto, comision) VALUES
-(1, 'Teka Manager', '51NMS'),
-(2, 'SITMAS', '51NMS'),
-(3, 'YO SOY', '51NMS'),
-(4, 'NODUS', '51NMS'),
-(5, 'SocioApp Rancul', ''),
-(6, 'GeoLocalizacion Biosa', ''),
-(7, 'Punto Cell', '51'),
-(8, 'Metalurgica', '51'),
-(9, 'Condado', ''),
-(10, 'Salus Aequitas', ''),
-(11, 'Mapla Joyas', ''),
-(12, 'Dentisware', ''),
-(13, 'Arguello Infancias', ''),
-(14, 'Tamcat', ''),
-(15, 'Inclusion', ''),
-(16, 'Daytona Repuesto de Autos', '')
-ON CONFLICT (id) DO NOTHING;
+INSERT INTO grupos (id, proyecto, comision, practica) VALUES
+(1, 'Teka Manager', '51NMS', 'P2'),
+(2, 'SITMAS', '51NMS', 'P2'),
+(3, 'YO SOY', '51NMS', 'P2'),
+(4, 'NODUS', '51NMS', 'P2'),
+(5, 'SocioApp Rancul', '', 'P2'),
+(6, 'GeoLocalizacion Biosa', '', 'P2'),
+(7, 'Punto Cell', '51', 'P2'),
+(8, 'Metalurgica', '51', 'P2'),
+(9, 'Condado', '', 'P2'),
+(10, 'Salus Aequitas', '', 'P2'),
+(11, 'Mapla Joyas', '', 'P2'),
+(12, 'Dentisware', '', 'P2'),
+(13, 'Arguello Infancias', '', 'P2'),
+(14, 'Tamcat', '', 'P2'),
+(15, 'Inclusion', '', 'P2'),
+(16, 'Daytona Repuesto de Autos', '', 'P2')
+ON CONFLICT (id) DO UPDATE SET
+  proyecto = EXCLUDED.proyecto,
+  comision = EXCLUDED.comision,
+  practica = EXCLUDED.practica;
 
 -- Integrantes
 INSERT INTO integrantes (grupo_id, nombre, rol, observacion) VALUES

@@ -5,32 +5,40 @@
 <div 
   x-data="seguimientoApp()" 
   x-init="init()" 
-  class="min-h-screen bg-slate-100 font-sans"
+  class="min-h-screen bg-gray-100 font-sans"
   x-cloak
 >
   <!-- Header -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+  <header class="bg-white border-b border-gray-300 sticky top-0 z-30 shadow-sm">
     <div class="max-w-6xl mx-auto px-4 py-3">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-lg font-bold text-slate-800">Práctica Profesionalizante II</h1>
-          <p class="text-xs text-slate-500" x-text="`${grupos.length} grupos activos`"></p>
+          <h1 class="text-lg font-bold text-gray-900">Práctica Profesionalizante</h1>
+          <p class="text-xs text-gray-600" x-text="`${gruposFiltrados.length} grupos activos`"></p>
         </div>
         <div class="flex items-center gap-3">
+          <button 
+            x-show="canEdit && (view === 'resumen' || view === 'encuentros' || view === 'stats')"
+            @click="showAddGrupo = true"
+            class="w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-600 text-white text-sm font-bold hover:bg-indigo-700 transition"
+            title="Agregar grupo"
+          >
+            +
+          </button>
           <template x-if="!user">
             <button 
               @click="showLogin = true"
-              class="px-3 py-1.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition"
+              class="px-3 py-1.5 bg-indigo-700 text-white text-sm font-medium rounded-lg hover:bg-indigo-800 transition"
             >
               Ingresar
             </button>
           </template>
           <template x-if="user">
             <div class="flex items-center gap-2">
-              <span class="text-xs text-slate-600" x-text="user.email"></span>
+              <span class="text-xs text-gray-700 font-medium" x-text="user.email"></span>
               <button 
                 @click="logout()"
-                class="px-3 py-1.5 text-xs text-red-600 hover:bg-red-50 rounded-lg transition"
+                class="px-3 py-1.5 text-xs text-red-700 hover:bg-red-50 rounded-lg transition font-medium"
               >
                 Salir
               </button>
@@ -39,26 +47,38 @@
         </div>
       </div>
       
+      <!-- Tabs de práctica -->
+      <nav class="flex gap-1 mt-2 mb-1 overflow-x-auto">
+        <template x-for="p in practicas" :key="p.id">
+          <button 
+            @click="practicaFilter = p.id"
+            class="px-3 py-1.5 text-xs font-bold rounded-md transition whitespace-nowrap"
+            :class="practicaFilter === p.id ? 'bg-indigo-700 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+            x-text="p.label"
+          ></button>
+        </template>
+      </nav>
+      
       <!-- Tabs de navegación -->
-      <nav class="flex gap-0 mt-3 -mb-px" x-show="view === 'resumen' || view === 'encuentros' || view === 'stats'">
+      <nav class="flex gap-0 mt-2 -mb-px" x-show="view === 'resumen' || view === 'encuentros' || view === 'stats'">
         <button 
           @click="view = 'resumen'"
-          class="flex-1 py-2 text-sm font-medium border-b-2 transition"
-          :class="view === 'resumen' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'"
+          class="flex-1 py-2 text-sm font-bold border-b-2 transition"
+          :class="view === 'resumen' ? 'border-indigo-700 text-indigo-700' : 'border-transparent text-gray-600 hover:text-gray-800'"
         >
           Resumen
         </button>
         <button 
           @click="view = 'encuentros'"
-          class="flex-1 py-2 text-sm font-medium border-b-2 transition"
-          :class="view === 'encuentros' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'"
+          class="flex-1 py-2 text-sm font-bold border-b-2 transition"
+          :class="view === 'encuentros' ? 'border-indigo-700 text-indigo-700' : 'border-transparent text-gray-600 hover:text-gray-800'"
         >
           Encuentros
         </button>
         <button 
           @click="view = 'stats'"
-          class="flex-1 py-2 text-sm font-medium border-b-2 transition"
-          :class="view === 'stats' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'"
+          class="flex-1 py-2 text-sm font-bold border-b-2 transition"
+          :class="view === 'stats' ? 'border-indigo-700 text-indigo-700' : 'border-transparent text-gray-600 hover:text-gray-800'"
         >
           Stats
         </button>
@@ -71,8 +91,8 @@
     
     <!-- Loading -->
     <div x-show="loadingData" class="text-center py-12">
-      <div class="inline-block w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-      <p class="text-sm text-slate-500 mt-2">Cargando datos...</p>
+      <div class="inline-block w-8 h-8 border-2 border-indigo-700 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-sm text-gray-600 mt-2 font-medium">Cargando datos...</p>
     </div>
 
     <!-- VISTA RESUMEN -->
@@ -81,35 +101,35 @@
         <input 
           x-model="filtro"
           placeholder="Buscar grupo o proyecto..."
-          class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white"
         >
       </div>
       
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
           <thead>
-            <tr class="text-slate-400 text-left">
-              <th class="px-2 py-2 font-semibold">Grupo</th>
-              <th class="px-2 py-2 font-semibold">Comisión</th>
+            <tr class="text-gray-600 text-left">
+              <th class="px-2 py-2 font-bold">Grupo</th>
+              <th class="px-2 py-2 font-bold">Comisión</th>
               <template x-for="enc in encuentrosMeta" :key="enc.id">
-                <th class="px-1 py-2 font-semibold text-center w-12">
-                  <button @click="selectEncuentro(enc.id)" class="text-indigo-600 font-bold hover:underline" x-text="enc.id"></button>
+                <th class="px-1 py-2 font-bold text-center w-12">
+                  <button @click="selectEncuentro(enc.id)" class="text-indigo-700 font-bold hover:underline" x-text="enc.id"></button>
                 </th>
               </template>
-              <th class="px-2 py-2 font-semibold text-center">Prom.</th>
+              <th class="px-2 py-2 font-bold text-center">Prom.</th>
             </tr>
           </thead>
           <tbody>
             <template x-for="grupo in gruposFiltrados" :key="grupo.id">
               <tr 
                 @click="selectGrupo(grupo.id)"
-                class="bg-white cursor-pointer hover:bg-slate-50 transition"
+                class="bg-white cursor-pointer hover:bg-gray-50 transition shadow-sm border-b border-gray-100"
               >
                 <td class="px-2 py-2.5 rounded-l-lg">
-                  <span class="text-slate-400 text-xs mr-1" x-text="`G${grupo.id}`"></span>
-                  <span class="font-semibold text-slate-800" x-text="grupo.proyecto"></span>
+                  <span class="text-gray-500 text-xs mr-1 font-bold" x-text="`G${grupo.id}`"></span>
+                  <span class="font-bold text-gray-900" x-text="grupo.proyecto"></span>
                 </td>
-                <td class="px-2 py-2.5 text-slate-600" x-text="grupo.comision || '—'"></td>
+                <td class="px-2 py-2.5 text-gray-700 font-medium" x-text="grupo.comision || '—'"></td>
                 <template x-for="enc in encuentrosMeta" :key="enc.id">
                   <td class="px-1 py-2.5 text-center">
                     <span 
@@ -135,20 +155,20 @@
 
     <!-- VISTA ENCUENTROS LISTA -->
     <div x-show="view === 'encuentros' && !loadingData" x-transition>
-      <h2 class="text-base font-bold text-slate-800 mb-3">Encuentros</h2>
+      <h2 class="text-base font-bold text-gray-900 mb-3">Encuentros</h2>
       <div class="space-y-2">
         <template x-for="enc in encuentrosMeta" :key="enc.id">
           <button 
             @click="selectEncuentro(enc.id)"
-            class="w-full bg-white rounded-xl p-4 text-left hover:shadow-md transition flex items-center gap-3"
+            class="w-full bg-white rounded-xl p-4 text-left hover:shadow-md transition flex items-center gap-3 border border-gray-200"
           >
-            <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center font-bold text-indigo-600 text-sm" x-text="enc.id"></div>
+            <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center font-bold text-indigo-700 text-sm" x-text="enc.id"></div>
             <div class="flex-1">
-              <div class="font-semibold text-sm text-slate-800" x-text="enc.nombre"></div>
-              <div class="text-xs text-slate-400 italic" x-text="enc.pregunta"></div>
+              <div class="font-bold text-sm text-gray-900" x-text="enc.nombre"></div>
+              <div class="text-xs text-gray-500 italic" x-text="enc.pregunta"></div>
             </div>
-            <div class="text-xs text-slate-400 font-medium" x-text="`${countGruposEvaluados(enc.id)} grupos`"></div>
-            <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            <div class="text-xs text-gray-500 font-bold" x-text="`${countGruposEvaluados(enc.id)} grupos`"></div>
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
         </template>
       </div>
@@ -156,15 +176,15 @@
 
     <!-- VISTA ESTADISTICAS -->
     <div x-show="view === 'stats' && !loadingData" x-transition>
-      <h2 class="text-base font-bold text-slate-800 mb-3">Estadísticas Generales</h2>
+      <h2 class="text-base font-bold text-gray-900 mb-3">Estadísticas Generales</h2>
       
       <!-- Promedio por dimensión -->
-      <div class="bg-white rounded-xl p-4 mb-3">
-        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">Promedio por Dimensión</h3>
+      <div class="bg-white rounded-xl p-4 mb-3 border border-gray-200 shadow-sm">
+        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Promedio por Dimensión</h3>
         <template x-for="dim in ['FN','DEV','SM']" :key="dim">
           <div class="flex items-center gap-3 mb-3">
             <span class="w-9 font-bold text-sm" :class="dimColor(dim)" x-text="dim"></span>
-            <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+            <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
               <div 
                 class="h-full rounded-full transition-all duration-500"
                 :class="dimBarColor(dim)"
@@ -177,12 +197,12 @@
       </div>
       
       <!-- Promedio por encuentro -->
-      <div class="bg-white rounded-xl p-4 mb-3">
-        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">Promedio por Encuentro</h3>
+      <div class="bg-white rounded-xl p-4 mb-3 border border-gray-200 shadow-sm">
+        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Promedio por Encuentro</h3>
         <template x-for="enc in encuentrosMeta" :key="enc.id">
           <div class="flex items-center gap-3 mb-3">
-            <span class="w-7 font-bold text-sm text-indigo-600" x-text="enc.id"></span>
-            <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+            <span class="w-7 font-bold text-sm text-indigo-700" x-text="enc.id"></span>
+            <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
               <div 
                 class="h-full rounded-full transition-all duration-500"
                 :class="encPromColor(enc.id)"
@@ -190,19 +210,19 @@
               ></div>
             </div>
             <span class="w-9 text-right font-bold text-sm" :class="notaColorClass(encAvg(enc.id))" x-text="encAvg(enc.id)"></span>
-            <span class="text-xs text-slate-400 w-6" x-text="`(${encCount(enc.id)})`"></span>
+            <span class="text-xs text-gray-500 w-6" x-text="`(${encCount(enc.id)})`"></span>
           </div>
         </template>
       </div>
       
       <!-- Ranking -->
-      <div class="bg-white rounded-xl p-4">
-        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">Ranking de Grupos</h3>
+      <div class="bg-white rounded-xl p-4 mb-3 border border-gray-200 shadow-sm">
+        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Ranking de Grupos</h3>
         <template x-for="(g, i) in ranking" :key="g.id">
           <div class="flex items-center gap-3 mb-3">
-            <span class="w-6 font-extrabold text-sm" :class="i < 3 ? ['text-amber-500','text-slate-400','text-amber-700'][i] : 'text-slate-300'" x-text="`#${i+1}`"></span>
-            <span class="flex-1 text-sm font-semibold text-slate-800" x-text="g.proyecto"></span>
-            <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+            <span class="w-6 font-extrabold text-sm" :class="i < 3 ? ['text-amber-600','text-gray-500','text-amber-800'][i] : 'text-gray-400'" x-text="`#${i+1}`"></span>
+            <span class="flex-1 text-sm font-bold text-gray-900" x-text="`G${g.id} · ${g.proyecto}`"></span>
+            <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
               <div 
                 class="h-full rounded-full transition-all duration-500"
                 :class="pctColor(g.prom * 100)"
@@ -217,26 +237,77 @@
           </div>
         </template>
       </div>
+
+      <!-- Tabla de notas por grupo y dimensión -->
+      <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Notas por Grupo y Dimensión</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-gray-700 text-left border-b border-gray-300">
+                <th class="px-2 py-2 font-bold">Grupo</th>
+                <th class="px-2 py-2 font-bold text-center">FN</th>
+                <th class="px-2 py-2 font-bold text-center">DEV</th>
+                <th class="px-2 py-2 font-bold text-center">SM</th>
+                <th class="px-2 py-2 font-bold text-center">Prom.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="g in gruposConProyecto" :key="g.id">
+                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                  <td class="px-2 py-2 font-bold text-gray-900" x-text="`G${g.id} · ${g.proyecto}`"></td>
+                  <td class="px-2 py-2 text-center">
+                    <span class="font-bold" :class="notaColorClass(dimAvgForGrupo(g.id, 'FN'))" x-text="dimAvgForGrupo(g.id, 'FN')"></span>
+                  </td>
+                  <td class="px-2 py-2 text-center">
+                    <span class="font-bold" :class="notaColorClass(dimAvgForGrupo(g.id, 'DEV'))" x-text="dimAvgForGrupo(g.id, 'DEV')"></span>
+                  </td>
+                  <td class="px-2 py-2 text-center">
+                    <span class="font-bold" :class="notaColorClass(dimAvgForGrupo(g.id, 'SM'))" x-text="dimAvgForGrupo(g.id, 'SM')"></span>
+                  </td>
+                  <td class="px-2 py-2 text-center">
+                    <span 
+                      class="inline-flex items-center justify-center min-w-[2.5rem] h-6 rounded-md text-xs font-bold"
+                      :class="notaBadgeClass(calcNota(promedioEncuentros(g.id)))"
+                      x-text="calcNota(promedioEncuentros(g.id))"
+                    ></span>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <!-- VISTA GRUPO DETALLE -->
     <div x-show="view === 'grupo' && selectedGrupo && !loadingData" x-transition>
       <div class="flex items-center gap-3 mb-4">
-        <button @click="view = 'resumen'" class="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-slate-700">
+        <button @click="view = 'resumen'" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
         </button>
         <div class="flex-1">
-          <h2 class="text-lg font-extrabold text-slate-800" x-text="grupoActual?.proyecto"></h2>
-          <p class="text-xs text-slate-400" x-text="`Grupo ${grupoActual?.id} ${grupoActual?.comision ? '· ' + grupoActual.comision : ''}`"></p>
+          <h2 class="text-lg font-extrabold text-gray-900" x-text="`G${grupoActual?.id} · ${grupoActual?.proyecto}`"></h2>
+          <p class="text-xs text-gray-600 font-medium" x-text="`Grupo ${grupoActual?.id} ${grupoActual?.comision ? '· ' + grupoActual.comision : ''} ${grupoActual?.practica ? '· ' + grupoActual.practica : ''}`"></p>
         </div>
-        <button 
-          x-show="canEdit"
-          @click="guardar()"
-          class="px-3 py-2 text-white text-sm font-bold rounded-lg hover:bg-indigo-700 transition flex items-center gap-2"
-          :class="saved ? 'bg-green-500 hover:bg-green-600' : 'bg-indigo-600 hover:bg-indigo-700'"
-        >
-          <span x-text="saved ? '¡Guardado!' : 'Guardar'"></span>
-        </button>
+        <div class="flex items-center gap-2">
+          <button 
+            x-show="canEdit"
+            @click="confirmDeleteGrupo()"
+            class="w-9 h-9 flex items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 transition"
+            title="Eliminar grupo"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          </button>
+          <button 
+            x-show="canEdit"
+            @click="guardar()"
+            class="px-3 py-2 text-white text-sm font-bold rounded-lg hover:bg-indigo-800 transition flex items-center gap-2"
+            :class="saved ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-700 hover:bg-indigo-800'"
+          >
+            <span x-text="saved ? '¡Guardado!' : 'Guardar'"></span>
+          </button>
+        </div>
       </div>
 
       <!-- Tabs de encuentros -->
@@ -245,12 +316,12 @@
           <button 
             @click="activeE = enc.id"
             class="flex-shrink-0 px-3 py-1.5 rounded-lg border-2 text-xs font-bold transition"
-            :class="activeE === enc.id ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-200 bg-white text-slate-500'"
+            :class="activeE === enc.id ? 'border-indigo-700 bg-indigo-700 text-white' : 'border-gray-300 bg-white text-gray-600'"
           >
             <span x-text="enc.id"></span>
             <span 
               class="block text-center text-[10px] mt-0.5"
-              :class="activeE === enc.id ? 'text-white/70' : notaColorClass(calcNota(calcPct(localData[enc.id])))"
+              :class="activeE === enc.id ? 'text-white/80' : notaColorClass(calcNota(calcPct(localData[enc.id])))"
               x-text="calcNota(calcPct(localData[enc.id]))"
             ></span>
           </button>
@@ -258,40 +329,40 @@
       </div>
 
       <!-- Encuentro activo -->
-      <div class="bg-white rounded-xl p-4 mb-3" x-show="encuentroActual">
-        <h3 class="font-bold text-sm text-slate-800" x-text="encuentroActual?.nombre"></h3>
-        <p class="text-xs text-slate-400 italic mb-4" x-text="encuentroActual?.pregunta"></p>
+      <div class="bg-white rounded-xl p-4 mb-3 border border-gray-200 shadow-sm" x-show="encuentroActual">
+        <h3 class="font-bold text-sm text-gray-900" x-text="encuentroActual?.nombre"></h3>
+        <p class="text-xs text-gray-600 italic mb-4 font-medium" x-text="encuentroActual?.pregunta"></p>
 
         <!-- Asistencia -->
         <div class="mb-4">
-          <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Asistencia</h4>
+          <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Asistencia</h4>
           <div class="space-y-2">
             <template x-for="int in grupoActual?.integrantes" :key="int.nombre">
-              <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center justify-between gap-2 py-1 border-b border-gray-50">
                 <div>
-                  <span class="text-sm text-slate-800 font-medium" x-text="int.nombre"></span>
-                  <span class="text-xs text-slate-400 ml-1" x-text="int.rol"></span>
+                  <span class="text-sm text-gray-900 font-bold" x-text="int.nombre"></span>
+                  <span class="text-xs text-gray-600 ml-1 font-medium" x-text="int.rol"></span>
                 </div>
                 <div class="flex gap-1" x-show="canEdit">
                   <template x-for="opt in ['Presente','Ausente','Justificado']" :key="opt">
                     <button 
                       @click="setAsist(int.nombre, localAsist[activeE]?.[int.nombre] === opt ? '' : opt)"
-                      class="w-7 h-7 rounded-md border text-xs flex items-center justify-center transition"
-                      :class="localAsist[activeE]?.[int.nombre] === opt ? asistBtnClass(opt) : 'border-slate-200 text-slate-300 bg-white'"
+                      class="w-7 h-7 rounded-md border text-xs flex items-center justify-center transition font-bold"
+                      :class="localAsist[activeE]?.[int.nombre] === opt ? asistBtnClass(opt) : 'border-gray-300 text-gray-400 bg-white'"
                       x-text="opt === 'Presente' ? '✓' : opt === 'Ausente' ? '✕' : '−'"
                     ></button>
                   </template>
                 </div>
-                <span x-show="!canEdit" class="text-xs font-medium" :class="asistTextClass(localAsist[activeE]?.[int.nombre])" x-text="localAsist[activeE]?.[int.nombre] || '—'"></span>
+                <span x-show="!canEdit" class="text-xs font-bold" :class="asistTextClass(localAsist[activeE]?.[int.nombre])" x-text="localAsist[activeE]?.[int.nombre] || '—'"></span>
               </div>
             </template>
           </div>
         </div>
 
         <!-- Dimensiones -->
-        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Evaluación de Dimensiones</h4>
-        <template x-for="[dim, label, color] in [['FN','FN — Análisis Funcional','text-indigo-500'],['DEV','DEV — Técnico','text-sky-500'],['SM','SM/PO — Gestión','text-amber-500']]" :key="dim">
-          <div class="mb-3 p-3 rounded-lg bg-slate-50 border border-slate-100">
+        <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Evaluación de Dimensiones</h4>
+        <template x-for="[dim, label, color] in [['FN','FN — Análisis Funcional','text-indigo-600'],['DEV','DEV — Técnico','text-sky-600'],['SM','SM/PO — Gestión','text-amber-600']]" :key="dim">
+          <div class="mb-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
             <div class="flex items-center justify-between mb-2">
               <span class="font-bold text-sm" :class="color" x-text="label"></span>
               <input 
@@ -299,25 +370,25 @@
                 type="number" min="0" max="10" step="0.5"
                 :value="localData[activeE]?.[dim] ?? ''"
                 @input="setField(activeE, dim, $event.target.value === '' ? null : Number($event.target.value))"
-                class="w-14 px-2 py-1 border border-slate-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="w-14 px-2 py-1 border border-gray-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-indigo-600 text-gray-900 font-bold"
               >
-              <span x-show="!canEdit" class="font-bold text-sm" x-text="localData[activeE]?.[dim] ?? '—'"></span>
+              <span x-show="!canEdit" class="font-bold text-sm text-gray-900" x-text="localData[activeE]?.[dim] ?? '—'"></span>
             </div>
-            <p class="text-xs text-slate-400 mb-2" x-text="criterioActual(dim)"></p>
+            <p class="text-xs text-gray-600 mb-2 font-medium" x-text="criterioActual(dim)"></p>
             <input 
               x-show="canEdit"
               placeholder="Retroalimentación..."
               :value="localData[activeE]?.feedback?.[dim] ?? ''"
               @input="setFb(activeE, dim, $event.target.value)"
-              class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-indigo-600 text-gray-900"
             >
-            <p x-show="!canEdit" class="text-xs text-slate-500" x-text="localData[activeE]?.feedback?.[dim] || 'Sin feedback'"></p>
+            <p x-show="!canEdit" class="text-xs text-gray-700 font-medium" x-text="localData[activeE]?.feedback?.[dim] || 'Sin feedback'"></p>
           </div>
         </template>
 
         <!-- Nota calculada -->
         <div class="flex items-center justify-end gap-2 mt-2">
-          <span class="text-sm text-slate-500 font-semibold">Nota del encuentro:</span>
+          <span class="text-sm text-gray-700 font-bold">Nota del encuentro:</span>
           <span 
             class="inline-flex items-center justify-center min-w-[3rem] h-8 rounded-lg text-sm font-bold"
             :class="notaBadgeClass(calcNota(calcPct(localData[activeE])))"
@@ -330,26 +401,26 @@
     <!-- VISTA ENCUENTRO DETALLE -->
     <div x-show="view === 'encuentro' && selectedEnc && !loadingData" x-transition>
       <div class="flex items-center gap-3 mb-4">
-        <button @click="view = 'resumen'" class="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-slate-700">
+        <button @click="view = 'resumen'" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
         </button>
         <div>
-          <h2 class="text-lg font-extrabold text-slate-800" x-text="encuentroSeleccionado?.nombre"></h2>
-          <p class="text-xs text-slate-400 italic" x-text="encuentroSeleccionado?.pregunta"></p>
+          <h2 class="text-lg font-extrabold text-gray-900" x-text="encuentroSeleccionado?.nombre"></h2>
+          <p class="text-xs text-gray-600 italic font-medium" x-text="encuentroSeleccionado?.pregunta"></p>
         </div>
       </div>
 
       <div class="space-y-2">
         <template x-for="grupo in gruposConProyecto" :key="grupo.id">
-          <div class="bg-white rounded-xl p-3 flex items-center gap-3">
+          <div class="bg-white rounded-xl p-3 flex items-center gap-3 border border-gray-200 shadow-sm">
             <div class="flex-1">
-              <div class="font-bold text-sm text-slate-800">
-                <span class="text-slate-400 font-normal mr-1" x-text="`G${grupo.id}`"></span>
+              <div class="font-bold text-sm text-gray-900">
+                <span class="text-gray-500 font-bold mr-1" x-text="`G${grupo.id}`"></span>
                 <span x-text="grupo.proyecto"></span>
               </div>
               <div class="flex gap-2 mt-1.5">
                 <template x-for="dim in ['FN','DEV','SM']" :key="dim">
-                  <span class="text-xs" :class="data[selectedEnc]?.[grupo.id]?.[dim] !== undefined ? 'text-slate-800 font-semibold' : 'text-slate-300'">
+                  <span class="text-xs font-medium" :class="data[selectedEnc]?.[grupo.id]?.[dim] !== undefined ? 'text-gray-900 font-bold' : 'text-gray-400'">
                     <span x-text="dim"></span>: <span x-text="data[selectedEnc]?.[grupo.id]?.[dim] ?? '—'"></span>
                   </span>
                 </template>
@@ -363,7 +434,7 @@
             <button 
               x-show="canEdit"
               @click="editGrupoEncuentro(grupo.id)"
-              class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-indigo-600 hover:bg-indigo-50"
+              class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 bg-white text-indigo-700 hover:bg-indigo-50"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </button>
@@ -377,48 +448,182 @@
   <div 
     x-show="showLogin" 
     x-transition
-    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+    class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
     @click.self="showLogin = false"
   >
-    <div class="bg-white rounded-xl p-6 w-full max-w-sm">
-      <h2 class="text-lg font-bold text-slate-800 mb-4">Ingresar como docente</h2>
+    <div class="bg-white rounded-xl p-6 w-full max-w-sm border border-gray-300 shadow-lg">
+      <h2 class="text-lg font-bold text-gray-900 mb-4">Ingresar como docente</h2>
       <form @submit.prevent="login()">
         <div class="mb-3">
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Email</label>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Email</label>
           <input 
             x-model="loginEmail"
             type="email"
-            class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white"
             required
           >
         </div>
         <div class="mb-4">
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Contraseña</label>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Contraseña</label>
           <input 
             x-model="loginPassword"
             type="password"
-            class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white"
             required
           >
         </div>
-        <p x-show="loginError" class="text-xs text-red-500 mb-3" x-text="loginError"></p>
+        <p x-show="loginError" class="text-xs text-red-600 mb-3 font-bold" x-text="loginError"></p>
         <div class="flex gap-2">
           <button 
             type="button"
             @click="showLogin = false"
-            class="flex-1 py-2 border border-slate-200 text-slate-600 text-sm font-medium rounded-lg hover:bg-slate-50"
+            class="flex-1 py-2 border border-gray-300 text-gray-700 text-sm font-bold rounded-lg hover:bg-gray-50"
           >
             Cancelar
           </button>
           <button 
             type="submit"
-            class="flex-1 py-2 bg-indigo-600 text-white text-sm font-bold rounded-lg hover:bg-indigo-700"
+            class="flex-1 py-2 bg-indigo-700 text-white text-sm font-bold rounded-lg hover:bg-indigo-800"
             :disabled="loadingAuth"
           >
             <span x-text="loadingAuth ? '...' : 'Ingresar'"></span>
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Add Grupo Modal -->
+  <div 
+    x-show="showAddGrupo" 
+    x-transition
+    class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+    @click.self="showAddGrupo = false"
+  >
+    <div class="bg-white rounded-xl p-6 w-full max-w-md border border-gray-300 shadow-lg max-h-[90vh] overflow-y-auto">
+      <h2 class="text-lg font-bold text-gray-900 mb-4">Agregar Grupo</h2>
+      <form @submit.prevent="agregarGrupo()">
+        <div class="mb-3">
+          <label class="block text-xs font-bold text-gray-700 mb-1">Proyecto</label>
+          <input 
+            x-model="newGrupo.proyecto"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            required
+          >
+        </div>
+        <div class="mb-3">
+          <label class="block text-xs font-bold text-gray-700 mb-1">Comisión</label>
+          <input 
+            x-model="newGrupo.comision"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          >
+        </div>
+        <div class="mb-3">
+          <label class="block text-xs font-bold text-gray-700 mb-1">Práctica</label>
+          <select 
+            x-model="newGrupo.practica"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white"
+          >
+            <option value="P1">P1</option>
+            <option value="P2">P2</option>
+            <option value="P3">P3</option>
+            <option value="TutoriasPost">Tutorías Post</option>
+          </select>
+        </div>
+        
+        <div class="mb-3">
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-xs font-bold text-gray-700">Integrantes</label>
+            <button 
+              type="button"
+              @click="newGrupo.integrantes.push({nombre:'',rol:'',observacion:''})"
+              class="px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded font-bold hover:bg-indigo-200"
+            >
+              + Agregar
+            </button>
+          </div>
+          <div class="space-y-2">
+            <template x-for="(int, idx) in newGrupo.integrantes" :key="idx">
+              <div class="flex gap-2 items-start p-2 bg-gray-50 rounded-lg border border-gray-200">
+                <div class="flex-1 space-y-1">
+                  <input 
+                    x-model="int.nombre"
+                    placeholder="Nombre"
+                    class="w-full px-2 py-1 text-xs border border-gray-300 rounded text-gray-900 focus:outline-none focus:ring-1 focus:ring-indigo-600"
+                    required
+                  >
+                  <input 
+                    x-model="int.rol"
+                    placeholder="Rol (opcional)"
+                    class="w-full px-2 py-1 text-xs border border-gray-300 rounded text-gray-900 focus:outline-none focus:ring-1 focus:ring-indigo-600"
+                  >
+                  <input 
+                    x-model="int.observacion"
+                    placeholder="Observación (opcional)"
+                    class="w-full px-2 py-1 text-xs border border-gray-300 rounded text-gray-900 focus:outline-none focus:ring-1 focus:ring-indigo-600"
+                  >
+                </div>
+                <button 
+                  type="button"
+                  @click="newGrupo.integrantes.splice(idx, 1)"
+                  class="w-6 h-6 flex items-center justify-center text-red-600 hover:bg-red-50 rounded"
+                  title="Eliminar integrante"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+            </template>
+          </div>
+        </div>
+        
+        <p x-show="addGrupoError" class="text-xs text-red-600 mb-3 font-bold" x-text="addGrupoError"></p>
+        <div class="flex gap-2">
+          <button 
+            type="button"
+            @click="showAddGrupo = false"
+            class="flex-1 py-2 border border-gray-300 text-gray-700 text-sm font-bold rounded-lg hover:bg-gray-50"
+          >
+            Cancelar
+          </button>
+          <button 
+            type="submit"
+            class="flex-1 py-2 bg-indigo-700 text-white text-sm font-bold rounded-lg hover:bg-indigo-800"
+            :disabled="loadingAddGrupo"
+          >
+            <span x-text="loadingAddGrupo ? '...' : 'Crear Grupo'"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirm Delete Modal -->
+  <div 
+    x-show="showConfirmDelete" 
+    x-transition
+    class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+    @click.self="showConfirmDelete = false"
+  >
+    <div class="bg-white rounded-xl p-6 w-full max-w-sm border border-gray-300 shadow-lg">
+      <h2 class="text-lg font-bold text-red-600 mb-2">Eliminar Grupo</h2>
+      <p class="text-sm text-gray-700 mb-4">
+        ¿Estás seguro de que deseas eliminar <strong x-text="grupoToDelete?.proyecto"></strong>? Esta acción no se puede deshacer.
+      </p>
+      <div class="flex gap-2">
+        <button 
+          @click="showConfirmDelete = false"
+          class="flex-1 py-2 border border-gray-300 text-gray-700 text-sm font-bold rounded-lg hover:bg-gray-50"
+        >
+          Cancelar
+        </button>
+        <button 
+          @click="eliminarGrupoConfirmado()"
+          class="flex-1 py-2 bg-red-600 text-white text-sm font-bold rounded-lg hover:bg-red-700"
+          :disabled="loadingDelete"
+        >
+          <span x-text="loadingDelete ? '...' : 'Eliminar'"></span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -444,22 +649,22 @@
   ];
 
   const GRUPOS_INICIALES = [
-    { id: 1, proyecto: "Teka Manager", comision: "51NMS", integrantes: [{ nombre: "Zagales, Mara", rol: "FN / DEV" }, { nombre: "Benetti, Gabriela", rol: "SM (Scrum Master)" }, { nombre: "Pigini, Fernando", rol: "FN (Análisis)" }, { nombre: "Molina, Carlos", rol: "DEV (Desarrollo)" }, { nombre: "Gaitan, Rocio", rol: "FN (Análisis)", obs: "Vive en España" }] },
-    { id: 2, proyecto: "SITMAS", comision: "51NMS", integrantes: [{ nombre: "Videla, Juan", rol: "FN / DEV" }, { nombre: "Lopez Diaz, Erika", rol: "DEV (Desarrollo)" }, { nombre: "Rivero, Cristina", rol: "SM (Scrum Master)" }, { nombre: "Cognini, Facundo", rol: "DEV (Desarrollo)" }, { nombre: "Zamora, Ramiro", rol: "DEV (Desarrollo)" }] },
-    { id: 3, proyecto: "YO SOY", comision: "51NMS", integrantes: [{ nombre: "Herrera Agustin", rol: "SM (Scrum Master)" }, { nombre: "Mantovani, Santiago", rol: "PO (Product Owner)" }, { nombre: "Gallo, Mariana", rol: "DEV (Desarrollo)" }, { nombre: "Armas, Alejandra", rol: "DEV (Desarrollo)" }] },
-    { id: 4, proyecto: "NODUS", comision: "51NMS", integrantes: [{ nombre: "Arias, Ayelen", rol: "DEV / SM" }, { nombre: "Arias, Mariana", rol: "DEV (Desarrollo)" }, { nombre: "Cerutti, Franco", rol: "FN / DEV" }, { nombre: "Barros, Claudia", rol: "FN / DEV" }] },
-    { id: 5, proyecto: "SocioApp Rancul", comision: "", integrantes: [{ nombre: "Emiliano Lafuria", rol: "SM (Scrum Master)" }, { nombre: "Romina Salome", rol: "" }, { nombre: "Asis Maleh", rol: "", obs: "Salió del grupo" }, { nombre: "Pereyra Débora Zulema", rol: "" }, { nombre: "Fernández Joaquín Tomas", rol: "" }, { nombre: "Torralba Silvana Beatriz", rol: "" }] },
-    { id: 6, proyecto: "GeoLocalizacion Biosa", comision: "", integrantes: [{ nombre: "Bustamante Danilo", rol: "SM (Scrum Master)" }, { nombre: "Baldironi Tomas", rol: "" }, { nombre: "Zurschmittn Maximo", rol: "" }, { nombre: "Nieto Samira", rol: "" }, { nombre: "Ferrara Melanie", rol: "", obs: "No cursa más" }] },
-    { id: 7, proyecto: "Punto Cell", comision: "51", integrantes: [{ nombre: "Fanara Maximilian", rol: "" }, { nombre: "Guerrini Juan Pablo", rol: "FN (Análisis)" }, { nombre: "Sclarandi Leandro Simon", rol: "" }, { nombre: "Yona Natan", rol: "" }] },
-    { id: 8, proyecto: "Metalurgica", comision: "51", integrantes: [{ nombre: "Noelia Pereyra", rol: "FN (Análisis)" }, { nombre: "Mariana Cepeda", rol: "SM (Scrum Master)" }, { nombre: "Federico Masin", rol: "DEV (Desarrollo)" }, { nombre: "Angel Ceballos", rol: "DEV (Desarrollo)" }] },
-    { id: 9, proyecto: "Condado", comision: "", integrantes: [{ nombre: "Bustos Pacheco Tomas Ezequiel", rol: "FN (Análisis)" }, { nombre: "Villegas Atoche Dylan Alexis", rol: "SM (Scrum Master)" }, { nombre: "Heredia Maximo", rol: "DEV (Desarrollo)" }, { nombre: "Escudero Mauricio", rol: "DEV (Desarrollo)" }] },
-    { id: 10, proyecto: "Salus Aequitas", comision: "", integrantes: [{ nombre: "Samira Nieto", rol: "" }, { nombre: "Maximo Zurshmitten", rol: "" }, { nombre: "Tomas Baldironi", rol: "SM (Scrum Master)" }, { nombre: "Danilo Bustamente", rol: "DEV (Desarrollo)" }] },
-    { id: 11, proyecto: "Mapla Joyas", comision: "", integrantes: [{ nombre: "Fazundo Zambrano", rol: "" }, { nombre: "Milagros Cordoba", rol: "" }, { nombre: "Belen Insegna", rol: "" }, { nombre: "Nazareno Cano", rol: "" }, { nombre: "Santiago Castro", rol: "" }] },
-    { id: 12, proyecto: "Dentisware", comision: "", integrantes: [{ nombre: "Edgar Narvaez Lavalle", rol: "" }, { nombre: "Leandro Saiz Zonni", rol: "" }, { nombre: "Rodrigo Good Carpio", rol: "" }] },
-    { id: 13, proyecto: "Arguello Infancias", comision: "", integrantes: [{ nombre: "Lozano Melani", rol: "" }, { nombre: "Tolomey Agostina", rol: "" }, { nombre: "Galvan Camila Anabel", rol: "" }, { nombre: "Marinez Sofia Del Valle", rol: "" }, { nombre: "Huansi Jordy", rol: "" }] },
-    { id: 14, proyecto: "Tamcat", comision: "", integrantes: [{ nombre: "Carballo Juan", rol: "" }, { nombre: "Gorosito Ezequiel", rol: "" }, { nombre: "Cunningham Luciano", rol: "" }, { nombre: "Matias Lopez", rol: "" }] },
-    { id: 15, proyecto: "Inclusion", comision: "", integrantes: [{ nombre: "Aparicio Fernando", rol: "DEV (Desarrollo)" }, { nombre: "Wlk, Mirko", rol: "DEV (Desarrollo)" }, { nombre: "Del Barrio Sacha", rol: "FN (Análisis)" }, { nombre: "Cochis German", rol: "FN (Análisis)" }, { nombre: "Decalli Mariano", rol: "SM (Scrum Master)" }] },
-    { id: 16, proyecto: "Daytona Repuesto de Autos", comision: "", integrantes: [{ nombre: "Ludueña Sofia", rol: "DEV / SM" }, { nombre: "Pereyra Hernan", rol: "DEV / SM" }] },
+    { id: 1, proyecto: "Teka Manager", comision: "51NMS", practica: "P2", integrantes: [{ nombre: "Zagales, Mara", rol: "FN / DEV" }, { nombre: "Benetti, Gabriela", rol: "SM (Scrum Master)" }, { nombre: "Pigini, Fernando", rol: "FN (Análisis)" }, { nombre: "Molina, Carlos", rol: "DEV (Desarrollo)" }, { nombre: "Gaitan, Rocio", rol: "FN (Análisis)", obs: "Vive en España" }] },
+    { id: 2, proyecto: "SITMAS", comision: "51NMS", practica: "P2", integrantes: [{ nombre: "Videla, Juan", rol: "FN / DEV" }, { nombre: "Lopez Diaz, Erika", rol: "DEV (Desarrollo)" }, { nombre: "Rivero, Cristina", rol: "SM (Scrum Master)" }, { nombre: "Cognini, Facundo", rol: "DEV (Desarrollo)" }, { nombre: "Zamora, Ramiro", rol: "DEV (Desarrollo)" }] },
+    { id: 3, proyecto: "YO SOY", comision: "51NMS", practica: "P2", integrantes: [{ nombre: "Herrera Agustin", rol: "SM (Scrum Master)" }, { nombre: "Mantovani, Santiago", rol: "PO (Product Owner)" }, { nombre: "Gallo, Mariana", rol: "DEV (Desarrollo)" }, { nombre: "Armas, Alejandra", rol: "DEV (Desarrollo)" }] },
+    { id: 4, proyecto: "NODUS", comision: "51NMS", practica: "P2", integrantes: [{ nombre: "Arias, Ayelen", rol: "DEV / SM" }, { nombre: "Arias, Mariana", rol: "DEV (Desarrollo)" }, { nombre: "Cerutti, Franco", rol: "FN / DEV" }, { nombre: "Barros, Claudia", rol: "FN / DEV" }] },
+    { id: 5, proyecto: "SocioApp Rancul", comision: "", practica: "P2", integrantes: [{ nombre: "Emiliano Lafuria", rol: "SM (Scrum Master)" }, { nombre: "Romina Salome", rol: "" }, { nombre: "Asis Maleh", rol: "", obs: "Salió del grupo" }, { nombre: "Pereyra Débora Zulema", rol: "" }, { nombre: "Fernández Joaquín Tomas", rol: "" }, { nombre: "Torralba Silvana Beatriz", rol: "" }] },
+    { id: 6, proyecto: "GeoLocalizacion Biosa", comision: "", practica: "P2", integrantes: [{ nombre: "Bustamante Danilo", rol: "SM (Scrum Master)" }, { nombre: "Baldironi Tomas", rol: "" }, { nombre: "Zurschmittn Maximo", rol: "" }, { nombre: "Nieto Samira", rol: "" }, { nombre: "Ferrara Melanie", rol: "", obs: "No cursa más" }] },
+    { id: 7, proyecto: "Punto Cell", comision: "51", practica: "P2", integrantes: [{ nombre: "Fanara Maximilian", rol: "" }, { nombre: "Guerrini Juan Pablo", rol: "FN (Análisis)" }, { nombre: "Sclarandi Leandro Simon", rol: "" }, { nombre: "Yona Natan", rol: "" }] },
+    { id: 8, proyecto: "Metalurgica", comision: "51", practica: "P2", integrantes: [{ nombre: "Noelia Pereyra", rol: "FN (Análisis)" }, { nombre: "Mariana Cepeda", rol: "SM (Scrum Master)" }, { nombre: "Federico Masin", rol: "DEV (Desarrollo)" }, { nombre: "Angel Ceballos", rol: "DEV (Desarrollo)" }] },
+    { id: 9, proyecto: "Condado", comision: "", practica: "P2", integrantes: [{ nombre: "Bustos Pacheco Tomas Ezequiel", rol: "FN (Análisis)" }, { nombre: "Villegas Atoche Dylan Alexis", rol: "SM (Scrum Master)" }, { nombre: "Heredia Maximo", rol: "DEV (Desarrollo)" }, { nombre: "Escudero Mauricio", rol: "DEV (Desarrollo)" }] },
+    { id: 10, proyecto: "Salus Aequitas", comision: "", practica: "P2", integrantes: [{ nombre: "Samira Nieto", rol: "" }, { nombre: "Maximo Zurshmitten", rol: "" }, { nombre: "Tomas Baldironi", rol: "SM (Scrum Master)" }, { nombre: "Danilo Bustamente", rol: "DEV (Desarrollo)" }] },
+    { id: 11, proyecto: "Mapla Joyas", comision: "", practica: "P2", integrantes: [{ nombre: "Fazundo Zambrano", rol: "" }, { nombre: "Milagros Cordoba", rol: "" }, { nombre: "Belen Insegna", rol: "" }, { nombre: "Nazareno Cano", rol: "" }, { nombre: "Santiago Castro", rol: "" }] },
+    { id: 12, proyecto: "Dentisware", comision: "", practica: "P2", integrantes: [{ nombre: "Edgar Narvaez Lavalle", rol: "" }, { nombre: "Leandro Saiz Zonni", rol: "" }, { nombre: "Rodrigo Good Carpio", rol: "" }] },
+    { id: 13, proyecto: "Arguello Infancias", comision: "", practica: "P2", integrantes: [{ nombre: "Lozano Melani", rol: "" }, { nombre: "Tolomey Agostina", rol: "" }, { nombre: "Galvan Camila Anabel", rol: "" }, { nombre: "Marinez Sofia Del Valle", rol: "" }, { nombre: "Huansi Jordy", rol: "" }] },
+    { id: 14, proyecto: "Tamcat", comision: "", practica: "P2", integrantes: [{ nombre: "Carballo Juan", rol: "" }, { nombre: "Gorosito Ezequiel", rol: "" }, { nombre: "Cunningham Luciano", rol: "" }, { nombre: "Matias Lopez", rol: "" }] },
+    { id: 15, proyecto: "Inclusion", comision: "", practica: "P2", integrantes: [{ nombre: "Aparicio Fernando", rol: "DEV (Desarrollo)" }, { nombre: "Wlk, Mirko", rol: "DEV (Desarrollo)" }, { nombre: "Del Barrio Sacha", rol: "FN (Análisis)" }, { nombre: "Cochis German", rol: "FN (Análisis)" }, { nombre: "Decalli Mariano", rol: "SM (Scrum Master)" }] },
+    { id: 16, proyecto: "Daytona Repuesto de Autos", comision: "", practica: "P2", integrantes: [{ nombre: "Ludueña Sofia", rol: "DEV / SM" }, { nombre: "Pereyra Hernan", rol: "DEV / SM" }] },
   ];
 
   const ENCUENTROS_CARGADOS = {
@@ -519,52 +724,52 @@
   }
 
   function notaColor(nota) {
-    if (nota === "—") return "text-slate-400";
+    if (nota === "—") return "text-gray-400";
     const n = parseFloat(nota);
-    if (n >= 8) return "text-green-500";
-    if (n >= 6) return "text-amber-500";
-    return "text-red-500";
+    if (n >= 8) return "text-green-700";
+    if (n >= 6) return "text-amber-700";
+    return "text-red-700";
   }
 
   function notaBadgeClass(nota) {
-    if (nota === "—") return "bg-slate-100 text-slate-400";
+    if (nota === "—") return "bg-gray-100 text-gray-400";
     const n = parseFloat(nota);
-    if (n >= 8) return "bg-green-50 text-green-600";
-    if (n >= 6) return "bg-amber-50 text-amber-600";
-    return "bg-red-50 text-red-600";
+    if (n >= 8) return "bg-green-100 text-green-700";
+    if (n >= 6) return "bg-amber-100 text-amber-700";
+    return "bg-red-100 text-red-700";
   }
 
   function pctColor(pct) {
-    if (pct >= 80) return "bg-green-500";
+    if (pct >= 80) return "bg-green-600";
     if (pct >= 60) return "bg-amber-500";
-    return "bg-red-500";
+    return "bg-red-600";
   }
 
   function asistBtnClass(val) {
     const map = {
-      Presente: "border-green-500 text-green-500 bg-green-50",
-      Ausente: "border-red-500 text-red-500 bg-red-50",
-      Justificado: "border-amber-500 text-amber-500 bg-amber-50"
+      Presente: "border-green-600 text-green-700 bg-green-100",
+      Ausente: "border-red-600 text-red-700 bg-red-100",
+      Justificado: "border-amber-600 text-amber-700 bg-amber-100"
     };
     return map[val] || "";
   }
 
   function asistTextClass(val) {
     const map = {
-      Presente: "text-green-600",
-      Ausente: "text-red-600",
-      Justificado: "text-amber-600"
+      Presente: "text-green-700 font-bold",
+      Ausente: "text-red-700 font-bold",
+      Justificado: "text-amber-700 font-bold"
     };
-    return map[val] || "text-slate-400";
+    return map[val] || "text-gray-500";
   }
 
   function dimColor(dim) {
-    const map = { FN: "text-indigo-500", DEV: "text-sky-500", SM: "text-amber-500" };
+    const map = { FN: "text-indigo-700", DEV: "text-sky-700", SM: "text-amber-700" };
     return map[dim] || "";
   }
 
   function dimBarColor(dim) {
-    const map = { FN: "bg-indigo-500", DEV: "bg-sky-500", SM: "bg-amber-500" };
+    const map = { FN: "bg-indigo-600", DEV: "bg-sky-600", SM: "bg-amber-500" };
     return map[dim] || "";
   }
 
@@ -575,21 +780,43 @@
     selectedEnc: null,
     activeE: 'E1',
     showLogin: false,
+    showAddGrupo: false,
+    showConfirmDelete: false,
     loginEmail: '',
     loginPassword: '',
     loginError: '',
+    addGrupoError: '',
     loading: false,
     loadingAuth: false,
     loadingData: true,
+    loadingAddGrupo: false,
+    loadingDelete: false,
     user: null,
     userRole: null,
     saved: false,
+    practicaFilter: 'Todas',
     
     encuentrosMeta: ENCUENTROS_META,
-    grupos: GRUPOS_INICIALES,
+    grupos: [],
     data: {},
     localData: {},
     localAsist: {},
+    grupoToDelete: null,
+    
+    practicas: [
+      { id: 'Todas', label: 'Todas' },
+      { id: 'P1', label: 'P1' },
+      { id: 'P2', label: 'P2' },
+      { id: 'P3', label: 'P3' },
+      { id: 'TutoriasPost', label: 'Tutorías Post' },
+    ],
+    
+    newGrupo: {
+      proyecto: '',
+      comision: '',
+      practica: 'P2',
+      integrantes: [{nombre:'',rol:'',observacion:''}]
+    },
 
     async init() {
       this.loadFallbackData();
@@ -599,6 +826,8 @@
     },
 
     loadFallbackData() {
+      // Start with empty, will fill from Supabase or fallback
+      this.grupos = [];
       const d = {};
       ENCUENTROS_META.forEach(e => { d[e.id] = {}; });
       Object.entries(ENCUENTROS_CARGADOS).forEach(([enc, gs]) => {
@@ -612,6 +841,42 @@
 
     async loadFromSupabase() {
       try {
+        // Load grupos with integrantes
+        const { data: gruposData, error: gruposError } = await supabase
+          .from('grupos')
+          .select('*')
+          .order('id');
+        
+        if (gruposError) {
+          console.warn('Supabase grupos error:', gruposError.message);
+        }
+
+        const { data: integrantesData, error: intError } = await supabase
+          .from('integrantes')
+          .select('*')
+          .order('id');
+
+        if (intError) {
+          console.warn('Supabase integrantes error:', intError.message);
+        }
+
+        // Build grupos with integrantes
+        let loadedGrupos = [];
+        if (gruposData && gruposData.length > 0) {
+          loadedGrupos = gruposData.map(g => ({
+            ...g,
+            integrantes: (integrantesData || []).filter(i => i.grupo_id === g.id).map(i => ({
+              nombre: i.nombre,
+              rol: i.rol || '',
+              obs: i.observacion || ''
+            }))
+          }));
+        } else {
+          // Fallback to hardcoded
+          loadedGrupos = GRUPOS_INICIALES;
+        }
+        this.grupos = loadedGrupos;
+
         // Load evaluaciones
         const { data: evals, error: evalError } = await supabase
           .from('evaluaciones')
@@ -619,11 +884,9 @@
         
         if (evalError) {
           console.warn('Supabase evaluaciones error:', evalError.message);
-          return;
         }
 
         if (evals && evals.length > 0) {
-          // Merge Supabase data into local structure
           evals.forEach(ev => {
             if (!this.data[ev.encuentro_meta_id]) this.data[ev.encuentro_meta_id] = {};
             if (!this.data[ev.encuentro_meta_id][ev.grupo_id]) this.data[ev.encuentro_meta_id][ev.grupo_id] = {};
@@ -646,12 +909,9 @@
 
         if (asistError) {
           console.warn('Supabase asistencias error:', asistError.message);
-          return;
         }
 
         if (asist && asist.length > 0) {
-          // Need to map evaluacion_id -> (encuentro_id, grupo_id)
-          // First build a lookup from evaluaciones we just loaded
           const evalLookup = {};
           if (evals) {
             evals.forEach(ev => {
@@ -673,6 +933,8 @@
         }
       } catch (e) {
         console.warn('Error loading from Supabase:', e);
+        // Fallback
+        this.grupos = GRUPOS_INICIALES;
       }
     },
 
@@ -706,16 +968,27 @@
     },
 
     get gruposFiltrados() {
+      let list = this.grupos;
+      if (this.practicaFilter !== 'Todas') {
+        list = list.filter(g => g.practica === this.practicaFilter);
+      }
       const f = this.filtro.toLowerCase();
-      return this.grupos.filter(g => 
-        g.proyecto.toLowerCase().includes(f) ||
-        g.comision.toLowerCase().includes(f) ||
-        String(g.id).includes(f)
-      );
+      if (f) {
+        list = list.filter(g => 
+          g.proyecto.toLowerCase().includes(f) ||
+          (g.comision || '').toLowerCase().includes(f) ||
+          String(g.id).includes(f)
+        );
+      }
+      return list;
     },
 
     get gruposConProyecto() {
-      return this.grupos.filter(g => g.proyecto);
+      let list = this.grupos.filter(g => g.proyecto);
+      if (this.practicaFilter !== 'Todas') {
+        list = list.filter(g => g.practica === this.practicaFilter);
+      }
+      return list;
     },
 
     get grupoActual() {
@@ -746,6 +1019,15 @@
         if (p !== null) { sum += p; count++; }
       });
       return count ? sum / count : null;
+    },
+
+    dimAvgForGrupo(grupoId, dim) {
+      let sum = 0, count = 0;
+      ENCUENTROS_META.forEach(e => {
+        const v = this.data[e.id]?.[grupoId]?.[dim];
+        if (v !== undefined && v !== null && v !== "") { sum += Number(v); count++; }
+      });
+      return count ? (sum / count).toFixed(1) : "—";
     },
 
     selectGrupo(id) {
@@ -806,13 +1088,13 @@
 
     countGruposEvaluados(encId) {
       let cnt = 0;
-      this.grupos.forEach(g => { if (calcPct(this.data[encId]?.[g.id]) !== null) cnt++; });
+      this.gruposConProyecto.forEach(g => { if (calcPct(this.data[encId]?.[g.id]) !== null) cnt++; });
       return cnt;
     },
 
     dimProm(dim) {
       let sum = 0, count = 0;
-      this.grupos.forEach(g => {
+      this.gruposConProyecto.forEach(g => {
         ENCUENTROS_META.forEach(e => {
           const v = this.data[e.id]?.[g.id]?.[dim];
           if (v !== undefined && v !== null && v !== "") { sum += Number(v); count++; }
@@ -823,7 +1105,7 @@
 
     dimAvg(dim) {
       let sum = 0, count = 0;
-      this.grupos.forEach(g => {
+      this.gruposConProyecto.forEach(g => {
         ENCUENTROS_META.forEach(e => {
           const v = this.data[e.id]?.[g.id]?.[dim];
           if (v !== undefined && v !== null && v !== "") { sum += Number(v); count++; }
@@ -834,7 +1116,7 @@
 
     encProm(encId) {
       let sum = 0, count = 0;
-      this.grupos.forEach(g => {
+      this.gruposConProyecto.forEach(g => {
         const sc = this.data[encId]?.[g.id];
         const p = calcPct(sc);
         if (p !== null) { sum += p * 10; count++; }
@@ -844,7 +1126,7 @@
 
     encAvg(encId) {
       let sum = 0, count = 0;
-      this.grupos.forEach(g => {
+      this.gruposConProyecto.forEach(g => {
         const sc = this.data[encId]?.[g.id];
         const p = calcPct(sc);
         if (p !== null) { sum += p * 10; count++; }
@@ -854,7 +1136,7 @@
 
     encCount(encId) {
       let count = 0;
-      this.grupos.forEach(g => {
+      this.gruposConProyecto.forEach(g => {
         const sc = this.data[encId]?.[g.id];
         const p = calcPct(sc);
         if (p !== null) count++;
@@ -911,7 +1193,6 @@
           
           if (!local) continue;
           
-          // Upsert evaluacion
           const evalPayload = {
             grupo_id: grupoId,
             encuentro_meta_id: enc.id,
@@ -934,7 +1215,6 @@
             continue;
           }
           
-          // Save asistencias
           if (asist && evalData) {
             for (const [nombre, estado] of Object.entries(asist)) {
               if (!estado) continue;
@@ -953,7 +1233,6 @@
             }
           }
           
-          // Update local data
           if (!this.data[enc.id]) this.data[enc.id] = {};
           if (!this.data[enc.id][grupoId]) this.data[enc.id][grupoId] = {};
           this.data[enc.id][grupoId] = {
@@ -974,6 +1253,118 @@
       } catch (e) {
         console.error('Error saving:', e);
         alert('Error al guardar: ' + e.message);
+      }
+    },
+    
+    async agregarGrupo() {
+      if (!this.canEdit) return;
+      this.loadingAddGrupo = true;
+      this.addGrupoError = '';
+      
+      try {
+        // Validate
+        if (!this.newGrupo.proyecto.trim()) {
+          throw new Error('El nombre del proyecto es obligatorio');
+        }
+        const validIntegrantes = this.newGrupo.integrantes.filter(i => i.nombre.trim());
+        if (validIntegrantes.length === 0) {
+          throw new Error('Debe haber al menos un integrante');
+        }
+        
+        // Generate next ID
+        const nextId = Math.max(0, ...this.grupos.map(g => g.id)) + 1;
+        
+        // Insert grupo
+        const { data: grupoData, error: grupoError } = await supabase
+          .from('grupos')
+          .insert({
+            id: nextId,
+            proyecto: this.newGrupo.proyecto.trim(),
+            comision: this.newGrupo.comision.trim(),
+            practica: this.newGrupo.practica
+          })
+          .select()
+          .single();
+        
+        if (grupoError) throw grupoError;
+        
+        // Insert integrantes
+        for (const int of validIntegrantes) {
+          const { error: intError } = await supabase
+            .from('integrantes')
+            .insert({
+              grupo_id: nextId,
+              nombre: int.nombre.trim(),
+              rol: int.rol.trim(),
+              observacion: int.observacion.trim()
+            });
+          if (intError) console.warn('Error insertando integrante:', intError);
+        }
+        
+        // Add to local state
+        this.grupos.push({
+          id: nextId,
+          proyecto: this.newGrupo.proyecto.trim(),
+          comision: this.newGrupo.comision.trim(),
+          practica: this.newGrupo.practica,
+          integrantes: validIntegrantes.map(i => ({
+            nombre: i.nombre.trim(),
+            rol: i.rol.trim(),
+            obs: i.observacion.trim()
+          }))
+        });
+        
+        // Reset form
+        this.newGrupo = {
+          proyecto: '',
+          comision: '',
+          practica: 'P2',
+          integrantes: [{nombre:'',rol:'',observacion:''}]
+        };
+        this.showAddGrupo = false;
+        
+      } catch (e) {
+        this.addGrupoError = e.message || 'Error al crear grupo';
+      } finally {
+        this.loadingAddGrupo = false;
+      }
+    },
+    
+    confirmDeleteGrupo() {
+      this.grupoToDelete = this.grupoActual;
+      this.showConfirmDelete = true;
+    },
+    
+    async eliminarGrupoConfirmado() {
+      if (!this.grupoToDelete || !this.canEdit) return;
+      this.loadingDelete = true;
+      
+      try {
+        const { error } = await supabase
+          .from('grupos')
+          .delete()
+          .eq('id', this.grupoToDelete.id);
+        
+        if (error) throw error;
+        
+        // Remove from local
+        this.grupos = this.grupos.filter(g => g.id !== this.grupoToDelete.id);
+        
+        // Clean data
+        ENCUENTROS_META.forEach(e => {
+          if (this.data[e.id]) {
+            delete this.data[e.id][this.grupoToDelete.id];
+          }
+        });
+        
+        this.showConfirmDelete = false;
+        this.grupoToDelete = null;
+        this.view = 'resumen';
+        
+      } catch (e) {
+        alert('Error al eliminar: ' + e.message);
+      } finally {
+        this.loadingDelete = false;
       }
     }
   }));
