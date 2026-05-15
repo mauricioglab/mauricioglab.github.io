@@ -425,7 +425,6 @@ window.initSurvey = function(containerId) {
       pp3_mes_regularizada: d.pp3_mes_regularizada || null,
       tiene_proyecto: d.tiene_proyecto || false,
       proyecto_nombre: d.tiene_proyecto ? (d.proyecto_nombre || null) : null,
-      proyecto_objetivo: d.tiene_proyecto ? (d.proyecto_objetivo || null) : null,
       proyecto_tutor: d.tiene_proyecto ? (d.proyecto_tutor || null) : null,
       tiene_grupo: d.tiene_grupo || false,
       grupo_detalle: d.tiene_grupo ? (d.grupo_detalle || null) : null,
@@ -459,12 +458,14 @@ window.initSurvey = function(containerId) {
           </div>`;
       }
     } catch (e) {
+      console.error('Error al enviar:', e);
       if (resultEl) {
         resultEl.innerHTML = `
           <div style="text-align:center;padding:40px 20px">
             <div style="font-size:48px;margin-bottom:16px">✕</div>
-            <h2 style="font-size:20px;font-weight:700;margin-bottom:8px;color:#ef4444">Error al enviar</h2>
-            <p style="color:#6b7280;font-size:14px">${e.message || "Intentá de nuevo más tarde."}</p>
+            <h2 style="font-size:20px;font-weight:700;margin-bottom:8px;color:#ef4444">No se pudieron guardar los datos</h2>
+            <p style="color:#6b7280;font-size:14px">Hubo un problema de conexión. Por favor, intentá de nuevo en unos minutos.</p>
+            <p style="color:#9ca3af;font-size:12px;margin-top:8px">Si el problema persiste, contactá al administrador.</p>
             <button onclick="location.reload()" style="margin-top:16px;padding:8px 24px;background:#6366f1;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:14px">Reintentar</button>
           </div>`;
       }
