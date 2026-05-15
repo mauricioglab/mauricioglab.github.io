@@ -1,0 +1,823 @@
+---
+// Admin Dashboard for Seguimiento Alumnos - Alpine.js + Supabase
+---
+
+<div
+  x-data="adminDashboard()"
+  x-init="init()"
+  class="min-h-screen bg-gray-100 font-sans"
+  x-cloak
+>
+  <header class="bg-white border-b border-gray-300 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-lg font-bold text-gray-900">Seguimiento Alumnos — Trabajo Final</h1>
+          <p class="text-xs text-gray-600" x-text="`${alumnos.length} alumnos registrados`"></p>
+        </div>
+        <div class="flex items-center gap-3">
+          <template x-if="!user">
+            <button
+              @click="showLogin = true"
+              class="px-3 py-1.5 bg-indigo-700 text-white text-sm font-medium rounded-lg hover:bg-indigo-800 transition"
+            >
+              Ingresar
+            </button>
+          </template>
+          <template x-if="user">
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-gray-700 font-medium" x-text="user.email"></span>
+              <button
+                @click="logout()"
+                class="px-3 py-1.5 text-xs text-red-700 hover:bg-red-50 rounded-lg transition font-medium"
+              >
+                Salir
+              </button>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-4">
+    <div x-show="loadingData" class="text-center py-12">
+      <div class="inline-block w-8 h-8 border-2 border-indigo-700 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-sm text-gray-600 mt-2 font-medium">Cargando datos...</p>
+    </div>
+
+    <div x-show="!loadingData" x-transition>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div class="bg-white rounded-xl p-3 border border-gray-200 shadow-sm">
+          <div class="text-xs text-gray-500 font-bold uppercase">Total</div>
+          <div class="text-2xl font-extrabold text-gray-900" x-text="alumnos.length"></div>
+        </div>
+        <div class="bg-white rounded-xl p-3 border border-green-200 shadow-sm">
+          <div class="text-xs text-green-700 font-bold uppercase">Habilitados</div>
+          <div class="text-2xl font-extrabold text-green-700" x-text="alumnos.filter(a => a.estado === 'habilitado').length"></div>
+        </div>
+        <div class="bg-white rounded-xl p-3 border border-amber-200 shadow-sm">
+          <div class="text-xs text-amber-700 font-bold uppercase">Condicional</div>
+          <div class="text-2xl font-extrabold text-amber-700" x-text="alumnos.filter(a => a.estado === 'condicional').length"></div>
+        </div>
+        <div class="bg-white rounded-xl p-3 border border-red-200 shadow-sm">
+          <div class="text-xs text-red-700 font-bold uppercase">A recursar</div>
+          <div class="text-2xl font-extrabold text-red-700" x-text="alumnos.filter(a => a.estado === 'a_recurrir').length"></div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-1.5 mb-3">
+        <button
+          @click="estadoFilter = 'todos'"
+          class="px-3 py-1.5 text-xs font-bold rounded-md transition"
+          :class="estadoFilter === 'todos' ? 'bg-gray-900 text-white' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-300'"
+        >Todos</button>
+        <button
+          @click="estadoFilter = 'habilitado'"
+          class="px-3 py-1.5 text-xs font-bold rounded-md transition"
+          :class="estadoFilter === 'habilitado' ? 'bg-green-700 text-white' : 'bg-white text-green-700 hover:bg-green-50 border border-green-300'"
+        >Habilitados</button>
+        <button
+          @click="estadoFilter = 'condicional'"
+          class="px-3 py-1.5 text-xs font-bold rounded-md transition"
+          :class="estadoFilter === 'condicional' ? 'bg-amber-700 text-white' : 'bg-white text-amber-700 hover:bg-amber-50 border border-amber-300'"
+        >Condicional</button>
+        <button
+          @click="estadoFilter = 'a_recurrir'"
+          class="px-3 py-1.5 text-xs font-bold rounded-md transition"
+          :class="estadoFilter === 'a_recurrir' ? 'bg-red-700 text-white' : 'bg-white text-red-700 hover:bg-red-50 border border-red-300'"
+        >A recursar</button>
+        <button
+          @click="estadoFilter = 'pendiente_revision'"
+          class="px-3 py-1.5 text-xs font-bold rounded-md transition"
+          :class="estadoFilter === 'pendiente_revision' ? 'bg-gray-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-300'"
+        >Sin revisar</button>
+      </div>
+
+      <div class="flex gap-2 mb-3">
+        <input
+          x-model="filtro"
+          placeholder="Buscar nombre, DNI, email, Teams..."
+          class="flex-1 px-4 py-2.5 border border-gray-300 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white"
+        >
+        <button
+          @click="showAddAlumno = true"
+          x-show="canEdit"
+          class="px-4 py-2.5 bg-indigo-700 text-white text-sm font-bold rounded-xl hover:bg-indigo-800 transition whitespace-nowrap flex items-center gap-1"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Agregar
+        </button>
+      </div>
+
+      <div class="overflow-x-auto bg-white rounded-xl border border-gray-200 shadow-sm">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-gray-50 text-gray-600 text-left border-b border-gray-200">
+              <th class="px-3 py-2.5 font-bold cursor-pointer hover:text-indigo-700" @click="sortBy('nombre_completo')">
+                Nombre <span x-text="sortIcon('nombre_completo')"></span>
+              </th>
+              <th class="px-3 py-2.5 font-bold hidden md:table-cell">Teams</th>
+              <th class="px-3 py-2.5 font-bold hidden lg:table-cell">Comisión</th>
+              <th class="px-3 py-2.5 font-bold">PP2</th>
+              <th class="px-3 py-2.5 font-bold">PP3</th>
+              <th class="px-3 py-2.5 font-bold hidden md:table-cell">Proyecto</th>
+              <th class="px-3 py-2.5 font-bold hidden lg:table-cell">Grupo</th>
+              <th class="px-3 py-2.5 font-bold">Materias</th>
+              <th class="px-3 py-2.5 font-bold">Estado</th>
+              <th class="px-3 py-2.5 font-bold w-10"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="alumno in alumnosFiltrados" :key="alumno.id">
+              <tr
+                @click="selectAlumno(alumno)"
+                class="cursor-pointer hover:bg-gray-50 transition border-b border-gray-100"
+              >
+                <td class="px-3 py-2.5">
+                  <div class="font-bold text-gray-900" x-text="alumno.nombre_completo" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
+                  <div class="text-xs text-gray-500" x-text="alumno.dni || '—'" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
+                </td>
+                <td class="px-3 py-2.5 text-xs hidden md:table-cell" x-text="alumno.usuario_teams || '—'"></td>
+                <td class="px-3 py-2.5 hidden lg:table-cell" x-text="alumno.comision || '—'"></td>
+                <td class="px-3 py-2.5">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold" :class="ppBadgeClass(alumno.pp2_estado)" x-text="ppLabel(alumno.pp2_estado)"></span>
+                </td>
+                <td class="px-3 py-2.5">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold" :class="ppBadgeClass(alumno.pp3_estado)" x-text="ppLabel(alumno.pp3_estado)"></span>
+                </td>
+                <td class="px-3 py-2.5 hidden md:table-cell">
+                  <span x-show="alumno.tiene_proyecto" class="text-xs font-bold text-green-700">✓</span>
+                  <span x-show="!alumno.tiene_proyecto && alumno.buscando_proyecto" class="text-xs font-bold text-amber-600">Buscando</span>
+                  <span x-show="!alumno.tiene_proyecto && !alumno.buscando_proyecto" class="text-xs text-gray-400">—</span>
+                </td>
+                <td class="px-3 py-2.5 hidden lg:table-cell">
+                  <span x-show="alumno.tiene_grupo" class="text-xs font-bold text-green-700">✓</span>
+                  <span x-show="!alumno.tiene_grupo && alumno.buscando_grupo" class="text-xs font-bold text-amber-600">Buscando</span>
+                  <span x-show="!alumno.tiene_grupo && !alumno.buscando_grupo" class="text-xs text-gray-400">—</span>
+                </td>
+                <td class="px-3 py-2.5">
+                  <span x-show="materiasCount(alumno) === 0" class="text-xs text-green-700 font-bold">—</span>
+                  <span x-show="materiasCount(alumno) > 0" class="text-xs font-bold text-red-700" x-text="materiasCount(alumno)"></span>
+                </td>
+                <td class="px-3 py-2.5">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold" :class="estadoBadgeClass(alumno.estado)" x-text="estadoLabel(alumno.estado)"></span>
+                </td>
+                <td class="px-3 py-2.5">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                </td>
+              </tr>
+            </template>
+            <template x-if="alumnosFiltrados.length === 0">
+              <tr>
+                <td colspan="10" class="px-3 py-8 text-center text-gray-500 text-sm">No hay alumnos que coincidan</td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div x-show="selectedAlumno && !loadingData" x-transition class="fixed inset-0 bg-black/50 z-40 flex items-start justify-center pt-8 pb-8 overflow-y-auto" @click.self="selectedAlumno = null">
+      <div class="bg-white rounded-xl w-full max-w-2xl border border-gray-300 shadow-lg mx-4 my-auto" @click.stop>
+        <template x-if="selectedAlumno">
+          <div>
+            <div class="flex items-center justify-between px-5 py-3 border-b border-gray-200">
+              <div>
+                <h2 class="text-lg font-extrabold text-gray-900" x-text="selectedAlumno.nombre_completo"></h2>
+                <p class="text-xs text-gray-600 font-medium">
+                  <span x-text="estadoLabel(selectedAlumno.estado)"></span>
+                  <span x-show="selectedAlumno.motivo_inhabilitacion" class="ml-2 text-amber-700" x-text="'— ' + selectedAlumno.motivo_inhabilitacion"></span>
+                </p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button
+                  x-show="canEdit"
+                  @click="guardarDetalle()"
+                  class="px-3 py-1.5 text-white text-xs font-bold rounded-lg transition"
+                  :class="detalleSaved ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-700 hover:bg-indigo-800'"
+                  :disabled="guardando"
+                >
+                  <span x-text="detalleSaved ? '¡Guardado!' : 'Guardar'"></span>
+                </button>
+                <button @click="selectedAlumno = null" class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+              
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-gray-700 mb-1">DNI</label>
+                  <input x-model="editAlumno.dni" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-700 mb-1">Email</label>
+                  <input x-model="editAlumno.email" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-700 mb-1">Teléfono</label>
+                  <input x-model="editAlumno.telefono" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-700 mb-1">Teams</label>
+                  <input x-model="editAlumno.usuario_teams" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-700 mb-1">Comisión</label>
+                  <input x-model="editAlumno.comision" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-700 mb-1">Estado (admin)</label>
+                  <select x-model="editAlumno.estado" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white" :disabled="!canEdit">
+                    <option value="pendiente_revision">Sin revisar</option>
+                    <option value="habilitado">Habilitado</option>
+                    <option value="condicional">Condicional</option>
+                    <option value="a_recurrir">A recursar</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="border-t border-gray-200 pt-3">
+                <h3 class="text-sm font-bold text-gray-900 mb-2">Práctica Profesionalizante</h3>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">PP2</label>
+                    <select x-model="editAlumno.pp2_estado" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white" :disabled="!canEdit">
+                      <option value="no_cursada">No la cursé</option>
+                      <option value="cursada_no_reg">Cursé, no regularicé</option>
+                      <option value="regularizada">Regularizada</option>
+                      <option value="aprobada">Aprobada</option>
+                      <option value="debe_recursar">Debo recursar</option>
+                    </select>
+                  </div>
+                  <div x-show="editAlumno.pp2_estado === 'regularizada' || editAlumno.pp2_estado === 'aprobada'">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Mes regularización PP2</label>
+                    <input x-model="editAlumno.pp2_mes_regularizada" type="month" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">PP3</label>
+                    <select x-model="editAlumno.pp3_estado" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white" :disabled="!canEdit">
+                      <option value="no_cursada">No la cursé</option>
+                      <option value="cursada_no_reg">Cursé, no regularicé</option>
+                      <option value="regularizada">Regularizada</option>
+                      <option value="aprobada">Aprobada</option>
+                      <option value="debe_recursar">Debo recursar</option>
+                    </select>
+                  </div>
+                  <div x-show="editAlumno.pp3_estado === 'regularizada' || editAlumno.pp3_estado === 'aprobada'">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Mes regularización PP3</label>
+                    <input x-model="editAlumno.pp3_mes_regularizada" type="month" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                  </div>
+                </div>
+              </div>
+
+              <div class="border-t border-gray-200 pt-3">
+                <h3 class="text-sm font-bold text-gray-900 mb-2">Materias a cursar/recursar</h3>
+                <div class="space-y-2">
+                  <template x-for="(m, i) in editAlumno.materias_a_cursar" :key="i">
+                    <div class="flex gap-2 items-center">
+                      <input x-model="m.nombre" placeholder="Materia" class="flex-1 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                      <button x-show="canEdit" @click="editAlumno.materias_a_cursar.splice(i, 1)" class="w-7 h-7 flex items-center justify-center text-red-600 hover:bg-red-50 rounded-lg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                    </div>
+                  </template>
+                  <button x-show="canEdit" @click="editAlumno.materias_a_cursar.push({nombre:''})" class="px-3 py-1.5 text-xs bg-indigo-100 text-indigo-700 rounded-lg font-bold hover:bg-indigo-200">+ Agregar materia</button>
+                </div>
+              </div>
+
+              <div class="border-t border-gray-200 pt-3">
+                <h3 class="text-sm font-bold text-gray-900 mb-2">Materias pendientes de final</h3>
+                <div class="space-y-2">
+                  <template x-for="(m, i) in editAlumno.materias_pendientes" :key="'p'+i">
+                    <div class="flex gap-2 items-center">
+                      <input x-model="m.nombre" placeholder="Materia" class="flex-1 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                      <input x-model="m.regularizada_en" placeholder="MM/AAAA" class="w-24 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                      <button x-show="canEdit" @click="editAlumno.materias_pendientes.splice(i, 1)" class="w-7 h-7 flex items-center justify-center text-red-600 hover:bg-red-50 rounded-lg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                    </div>
+                  </template>
+                  <button x-show="canEdit" @click="editAlumno.materias_pendientes.push({nombre:'',regularizada_en:''})" class="px-3 py-1.5 text-xs bg-indigo-100 text-indigo-700 rounded-lg font-bold hover:bg-indigo-200">+ Agregar materia</button>
+                </div>
+              </div>
+
+              <div class="border-t border-gray-200 pt-3">
+                <h3 class="text-sm font-bold text-gray-900 mb-2">Proyecto</h3>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Tiene proyecto</label>
+                    <select x-model="editAlumno.tiene_proyecto" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white" :disabled="!canEdit">
+                      <option :value="true">Sí</option>
+                      <option :value="false">No</option>
+                    </select>
+                  </div>
+                  <div x-show="editAlumno.tiene_proyecto">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Nombre del proyecto</label>
+                    <input x-model="editAlumno.proyecto_nombre" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                  </div>
+                </div>
+                <div x-show="editAlumno.tiene_proyecto" class="mt-2">
+                  <label class="block text-xs font-bold text-gray-700 mb-1">Tutor</label>
+                  <input x-model="editAlumno.proyecto_tutor" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                </div>
+                <div x-show="!editAlumno.tiene_proyecto" class="mt-2">
+                  <label class="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">
+                    <input type="checkbox" x-model="editAlumno.buscando_proyecto" :disabled="!canEdit" class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                    Buscando proyecto
+                  </label>
+                </div>
+              </div>
+
+              <div class="border-t border-gray-200 pt-3">
+                <h3 class="text-sm font-bold text-gray-900 mb-2">Grupo</h3>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Tiene grupo</label>
+                    <select x-model="editAlumno.tiene_grupo" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white" :disabled="!canEdit">
+                      <option :value="true">Sí</option>
+                      <option :value="false">No</option>
+                    </select>
+                  </div>
+                  <div x-show="editAlumno.tiene_grupo">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Detalle del grupo</label>
+                    <input x-model="editAlumno.grupo_detalle" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                  </div>
+                </div>
+
+                <div x-show="editAlumno.tiene_grupo && editAlumno.grupo_miembros_anteriores" class="mt-3">
+                  <label class="block text-xs font-bold text-gray-700 mb-2">Miembros anteriores del grupo</label>
+                  <template x-for="(mi, i) in editAlumno.grupo_miembros_anteriores" :key="'ma'+i">
+                    <div class="flex gap-2 items-center mb-2">
+                      <input x-model="mi.nombre" placeholder="Nombre" class="flex-1 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                      <input x-model="mi.contacto" placeholder="Contacto" class="flex-1 px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                      <button x-show="canEdit" @click="editAlumno.grupo_miembros_anteriores.splice(i, 1)" class="w-7 h-7 flex items-center justify-center text-red-600 hover:bg-red-50 rounded-lg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                    </div>
+                  </template>
+                  <button x-show="canEdit" @click="editAlumno.grupo_miembros_anteriores.push({nombre:'',contacto:''})" class="px-3 py-1.5 text-xs bg-indigo-100 text-indigo-700 rounded-lg font-bold hover:bg-indigo-200">+ Agregar miembro anterior</button>
+                </div>
+
+                <div x-show="!editAlumno.tiene_grupo" class="mt-2">
+                  <label class="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">
+                    <input type="checkbox" x-model="editAlumno.buscando_grupo" :disabled="!canEdit" class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                    Buscando grupo
+                  </label>
+                </div>
+              </div>
+
+              <div class="border-t border-gray-200 pt-3">
+                <label class="block text-xs font-bold text-gray-700 mb-1">Observaciones (admin)</label>
+                <textarea x-model="editAlumno.observaciones_admin" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit"></textarea>
+              </div>
+
+              <div x-show="canEdit" class="border-t border-gray-200 pt-3 flex gap-2">
+                <button
+                  @click="guardarDetalle()"
+                  class="flex-1 py-2 text-sm font-bold rounded-lg transition"
+                  :class="detalleSaved ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-indigo-700 text-white hover:bg-indigo-800'"
+                  :disabled="guardando"
+                >
+                  <span x-text="detalleSaved ? '¡Guardado!' : 'Guardar cambios'"></span>
+                </button>
+                <button
+                  @click="confirmDeleteAlumno()"
+                  class="px-4 py-2 border border-red-300 text-red-700 text-sm font-bold rounded-lg hover:bg-red-50 transition"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <div
+      x-show="showAddAlumno"
+      x-transition
+      class="fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-8 pb-8 overflow-y-auto"
+      @click.self="showAddAlumno = false"
+    >
+      <div class="bg-white rounded-xl w-full max-w-md border border-gray-300 shadow-lg mx-4 my-auto" @click.stop>
+        <div class="px-5 py-3 border-b border-gray-200 flex items-center justify-between">
+          <h2 class="text-lg font-bold text-gray-900">Agregar Alumno</h2>
+          <button @click="showAddAlumno = false" class="text-gray-400 hover:text-gray-700">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="p-5 space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Nombre completo *</label>
+            <input x-model="newAlumno.nombre_completo" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" required>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">DNI</label>
+              <input x-model="newAlumno.dni" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Comisión</label>
+              <input x-model="newAlumno.comision" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Usuario de Teams *</label>
+            <input x-model="newAlumno.usuario_teams" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" required>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">PP2</label>
+              <select x-model="newAlumno.pp2_estado" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white">
+                <option value="no_cursada">No la cursé</option>
+                <option value="cursada_no_reg">Cursé, no regularicé</option>
+                <option value="regularizada">Regularizada</option>
+                <option value="aprobada">Aprobada</option>
+                <option value="debe_recursar">Debo recursar</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">PP3</label>
+              <select x-model="newAlumno.pp3_estado" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white">
+                <option value="no_cursada">No la cursé</option>
+                <option value="cursada_no_reg">Cursé, no regularicé</option>
+                <option value="regularizada">Regularizada</option>
+                <option value="aprobada">Aprobada</option>
+                <option value="debe_recursar">Debo recursar</option>
+              </select>
+            </div>
+          </div>
+          <p x-show="addAlumnoError" class="text-xs text-red-600 font-bold" x-text="addAlumnoError"></p>
+          <div class="flex gap-2">
+            <button @click="showAddAlumno = false" class="flex-1 py-2 border border-gray-300 text-gray-700 text-sm font-bold rounded-lg hover:bg-gray-50">Cancelar</button>
+            <button @click="agregarAlumno()" class="flex-1 py-2 bg-indigo-700 text-white text-sm font-bold rounded-lg hover:bg-indigo-800" :disabled="addingAlumno">
+              <span x-text="addingAlumno ? '...' : 'Crear'"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      x-show="showConfirmDelete"
+      x-transition
+      class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+      @click.self="showConfirmDelete = false"
+    >
+      <div class="bg-white rounded-xl p-6 w-full max-w-sm border border-gray-300 shadow-lg">
+        <h2 class="text-lg font-bold text-red-600 mb-2">Eliminar Alumno</h2>
+        <p class="text-sm text-gray-700 mb-4">¿Estás seguro de que deseas eliminar a <strong x-text="selectedAlumno?.nombre_completo"></strong>? Esta acción no se puede deshacer.</p>
+        <div class="flex gap-2">
+          <button @click="showConfirmDelete = false" class="flex-1 py-2 border border-gray-300 text-gray-700 text-sm font-bold rounded-lg hover:bg-gray-50">Cancelar</button>
+          <button @click="eliminarAlumnoConfirmado()" class="flex-1 py-2 bg-red-600 text-white text-sm font-bold rounded-lg hover:bg-red-700" :disabled="deletingAlumno">
+            <span x-text="deletingAlumno ? '...' : 'Eliminar'"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      x-show="showLogin"
+      x-transition
+      class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+      @click.self="showLogin = false"
+    >
+      <div class="bg-white rounded-xl p-6 w-full max-w-sm border border-gray-300 shadow-lg">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Ingresar como docente</h2>
+        <form @submit.prevent="login()">
+          <div class="mb-3">
+            <label class="block text-xs font-bold text-gray-700 mb-1">Email</label>
+            <input x-model="loginEmail" type="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" required>
+          </div>
+          <div class="mb-4">
+            <label class="block text-xs font-bold text-gray-700 mb-1">Contraseña</label>
+            <input x-model="loginPassword" type="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" required>
+          </div>
+          <p x-show="loginError" class="text-xs text-red-600 mb-3 font-bold" x-text="loginError"></p>
+          <div class="flex gap-2">
+            <button type="button" @click="showLogin = false" class="flex-1 py-2 border border-gray-300 text-gray-700 text-sm font-bold rounded-lg hover:bg-gray-50">Cancelar</button>
+            <button type="submit" class="flex-1 py-2 bg-indigo-700 text-white text-sm font-bold rounded-lg hover:bg-indigo-800" :disabled="loadingAuth">
+              <span x-text="loadingAuth ? '...' : 'Ingresar'"></span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  </div>
+
+<script>
+  import Alpine from 'alpinejs';
+  import { supabase } from '../../lib/supabase.js';
+
+  window.Alpine = Alpine;
+
+  const PP_LABELS = {
+    no_cursada: 'No cursó',
+    cursada_no_reg: 'No reg.',
+    regularizada: 'Reg.',
+    aprobada: 'Aprob.',
+    debe_recursar: 'Recursar'
+  };
+
+  const ESTADO_LABELS = {
+    pendiente_revision: 'Sin revisar',
+    habilitado: 'Habilitado',
+    condicional: 'Condicional',
+    a_recurrir: 'A recursar'
+  };
+
+  function ppBadgeClass(estado) {
+    const map = {
+      no_cursada: 'bg-gray-100 text-gray-700',
+      cursada_no_reg: 'bg-red-100 text-red-700',
+      regularizada: 'bg-amber-100 text-amber-700',
+      aprobada: 'bg-green-100 text-green-700',
+      debe_recursar: 'bg-red-100 text-red-700'
+    };
+    return map[estado] || 'bg-gray-100 text-gray-600';
+  }
+
+  function estadoBadgeClass(estado) {
+    const map = {
+      pendiente_revision: 'bg-gray-100 text-gray-700',
+      habilitado: 'bg-green-100 text-green-700',
+      condicional: 'bg-amber-100 text-amber-700',
+      a_recurrir: 'bg-red-100 text-red-700'
+    };
+    return map[estado] || 'bg-gray-100 text-gray-600';
+  }
+
+  Alpine.data('adminDashboard', () => ({
+    alumnos: [],
+    filtro: '',
+    estadoFilter: 'todos',
+    sortField: 'nombre_completo',
+    sortAsc: true,
+    selectedAlumno: null,
+    editAlumno: {},
+    showLogin: false,
+    showAddAlumno: false,
+    showConfirmDelete: false,
+    loginEmail: '',
+    loginPassword: '',
+    loginError: '',
+    addAlumnoError: '',
+    loadingData: true,
+    loadingAuth: false,
+    addingAlumno: false,
+    deletingAlumno: false,
+    guardando: false,
+    detalleSaved: false,
+    user: null,
+    userRole: null,
+
+    newAlumno: {
+      nombre_completo: '',
+      dni: '',
+      comision: '',
+      usuario_teams: '',
+      pp2_estado: 'no_cursada',
+      pp3_estado: 'no_cursada'
+    },
+
+    get canEdit() {
+      return ['profesor_practica', 'director', 'admin'].includes(this.userRole);
+    },
+
+    get alumnosFiltrados() {
+      let list = [...this.alumnos];
+      if (this.estadoFilter !== 'todos') {
+        list = list.filter(a => a.estado === this.estadoFilter);
+      }
+      if (this.filtro) {
+        const f = this.filtro.toLowerCase();
+        list = list.filter(a =>
+          (a.nombre_completo || '').toLowerCase().includes(f) ||
+          (a.dni || '').toLowerCase().includes(f) ||
+          (a.email || '').toLowerCase().includes(f) ||
+          (a.usuario_teams || '').toLowerCase().includes(f) ||
+          (a.comision || '').toLowerCase().includes(f)
+        );
+      }
+      list.sort((a, b) => {
+        const va = a[this.sortField] || '';
+        const vb = b[this.sortField] || '';
+        const cmp = typeof va === 'string' ? va.localeCompare(vb) : va - vb;
+        return this.sortAsc ? cmp : -cmp;
+      });
+      return list;
+    },
+
+    ppLabel(estado) { return PP_LABELS[estado] || estado || '—'; },
+    ppBadgeClass(estado) { return ppBadgeClass(estado); },
+    estadoLabel(estado) { return ESTADO_LABELS[estado] || estado || '—'; },
+    estadoBadgeClass(estado) { return estadoBadgeClass(estado); },
+
+    materiasCount(alumno) {
+      const a = (alumno.materias_a_cursar || []).length;
+      const p = (alumno.materias_pendientes || []).length;
+      return a + p;
+    },
+
+    sortIcon(field) {
+      if (this.sortField !== field) return '';
+      return this.sortAsc ? '↑' : '↓';
+    },
+
+    sortBy(field) {
+      if (this.sortField === field) {
+        this.sortAsc = !this.sortAsc;
+      } else {
+        this.sortField = field;
+        this.sortAsc = true;
+      }
+    },
+
+    async init() {
+      await this.loadFromSupabase();
+      await this.checkSession();
+      this.loadingData = false;
+    },
+
+    async loadFromSupabase() {
+      try {
+        const { data, error } = await supabase
+          .from('alumnos_seguimiento')
+          .select('*')
+          .order('nombre_completo');
+        if (error) {
+          console.warn('Error loading alumnos:', error.message);
+          return;
+        }
+        if (data) {
+          this.alumnos = data.map(a => ({
+            ...a,
+            materias_a_cursar: a.materias_a_cursar || [],
+            materias_pendientes: a.materias_pendientes || [],
+            grupo_miembros_anteriores: a.grupo_miembros_anteriores || []
+          }));
+        }
+      } catch (e) {
+        console.warn('Error:', e);
+      }
+    },
+
+    async checkSession() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          this.user = session.user;
+          await this.loadProfile();
+        }
+      } catch (e) {
+        console.error('Error checking session:', e);
+      }
+    },
+
+    async loadProfile() {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', this.user.id)
+          .single();
+        if (data) this.userRole = data.role;
+      } catch (e) {
+        console.error('Error loading profile:', e);
+      }
+    },
+
+    async login() {
+      this.loadingAuth = true;
+      this.loginError = '';
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: this.loginEmail,
+          password: this.loginPassword
+        });
+        if (error) throw error;
+        this.user = data.user;
+        await this.loadProfile();
+        this.showLogin = false;
+        this.loginEmail = '';
+        this.loginPassword = '';
+      } catch (e) {
+        this.loginError = e.message || 'Error al iniciar sesión';
+      } finally {
+        this.loadingAuth = false;
+      }
+    },
+
+    async logout() {
+      await supabase.auth.signOut();
+      this.user = null;
+      this.userRole = null;
+    },
+
+    selectAlumno(alumno) {
+      this.selectedAlumno = alumno;
+      this.detalleSaved = false;
+      this.editAlumno = JSON.parse(JSON.stringify(alumno));
+      if (!this.editAlumno.materias_a_cursar) this.editAlumno.materias_a_cursar = [];
+      if (!this.editAlumno.materias_pendientes) this.editAlumno.materias_pendientes = [];
+      if (!this.editAlumno.grupo_miembros_anteriores) this.editAlumno.grupo_miembros_anteriores = [];
+    },
+
+    async guardarDetalle() {
+      if (!this.canEdit || !this.selectedAlumno) return;
+      this.guardando = true;
+      this.detalleSaved = false;
+      try {
+        const payload = { ...this.editAlumno };
+        delete payload.id;
+        delete payload.creado_en;
+        payload.actualizado_en = new Date().toISOString();
+
+        const { error } = await supabase
+          .from('alumnos_seguimiento')
+          .update(payload)
+          .eq('id', this.selectedAlumno.id);
+
+        if (error) throw error;
+
+        Object.assign(this.selectedAlumno, this.editAlumno);
+        const idx = this.alumnos.findIndex(a => a.id === this.selectedAlumno.id);
+        if (idx !== -1) this.alumnos[idx] = { ...this.editAlumno, id: this.selectedAlumno.id };
+
+        this.detalleSaved = true;
+        setTimeout(() => this.detalleSaved = false, 2000);
+      } catch (e) {
+        alert('Error al guardar: ' + e.message);
+      } finally {
+        this.guardando = false;
+      }
+    },
+
+    async agregarAlumno() {
+      this.addingAlumno = true;
+      this.addAlumnoError = '';
+      try {
+        if (!this.newAlumno.nombre_completo.trim()) throw new Error('El nombre es obligatorio');
+        if (!this.newAlumno.usuario_teams.trim()) throw new Error('El usuario de Teams es obligatorio');
+
+        const payload = {
+          nombre_completo: this.newAlumno.nombre_completo.trim(),
+          dni: this.newAlumno.dni.trim() || null,
+          comision: this.newAlumno.comision.trim() || null,
+          usuario_teams: this.newAlumno.usuario_teams.trim(),
+          pp2_estado: this.newAlumno.pp2_estado,
+          pp3_estado: this.newAlumno.pp3_estado,
+          estado: 'pendiente_revision'
+        };
+
+        const { data, error } = await supabase
+          .from('alumnos_seguimiento')
+          .insert([payload])
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        this.alumnos.push({ ...data, materias_a_cursar: [], materias_pendientes: [], grupo_miembros_anteriores: [] });
+        this.newAlumno = { nombre_completo: '', dni: '', comision: '', usuario_teams: '', pp2_estado: 'no_cursada', pp3_estado: 'no_cursada' };
+        this.showAddAlumno = false;
+      } catch (e) {
+        this.addAlumnoError = e.message || 'Error al crear alumno';
+      } finally {
+        this.addingAlumno = false;
+      }
+    },
+
+    confirmDeleteAlumno() {
+      this.showConfirmDelete = true;
+    },
+
+    async eliminarAlumnoConfirmado() {
+      if (!this.selectedAlumno || !this.canEdit) return;
+      this.deletingAlumno = true;
+      try {
+        const { error } = await supabase
+          .from('alumnos_seguimiento')
+          .delete()
+          .eq('id', this.selectedAlumno.id);
+        if (error) throw error;
+        this.alumnos = this.alumnos.filter(a => a.id !== this.selectedAlumno.id);
+        this.selectedAlumno = null;
+        this.showConfirmDelete = false;
+      } catch (e) {
+        alert('Error al eliminar: ' + e.message);
+      } finally {
+        this.deletingAlumno = false;
+      }
+    }
+  }));
+
+  Alpine.start();
+</script>

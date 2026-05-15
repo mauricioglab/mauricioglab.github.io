@@ -1,0 +1,27 @@
+---
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+import AlumnoForm from '../../components/seguimiento-alumnos/AlumnoForm.astro';
+
+export const prerender = true;
+
+const title = "Seguimiento de Alumnos — Formulario";
+---
+
+<BaseTailwind
+  title={title}
+  description="Formulario de seguimiento de alumnos para Trabajo Final"
+  lang="es"
+  layoutType="tool"
+  showHeader={true}
+  showFooter={false}
+>
+  <div class="min-h-screen bg-gray-50 py-8 px-4">
+    <div class="max-w-2xl mx-auto">
+      <div class="text-center mb-6">
+        <h1 class="text-2xl font-extrabold text-gray-900">Seguimiento de Alumnos</h1>
+        <p class="text-sm text-gray-600 mt-1">Completá tus datos para que podamos conocer tu situación y acompañarte.</p>
+      </div>
+      <AlumnoForm />
+    </div>
+  </div>
+</BaseTailwind>

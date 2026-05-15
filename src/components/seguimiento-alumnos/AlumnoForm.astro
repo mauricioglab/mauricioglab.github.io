@@ -1,0 +1,14 @@
+---
+import 'survey-core/survey-core.min.css';
+---
+
+<div id="survey-container" class="max-w-2xl mx-auto"></div>
+<div id="survey-result"></div>
+
+<script>
+  import { initSurvey } from './alumno-form.js';
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    initSurvey('survey-container');
+  });
+</script>

@@ -1,0 +1,19 @@
+---
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+import AdminDashboard from '../../components/seguimiento-alumnos/AdminDashboard.astro';
+
+export const prerender = true;
+
+const title = "Seguimiento de Alumnos — Admin";
+---
+
+<BaseTailwind
+  title={title}
+  description="Dashboard de administración de seguimiento de alumnos"
+  lang="es"
+  layoutType="tool"
+  showHeader={true}
+  showFooter={false}
+>
+  <AdminDashboard />
+</BaseTailwind>
