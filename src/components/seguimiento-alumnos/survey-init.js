@@ -59,7 +59,7 @@ function getSurveySchema() {
         name: "pp3",
         title: "Práctica Profesionalizante III",
         description: "Contanos cuál es tu situación con PP3.",
-        visibleIf: "{pp2_estado} = 'regularizada' or {pp2_estado} = 'aprobada'",
+        visibleIf: "{pp2_estado} = 'regularizada'",
         elements: [
           {
             type: "radiogroup",
@@ -70,7 +70,6 @@ function getSurveySchema() {
               { value: "no_cursada", text: "No la cursé" },
               { value: "cursada_no_reg", text: "La cursé pero no regularicé" },
               { value: "regularizada", text: "La regularicé" },
-              { value: "aprobada", text: "La aprobé" },
               { value: "debe_recursar", text: "Tengo que recursarla" }
             ]
           },
@@ -78,54 +77,21 @@ function getSurveySchema() {
             type: "dropdown",
             name: "pp3_mes_regularizada",
             title: "¿Cuándo la regularizaste?",
-            visibleIf: "{pp3_estado} = 'regularizada' or {pp3_estado} = 'aprobada'",
+            visibleIf: "{pp3_estado} = 'regularizada'",
             isRequired: true,
             choices: generarMeses()
           }
         ]
       },
       {
-        name: "materias_cursar",
-        title: "Materias a cursar o recursar",
-        description: "¿Tenés materias que debés cursar o recursar antes de poder aspirar al Trabajo Final?",
-        elements: [
-          {
-            type: "boolean",
-            name: "tiene_materias_a_cursar",
-            title: "¿Tenés materias que debés cursar o recursar?",
-            isRequired: true,
-            labelTrue: "Sí",
-            labelFalse: "No"
-          },
-          {
-            type: "panel",
-            name: "materias_a_cursar_panel",
-            visibleIf: "{tiene_materias_a_cursar} = true",
-            elements: [
-              {
-                type: "matrixdynamic",
-                name: "materias_a_cursar",
-                title: "Listá las materias que debés cursar o recursar",
-                columns: [
-                  { name: "nombre", title: "Nombre de la materia", cellType: "text", isRequired: true }
-                ],
-                rowCount: 1,
-                addRowText: "Agregar materia",
-                removeRowText: "Eliminar"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        name: "materias_pendientes",
-        title: "Materias pendientes de final",
-        description: "Materias que ya regularizaste pero todavía no rendiste el final.",
+        name: "materias",
+        title: "Materias pendientes",
+        description: "¿Tenés materias que debés cursar, recursar o rendir final?",
         elements: [
           {
             type: "boolean",
             name: "tiene_materias_pendientes",
-            title: "¿Te queda alguna materia por rendir (final)?",
+            title: "¿Tenés materias pendientes (a cursar, recursar o rendir final)?",
             isRequired: true,
             labelTrue: "Sí",
             labelFalse: "No"
@@ -138,14 +104,24 @@ function getSurveySchema() {
               {
                 type: "matrixdynamic",
                 name: "materias_pendientes",
-                title: "Indicá las materias regulares que te quedan por rendir y cuándo las regularizaste",
+                title: "Listá las materias que tenés pendientes",
                 columns: [
-                  { name: "nombre", title: "Materia", cellType: "text", isRequired: true },
+                  { name: "nombre", title: "Nombre de la materia", cellType: "text", isRequired: true },
+                  {
+                    name: "estado",
+                    title: "Estado",
+                    cellType: "dropdown",
+                    isRequired: true,
+                    choices: [
+                      { value: "a_cursar", text: "A cursar / recursar" },
+                      { value: "regularizada_pendiente_final", text: "Regularizada, pendiente de final" }
+                    ]
+                  },
                   {
                     name: "regularizada_en",
                     title: "Cuándo la regularizaste",
                     cellType: "dropdown",
-                    isRequired: true,
+                    visibleIf: "{row.estado} = 'regularizada_pendiente_final'",
                     choices: generarMeses()
                   }
                 ],
@@ -165,7 +141,7 @@ function getSurveySchema() {
           {
             type: "boolean",
             name: "tiene_proyecto",
-            title: "¿Tenés un proyecto de Trabajo Final?",
+            title: "¿Tenés un proyecto para el sistema de trabajo final?",
             isRequired: true,
             labelTrue: "Sí",
             labelFalse: "No"
@@ -173,22 +149,23 @@ function getSurveySchema() {
           {
             type: "text",
             name: "proyecto_nombre",
-            title: "Nombre del proyecto",
+            title: "Nombre del sistema",
             visibleIf: "{tiene_proyecto} = true",
             isRequired: true
+          },
+          {
+            type: "comment",
+            name: "proyecto_objetivo",
+            title: "Objetivo del sistema",
+            visibleIf: "{tiene_proyecto} = true",
+            isRequired: true,
+            rows: 3
           },
           {
             type: "text",
             name: "proyecto_tutor",
             title: "Tutor del proyecto",
             visibleIf: "{tiene_proyecto} = true"
-          },
-          {
-            type: "boolean",
-            name: "buscando_proyecto",
-            title: "¿Estás buscando proyecto?",
-            visibleIf: "{tiene_proyecto} = false",
-            defaultValue: true
           }
         ]
       },
@@ -206,31 +183,12 @@ function getSurveySchema() {
             labelFalse: "No"
           },
           {
-            type: "text",
+            type: "comment",
             name: "grupo_detalle",
-            title: "Detalle del grupo (nombres de los integrantes)",
+            title: "Nombres de los integrantes del grupo",
             visibleIf: "{tiene_grupo} = true",
-            isRequired: true
-          },
-          {
-            type: "matrixdynamic",
-            name: "grupo_miembros_anteriores",
-            title: "Compañeros que ya no están en el grupo (para poder contactarlos)",
-            visibleIf: "{tiene_grupo} = true",
-            columns: [
-              { name: "nombre", title: "Nombre", cellType: "text", isRequired: true },
-              { name: "contacto", title: "Contacto (Teams / Email)", cellType: "text" }
-            ],
-            rowCount: 0,
-            addRowText: "Agregar miembro anterior",
-            removeRowText: "Eliminar"
-          },
-          {
-            type: "boolean",
-            name: "buscando_grupo",
-            title: "¿Estás buscando grupo?",
-            visibleIf: "{tiene_grupo} = false",
-            defaultValue: true
+            isRequired: true,
+            rows: 3
           }
         ]
       },
@@ -274,13 +232,20 @@ function calcularElegibilidad(data) {
     reglas.a_recurrir.motivos.push("PP2 no está regularizada ni aprobada");
   }
 
-  const pp3Needed = data.pp2_estado === "regularizada" || data.pp2_estado === "aprobada";
+  const pp3Needed = data.pp2_estado === "regularizada";
   if (pp3Needed && data.pp3_estado !== "regularizada" && data.pp3_estado !== "aprobada") {
-    reglas.a_recurrir.motivos.push("PP3 no está regularizada ni aprobada");
+    reglas.a_recurrir.motivos.push("PP3 no está regularizada");
   }
 
   if (data.materias_pendientes && data.materias_pendientes.length > 0) {
-    reglas.condicional.alertas.push({ mensaje: "Tenés materias pendientes de final" });
+    const tieneParaCursar = data.materias_pendientes.some(function(m) {
+      return m.estado === "a_cursar";
+    });
+    if (tieneParaCursar) {
+      reglas.a_recurrir.motivos.push("Tenés materias para cursar/recursar");
+    } else {
+      reglas.condicional.alertas.push({ mensaje: "Tenés materias pendientes de final" });
+    }
   }
 
   let estado = "habilitado";
@@ -309,7 +274,7 @@ function buildResumenHTML(survey) {
     html += `<p><strong>Regularizada en:</strong> ${d.pp2_mes_regularizada}</p>`;
   }
 
-  if (d.pp2_estado === "regularizada" || d.pp2_estado === "aprobada") {
+  if (d.pp2_estado === "regularizada") {
     html += '<hr style="border-color:#e5e7eb;margin:12px 0">';
     html += '<h3 style="margin:0 0 8px;font-weight:700;font-size:15px;">PP3</h3>';
     html += `<p><strong>Estado:</strong> ${PP_ESTADO_LABELS[d.pp3_estado] || d.pp3_estado || "—"}</p>`;
@@ -318,22 +283,13 @@ function buildResumenHTML(survey) {
     }
   }
 
-  if (d.tiene_materias_a_cursar && d.materias_a_cursar && d.materias_a_cursar.length > 0) {
-    html += '<hr style="border-color:#e5e7eb;margin:12px 0">';
-    html += '<h3 style="margin:0 0 8px;font-weight:700;font-size:15px;">Materias a cursar/recursar</h3>';
-    html += "<ul>";
-    for (const m of d.materias_a_cursar) {
-      html += `<li>${m.nombre}</li>`;
-    }
-    html += "</ul>";
-  }
-
   if (d.tiene_materias_pendientes && d.materias_pendientes && d.materias_pendientes.length > 0) {
     html += '<hr style="border-color:#e5e7eb;margin:12px 0">';
-    html += '<h3 style="margin:0 0 8px;font-weight:700;font-size:15px;">Materias pendientes de final</h3>';
+    html += '<h3 style="margin:0 0 8px;font-weight:700;font-size:15px;">Materias pendientes</h3>';
     html += "<ul>";
     for (const m of d.materias_pendientes) {
-      html += `<li>${m.nombre} — regularizada en ${m.regularizada_en}</li>`;
+      const estadoText = m.estado === "a_cursar" ? "A cursar/recursar" : "Regularizada, pendiente de final";
+      html += `<li>${m.nombre} — ${estadoText}${m.regularizada_en ? " (" + m.regularizada_en + ")" : ""}</li>`;
     }
     html += "</ul>";
   }
@@ -342,10 +298,11 @@ function buildResumenHTML(survey) {
   html += '<h3 style="margin:0 0 8px;font-weight:700;font-size:15px;">Proyecto</h3>';
   if (d.tiene_proyecto) {
     html += `<p><strong>Tiene proyecto:</strong> Sí</p>`;
-    html += `<p><strong>Nombre:</strong> ${d.proyecto_nombre || "—"}</p>`;
+    html += `<p><strong>Nombre del sistema:</strong> ${d.proyecto_nombre || "—"}</p>`;
+    html += `<p><strong>Objetivo:</strong> ${d.proyecto_objetivo || "—"}</p>`;
     html += `<p><strong>Tutor:</strong> ${d.proyecto_tutor || "—"}</p>`;
   } else {
-    html += `<p><strong>Tiene proyecto:</strong> No${d.buscando_proyecto ? " (buscando)" : ""}</p>`;
+    html += `<p><strong>Tiene proyecto:</strong> No</p>`;
   }
 
   html += '<hr style="border-color:#e5e7eb;margin:12px 0">';
@@ -353,26 +310,16 @@ function buildResumenHTML(survey) {
   if (d.tiene_grupo) {
     html += `<p><strong>Tiene grupo:</strong> Sí</p>`;
     html += `<p><strong>Integrantes:</strong> ${d.grupo_detalle || "—"}</p>`;
-    if (d.grupo_miembros_anteriores && d.grupo_miembros_anteriores.length > 0) {
-      html += "<p><strong>Miembros anteriores:</strong></p><ul>";
-      for (const m of d.grupo_miembros_anteriores) {
-        html += `<li>${m.nombre}${m.contacto ? ` — ${m.contacto}` : ""}</li>`;
-      }
-      html += "</ul>";
-    }
   } else {
-    html += `<p><strong>Tiene grupo:</strong> No${d.buscando_grupo ? " (buscando)" : ""}</p>`;
+    html += `<p><strong>Tiene grupo:</strong> No</p>`;
   }
 
   const alumnoData = {
     pp2_estado: d.pp2_estado || "no_cursada",
-    pp3_estado: d.pp3_estado || "no_cursada",
-    materias_a_cursar: d.materias_a_cursar || [],
+    pp3_estado: d.pp2_estado === "regularizada" ? (d.pp3_estado || "no_cursada") : "no_cursada",
     materias_pendientes: d.materias_pendientes || [],
     tiene_proyecto: d.tiene_proyecto,
-    buscando_proyecto: d.buscando_proyecto,
-    tiene_grupo: d.tiene_grupo,
-    buscando_grupo: d.buscando_grupo
+    tiene_grupo: d.tiene_grupo
   };
   const resultado = calcularElegibilidad(alumnoData);
 
@@ -457,13 +404,10 @@ window.initSurvey = function(containerId) {
     const d = sender.data;
     const alumnoData = {
       pp2_estado: d.pp2_estado || "no_cursada",
-      pp3_estado: d.pp2_estado === "regularizada" || d.pp2_estado === "aprobada" ? (d.pp3_estado || "no_cursada") : "no_cursada",
-      materias_a_cursar: d.materias_a_cursar || [],
+      pp3_estado: d.pp2_estado === "regularizada" ? (d.pp3_estado || "no_cursada") : "no_cursada",
       materias_pendientes: d.materias_pendientes || [],
       tiene_proyecto: d.tiene_proyecto || false,
-      buscando_proyecto: d.buscando_proyecto || false,
-      tiene_grupo: d.tiene_grupo || false,
-      buscando_grupo: d.buscando_grupo || false
+      tiene_grupo: d.tiene_grupo || false
     };
     const resultado = calcularElegibilidad(alumnoData);
 
@@ -480,13 +424,10 @@ window.initSurvey = function(containerId) {
       pp3_mes_regularizada: d.pp3_mes_regularizada || null,
       tiene_proyecto: d.tiene_proyecto || false,
       proyecto_nombre: d.tiene_proyecto ? (d.proyecto_nombre || null) : null,
+      proyecto_objetivo: d.tiene_proyecto ? (d.proyecto_objetivo || null) : null,
       proyecto_tutor: d.tiene_proyecto ? (d.proyecto_tutor || null) : null,
-      buscando_proyecto: !d.tiene_proyecto ? (d.buscando_proyecto || false) : false,
       tiene_grupo: d.tiene_grupo || false,
       grupo_detalle: d.tiene_grupo ? (d.grupo_detalle || null) : null,
-      grupo_miembros_anteriores: d.tiene_grupo && d.grupo_miembros_anteriores ? d.grupo_miembros_anteriores : [],
-      buscando_grupo: !d.tiene_grupo ? (d.buscando_grupo || false) : false,
-      materias_a_cursar: d.tiene_materias_a_cursar ? (d.materias_a_cursar || []) : [],
       materias_pendientes: d.tiene_materias_pendientes ? (d.materias_pendientes || []) : [],
       estado: resultado.estado,
       puede_aspirar: resultado.estado === "habilitado" || resultado.estado === "condicional",
