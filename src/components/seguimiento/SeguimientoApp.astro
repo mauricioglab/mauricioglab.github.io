@@ -373,9 +373,9 @@
           <div class="mb-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
             <div class="flex items-center justify-between mb-2">
               <span class="font-bold text-sm" :class="color" x-text="label"></span>
-              <input 
+              <input
                 x-show="canEdit"
-                type="number" min="0" max="10" step="0.5"
+                type="number" min="0" :max="((evalMeta[activeE + '_' + selectedGrupo]?.es_modificacion || (data[activeE]?.[selectedGrupo]?.FN || data[activeE]?.[selectedGrupo]?.DEV || data[activeE]?.[selectedGrupo]?.SM)) && !localOverride[activeE]) ? 7 : 10" step="0.5"
                 :value="localData[activeE]?.[dim] ?? ''"
                 @input="setField(activeE, dim, $event.target.value === '' ? null : Number($event.target.value))"
                 class="w-14 px-2 py-1 border border-gray-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-indigo-600 text-gray-900 font-bold"
@@ -393,6 +393,26 @@
             <p x-show="!canEdit" class="text-xs text-gray-700 font-medium" x-text="localData[activeE]?.feedback?.[dim] || 'Sin feedback'"></p>
           </div>
         </template>
+
+        <!-- Fechas y override -->
+        <div class="mt-3 pt-3 border-t border-gray-200 space-y-2" x-data="{ key: activeE + '_' + selectedGrupo, meta: evalMeta[activeE + '_' + selectedGrupo] || {} }">
+          <div x-show="meta.fecha_primera_nota" class="flex items-center justify-between text-xs text-gray-500">
+            <span>Primera nota: <span x-text="meta.fecha_primera_nota ? new Date(meta.fecha_primera_nota).toLocaleDateString('es-AR') : '—'"></span></span>
+            <span x-show="meta.fecha_modificacion">Modificación: <span x-text="new Date(meta.fecha_modificacion).toLocaleDateString('es-AR')"></span></span>
+          </div>
+          
+          <label 
+            x-show="canEdit && (meta.es_modificacion || (data[activeE]?.[selectedGrupo]?.FN || data[activeE]?.[selectedGrupo]?.DEV || data[activeE]?.[selectedGrupo]?.SM))" 
+            class="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer"
+          >
+            <input 
+              type="checkbox" 
+              x-model="localOverride[activeE]"
+              class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+            >
+            Override límite de modificación (permite nota >7)
+          </label>
+        </div>
 
         <!-- Nota calculada -->
         <div class="flex items-center justify-end gap-2 mt-2">
@@ -521,10 +541,24 @@
         </div>
         <div class="mb-3">
           <label class="block text-xs font-bold text-gray-700 mb-1">Comisión</label>
-          <input 
-            x-model="newGrupo.comision"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-          >
+          <div class="flex gap-2">
+            <select 
+              x-model="newGrupo.comision"
+              class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white"
+            >
+              <option value="">Seleccionar comisión...</option>
+              <template x-for="c in comisiones" :key="c.id">
+                <option :value="c.id" x-text="c.nombre"></option>
+              </template>
+            </select>
+            <button 
+              type="button"
+              x-show="canEdit"
+              @click="showAddComision = true"
+              class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-bold hover:bg-gray-200"
+              title="Agregar comisión"
+            >+</button>
+          </div>
         </div>
         <div class="mb-3">
           <label class="block text-xs font-bold text-gray-700 mb-1">Práctica</label>
@@ -643,6 +677,54 @@
     </div>
   </div>
 
+  <!-- Add Comision Modal -->
+  <div 
+    x-show="showAddComision" 
+    x-transition
+    class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+    @click.self="showAddComision = false"
+  >
+    <div class="bg-white rounded-xl p-6 w-full max-w-sm border border-gray-300 shadow-lg">
+      <h2 class="text-lg font-bold text-gray-900 mb-4">Agregar Comisión</h2>
+      <form @submit.prevent="guardarComision()">
+        <div class="mb-3">
+          <label class="block text-xs font-bold text-gray-700 mb-1">Código</label>
+          <input 
+            x-model="newComision.id"
+            placeholder="Ej: 51NMS"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            required
+          >
+        </div>
+        <div class="mb-4">
+          <label class="block text-xs font-bold text-gray-700 mb-1">Nombre</label>
+          <input 
+            x-model="newComision.nombre"
+            placeholder="Ej: 51NMS"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            required
+          >
+        </div>
+        <p x-show="addComisionError" class="text-xs text-red-600 mb-3 font-bold" x-text="addComisionError"></p>
+        <div class="flex gap-2">
+          <button 
+            type="button"
+            @click="showAddComision = false"
+            class="flex-1 py-2 border border-gray-300 text-gray-700 text-sm font-bold rounded-lg hover:bg-gray-50"
+          >
+            Cancelar
+          </button>
+          <button 
+            type="submit"
+            class="flex-1 py-2 bg-indigo-700 text-white text-sm font-bold rounded-lg hover:bg-indigo-800"
+          >
+            Crear
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <style>
     [x-cloak] { display: none !important; }
   </style>
@@ -738,10 +820,12 @@
     showLogin: false,
     showAddGrupo: false,
     showConfirmDelete: false,
+    showAddComision: false,
     loginEmail: '',
     loginPassword: '',
     loginError: '',
     addGrupoError: '',
+    addComisionError: '',
     loading: false,
     loadingAuth: false,
     loadingData: true,
@@ -755,9 +839,12 @@
     
     encuentrosMeta: ENCUENTROS_META,
     grupos: [],
+    comisiones: [],
     data: {},
     localData: {},
     localAsist: {},
+    localOverride: {},
+    evalMeta: {},
     grupoToDelete: null,
     
     practicas: [
@@ -773,6 +860,11 @@
       comision: '',
       practica: 'P2',
       integrantes: [{nombre:'',rol:'',observacion:'', dbId:null}]
+    },
+    
+    newComision: {
+      id: '',
+      nombre: ''
     },
 
     // --- HELPERS (dentro del componente para scope correcto en Alpine) ---
@@ -862,6 +954,20 @@
 
     async loadFromSupabase() {
       try {
+        // Cargar comisiones
+        const { data: comisionesData, error: comisionesError } = await supabase
+          .from('comisiones')
+          .select('*')
+          .eq('activa', true)
+          .order('nombre');
+        
+        if (comisionesError) {
+          console.warn('Supabase comisiones error:', comisionesError.message);
+        }
+        if (comisionesData && comisionesData.length > 0) {
+          this.comisiones = comisionesData;
+        }
+
         const { data: gruposData, error: gruposError } = await supabase
           .from('grupos')
           .select('*')
@@ -917,6 +1023,15 @@
             entry.fb.FN = ev.feedback_fn || entry.fb.FN || '';
             entry.fb.DEV = ev.feedback_dev || entry.fb.DEV || '';
             entry.fb.SM = ev.feedback_sm || entry.fb.SM || '';
+            
+            // Guardar metadatos de evaluación
+            const key = `${ev.encuentro_meta_id}_${ev.grupo_id}`;
+            this.evalMeta[key] = {
+              fecha_primera_nota: ev.fecha_primera_nota,
+              fecha_modificacion: ev.fecha_modificacion,
+              es_modificacion: ev.es_modificacion,
+              override_limite: ev.override_limite
+            };
           });
         }
 
@@ -1068,6 +1183,7 @@
     initLocalData(grupoId) {
       const d = {};
       const a = {};
+      const o = {};
       ENCUENTROS_META.forEach(e => {
         const sc = this.data[e.id]?.[grupoId] || {};
         d[e.id] = {
@@ -1077,9 +1193,12 @@
           feedback: { FN: sc.fb?.FN ?? "", DEV: sc.fb?.DEV ?? "", SM: sc.fb?.SM ?? "" },
         };
         a[e.id] = { ...(sc.asistencia || {}) };
+        const key = `${e.id}_${grupoId}`;
+        o[e.id] = this.evalMeta[key]?.override_limite || false;
       });
       this.localData = d;
       this.localAsist = a;
+      this.localOverride = o;
     },
 
     setField(enc, dim, val) {
@@ -1209,6 +1328,26 @@
           
           if (!local) continue;
           
+          // Determinar si es primera vez o modificación
+          const key = `${enc.id}_${grupoId}`;
+          const hasExisting = !!this.data[enc.id]?.[grupoId]?.FN || !!this.data[enc.id]?.[grupoId]?.DEV || !!this.data[enc.id]?.[grupoId]?.SM;
+          const isModificacion = hasExisting || (this.evalMeta[key]?.es_modificacion);
+          const override = this.localOverride[enc.id] || false;
+          const maxNota = (isModificacion && !override) ? 7 : 10;
+          
+          // Validar notas
+          const dims = ['FN', 'DEV', 'SM'];
+          for (const dim of dims) {
+            const val = local[dim];
+            if (val !== null && val !== '' && val !== undefined) {
+              const numVal = Number(val);
+              if (numVal < 1 || numVal > maxNota) {
+                alert(`La nota de ${dim} para ${enc.id} debe estar entre 1 y ${maxNota}. ${isModificacion ? 'Es una modificación.' : ''}`);
+                return;
+              }
+            }
+          }
+          
           const evalPayload = {
             grupo_id: grupoId,
             encuentro_meta_id: enc.id,
@@ -1219,6 +1358,21 @@
             feedback_dev: local.feedback?.DEV || '',
             feedback_sm: local.feedback?.SM || '',
           };
+          
+          // Manejar fechas y estado de modificación
+          if (isModificacion) {
+            evalPayload.es_modificacion = true;
+            evalPayload.fecha_modificacion = new Date().toISOString();
+            evalPayload.override_limite = override;
+            // Mantener fecha_primera_nota existente
+            if (this.evalMeta[key]?.fecha_primera_nota) {
+              evalPayload.fecha_primera_nota = this.evalMeta[key].fecha_primera_nota;
+            }
+          } else {
+            evalPayload.fecha_primera_nota = new Date().toISOString();
+            evalPayload.es_modificacion = false;
+            evalPayload.override_limite = false;
+          }
           
           const { data: evalData, error: evalError } = await supabase
             .from('evaluaciones')
@@ -1261,6 +1415,14 @@
               SM: local.feedback?.SM || '',
             },
             asistencia: { ...asist },
+          };
+          
+          // Actualizar evalMeta local
+          this.evalMeta[key] = {
+            fecha_primera_nota: evalPayload.fecha_primera_nota,
+            fecha_modificacion: evalPayload.fecha_modificacion,
+            es_modificacion: evalPayload.es_modificacion,
+            override_limite: evalPayload.override_limite
           };
         }
         
@@ -1490,6 +1652,38 @@
         alert('Error al eliminar: ' + e.message);
       } finally {
         this.loadingDelete = false;
+      }
+    },
+    
+    async guardarComision() {
+      if (!this.canEdit) return;
+      this.addComisionError = '';
+      
+      try {
+        if (!this.newComision.id.trim() || !this.newComision.nombre.trim()) {
+          throw new Error('Código y nombre son obligatorios');
+        }
+        
+        const { data, error } = await supabase
+          .from('comisiones')
+          .insert({
+            id: this.newComision.id.trim(),
+            nombre: this.newComision.nombre.trim(),
+            activa: true
+          })
+          .select()
+          .single();
+        
+        if (error) throw error;
+        
+        this.comisiones.push(data);
+        this.comisiones.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        
+        this.newComision = { id: '', nombre: '' };
+        this.showAddComision = false;
+        
+      } catch (e) {
+        this.addComisionError = e.message || 'Error al crear comisión';
       }
     }
   }));
