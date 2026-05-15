@@ -411,11 +411,17 @@ window.initSurvey = function(containerId) {
     return;
   }
 
+  const container = document.getElementById(containerId);
+  if (!container) {
+    console.error('Container not found:', containerId);
+    return;
+  }
+
   const schema = getSurveySchema();
   const survey = new Model(schema);
 
   survey.platform = 'js-ui';
-  survey.render(containerId);
+  survey.render(container);
 
   survey.applyTheme({
     cssVariables: {
