@@ -59,3 +59,50 @@ export interface Profile {
   role: UserRole
   nombre: string
 }
+
+export type PPEstado = 'no_cursada' | 'cursada_no_reg' | 'regularizada' | 'aprobada' | 'debe_recursar'
+export type AlumnoSeguimientoEstado = 'pendiente_revision' | 'habilitado' | 'condicional' | 'a_recurrir'
+
+export interface MateriaPendiente {
+  nombre: string
+  regularizada_en: string
+}
+
+export interface MateriaACursar {
+  nombre: string
+}
+
+export interface MiembroAnterior {
+  nombre: string
+  contacto: string
+}
+
+export interface AlumnoSeguimiento {
+  id: string
+  nombre_completo: string
+  dni: string
+  email: string
+  telefono: string
+  usuario_teams: string
+  comision: string
+  pp2_estado: PPEstado
+  pp2_mes_regularizada: string
+  pp3_estado: PPEstado
+  pp3_mes_regularizada: string
+  tiene_proyecto: boolean
+  proyecto_nombre: string
+  proyecto_tutor: string
+  buscando_proyecto: boolean
+  tiene_grupo: boolean
+  grupo_detalle: string
+  grupo_miembros_anteriores: MiembroAnterior[]
+  buscando_grupo: boolean
+  materias_a_cursar: MateriaACursar[]
+  materias_pendientes: MateriaPendiente[]
+  estado: AlumnoSeguimientoEstado
+  puede_aspirar: boolean | null
+  motivo_inhabilitacion: string
+  observaciones_admin: string
+  creado_en: string
+  actualizado_en: string
+}

@@ -19,7 +19,7 @@
         <div class="flex items-center gap-3">
           <button 
             x-show="canEdit && (view === 'resumen' || view === 'encuentros' || view === 'stats')"
-            @click="showAddGrupo = true"
+            @click="openAddGrupoModal()"
             class="w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-600 text-white text-sm font-bold hover:bg-indigo-700 transition"
             title="Agregar grupo"
           >
@@ -293,6 +293,14 @@
         <div class="flex items-center gap-2">
           <button 
             x-show="canEdit"
+            @click="openEditGrupoModal()"
+            class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition"
+            title="Editar grupo"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button 
+            x-show="canEdit"
             @click="confirmDeleteGrupo()"
             class="w-9 h-9 flex items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 transition"
             title="Eliminar grupo"
@@ -493,7 +501,7 @@
     </div>
   </div>
 
-  <!-- Add Grupo Modal -->
+  <!-- Add/Edit Grupo Modal -->
   <div 
     x-show="showAddGrupo" 
     x-transition
@@ -501,8 +509,8 @@
     @click.self="showAddGrupo = false"
   >
     <div class="bg-white rounded-xl p-6 w-full max-w-md border border-gray-300 shadow-lg max-h-[90vh] overflow-y-auto">
-      <h2 class="text-lg font-bold text-gray-900 mb-4">Agregar Grupo</h2>
-      <form @submit.prevent="agregarGrupo()">
+      <h2 class="text-lg font-bold text-gray-900 mb-4" x-text="editingGrupoId ? 'Editar Grupo' : 'Agregar Grupo'"></h2>
+      <form @submit.prevent="guardarGrupoModal()">
         <div class="mb-3">
           <label class="block text-xs font-bold text-gray-700 mb-1">Proyecto</label>
           <input 
@@ -536,7 +544,7 @@
             <label class="text-xs font-bold text-gray-700">Integrantes</label>
             <button 
               type="button"
-              @click="newGrupo.integrantes.push({nombre:'',rol:'',observacion:''})"
+              @click="newGrupo.integrantes.push({nombre:'',rol:'',observacion:'', dbId:null})"
               class="px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded font-bold hover:bg-indigo-200"
             >
               + Agregar
@@ -590,8 +598,8 @@
             class="flex-1 py-2 bg-indigo-700 text-white text-sm font-bold rounded-lg hover:bg-indigo-800"
             :disabled="loadingAddGrupo"
           >
-            <span x-text="loadingAddGrupo ? '...' : 'Crear Grupo'"></span>
-          </button>
+            <span x-text="loadingAddGrupo ? '...' : (editingGrupoId ? 'Guardar Cambios' : 'Crear Grupo')"
+          ></button>
         </div>
       </form>
     </div>
@@ -712,68 +720,8 @@
     },
   };
 
-  function calcPct(scores) {
-    if (!scores) return null;
-    const vals = [scores.FN, scores.DEV, scores.SM].filter(v => v !== undefined && v !== null && v !== "");
-    if (!vals.length) return null;
-    return vals.reduce((a, b) => a + Number(b), 0) / (vals.length * 10);
-  }
-
-  function calcNota(pct) {
-    return pct !== null ? (pct * 10).toFixed(1) : "—";
-  }
-
-  function notaColor(nota) {
-    if (nota === "—") return "text-gray-400";
-    const n = parseFloat(nota);
-    if (n >= 8) return "text-green-700";
-    if (n >= 6) return "text-amber-700";
-    return "text-red-700";
-  }
-
-  function notaBadgeClass(nota) {
-    if (nota === "—") return "bg-gray-100 text-gray-400";
-    const n = parseFloat(nota);
-    if (n >= 8) return "bg-green-100 text-green-700";
-    if (n >= 6) return "bg-amber-100 text-amber-700";
-    return "bg-red-100 text-red-700";
-  }
-
-  function pctColor(pct) {
-    if (pct >= 80) return "bg-green-600";
-    if (pct >= 60) return "bg-amber-500";
-    return "bg-red-600";
-  }
-
-  function asistBtnClass(val) {
-    const map = {
-      Presente: "border-green-600 text-green-700 bg-green-100",
-      Ausente: "border-red-600 text-red-700 bg-red-100",
-      Justificado: "border-amber-600 text-amber-700 bg-amber-100"
-    };
-    return map[val] || "";
-  }
-
-  function asistTextClass(val) {
-    const map = {
-      Presente: "text-green-700 font-bold",
-      Ausente: "text-red-700 font-bold",
-      Justificado: "text-amber-700 font-bold"
-    };
-    return map[val] || "text-gray-500";
-  }
-
-  function dimColor(dim) {
-    const map = { FN: "text-indigo-700", DEV: "text-sky-700", SM: "text-amber-700" };
-    return map[dim] || "";
-  }
-
-  function dimBarColor(dim) {
-    const map = { FN: "bg-indigo-600", DEV: "bg-sky-600", SM: "bg-amber-500" };
-    return map[dim] || "";
-  }
-
   Alpine.data('seguimientoApp', () => ({
+    // --- STATE ---
     view: 'resumen',
     filtro: '',
     selectedGrupo: null,
@@ -795,6 +743,7 @@
     userRole: null,
     saved: false,
     practicaFilter: 'Todas',
+    editingGrupoId: null,
     
     encuentrosMeta: ENCUENTROS_META,
     grupos: [],
@@ -815,9 +764,72 @@
       proyecto: '',
       comision: '',
       practica: 'P2',
-      integrantes: [{nombre:'',rol:'',observacion:''}]
+      integrantes: [{nombre:'',rol:'',observacion:'', dbId:null}]
     },
 
+    // --- HELPERS (dentro del componente para scope correcto en Alpine) ---
+    calcPct(scores) {
+      if (!scores) return null;
+      const vals = [scores.FN, scores.DEV, scores.SM].filter(v => v !== undefined && v !== null && v !== "");
+      if (!vals.length) return null;
+      return vals.reduce((a, b) => a + Number(b), 0) / (vals.length * 10);
+    },
+
+    calcNota(pct) {
+      return pct !== null ? (pct * 10).toFixed(1) : "—";
+    },
+
+    notaColor(nota) {
+      if (nota === "—") return "text-gray-400";
+      const n = parseFloat(nota);
+      if (n >= 8) return "text-green-700";
+      if (n >= 6) return "text-amber-700";
+      return "text-red-700";
+    },
+
+    notaBadgeClass(nota) {
+      if (nota === "—") return "bg-gray-100 text-gray-400";
+      const n = parseFloat(nota);
+      if (n >= 8) return "bg-green-100 text-green-700";
+      if (n >= 6) return "bg-amber-100 text-amber-700";
+      return "bg-red-100 text-red-700";
+    },
+
+    pctColor(pct) {
+      if (pct >= 80) return "bg-green-600";
+      if (pct >= 60) return "bg-amber-500";
+      return "bg-red-600";
+    },
+
+    asistBtnClass(val) {
+      const map = {
+        Presente: "border-green-600 text-green-700 bg-green-100",
+        Ausente: "border-red-600 text-red-700 bg-red-100",
+        Justificado: "border-amber-600 text-amber-700 bg-amber-100"
+      };
+      return map[val] || "";
+    },
+
+    asistTextClass(val) {
+      const map = {
+        Presente: "text-green-700 font-bold",
+        Ausente: "text-red-700 font-bold",
+        Justificado: "text-amber-700 font-bold"
+      };
+      return map[val] || "text-gray-500";
+    },
+
+    dimColor(dim) {
+      const map = { FN: "text-indigo-700", DEV: "text-sky-700", SM: "text-amber-700" };
+      return map[dim] || "";
+    },
+
+    dimBarColor(dim) {
+      const map = { FN: "bg-indigo-600", DEV: "bg-sky-600", SM: "bg-amber-500" };
+      return map[dim] || "";
+    },
+
+    // --- LIFECYCLE ---
     async init() {
       this.loadFallbackData();
       await this.loadFromSupabase();
@@ -826,7 +838,6 @@
     },
 
     loadFallbackData() {
-      // Start with empty, will fill from Supabase or fallback
       this.grupos = [];
       const d = {};
       ENCUENTROS_META.forEach(e => { d[e.id] = {}; });
@@ -841,7 +852,6 @@
 
     async loadFromSupabase() {
       try {
-        // Load grupos with integrantes
         const { data: gruposData, error: gruposError } = await supabase
           .from('grupos')
           .select('*')
@@ -860,24 +870,22 @@
           console.warn('Supabase integrantes error:', intError.message);
         }
 
-        // Build grupos with integrantes
         let loadedGrupos = [];
         if (gruposData && gruposData.length > 0) {
           loadedGrupos = gruposData.map(g => ({
             ...g,
             integrantes: (integrantesData || []).filter(i => i.grupo_id === g.id).map(i => ({
+              id: i.id,
               nombre: i.nombre,
               rol: i.rol || '',
               obs: i.observacion || ''
             }))
           }));
         } else {
-          // Fallback to hardcoded
           loadedGrupos = GRUPOS_INICIALES;
         }
         this.grupos = loadedGrupos;
 
-        // Load evaluaciones
         const { data: evals, error: evalError } = await supabase
           .from('evaluaciones')
           .select('*');
@@ -902,7 +910,6 @@
           });
         }
 
-        // Load asistencias
         const { data: asist, error: asistError } = await supabase
           .from('asistencias')
           .select('*');
@@ -933,7 +940,6 @@
         }
       } catch (e) {
         console.warn('Error loading from Supabase:', e);
-        // Fallback
         this.grupos = GRUPOS_INICIALES;
       }
     },
@@ -1015,7 +1021,7 @@
       let sum = 0, count = 0;
       ENCUENTROS_META.forEach(e => {
         const sc = this.data[e.id]?.[grupoId];
-        const p = calcPct(sc);
+        const p = this.calcPct(sc);
         if (p !== null) { sum += p; count++; }
       });
       return count ? sum / count : null;
@@ -1088,7 +1094,7 @@
 
     countGruposEvaluados(encId) {
       let cnt = 0;
-      this.gruposConProyecto.forEach(g => { if (calcPct(this.data[encId]?.[g.id]) !== null) cnt++; });
+      this.gruposConProyecto.forEach(g => { if (this.calcPct(this.data[encId]?.[g.id]) !== null) cnt++; });
       return cnt;
     },
 
@@ -1118,7 +1124,7 @@
       let sum = 0, count = 0;
       this.gruposConProyecto.forEach(g => {
         const sc = this.data[encId]?.[g.id];
-        const p = calcPct(sc);
+        const p = this.calcPct(sc);
         if (p !== null) { sum += p * 10; count++; }
       });
       return count ? (sum / count) * 10 : 0;
@@ -1128,7 +1134,7 @@
       let sum = 0, count = 0;
       this.gruposConProyecto.forEach(g => {
         const sc = this.data[encId]?.[g.id];
-        const p = calcPct(sc);
+        const p = this.calcPct(sc);
         if (p !== null) { sum += p * 10; count++; }
       });
       return count ? (sum / count).toFixed(1) : "—";
@@ -1138,7 +1144,7 @@
       let count = 0;
       this.gruposConProyecto.forEach(g => {
         const sc = this.data[encId]?.[g.id];
-        const p = calcPct(sc);
+        const p = this.calcPct(sc);
         if (p !== null) count++;
       });
       return count;
@@ -1146,11 +1152,11 @@
 
     encPromColor(encId) {
       const avg = this.encProm(encId) / 10;
-      return pctColor(avg * 100);
+      return this.pctColor(avg * 100);
     },
 
     notaColorClass(nota) {
-      return notaColor(nota);
+      return this.notaColor(nota);
     },
 
     async login() {
@@ -1256,13 +1262,44 @@
       }
     },
     
-    async agregarGrupo() {
+    // --- GRUPO CRUD ---
+    openAddGrupoModal() {
+      this.editingGrupoId = null;
+      this.newGrupo = {
+        proyecto: '',
+        comision: '',
+        practica: 'P2',
+        integrantes: [{nombre:'',rol:'',observacion:'', dbId:null}]
+      };
+      this.addGrupoError = '';
+      this.showAddGrupo = true;
+    },
+    
+    openEditGrupoModal() {
+      const g = this.grupoActual;
+      if (!g) return;
+      this.editingGrupoId = g.id;
+      this.newGrupo = {
+        proyecto: g.proyecto,
+        comision: g.comision || '',
+        practica: g.practica || 'P2',
+        integrantes: g.integrantes.map(i => ({
+          nombre: i.nombre,
+          rol: i.rol || '',
+          observacion: i.obs || '',
+          dbId: i.id || null
+        }))
+      };
+      this.addGrupoError = '';
+      this.showAddGrupo = true;
+    },
+    
+    async guardarGrupoModal() {
       if (!this.canEdit) return;
       this.loadingAddGrupo = true;
       this.addGrupoError = '';
       
       try {
-        // Validate
         if (!this.newGrupo.proyecto.trim()) {
           throw new Error('El nombre del proyecto es obligatorio');
         }
@@ -1271,60 +1308,140 @@
           throw new Error('Debe haber al menos un integrante');
         }
         
-        // Generate next ID
-        const nextId = Math.max(0, ...this.grupos.map(g => g.id)) + 1;
-        
-        // Insert grupo
-        const { data: grupoData, error: grupoError } = await supabase
-          .from('grupos')
-          .insert({
+        if (this.editingGrupoId) {
+          // EDITAR GRUPO EXISTENTE
+          const { error: updError } = await supabase
+            .from('grupos')
+            .update({
+              proyecto: this.newGrupo.proyecto.trim(),
+              comision: this.newGrupo.comision.trim(),
+              practica: this.newGrupo.practica
+            })
+            .eq('id', this.editingGrupoId);
+          
+          if (updError) throw updError;
+          
+          // Obtener integrantes actuales de Supabase para comparación
+          const { data: currentIntegrantes, error: intQError } = await supabase
+            .from('integrantes')
+            .select('id, nombre, rol, observacion')
+            .eq('grupo_id', this.editingGrupoId);
+          
+          if (intQError) console.warn('Error cargando integrantes actuales:', intQError);
+          
+          const currentMap = new Map((currentIntegrantes || []).map(i => [i.id, i]));
+          const handledIds = new Set();
+          
+          // Procesar integrantes del formulario
+          for (const int of validIntegrantes) {
+            if (int.dbId && currentMap.has(int.dbId)) {
+              // UPDATE existente
+              const { error: upIntError } = await supabase
+                .from('integrantes')
+                .update({
+                  nombre: int.nombre.trim(),
+                  rol: int.rol.trim(),
+                  observacion: int.observacion.trim()
+                })
+                .eq('id', int.dbId);
+              if (upIntError) console.warn('Error actualizando integrante:', upIntError);
+              handledIds.add(int.dbId);
+            } else {
+              // INSERT nuevo
+              const { error: inIntError } = await supabase
+                .from('integrantes')
+                .insert({
+                  grupo_id: this.editingGrupoId,
+                  nombre: int.nombre.trim(),
+                  rol: int.rol.trim(),
+                  observacion: int.observacion.trim()
+                });
+              if (inIntError) console.warn('Error insertando integrante:', inIntError);
+            }
+          }
+          
+          // DELETE integrantes eliminados
+          for (const [id, intData] of currentMap) {
+            if (!handledIds.has(id)) {
+              const { error: delError } = await supabase
+                .from('integrantes')
+                .delete()
+                .eq('id', id);
+              if (delError) console.warn('Error eliminando integrante:', delError);
+            }
+          }
+          
+          // Update local state
+          const gIdx = this.grupos.findIndex(g => g.id === this.editingGrupoId);
+          if (gIdx >= 0) {
+            this.grupos[gIdx] = {
+              ...this.grupos[gIdx],
+              proyecto: this.newGrupo.proyecto.trim(),
+              comision: this.newGrupo.comision.trim(),
+              practica: this.newGrupo.practica,
+              integrantes: validIntegrantes.map(i => ({
+                id: i.dbId,
+                nombre: i.nombre.trim(),
+                rol: i.rol.trim(),
+                obs: i.observacion.trim()
+              }))
+            };
+          }
+          
+        } else {
+          // CREAR NUEVO GRUPO
+          const nextId = Math.max(0, ...this.grupos.map(g => g.id)) + 1;
+          
+          const { data: grupoData, error: grupoError } = await supabase
+            .from('grupos')
+            .insert({
+              id: nextId,
+              proyecto: this.newGrupo.proyecto.trim(),
+              comision: this.newGrupo.comision.trim(),
+              practica: this.newGrupo.practica
+            })
+            .select()
+            .single();
+          
+          if (grupoError) throw grupoError;
+          
+          for (const int of validIntegrantes) {
+            const { error: intError } = await supabase
+              .from('integrantes')
+              .insert({
+                grupo_id: nextId,
+                nombre: int.nombre.trim(),
+                rol: int.rol.trim(),
+                observacion: int.observacion.trim()
+              });
+            if (intError) console.warn('Error insertando integrante:', intError);
+          }
+          
+          this.grupos.push({
             id: nextId,
             proyecto: this.newGrupo.proyecto.trim(),
             comision: this.newGrupo.comision.trim(),
-            practica: this.newGrupo.practica
-          })
-          .select()
-          .single();
-        
-        if (grupoError) throw grupoError;
-        
-        // Insert integrantes
-        for (const int of validIntegrantes) {
-          const { error: intError } = await supabase
-            .from('integrantes')
-            .insert({
-              grupo_id: nextId,
-              nombre: int.nombre.trim(),
-              rol: int.rol.trim(),
-              observacion: int.observacion.trim()
-            });
-          if (intError) console.warn('Error insertando integrante:', intError);
+            practica: this.newGrupo.practica,
+            integrantes: validIntegrantes.map(i => ({
+              nombre: i.nombre.trim(),
+              rol: i.rol.trim(),
+              obs: i.observacion.trim()
+            }))
+          });
         }
         
-        // Add to local state
-        this.grupos.push({
-          id: nextId,
-          proyecto: this.newGrupo.proyecto.trim(),
-          comision: this.newGrupo.comision.trim(),
-          practica: this.newGrupo.practica,
-          integrantes: validIntegrantes.map(i => ({
-            nombre: i.nombre.trim(),
-            rol: i.rol.trim(),
-            obs: i.observacion.trim()
-          }))
-        });
-        
-        // Reset form
+        // Reset
         this.newGrupo = {
           proyecto: '',
           comision: '',
           practica: 'P2',
-          integrantes: [{nombre:'',rol:'',observacion:''}]
+          integrantes: [{nombre:'',rol:'',observacion:'', dbId:null}]
         };
+        this.editingGrupoId = null;
         this.showAddGrupo = false;
         
       } catch (e) {
-        this.addGrupoError = e.message || 'Error al crear grupo';
+        this.addGrupoError = e.message || 'Error al guardar grupo';
       } finally {
         this.loadingAddGrupo = false;
       }
@@ -1347,10 +1464,8 @@
         
         if (error) throw error;
         
-        // Remove from local
         this.grupos = this.grupos.filter(g => g.id !== this.grupoToDelete.id);
         
-        // Clean data
         ENCUENTROS_META.forEach(e => {
           if (this.data[e.id]) {
             delete this.data[e.id][this.grupoToDelete.id];
