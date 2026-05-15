@@ -1,0 +1,982 @@
+---
+// Componente principal de seguimiento - Alpine.js + Supabase
+---
+
+<div 
+  x-data="seguimientoApp()" 
+  x-init="init()" 
+  class="min-h-screen bg-slate-100 font-sans"
+  x-cloak
+>
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 py-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-lg font-bold text-slate-800">Práctica Profesionalizante II</h1>
+          <p class="text-xs text-slate-500" x-text="`${grupos.length} grupos activos`"></p>
+        </div>
+        <div class="flex items-center gap-3">
+          <template x-if="!user">
+            <button 
+              @click="showLogin = true"
+              class="px-3 py-1.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition"
+            >
+              Ingresar
+            </button>
+          </template>
+          <template x-if="user">
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-600" x-text="user.email"></span>
+              <button 
+                @click="logout()"
+                class="px-3 py-1.5 text-xs text-red-600 hover:bg-red-50 rounded-lg transition"
+              >
+                Salir
+              </button>
+            </div>
+          </template>
+        </div>
+      </div>
+      
+      <!-- Tabs de navegación -->
+      <nav class="flex gap-0 mt-3 -mb-px" x-show="view === 'resumen' || view === 'encuentros' || view === 'stats'">
+        <button 
+          @click="view = 'resumen'"
+          class="flex-1 py-2 text-sm font-medium border-b-2 transition"
+          :class="view === 'resumen' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'"
+        >
+          Resumen
+        </button>
+        <button 
+          @click="view = 'encuentros'"
+          class="flex-1 py-2 text-sm font-medium border-b-2 transition"
+          :class="view === 'encuentros' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'"
+        >
+          Encuentros
+        </button>
+        <button 
+          @click="view = 'stats'"
+          class="flex-1 py-2 text-sm font-medium border-b-2 transition"
+          :class="view === 'stats' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'"
+        >
+          Stats
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-6xl mx-auto px-4 py-4">
+    
+    <!-- Loading -->
+    <div x-show="loadingData" class="text-center py-12">
+      <div class="inline-block w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-sm text-slate-500 mt-2">Cargando datos...</p>
+    </div>
+
+    <!-- VISTA RESUMEN -->
+    <div x-show="view === 'resumen' && !loadingData" x-transition>
+      <div class="mb-4">
+        <input 
+          x-model="filtro"
+          placeholder="Buscar grupo o proyecto..."
+          class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-slate-400 text-left">
+              <th class="px-2 py-2 font-semibold">Grupo</th>
+              <th class="px-2 py-2 font-semibold">Comisión</th>
+              <template x-for="enc in encuentrosMeta" :key="enc.id">
+                <th class="px-1 py-2 font-semibold text-center w-12">
+                  <button @click="selectEncuentro(enc.id)" class="text-indigo-600 font-bold hover:underline" x-text="enc.id"></button>
+                </th>
+              </template>
+              <th class="px-2 py-2 font-semibold text-center">Prom.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="grupo in gruposFiltrados" :key="grupo.id">
+              <tr 
+                @click="selectGrupo(grupo.id)"
+                class="bg-white cursor-pointer hover:bg-slate-50 transition"
+              >
+                <td class="px-2 py-2.5 rounded-l-lg">
+                  <span class="text-slate-400 text-xs mr-1" x-text="`G${grupo.id}`"></span>
+                  <span class="font-semibold text-slate-800" x-text="grupo.proyecto"></span>
+                </td>
+                <td class="px-2 py-2.5 text-slate-600" x-text="grupo.comision || '—'"></td>
+                <template x-for="enc in encuentrosMeta" :key="enc.id">
+                  <td class="px-1 py-2.5 text-center">
+                    <span 
+                      class="inline-flex items-center justify-center min-w-[2.5rem] h-6 rounded-md text-xs font-bold"
+                      :class="notaBadgeClass(calcNota(calcPct(data[enc.id]?.[grupo.id])))"
+                      x-text="calcNota(calcPct(data[enc.id]?.[grupo.id]))"
+                    ></span>
+                  </td>
+                </template>
+                <td class="px-2 py-2.5 text-center rounded-r-lg">
+                  <span 
+                    class="inline-flex items-center justify-center min-w-[3rem] h-8 rounded-lg text-sm font-bold"
+                    :class="notaBadgeClass(calcNota(promedioEncuentros(grupo.id)))"
+                    x-text="calcNota(promedioEncuentros(grupo.id))"
+                  ></span>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VISTA ENCUENTROS LISTA -->
+    <div x-show="view === 'encuentros' && !loadingData" x-transition>
+      <h2 class="text-base font-bold text-slate-800 mb-3">Encuentros</h2>
+      <div class="space-y-2">
+        <template x-for="enc in encuentrosMeta" :key="enc.id">
+          <button 
+            @click="selectEncuentro(enc.id)"
+            class="w-full bg-white rounded-xl p-4 text-left hover:shadow-md transition flex items-center gap-3"
+          >
+            <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center font-bold text-indigo-600 text-sm" x-text="enc.id"></div>
+            <div class="flex-1">
+              <div class="font-semibold text-sm text-slate-800" x-text="enc.nombre"></div>
+              <div class="text-xs text-slate-400 italic" x-text="enc.pregunta"></div>
+            </div>
+            <div class="text-xs text-slate-400 font-medium" x-text="`${countGruposEvaluados(enc.id)} grupos`"></div>
+            <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </template>
+      </div>
+    </div>
+
+    <!-- VISTA ESTADISTICAS -->
+    <div x-show="view === 'stats' && !loadingData" x-transition>
+      <h2 class="text-base font-bold text-slate-800 mb-3">Estadísticas Generales</h2>
+      
+      <!-- Promedio por dimensión -->
+      <div class="bg-white rounded-xl p-4 mb-3">
+        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">Promedio por Dimensión</h3>
+        <template x-for="dim in ['FN','DEV','SM']" :key="dim">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-9 font-bold text-sm" :class="dimColor(dim)" x-text="dim"></span>
+            <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+              <div 
+                class="h-full rounded-full transition-all duration-500"
+                :class="dimBarColor(dim)"
+                :style="`width: ${dimProm(dim)}%`"
+              ></div>
+            </div>
+            <span class="w-9 text-right font-bold text-sm" :class="notaColorClass(dimAvg(dim))" x-text="dimAvg(dim)"></span>
+          </div>
+        </template>
+      </div>
+      
+      <!-- Promedio por encuentro -->
+      <div class="bg-white rounded-xl p-4 mb-3">
+        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">Promedio por Encuentro</h3>
+        <template x-for="enc in encuentrosMeta" :key="enc.id">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-7 font-bold text-sm text-indigo-600" x-text="enc.id"></span>
+            <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+              <div 
+                class="h-full rounded-full transition-all duration-500"
+                :class="encPromColor(enc.id)"
+                :style="`width: ${encProm(enc.id)}%`"
+              ></div>
+            </div>
+            <span class="w-9 text-right font-bold text-sm" :class="notaColorClass(encAvg(enc.id))" x-text="encAvg(enc.id)"></span>
+            <span class="text-xs text-slate-400 w-6" x-text="`(${encCount(enc.id)})`"></span>
+          </div>
+        </template>
+      </div>
+      
+      <!-- Ranking -->
+      <div class="bg-white rounded-xl p-4">
+        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">Ranking de Grupos</h3>
+        <template x-for="(g, i) in ranking" :key="g.id">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-6 font-extrabold text-sm" :class="i < 3 ? ['text-amber-500','text-slate-400','text-amber-700'][i] : 'text-slate-300'" x-text="`#${i+1}`"></span>
+            <span class="flex-1 text-sm font-semibold text-slate-800" x-text="g.proyecto"></span>
+            <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+              <div 
+                class="h-full rounded-full transition-all duration-500"
+                :class="pctColor(g.prom * 100)"
+                :style="`width: ${Math.round(g.prom * 100)}%`"
+              ></div>
+            </div>
+            <span 
+              class="inline-flex items-center justify-center min-w-[3rem] h-8 rounded-lg text-sm font-bold"
+              :class="notaBadgeClass(calcNota(g.prom))"
+              x-text="calcNota(g.prom)"
+            ></span>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <!-- VISTA GRUPO DETALLE -->
+    <div x-show="view === 'grupo' && selectedGrupo && !loadingData" x-transition>
+      <div class="flex items-center gap-3 mb-4">
+        <button @click="view = 'resumen'" class="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-slate-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="flex-1">
+          <h2 class="text-lg font-extrabold text-slate-800" x-text="grupoActual?.proyecto"></h2>
+          <p class="text-xs text-slate-400" x-text="`Grupo ${grupoActual?.id} ${grupoActual?.comision ? '· ' + grupoActual.comision : ''}`"></p>
+        </div>
+        <button 
+          x-show="canEdit"
+          @click="guardar()"
+          class="px-3 py-2 text-white text-sm font-bold rounded-lg hover:bg-indigo-700 transition flex items-center gap-2"
+          :class="saved ? 'bg-green-500 hover:bg-green-600' : 'bg-indigo-600 hover:bg-indigo-700'"
+        >
+          <span x-text="saved ? '¡Guardado!' : 'Guardar'"></span>
+        </button>
+      </div>
+
+      <!-- Tabs de encuentros -->
+      <div class="flex gap-1.5 mb-4 overflow-x-auto pb-1">
+        <template x-for="enc in encuentrosMeta" :key="enc.id">
+          <button 
+            @click="activeE = enc.id"
+            class="flex-shrink-0 px-3 py-1.5 rounded-lg border-2 text-xs font-bold transition"
+            :class="activeE === enc.id ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-200 bg-white text-slate-500'"
+          >
+            <span x-text="enc.id"></span>
+            <span 
+              class="block text-center text-[10px] mt-0.5"
+              :class="activeE === enc.id ? 'text-white/70' : notaColorClass(calcNota(calcPct(localData[enc.id])))"
+              x-text="calcNota(calcPct(localData[enc.id]))"
+            ></span>
+          </button>
+        </template>
+      </div>
+
+      <!-- Encuentro activo -->
+      <div class="bg-white rounded-xl p-4 mb-3" x-show="encuentroActual">
+        <h3 class="font-bold text-sm text-slate-800" x-text="encuentroActual?.nombre"></h3>
+        <p class="text-xs text-slate-400 italic mb-4" x-text="encuentroActual?.pregunta"></p>
+
+        <!-- Asistencia -->
+        <div class="mb-4">
+          <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Asistencia</h4>
+          <div class="space-y-2">
+            <template x-for="int in grupoActual?.integrantes" :key="int.nombre">
+              <div class="flex items-center justify-between gap-2">
+                <div>
+                  <span class="text-sm text-slate-800 font-medium" x-text="int.nombre"></span>
+                  <span class="text-xs text-slate-400 ml-1" x-text="int.rol"></span>
+                </div>
+                <div class="flex gap-1" x-show="canEdit">
+                  <template x-for="opt in ['Presente','Ausente','Justificado']" :key="opt">
+                    <button 
+                      @click="setAsist(int.nombre, localAsist[activeE]?.[int.nombre] === opt ? '' : opt)"
+                      class="w-7 h-7 rounded-md border text-xs flex items-center justify-center transition"
+                      :class="localAsist[activeE]?.[int.nombre] === opt ? asistBtnClass(opt) : 'border-slate-200 text-slate-300 bg-white'"
+                      x-text="opt === 'Presente' ? '✓' : opt === 'Ausente' ? '✕' : '−'"
+                    ></button>
+                  </template>
+                </div>
+                <span x-show="!canEdit" class="text-xs font-medium" :class="asistTextClass(localAsist[activeE]?.[int.nombre])" x-text="localAsist[activeE]?.[int.nombre] || '—'"></span>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Dimensiones -->
+        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Evaluación de Dimensiones</h4>
+        <template x-for="[dim, label, color] in [['FN','FN — Análisis Funcional','text-indigo-500'],['DEV','DEV — Técnico','text-sky-500'],['SM','SM/PO — Gestión','text-amber-500']]" :key="dim">
+          <div class="mb-3 p-3 rounded-lg bg-slate-50 border border-slate-100">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-bold text-sm" :class="color" x-text="label"></span>
+              <input 
+                x-show="canEdit"
+                type="number" min="0" max="10" step="0.5"
+                :value="localData[activeE]?.[dim] ?? ''"
+                @input="setField(activeE, dim, $event.target.value === '' ? null : Number($event.target.value))"
+                class="w-14 px-2 py-1 border border-slate-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+              <span x-show="!canEdit" class="font-bold text-sm" x-text="localData[activeE]?.[dim] ?? '—'"></span>
+            </div>
+            <p class="text-xs text-slate-400 mb-2" x-text="criterioActual(dim)"></p>
+            <input 
+              x-show="canEdit"
+              placeholder="Retroalimentación..."
+              :value="localData[activeE]?.feedback?.[dim] ?? ''"
+              @input="setFb(activeE, dim, $event.target.value)"
+              class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+            <p x-show="!canEdit" class="text-xs text-slate-500" x-text="localData[activeE]?.feedback?.[dim] || 'Sin feedback'"></p>
+          </div>
+        </template>
+
+        <!-- Nota calculada -->
+        <div class="flex items-center justify-end gap-2 mt-2">
+          <span class="text-sm text-slate-500 font-semibold">Nota del encuentro:</span>
+          <span 
+            class="inline-flex items-center justify-center min-w-[3rem] h-8 rounded-lg text-sm font-bold"
+            :class="notaBadgeClass(calcNota(calcPct(localData[activeE])))"
+            x-text="calcNota(calcPct(localData[activeE]))"
+          ></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISTA ENCUENTRO DETALLE -->
+    <div x-show="view === 'encuentro' && selectedEnc && !loadingData" x-transition>
+      <div class="flex items-center gap-3 mb-4">
+        <button @click="view = 'resumen'" class="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 hover:text-slate-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div>
+          <h2 class="text-lg font-extrabold text-slate-800" x-text="encuentroSeleccionado?.nombre"></h2>
+          <p class="text-xs text-slate-400 italic" x-text="encuentroSeleccionado?.pregunta"></p>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <template x-for="grupo in gruposConProyecto" :key="grupo.id">
+          <div class="bg-white rounded-xl p-3 flex items-center gap-3">
+            <div class="flex-1">
+              <div class="font-bold text-sm text-slate-800">
+                <span class="text-slate-400 font-normal mr-1" x-text="`G${grupo.id}`"></span>
+                <span x-text="grupo.proyecto"></span>
+              </div>
+              <div class="flex gap-2 mt-1.5">
+                <template x-for="dim in ['FN','DEV','SM']" :key="dim">
+                  <span class="text-xs" :class="data[selectedEnc]?.[grupo.id]?.[dim] !== undefined ? 'text-slate-800 font-semibold' : 'text-slate-300'">
+                    <span x-text="dim"></span>: <span x-text="data[selectedEnc]?.[grupo.id]?.[dim] ?? '—'"></span>
+                  </span>
+                </template>
+              </div>
+            </div>
+            <span 
+              class="inline-flex items-center justify-center min-w-[2.5rem] h-7 rounded-md text-sm font-bold"
+              :class="notaBadgeClass(calcNota(calcPct(data[selectedEnc]?.[grupo.id])))"
+              x-text="calcNota(calcPct(data[selectedEnc]?.[grupo.id]))"
+            ></span>
+            <button 
+              x-show="canEdit"
+              @click="editGrupoEncuentro(grupo.id)"
+              class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-indigo-600 hover:bg-indigo-50"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+          </div>
+        </template>
+      </div>
+    </div>
+  </main>
+
+  <!-- Login Modal -->
+  <div 
+    x-show="showLogin" 
+    x-transition
+    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+    @click.self="showLogin = false"
+  >
+    <div class="bg-white rounded-xl p-6 w-full max-w-sm">
+      <h2 class="text-lg font-bold text-slate-800 mb-4">Ingresar como docente</h2>
+      <form @submit.prevent="login()">
+        <div class="mb-3">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Email</label>
+          <input 
+            x-model="loginEmail"
+            type="email"
+            class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            required
+          >
+        </div>
+        <div class="mb-4">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Contraseña</label>
+          <input 
+            x-model="loginPassword"
+            type="password"
+            class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            required
+          >
+        </div>
+        <p x-show="loginError" class="text-xs text-red-500 mb-3" x-text="loginError"></p>
+        <div class="flex gap-2">
+          <button 
+            type="button"
+            @click="showLogin = false"
+            class="flex-1 py-2 border border-slate-200 text-slate-600 text-sm font-medium rounded-lg hover:bg-slate-50"
+          >
+            Cancelar
+          </button>
+          <button 
+            type="submit"
+            class="flex-1 py-2 bg-indigo-600 text-white text-sm font-bold rounded-lg hover:bg-indigo-700"
+            :disabled="loadingAuth"
+          >
+            <span x-text="loadingAuth ? '...' : 'Ingresar'"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <style>
+    [x-cloak] { display: none !important; }
+  </style>
+</div>
+
+<script>
+  import Alpine from 'alpinejs';
+  import { supabase } from '../../lib/supabase';
+
+  window.Alpine = Alpine;
+
+  const ENCUENTROS_META = [
+    { id: "E1", nombre: "E1 — Informativo", pregunta: "¿Cómo vamos a trabajar?", criterios: { FN: "Presentación del Proyecto.", DEV: "Presentación del sistema base. Tecnologías elegidas y justificadas.", SM: "Presentación del Sprint 0: equipo, roles, backlog inicial, herramienta." } },
+    { id: "E2", nombre: "E2 — Validación de Dominio", pregunta: "¿De qué trata esto y tiene sentido el modelo?", criterios: { FN: "Procesos del negocio relevados. Justificación de entidades del DER. Actores identificados.", DEV: "DER con 8-12 entidades. Al menos una entidad transaccional. Relaciones reales.", SM: "Story Map inicial. Template de US definido." } },
+    { id: "E3", nombre: "E3 — Profundización", pregunta: "¿Está bien construido?", criterios: { FN: "Casos de uso o flujos funcionales completos.", DEV: "Arquitectura técnica definida. Módulos planificados.", SM: "Sprint 1 planificado con US estimadas." } },
+    { id: "E4", nombre: "E4 — Avance Técnico", pregunta: "¿Hay algo funcionando?", criterios: { FN: "Requerimientos actualizados según feedback.", DEV: "Módulo base implementado y demo.", SM: "Retrospectiva Sprint 1. Sprint 2 planificado." } },
+    { id: "E5", nombre: "E5 — Integración", pregunta: "¿Las partes se conectan?", criterios: { FN: "Escenarios de prueba definidos.", DEV: "Integración de módulos. Base de datos poblada.", SM: "Burndown actualizado. Impedimentos resueltos." } },
+    { id: "E6", nombre: "E6 — Pre-entrega", pregunta: "¿Está listo para mostrar?", criterios: { FN: "Manual de usuario borrador.", DEV: "Sistema desplegado o en staging.", SM: "Sprint final planificado." } },
+    { id: "E7", nombre: "E7 — Presentación Final", pregunta: "¿Cumplió con lo prometido?", criterios: { FN: "Documentación final entregada.", DEV: "Demo completa sin errores críticos.", SM: "Cierre de sprints y lecciones aprendidas." } },
+  ];
+
+  const GRUPOS_INICIALES = [
+    { id: 1, proyecto: "Teka Manager", comision: "51NMS", integrantes: [{ nombre: "Zagales, Mara", rol: "FN / DEV" }, { nombre: "Benetti, Gabriela", rol: "SM (Scrum Master)" }, { nombre: "Pigini, Fernando", rol: "FN (Análisis)" }, { nombre: "Molina, Carlos", rol: "DEV (Desarrollo)" }, { nombre: "Gaitan, Rocio", rol: "FN (Análisis)", obs: "Vive en España" }] },
+    { id: 2, proyecto: "SITMAS", comision: "51NMS", integrantes: [{ nombre: "Videla, Juan", rol: "FN / DEV" }, { nombre: "Lopez Diaz, Erika", rol: "DEV (Desarrollo)" }, { nombre: "Rivero, Cristina", rol: "SM (Scrum Master)" }, { nombre: "Cognini, Facundo", rol: "DEV (Desarrollo)" }, { nombre: "Zamora, Ramiro", rol: "DEV (Desarrollo)" }] },
+    { id: 3, proyecto: "YO SOY", comision: "51NMS", integrantes: [{ nombre: "Herrera Agustin", rol: "SM (Scrum Master)" }, { nombre: "Mantovani, Santiago", rol: "PO (Product Owner)" }, { nombre: "Gallo, Mariana", rol: "DEV (Desarrollo)" }, { nombre: "Armas, Alejandra", rol: "DEV (Desarrollo)" }] },
+    { id: 4, proyecto: "NODUS", comision: "51NMS", integrantes: [{ nombre: "Arias, Ayelen", rol: "DEV / SM" }, { nombre: "Arias, Mariana", rol: "DEV (Desarrollo)" }, { nombre: "Cerutti, Franco", rol: "FN / DEV" }, { nombre: "Barros, Claudia", rol: "FN / DEV" }] },
+    { id: 5, proyecto: "SocioApp Rancul", comision: "", integrantes: [{ nombre: "Emiliano Lafuria", rol: "SM (Scrum Master)" }, { nombre: "Romina Salome", rol: "" }, { nombre: "Asis Maleh", rol: "", obs: "Salió del grupo" }, { nombre: "Pereyra Débora Zulema", rol: "" }, { nombre: "Fernández Joaquín Tomas", rol: "" }, { nombre: "Torralba Silvana Beatriz", rol: "" }] },
+    { id: 6, proyecto: "GeoLocalizacion Biosa", comision: "", integrantes: [{ nombre: "Bustamante Danilo", rol: "SM (Scrum Master)" }, { nombre: "Baldironi Tomas", rol: "" }, { nombre: "Zurschmittn Maximo", rol: "" }, { nombre: "Nieto Samira", rol: "" }, { nombre: "Ferrara Melanie", rol: "", obs: "No cursa más" }] },
+    { id: 7, proyecto: "Punto Cell", comision: "51", integrantes: [{ nombre: "Fanara Maximilian", rol: "" }, { nombre: "Guerrini Juan Pablo", rol: "FN (Análisis)" }, { nombre: "Sclarandi Leandro Simon", rol: "" }, { nombre: "Yona Natan", rol: "" }] },
+    { id: 8, proyecto: "Metalurgica", comision: "51", integrantes: [{ nombre: "Noelia Pereyra", rol: "FN (Análisis)" }, { nombre: "Mariana Cepeda", rol: "SM (Scrum Master)" }, { nombre: "Federico Masin", rol: "DEV (Desarrollo)" }, { nombre: "Angel Ceballos", rol: "DEV (Desarrollo)" }] },
+    { id: 9, proyecto: "Condado", comision: "", integrantes: [{ nombre: "Bustos Pacheco Tomas Ezequiel", rol: "FN (Análisis)" }, { nombre: "Villegas Atoche Dylan Alexis", rol: "SM (Scrum Master)" }, { nombre: "Heredia Maximo", rol: "DEV (Desarrollo)" }, { nombre: "Escudero Mauricio", rol: "DEV (Desarrollo)" }] },
+    { id: 10, proyecto: "Salus Aequitas", comision: "", integrantes: [{ nombre: "Samira Nieto", rol: "" }, { nombre: "Maximo Zurshmitten", rol: "" }, { nombre: "Tomas Baldironi", rol: "SM (Scrum Master)" }, { nombre: "Danilo Bustamente", rol: "DEV (Desarrollo)" }] },
+    { id: 11, proyecto: "Mapla Joyas", comision: "", integrantes: [{ nombre: "Fazundo Zambrano", rol: "" }, { nombre: "Milagros Cordoba", rol: "" }, { nombre: "Belen Insegna", rol: "" }, { nombre: "Nazareno Cano", rol: "" }, { nombre: "Santiago Castro", rol: "" }] },
+    { id: 12, proyecto: "Dentisware", comision: "", integrantes: [{ nombre: "Edgar Narvaez Lavalle", rol: "" }, { nombre: "Leandro Saiz Zonni", rol: "" }, { nombre: "Rodrigo Good Carpio", rol: "" }] },
+    { id: 13, proyecto: "Arguello Infancias", comision: "", integrantes: [{ nombre: "Lozano Melani", rol: "" }, { nombre: "Tolomey Agostina", rol: "" }, { nombre: "Galvan Camila Anabel", rol: "" }, { nombre: "Marinez Sofia Del Valle", rol: "" }, { nombre: "Huansi Jordy", rol: "" }] },
+    { id: 14, proyecto: "Tamcat", comision: "", integrantes: [{ nombre: "Carballo Juan", rol: "" }, { nombre: "Gorosito Ezequiel", rol: "" }, { nombre: "Cunningham Luciano", rol: "" }, { nombre: "Matias Lopez", rol: "" }] },
+    { id: 15, proyecto: "Inclusion", comision: "", integrantes: [{ nombre: "Aparicio Fernando", rol: "DEV (Desarrollo)" }, { nombre: "Wlk, Mirko", rol: "DEV (Desarrollo)" }, { nombre: "Del Barrio Sacha", rol: "FN (Análisis)" }, { nombre: "Cochis German", rol: "FN (Análisis)" }, { nombre: "Decalli Mariano", rol: "SM (Scrum Master)" }] },
+    { id: 16, proyecto: "Daytona Repuesto de Autos", comision: "", integrantes: [{ nombre: "Ludueña Sofia", rol: "DEV / SM" }, { nombre: "Pereyra Hernan", rol: "DEV / SM" }] },
+  ];
+
+  const ENCUENTROS_CARGADOS = {
+    E1: {
+      1: { FN: 10, DEV: 10, SM: 10, fb: { FN: "Mueblería. Gestión-Trazabilidad-Ecommerce-Recortes", DEV: "React .Net Sql Server", SM: "Ok. Viernes" }, asistencia: { "Zagales, Mara": "Presente", "Benetti, Gabriela": "Presente", "Gaitan, Rocio": "Justificado" } },
+      2: { FN: 10, DEV: 10, SM: 10, fb: { SM: "Martes. OK" }, asistencia: { "Videla, Juan": "Presente", "Lopez Diaz, Erika": "Presente", "Rivero, Cristina": "Presente" } },
+      3: { FN: 10, DEV: 10, SM: 10, fb: { DEV: ".net - react - n8n - sql server", SM: "Sabado" }, asistencia: { "Gallo, Mariana": "Presente", "Armas, Alejandra": "Presente" } },
+      4: { FN: 10, DEV: 10, SM: 9, fb: { FN: "Bioingenieria-Mantenimiento-Equipamiento-SoporteVital", DEV: "SQL Server - .net - html-js-css (prob react)", SM: "Ok" }, asistencia: {} },
+    },
+    E2: {
+      1: { FN: 10, DEV: 10, SM: 10, fb: { FN: "Procesos: 9. Justos" }, asistencia: {} },
+      2: { FN: 10, DEV: 9, SM: 9, asistencia: { "Videla, Juan": "Presente", "Lopez Diaz, Erika": "Presente", "Rivero, Cristina": "Presente" } },
+      3: { FN: 6, DEV: 7, SM: 8, fb: { FN: "Falta gráficos y derivaciones", DEV: "Faltan entidades", SM: "Falta Story Map" }, asistencia: { "Gallo, Mariana": "Presente", "Armas, Alejandra": "Presente" } },
+      4: { FN: 6, DEV: 7, SM: 8, fb: { FN: "Faltan gráficos", DEV: "Falta armar gráfico", SM: "Faltó" }, asistencia: {} },
+      5: { FN: 8, DEV: 6, SM: 0, fb: { FN: "Procesos sin tomar en los alcances", DEV: "Poca relación entre entidades y procesos", SM: "No entregaron" }, asistencia: {} },
+      7: { FN: 8, DEV: 8, SM: 8, fb: { FN: "Escritos sin gráficos", DEV: "Der algo chico para leerlo bien", SM: "Podría incorporar más al mvp" }, asistencia: {} },
+      8: { FN: 8, DEV: 10, SM: 10, fb: { FN: "No pude ver bien los procesos, solo un resumen", DEV: "Correcto", SM: "Correcto. Aun creo que se podría agregar un poco más al mvp" }, asistencia: {} },
+      9: { FN: 6, DEV: 8, SM: 6, fb: { FN: "Por chat me pasaron solo 4 procesos", DEV: "No me pasan imagen de DER.", SM: "Por el DER se puede llegar a inferir que no tiene muchas historias" }, asistencia: {} },
+      10: { FN: 9, DEV: 8, SM: 4, fb: { FN: "Definidos", DEV: "Justo", SM: "Cumple pero no se lee, es una captura del Jira" }, asistencia: {} },
+      11: { FN: 8, DEV: 8, SM: 10, fb: { FN: "Creo que son pocos y se pueden quedar cortos de requerimientos", DEV: "Justos no se puede leer bien", SM: "Está correcto. Aunque como derivado de los procesos es algo corto" }, asistencia: {} },
+      12: { FN: 8, DEV: 4, SM: 2, fb: { FN: "Procesos correctos pero no se puede apreciar si están bien implementados en el DER", DEV: "DER - El gráfico no corresponde", SM: "Se presenta un anexo. Pero la imagen no es la de un story map" }, asistencia: {} },
+      13: { FN: 7, DEV: 5, SM: 8, fb: { FN: "Redactados", DEV: "No se logra apreciar", SM: "Está correcta, podría incorporar más cosas al mvp" }, asistencia: {} },
+      14: { FN: 7, DEV: 6, SM: 7, fb: {}, asistencia: {} },
+      15: { FN: 8, DEV: 8, SM: 8, fb: {}, asistencia: {} },
+      16: { FN: 4, DEV: 4, SM: 4, fb: {}, asistencia: {} },
+    },
+    E3: {
+      1: { FN: 9, DEV: 9, SM: 9, fb: {}, asistencia: {} },
+      2: { FN: 8, DEV: 8, SM: 8, fb: {}, asistencia: {} },
+      3: { FN: 5, DEV: 6, SM: 6, fb: {}, asistencia: {} },
+      4: { FN: 5, DEV: 6, SM: 6, fb: {}, asistencia: {} },
+      6: { FN: 7, DEV: 6, SM: 6, fb: {}, asistencia: {} },
+      7: { FN: 5, DEV: 6, SM: 7, fb: {}, asistencia: {} },
+      9: { FN: 5, DEV: 6, SM: 6, fb: {}, asistencia: {} },
+      11: { FN: 8, DEV: 9, SM: 9, fb: {}, asistencia: {} },
+      15: { FN: 9, DEV: 8, SM: 9, fb: {}, asistencia: {} },
+      16: { FN: 6, DEV: 6, SM: 6, fb: {}, asistencia: {} },
+    },
+    E4: {
+      6: { FN: 7, DEV: 6, SM: 6, fb: {}, asistencia: {} },
+      7: { FN: 9, DEV: 9, SM: 10, fb: {}, asistencia: {} },
+      8: { FN: 7, DEV: 7, SM: 8, fb: {}, asistencia: {} },
+      9: { FN: 1, DEV: 2, SM: 3, fb: {}, asistencia: {} },
+      11: { FN: 4, DEV: 5, SM: 5, fb: {}, asistencia: {} },
+    },
+  };
+
+  function calcPct(scores) {
+    if (!scores) return null;
+    const vals = [scores.FN, scores.DEV, scores.SM].filter(v => v !== undefined && v !== null && v !== "");
+    if (!vals.length) return null;
+    return vals.reduce((a, b) => a + Number(b), 0) / (vals.length * 10);
+  }
+
+  function calcNota(pct) {
+    return pct !== null ? (pct * 10).toFixed(1) : "—";
+  }
+
+  function notaColor(nota) {
+    if (nota === "—") return "text-slate-400";
+    const n = parseFloat(nota);
+    if (n >= 8) return "text-green-500";
+    if (n >= 6) return "text-amber-500";
+    return "text-red-500";
+  }
+
+  function notaBadgeClass(nota) {
+    if (nota === "—") return "bg-slate-100 text-slate-400";
+    const n = parseFloat(nota);
+    if (n >= 8) return "bg-green-50 text-green-600";
+    if (n >= 6) return "bg-amber-50 text-amber-600";
+    return "bg-red-50 text-red-600";
+  }
+
+  function pctColor(pct) {
+    if (pct >= 80) return "bg-green-500";
+    if (pct >= 60) return "bg-amber-500";
+    return "bg-red-500";
+  }
+
+  function asistBtnClass(val) {
+    const map = {
+      Presente: "border-green-500 text-green-500 bg-green-50",
+      Ausente: "border-red-500 text-red-500 bg-red-50",
+      Justificado: "border-amber-500 text-amber-500 bg-amber-50"
+    };
+    return map[val] || "";
+  }
+
+  function asistTextClass(val) {
+    const map = {
+      Presente: "text-green-600",
+      Ausente: "text-red-600",
+      Justificado: "text-amber-600"
+    };
+    return map[val] || "text-slate-400";
+  }
+
+  function dimColor(dim) {
+    const map = { FN: "text-indigo-500", DEV: "text-sky-500", SM: "text-amber-500" };
+    return map[dim] || "";
+  }
+
+  function dimBarColor(dim) {
+    const map = { FN: "bg-indigo-500", DEV: "bg-sky-500", SM: "bg-amber-500" };
+    return map[dim] || "";
+  }
+
+  Alpine.data('seguimientoApp', () => ({
+    view: 'resumen',
+    filtro: '',
+    selectedGrupo: null,
+    selectedEnc: null,
+    activeE: 'E1',
+    showLogin: false,
+    loginEmail: '',
+    loginPassword: '',
+    loginError: '',
+    loading: false,
+    loadingAuth: false,
+    loadingData: true,
+    user: null,
+    userRole: null,
+    saved: false,
+    
+    encuentrosMeta: ENCUENTROS_META,
+    grupos: GRUPOS_INICIALES,
+    data: {},
+    localData: {},
+    localAsist: {},
+
+    async init() {
+      this.loadFallbackData();
+      await this.loadFromSupabase();
+      await this.checkSession();
+      this.loadingData = false;
+    },
+
+    loadFallbackData() {
+      const d = {};
+      ENCUENTROS_META.forEach(e => { d[e.id] = {}; });
+      Object.entries(ENCUENTROS_CARGADOS).forEach(([enc, gs]) => {
+        Object.entries(gs).forEach(([gid, sc]) => {
+          if (!d[enc]) d[enc] = {};
+          d[enc][Number(gid)] = sc;
+        });
+      });
+      this.data = d;
+    },
+
+    async loadFromSupabase() {
+      try {
+        // Load evaluaciones
+        const { data: evals, error: evalError } = await supabase
+          .from('evaluaciones')
+          .select('*');
+        
+        if (evalError) {
+          console.warn('Supabase evaluaciones error:', evalError.message);
+          return;
+        }
+
+        if (evals && evals.length > 0) {
+          // Merge Supabase data into local structure
+          evals.forEach(ev => {
+            if (!this.data[ev.encuentro_meta_id]) this.data[ev.encuentro_meta_id] = {};
+            if (!this.data[ev.encuentro_meta_id][ev.grupo_id]) this.data[ev.encuentro_meta_id][ev.grupo_id] = {};
+            
+            const entry = this.data[ev.encuentro_meta_id][ev.grupo_id];
+            entry.FN = ev.fn ?? entry.FN;
+            entry.DEV = ev.dev ?? entry.DEV;
+            entry.SM = ev.sm ?? entry.SM;
+            if (!entry.fb) entry.fb = {};
+            entry.fb.FN = ev.feedback_fn || entry.fb.FN || '';
+            entry.fb.DEV = ev.feedback_dev || entry.fb.DEV || '';
+            entry.fb.SM = ev.feedback_sm || entry.fb.SM || '';
+          });
+        }
+
+        // Load asistencias
+        const { data: asist, error: asistError } = await supabase
+          .from('asistencias')
+          .select('*');
+
+        if (asistError) {
+          console.warn('Supabase asistencias error:', asistError.message);
+          return;
+        }
+
+        if (asist && asist.length > 0) {
+          // Need to map evaluacion_id -> (encuentro_id, grupo_id)
+          // First build a lookup from evaluaciones we just loaded
+          const evalLookup = {};
+          if (evals) {
+            evals.forEach(ev => {
+              evalLookup[ev.id] = { enc: ev.encuentro_meta_id, grp: ev.grupo_id };
+            });
+          }
+          
+          asist.forEach(a => {
+            const lookup = evalLookup[a.evaluacion_id];
+            if (lookup) {
+              const enc = lookup.enc;
+              const grp = lookup.grp;
+              if (!this.data[enc]) this.data[enc] = {};
+              if (!this.data[enc][grp]) this.data[enc][grp] = {};
+              if (!this.data[enc][grp].asistencia) this.data[enc][grp].asistencia = {};
+              this.data[enc][grp].asistencia[a.integrante_nombre] = a.estado;
+            }
+          });
+        }
+      } catch (e) {
+        console.warn('Error loading from Supabase:', e);
+      }
+    },
+
+    async checkSession() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          this.user = session.user;
+          await this.loadProfile();
+        }
+      } catch (e) {
+        console.error('Error checking session:', e);
+      }
+    },
+
+    async loadProfile() {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', this.user.id)
+          .single();
+        if (data) this.userRole = data.role;
+      } catch (e) {
+        console.error('Error loading profile:', e);
+      }
+    },
+
+    get canEdit() {
+      return ['profesor_practica', 'director', 'admin'].includes(this.userRole);
+    },
+
+    get gruposFiltrados() {
+      const f = this.filtro.toLowerCase();
+      return this.grupos.filter(g => 
+        g.proyecto.toLowerCase().includes(f) ||
+        g.comision.toLowerCase().includes(f) ||
+        String(g.id).includes(f)
+      );
+    },
+
+    get gruposConProyecto() {
+      return this.grupos.filter(g => g.proyecto);
+    },
+
+    get grupoActual() {
+      return this.grupos.find(g => g.id === this.selectedGrupo);
+    },
+
+    get encuentroActual() {
+      return ENCUENTROS_META.find(e => e.id === this.activeE);
+    },
+
+    get encuentroSeleccionado() {
+      return ENCUENTROS_META.find(e => e.id === this.selectedEnc);
+    },
+
+    get ranking() {
+      const stats = this.gruposConProyecto.map(g => {
+        const prom = this.promedioEncuentros(g.id);
+        return { ...g, prom };
+      }).filter(g => g.prom !== null).sort((a, b) => b.prom - a.prom);
+      return stats;
+    },
+
+    promedioEncuentros(grupoId) {
+      let sum = 0, count = 0;
+      ENCUENTROS_META.forEach(e => {
+        const sc = this.data[e.id]?.[grupoId];
+        const p = calcPct(sc);
+        if (p !== null) { sum += p; count++; }
+      });
+      return count ? sum / count : null;
+    },
+
+    selectGrupo(id) {
+      this.selectedGrupo = id;
+      this.view = 'grupo';
+      this.activeE = 'E1';
+      this.initLocalData(id);
+    },
+
+    selectEncuentro(id) {
+      this.selectedEnc = id;
+      this.view = 'encuentro';
+    },
+
+    editGrupoEncuentro(grupoId) {
+      this.selectedGrupo = grupoId;
+      this.activeE = this.selectedEnc;
+      this.view = 'grupo';
+      this.initLocalData(grupoId);
+    },
+
+    initLocalData(grupoId) {
+      const d = {};
+      const a = {};
+      ENCUENTROS_META.forEach(e => {
+        const sc = this.data[e.id]?.[grupoId] || {};
+        d[e.id] = {
+          FN: sc.FN ?? "",
+          DEV: sc.DEV ?? "",
+          SM: sc.SM ?? "",
+          feedback: { FN: sc.fb?.FN ?? "", DEV: sc.fb?.DEV ?? "", SM: sc.fb?.SM ?? "" },
+        };
+        a[e.id] = { ...(sc.asistencia || {}) };
+      });
+      this.localData = d;
+      this.localAsist = a;
+    },
+
+    setField(enc, dim, val) {
+      if (!this.localData[enc]) this.localData[enc] = {};
+      this.localData[enc][dim] = val;
+    },
+
+    setFb(enc, dim, val) {
+      if (!this.localData[enc]) this.localData[enc] = {};
+      if (!this.localData[enc].feedback) this.localData[enc].feedback = {};
+      this.localData[enc].feedback[dim] = val;
+    },
+
+    setAsist(nombre, val) {
+      if (!this.localAsist[this.activeE]) this.localAsist[this.activeE] = {};
+      this.localAsist[this.activeE][nombre] = val;
+    },
+
+    criterioActual(dim) {
+      return this.encuentroActual?.criterios[dim] || '';
+    },
+
+    countGruposEvaluados(encId) {
+      let cnt = 0;
+      this.grupos.forEach(g => { if (calcPct(this.data[encId]?.[g.id]) !== null) cnt++; });
+      return cnt;
+    },
+
+    dimProm(dim) {
+      let sum = 0, count = 0;
+      this.grupos.forEach(g => {
+        ENCUENTROS_META.forEach(e => {
+          const v = this.data[e.id]?.[g.id]?.[dim];
+          if (v !== undefined && v !== null && v !== "") { sum += Number(v); count++; }
+        });
+      });
+      return count ? (sum / count) * 10 : 0;
+    },
+
+    dimAvg(dim) {
+      let sum = 0, count = 0;
+      this.grupos.forEach(g => {
+        ENCUENTROS_META.forEach(e => {
+          const v = this.data[e.id]?.[g.id]?.[dim];
+          if (v !== undefined && v !== null && v !== "") { sum += Number(v); count++; }
+        });
+      });
+      return count ? (sum / count).toFixed(1) : "—";
+    },
+
+    encProm(encId) {
+      let sum = 0, count = 0;
+      this.grupos.forEach(g => {
+        const sc = this.data[encId]?.[g.id];
+        const p = calcPct(sc);
+        if (p !== null) { sum += p * 10; count++; }
+      });
+      return count ? (sum / count) * 10 : 0;
+    },
+
+    encAvg(encId) {
+      let sum = 0, count = 0;
+      this.grupos.forEach(g => {
+        const sc = this.data[encId]?.[g.id];
+        const p = calcPct(sc);
+        if (p !== null) { sum += p * 10; count++; }
+      });
+      return count ? (sum / count).toFixed(1) : "—";
+    },
+
+    encCount(encId) {
+      let count = 0;
+      this.grupos.forEach(g => {
+        const sc = this.data[encId]?.[g.id];
+        const p = calcPct(sc);
+        if (p !== null) count++;
+      });
+      return count;
+    },
+
+    encPromColor(encId) {
+      const avg = this.encProm(encId) / 10;
+      return pctColor(avg * 100);
+    },
+
+    notaColorClass(nota) {
+      return notaColor(nota);
+    },
+
+    async login() {
+      this.loadingAuth = true;
+      this.loginError = '';
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: this.loginEmail,
+          password: this.loginPassword
+        });
+        if (error) throw error;
+        this.user = data.user;
+        await this.loadProfile();
+        this.showLogin = false;
+        this.loginEmail = '';
+        this.loginPassword = '';
+      } catch (e) {
+        this.loginError = e.message || 'Error al iniciar sesión';
+      } finally {
+        this.loadingAuth = false;
+      }
+    },
+
+    async logout() {
+      await supabase.auth.signOut();
+      this.user = null;
+      this.userRole = null;
+    },
+
+    async guardar() {
+      if (!this.canEdit) return;
+      this.saved = false;
+      
+      try {
+        const grupoId = this.selectedGrupo;
+        
+        for (const enc of ENCUENTROS_META) {
+          const local = this.localData[enc.id];
+          const asist = this.localAsist[enc.id];
+          
+          if (!local) continue;
+          
+          // Upsert evaluacion
+          const evalPayload = {
+            grupo_id: grupoId,
+            encuentro_meta_id: enc.id,
+            fn: local.FN || null,
+            dev: local.DEV || null,
+            sm: local.SM || null,
+            feedback_fn: local.feedback?.FN || '',
+            feedback_dev: local.feedback?.DEV || '',
+            feedback_sm: local.feedback?.SM || '',
+          };
+          
+          const { data: evalData, error: evalError } = await supabase
+            .from('evaluaciones')
+            .upsert(evalPayload, { onConflict: 'grupo_id,encuentro_meta_id' })
+            .select()
+            .single();
+          
+          if (evalError) {
+            console.error('Error saving evaluacion:', evalError);
+            continue;
+          }
+          
+          // Save asistencias
+          if (asist && evalData) {
+            for (const [nombre, estado] of Object.entries(asist)) {
+              if (!estado) continue;
+              
+              const { error: asistError } = await supabase
+                .from('asistencias')
+                .upsert({
+                  evaluacion_id: evalData.id,
+                  integrante_nombre: nombre,
+                  estado: estado,
+                }, { onConflict: 'evaluacion_id,integrante_nombre' });
+              
+              if (asistError) {
+                console.error('Error saving asistencia:', asistError);
+              }
+            }
+          }
+          
+          // Update local data
+          if (!this.data[enc.id]) this.data[enc.id] = {};
+          if (!this.data[enc.id][grupoId]) this.data[enc.id][grupoId] = {};
+          this.data[enc.id][grupoId] = {
+            FN: local.FN || undefined,
+            DEV: local.DEV || undefined,
+            SM: local.SM || undefined,
+            fb: {
+              FN: local.feedback?.FN || '',
+              DEV: local.feedback?.DEV || '',
+              SM: local.feedback?.SM || '',
+            },
+            asistencia: { ...asist },
+          };
+        }
+        
+        this.saved = true;
+        setTimeout(() => this.saved = false, 2000);
+      } catch (e) {
+        console.error('Error saving:', e);
+        alert('Error al guardar: ' + e.message);
+      }
+    }
+  }));
+
+  Alpine.start();
+</script>

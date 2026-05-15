@@ -1,0 +1,17 @@
+---
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+import SeguimientoApp from '../../components/seguimiento/SeguimientoApp.astro';
+
+export const prerender = true;
+
+const title = "Seguimiento Práctica Profesionalizante II";
+---
+
+<BaseTailwind 
+  title={title}
+  description="Seguimiento de grupos de Práctica Profesionalizante II"
+  lang="es"
+  layoutType="tool"
+>
+  <SeguimientoApp />
+</BaseTailwind>

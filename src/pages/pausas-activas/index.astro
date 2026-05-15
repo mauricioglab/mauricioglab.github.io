@@ -24,13 +24,13 @@ const title = 'Pausas Activas';
       <div class="mb-8 flex max-sm:flex-col items-start gap-4 max-sm:gap-3 rounded-2xl border border-[rgba(251,146,60,0.15)] bg-[rgba(251,146,60,0.05)] p-5 max-sm:p-4">
         <div class="flex items-center gap-3">
           <div id="pa-banner-emoji" class="text-[2rem] max-sm:text-[1.5rem] leading-none">☀️</div>
-          <div class="ml-auto rounded-lg border border-[rgba(251,146,60,0.2)] bg-[rgba(251,146,60,0.08)] px-3 py-1.5 text-[0.65rem] max-sm:text-[0.6rem] font-bold uppercase tracking-[2px] text-[#fb923c] sm:hidden">10 SEG PAUSA</div>
+          <div class="ml-auto rounded-lg border border-[rgba(251,146,60,0.2)] bg-[rgba(251,146,60,0.08)] px-3 py-1.5 text-[0.65rem] max-sm:text-[0.6rem] font-bold uppercase tracking-[2px] text-[#fb923c] sm:hidden">MODO CIRCUITO</div>
         </div>
         <div class="flex flex-col gap-1">
           <div id="pa-banner-title" class="font-['Bebas_Neue',sans-serif] text-[1.1rem] max-sm:text-[1rem] tracking-[2px] text-[#fb923c]">PAUSA DE LAS 11 HS · EN EL ESCRITORIO</div>
           <div class="text-[0.78rem] max-sm:text-[0.7rem] font-semibold leading-relaxed text-[#5a5a7a]">Controlá el movimiento. Despacio. Sentí cada parte del cuerpo que vas movilizando.</div>
         </div>
-        <div class="ml-auto shrink-0 max-sm:hidden rounded-lg border border-[rgba(251,146,60,0.2)] bg-[rgba(251,146,60,0.08)] px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[2px] text-[#fb923c]">10 SEG PAUSA</div>
+        <div class="ml-auto shrink-0 max-sm:hidden rounded-lg border border-[rgba(251,146,60,0.2)] bg-[rgba(251,146,60,0.08)] px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[2px] text-[#fb923c]">MODO CIRCUITO</div>
       </div>
       <div class="mb-5 flex max-sm:flex-col max-sm:items-start max-sm:gap-3 items-center justify-between">
         <div class="font-['Bebas_Neue',sans-serif] text-[1.8rem] max-sm:text-[1.5rem] tracking-[2px] text-[#eeeef8]">EJERCICIOS EN SILLA</div>
@@ -269,8 +269,7 @@ const title = 'Pausas Activas';
       showRest(30, () => { wkState.currentRound++; wkState.currentEx = 0; showCurrentStep(); },
         `Vuelta ${wkState.currentRound + 1} completada`, `A continuación: vuelta ${wkState.currentRound + 2}`);
     } else {
-      showRest(REST, () => { wkState.currentEx++; showCurrentStep(); },
-        `⏸ Descanso · ${REST} segundos`, `A continuación: ${EXERCISES[wkState.currentEx + 1].name}`);
+      wkState.currentEx++; showCurrentStep();
     }
   }
 

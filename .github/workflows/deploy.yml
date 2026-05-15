@@ -21,6 +21,9 @@ jobs:
 
       - name: Install, build and upload site
         uses: withastro/action@v5
+        env:
+          PUBLIC_SUPABASE_URL: https://rnejgcdfpbkqbdoadeib.supabase.co
+          PUBLIC_SUPABASE_ANON_KEY: sb_publishable_wQef0RztvyMcq52QckV7Uw_BcXEdBqI
 
   deploy:
     needs: build

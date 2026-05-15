@@ -72,7 +72,7 @@ const title = 'Movilidad';
         <div class="flex items-center gap-3">
           <div id="mob-banner-emoji" class="text-[2rem] max-sm:text-[1.5rem] leading-none">🌙</div>
           <div class="ml-auto rounded-lg border border-[rgba(138,180,248,0.2)] bg-[rgba(138,180,248,0.08)] px-3 py-1.5 text-[0.65rem] max-sm:text-[0.6rem] font-bold uppercase tracking-[2px] text-[#8ab4f8] sm:hidden">
-            10 SEG PAUSA
+            MODO CIRCUITO
           </div>
         </div>
         <div class="flex flex-col gap-1">
@@ -82,7 +82,7 @@ const title = 'Movilidad';
           </div>
         </div>
         <div class="ml-auto max-sm:hidden rounded-lg border border-[rgba(138,180,248,0.2)] bg-[rgba(138,180,248,0.08)] px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-[2px] text-[#8ab4f8]">
-          10 SEG PAUSA
+          MODO CIRCUITO
         </div>
       </div>
 
@@ -537,42 +537,13 @@ const title = 'Movilidad';
       // Full lap done → rest between rounds
       showCircuitRest();
     } else {
-      // Next exercise in this lap → short rest (10s) then continue
-      showExRest();
+      // Next exercise in this lap → continue immediately
+      wkState.currentEx++;
+      showCurrentStep();
     }
   }
 
-  function showExRest() {
-    clearTimer();
-    wkState.phase = 'rest';
-    const nextEx = wkState.exercises[wkState.currentEx + 1];
-    showRestState();
-    ovChip.className     = CL.chipRest;
-    ovChip.textContent   = '⏸ Descanso · 10 segundos';
-    ovExname.textContent = `A continuación: ${nextEx.name}`;
-    ovExnote.textContent = nextEx.note ? `↳ ${nextEx.note}` : '';
-    cueBox.textContent   = 'Respirá. Relajate. Preparate para el siguiente ejercicio.';
 
-    repsDisplay.classList.remove('hidden'); repsDisplay.classList.add('flex');
-    ovRepsVal.className    = CL.repsValRest;
-    ovRepsUnit.textContent = 'SEGUNDOS';
-    actionBtn.textContent  = '⏭ SALTAR';
-    actionBtn.className    = CL.actionRest;
-
-    let remaining = wkState.restSeconds;
-    ovRepsVal.textContent = remaining;
-    timerInterval = setInterval(() => {
-      remaining--;
-      ovRepsVal.textContent = remaining;
-      if (remaining <= 0) {
-        clearTimer(); playBeep();
-        wkState.currentEx++;
-        showCurrentStep();
-      }
-    }, 1000);
-    actionBtn.onclick = () => { clearTimer(); wkState.currentEx++; showCurrentStep(); };
-    updateDots();
-  }
 
   function showCircuitRest() {
     clearTimer();

@@ -623,40 +623,16 @@ const gifBase = `${basePath}entrenamiento/`;
     updateProgress();
     ovRepsVal.className = CL.repsValExercise;
 
-    if (isTime) {
-      repsDisplay.classList.add('hidden'); repsDisplay.classList.remove('flex');
-      timerDisplay.classList.remove('hidden'); timerDisplay.classList.add('flex');
-      timerLabel.textContent = 'SEGUNDOS';
-      timerArc.style.stroke  = '#b8ff00';
-      startTimerCountdown(val, () => afterExercise());
-      actionBtn.textContent = '⏭ SALTAR';
-      actionBtn.className   = CL.actionReady;
-      actionBtn.onclick = () => { clearTimer(); afterExercise(); };
-    } else {
-      timerDisplay.classList.add('hidden'); timerDisplay.classList.remove('flex');
-      repsDisplay.classList.remove('hidden'); repsDisplay.classList.add('flex');
-      ovRepsVal.textContent  = val;
-      ovRepsUnit.textContent = 'REPETICIONES';
-      actionBtn.textContent  = '✓ LISTO';
-      actionBtn.className    = CL.actionReady;
-      actionBtn.onclick = () => afterExercise();
-    }
+    timerDisplay.classList.add('hidden'); timerDisplay.classList.remove('flex');
+    repsDisplay.classList.remove('hidden'); repsDisplay.classList.add('flex');
+    ovRepsVal.textContent  = val;
+    ovRepsUnit.textContent = isTime ? 'SEGUNDOS' : 'REPETICIONES';
+    actionBtn.textContent  = '✓ LISTO';
+    actionBtn.className    = CL.actionReady;
+    actionBtn.onclick = () => afterExercise();
   }
 
-  function startTimerCountdown(seconds, cb) {
-    let remaining = seconds;
-    timerText.textContent = remaining;
-    timerArc.style.transition = 'none';
-    timerArc.style.strokeDashoffset = '0';
-    timerInterval = setInterval(() => {
-      remaining--;
-      timerText.textContent = remaining;
-      const p = 1 - (remaining / seconds);
-      timerArc.style.transition = 'stroke-dashoffset 1s linear';
-      timerArc.style.strokeDashoffset = (TOTAL_ARC * p).toString();
-      if (remaining <= 0) { clearTimer(); cb(); }
-    }, 1000);
-  }
+
 
   // ── CIRCUIT MODE: no rest between exercises, rest only between rounds ────
   function afterExercise() {
