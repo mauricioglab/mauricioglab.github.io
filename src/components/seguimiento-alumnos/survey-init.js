@@ -14,8 +14,6 @@ function getSurveySchema() {
   return {
     showProgressBar: "top",
     progressBarType: "percentage",
-    title: "Seguimiento de Alumnos — Trabajo Final",
-    description: "Completá tus datos para que podamos conocer tu situación actual y acompañarte.",
     pages: [
       {
         name: "datos_personales",
