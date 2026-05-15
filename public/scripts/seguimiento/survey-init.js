@@ -7,6 +7,7 @@ function generarMeses() {
     const yyyy = d.getFullYear();
     meses.push({ value: `${mm}/${yyyy}`, text: `${mm}/${yyyy}` });
   }
+  return meses;
 }
 
 function getSurveySchema() {
