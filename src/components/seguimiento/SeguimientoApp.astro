@@ -258,9 +258,101 @@
         </div>
       </div>
       
-      <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+      <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm mb-3">
         <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Heatmap Comisiones × Encuentros</h3>
         <div id="plot-heatmap" class="w-full" style="min-height: 360px;"></div>
+      </div>
+      
+      <!-- Estadísticas de Ausencias -->
+      <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+        <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">📊 Estadísticas de Ausencias</h3>
+        
+        <!-- Grupos con más ausentes -->
+        <div class="mb-6">
+          <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Grupos con más ausencias</h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-gray-50">
+                  <th class="px-3 py-2 text-left text-xs font-bold text-gray-700">Grupo</th>
+                  <th class="px-3 py-2 text-center text-xs font-bold text-red-700">Ausentes</th>
+                  <th class="px-3 py-2 text-center text-xs font-bold text-amber-700">Justificados</th>
+                  <th class="px-3 py-2 text-center text-xs font-bold text-gray-700">Total inasistencias</th>
+                  <th class="px-3 py-2 text-center text-xs font-bold text-gray-700">%</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="item in getAusenciasPorGrupo()" :key="item.grupo">
+                  <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="px-3 py-2 font-medium text-gray-900" x-text="item.grupo"></td>
+                    <td class="px-3 py-2 text-center text-red-600 font-bold" x-text="item.ausentes"></td>
+                    <td class="px-3 py-2 text-center text-amber-600 font-bold" x-text="item.justificados"></td>
+                    <td class="px-3 py-2 text-center font-bold text-gray-900" x-text="item.totalInasistencias"></td>
+                    <td class="px-3 py-2 text-center text-gray-600" x-text="item.porcentaje + '%'"></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- Ausentes por encuentro -->
+        <div class="mb-6">
+          <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Ausencias por encuentro</h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-gray-50">
+                  <th class="px-3 py-2 text-left text-xs font-bold text-gray-700">Encuentro</th>
+                  <th class="px-3 py-2 text-center text-xs font-bold text-red-700">Ausentes</th>
+                  <th class="px-3 py-2 text-center text-xs font-bold text-amber-700">Justificados</th>
+                  <th class="px-3 py-2 text-center text-xs font-bold text-gray-700">Total inasistencias</th>
+                  <th class="px-3 py-2 text-center text-xs font-bold text-gray-700">%</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="item in getAusenciasPorEncuentro()" :key="item.encuentro">
+                  <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="px-3 py-2 font-medium text-gray-900" x-text="item.encuentro + ' — ' + item.nombre.split('—')[1]?.trim()"></td>
+                    <td class="px-3 py-2 text-center text-red-600 font-bold" x-text="item.ausentes"></td>
+                    <td class="px-3 py-2 text-center text-amber-600 font-bold" x-text="item.justificados"></td>
+                    <td class="px-3 py-2 text-center font-bold text-gray-900" x-text="item.totalInasistencias"></td>
+                    <td class="px-3 py-2 text-center text-gray-600" x-text="item.porcentaje + '%'"></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- Alumnos con más ausentes -->
+        <div>
+          <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Alumnos con más ausencias</h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-gray-50">
+                  <th class="px-3 py-2 text-left text-xs font-bold text-gray-700">Alumno</th>
+                  <th class="px-3 py-2 text-left text-xs font-bold text-gray-700">Grupo</th>
+                  <th class="px-3 py-2 text-center text-xs font-bold text-red-700">Ausentes</th>
+                  <th class="px-3 py-2 text-center text-xs font-bold text-amber-700">Justificados</th>
+                  <th class="px-3 py-2 text-center text-xs font-bold text-gray-700">Total inasistencias</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="item in getAusenciasPorAlumno()" :key="item.nombre">
+                  <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="px-3 py-2 font-medium text-gray-900" x-text="item.nombre"></td>
+                    <td class="px-3 py-2 text-gray-600 text-xs" x-text="item.grupo"></td>
+                    <td class="px-3 py-2 text-center text-red-600 font-bold" x-text="item.ausentes"></td>
+                    <td class="px-3 py-2 text-center text-amber-600 font-bold" x-text="item.justificados"></td>
+                    <td class="px-3 py-2 text-center font-bold text-gray-900" x-text="item.ausentes + item.justificados"></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1471,6 +1563,103 @@
           font: { family: 'sans-serif', size: 12 }
         }
       };
+    },
+
+    // --- AUSENCIAS STATS ---
+    getAusenciasPorGrupo() {
+      const grupos = this.gruposStatsFiltrados();
+      const resultados = [];
+      
+      grupos.forEach(g => {
+        let ausentes = 0;
+        let justificados = 0;
+        let total = 0;
+        
+        ENCUENTROS_META.forEach(enc => {
+          const asist = this.data[enc.id]?.[g.id]?.asistencia || {};
+          g.integrantes?.forEach(int => {
+            const estado = asist[int.nombre];
+            total++;
+            if (estado === 'Ausente') ausentes++;
+            else if (estado === 'Justificado') justificados++;
+          });
+        });
+        
+        if (total > 0) {
+          resultados.push({
+            grupo: `G${g.id} · ${g.proyecto}`,
+            ausentes,
+            justificados,
+            totalInasistencias: ausentes + justificados,
+            porcentaje: ((ausentes + justificados) / total * 100).toFixed(1)
+          });
+        }
+      });
+      
+      return resultados.sort((a, b) => b.totalInasistencias - a.totalInasistencias);
+    },
+
+    getAusenciasPorEncuentro() {
+      const grupos = this.gruposStatsFiltrados();
+      const resultados = [];
+      
+      ENCUENTROS_META.forEach(enc => {
+        let ausentes = 0;
+        let justificados = 0;
+        let total = 0;
+        
+        grupos.forEach(g => {
+          const asist = this.data[enc.id]?.[g.id]?.asistencia || {};
+          g.integrantes?.forEach(int => {
+            const estado = asist[int.nombre];
+            if (estado) {
+              total++;
+              if (estado === 'Ausente') ausentes++;
+              else if (estado === 'Justificado') justificados++;
+            }
+          });
+        });
+        
+        if (total > 0) {
+          resultados.push({
+            encuentro: enc.id,
+            nombre: enc.nombre,
+            ausentes,
+            justificados,
+            totalInasistencias: ausentes + justificados,
+            porcentaje: ((ausentes + justificados) / total * 100).toFixed(1)
+          });
+        }
+      });
+      
+      return resultados;
+    },
+
+    getAusenciasPorAlumno() {
+      const grupos = this.gruposStatsFiltrados();
+      const alumnos = {};
+      
+      grupos.forEach(g => {
+        g.integrantes?.forEach(int => {
+          if (!alumnos[int.nombre]) {
+            alumnos[int.nombre] = { nombre: int.nombre, grupo: `G${g.id} · ${g.proyecto}`, ausentes: 0, justificados: 0, total: 0 };
+          }
+          
+          ENCUENTROS_META.forEach(enc => {
+            const asist = this.data[enc.id]?.[g.id]?.asistencia || {};
+            const estado = asist[int.nombre];
+            if (estado) {
+              alumnos[int.nombre].total++;
+              if (estado === 'Ausente') alumnos[int.nombre].ausentes++;
+              else if (estado === 'Justificado') alumnos[int.nombre].justificados++;
+            }
+          });
+        });
+      });
+      
+      return Object.values(alumnos)
+        .filter(a => a.total > 0)
+        .sort((a, b) => (b.ausentes + b.justificados) - (a.ausentes + a.justificados));
     },
 
     renderStats() {
