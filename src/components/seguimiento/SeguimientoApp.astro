@@ -236,12 +236,12 @@
       
       <div class="grid md:grid-cols-2 gap-3 mb-3">
         <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-          <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Primera Nota vs Modificación</h3>
+          <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Nota vs Asistencia</h3>
           <div id="plot-scatter" class="w-full" style="min-height: 320px;"></div>
         </div>
         
         <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-          <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Capacidad de Mejora</h3>
+          <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-3">Evolución entre Encuentros</h3>
           <div id="plot-mejora" class="w-full" style="min-height: 320px;"></div>
         </div>
       </div>
@@ -1298,34 +1298,31 @@
       
       grupos.forEach(g => {
         ENCUENTROS_META.forEach(enc => {
-          const key = `${enc.id}_${g.id}`;
-          const meta = this.evalMeta[key];
-          if (meta && meta.es_modificacion) {
-            const primera = this.data[enc.id]?.[g.id]?.FN || this.data[enc.id]?.[g.id]?.DEV || this.data[enc.id]?.[g.id]?.SM;
-            const actual = this.data[enc.id]?.[g.id]?.FN || this.data[enc.id]?.[g.id]?.DEV || this.data[enc.id]?.[g.id]?.SM;
-            if (primera !== undefined && actual !== undefined) {
-              // Usar promedio de las 3 dimensiones
-              const dims = ['FN','DEV','SM'];
-              let pSum = 0, pCount = 0, aSum = 0, aCount = 0;
-              dims.forEach(d => {
-                const pv = this.data[enc.id]?.[g.id]?.[d];
-                if (pv !== undefined && pv !== null && pv !== '') { pSum += Number(pv); pCount++; }
-              });
-              // No tenemos la nota primera guardada en data, usamos aproximación
-              // Para el scatter real necesitaríamos la nota histórica
-              // Por ahora usamos la actual vs una simulada
-              if (pCount > 0) {
-                const avg = pSum / pCount;
-                x.push(avg - 1 + Math.random() * 2); // Simulado: primera nota ligeramente menor
-                y.push(avg);
-                text.push(`G${g.id} · ${enc.id}`);
-                const f1 = new Date(meta.fecha_primera_nota);
-                const f2 = new Date(meta.fecha_modificacion);
-                const dias = f2 && f1 ? Math.max(1, Math.round((f2 - f1) / (1000 * 60 * 60 * 24))) : 1;
-                color.push(dias);
-                size.push(Math.abs(avg - (avg - 1)) * 20 + 8);
-              }
+          const asist = this.data[enc.id]?.[g.id]?.asistencia || {};
+          let presentes = 0, total = 0;
+          g.integrantes?.forEach(int => {
+            const estado = asist[int.nombre];
+            if (estado) {
+              total++;
+              if (estado === 'Presente') presentes++;
             }
+          });
+          
+          const dims = ['FN','DEV','SM'];
+          let sum = 0, count = 0;
+          dims.forEach(d => {
+            const v = this.data[enc.id]?.[g.id]?.[d];
+            if (v !== undefined && v !== null && v !== '') { sum += Number(v); count++; }
+          });
+          
+          if (count > 0 && total > 0) {
+            const notaAvg = sum / count;
+            const asistPct = (presentes / total) * 100;
+            x.push(asistPct);
+            y.push(notaAvg);
+            text.push(`G${g.id} · ${enc.id}`);
+            color.push(notaAvg >= 7 ? '#10b981' : notaAvg >= 5 ? '#f59e0b' : '#ef4444');
+            size.push(10 + total * 2);
           }
         });
       });
@@ -1333,16 +1330,17 @@
       if (x.length === 0) return { data: [], layout: {} };
       
       const trace = {
-        x, y, mode: 'markers', text, marker: { size, color, colorscale: 'Viridis', showscale: true, colorbar: { title: 'Días', titleside: 'right' } },
+        x, y, mode: 'markers', text, hovertemplate: '%{text}<br>Nota: %{y:.1f}<br>Asistencia: %{x:.0f}%<extra></extra>',
+        marker: { size, color, opacity: 0.8, line: { width: 1, color: 'white' } },
         type: 'scatter'
       };
       
       return {
         data: [trace],
         layout: {
-          margin: { t: 20, r: 60, b: 40, l: 40 },
-          xaxis: { title: 'Nota primera vez', range: [0, 10] },
-          yaxis: { title: 'Nota modificación', range: [0, 10] },
+          margin: { t: 20, r: 20, b: 40, l: 40 },
+          xaxis: { title: '% Asistencia', range: [0, 105] },
+          yaxis: { title: 'Nota promedio', range: [0, 10] },
           paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
           font: { family: 'sans-serif', size: 12 }
         }
@@ -1354,40 +1352,35 @@
       const y = [], x = [], text = [];
       
       grupos.forEach(g => {
+        const dims = ['FN','DEV','SM'];
+        const avgs = [];
+        
         ENCUENTROS_META.forEach(enc => {
-          const key = `${enc.id}_${g.id}`;
-          const meta = this.evalMeta[key];
-          if (meta && meta.es_modificacion && meta.fecha_primera_nota && meta.fecha_modificacion) {
-            const dims = ['FN','DEV','SM'];
-            let pSum = 0, pCount = 0, aSum = 0, aCount = 0;
-            dims.forEach(d => {
-              const pv = this.data[enc.id]?.[g.id]?.[d];
-              if (pv !== undefined && pv !== null && pv !== '') { aSum += Number(pv); aCount++; }
-            });
-            if (aCount > 0) {
-              const notaActual = aSum / aCount;
-              // Como no tenemos la nota primera exacta, estimamos una mejora promedio
-              const mejora = (notaActual - 5) / 5; // normalizado
-              const f1 = new Date(meta.fecha_primera_nota);
-              const f2 = new Date(meta.fecha_modificacion);
-              const dias = Math.max(1, Math.round((f2 - f1) / (1000 * 60 * 60 * 24)));
-              const capacidad = mejora / dias;
-              
-              y.push(`G${g.id} · ${enc.id}`);
-              x.push(capacidad);
-              text.push(`Mejora: ${mejora.toFixed(2)} en ${dias} días`);
-            }
-          }
+          let sum = 0, count = 0;
+          dims.forEach(d => {
+            const v = this.data[enc.id]?.[g.id]?.[d];
+            if (v !== undefined && v !== null && v !== '') { sum += Number(v); count++; }
+          });
+          avgs.push(count > 0 ? sum / count : null);
         });
+        
+        for (let i = 1; i < avgs.length; i++) {
+          if (avgs[i] !== null && avgs[i-1] !== null) {
+            const delta = avgs[i] - avgs[i-1];
+            y.push(`G${g.id}: ${ENCUENTROS_META[i-1].id} → ${ENCUENTROS_META[i].id}`);
+            x.push(delta);
+            text.push(`${delta >= 0 ? '+' : ''}${delta.toFixed(2)} pts`);
+          }
+        }
       });
       
       if (y.length === 0) return { data: [], layout: {} };
       
       return {
-        data: [{ x, y, type: 'bar', orientation: 'h', marker: { color: x.map(v => v >= 0 ? '#10b981' : '#ef4444') }, text, textposition: 'auto' }],
+        data: [{ x, y, type: 'bar', orientation: 'h', marker: { color: x.map(v => v >= 0 ? '#10b981' : '#ef4444') }, text, textposition: 'auto', hovertemplate: '%{text}<extra></extra>' }],
         layout: {
-          margin: { t: 20, r: 20, b: 40, l: 120 },
-          xaxis: { title: 'Capacidad de mejora (nota/día)' },
+          margin: { t: 20, r: 20, b: 40, l: 160 },
+          xaxis: { title: 'Δ Nota (pts)' },
           paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
           font: { family: 'sans-serif', size: 12 }
         }
