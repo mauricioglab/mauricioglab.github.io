@@ -444,18 +444,19 @@
         <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Evaluación de Dimensiones</h4>
         <template x-for="[dim, label, color] in [['FN','FN — Análisis Funcional','text-indigo-600'],['DEV','DEV — Técnico','text-sky-600'],['SM','SM/PO — Gestión','text-amber-600']]" :key="dim">
           <div class="mb-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
-            <div class="flex items-center justify-between mb-2">
-              <span class="font-bold text-sm" :class="color" x-text="label"></span>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="font-bold text-sm flex-shrink-0" :class="color" x-text="label"></span>
+              <span class="text-xs text-gray-500">|</span>
+              <span class="text-xs text-gray-600 font-medium flex-1" x-text="criterioActual(dim)"></span>
               <input
                 x-show="canEdit"
                 type="number" min="0" :max="((evalMeta[activeE + '_' + selectedGrupo]?.es_modificacion || (data[activeE]?.[selectedGrupo]?.FN || data[activeE]?.[selectedGrupo]?.DEV || data[activeE]?.[selectedGrupo]?.SM)) && !localOverride[activeE]) ? 7 : 10" step="0.5"
                 :value="localData[activeE]?.[dim] ?? ''"
                 @input="setField(activeE, dim, $event.target.value === '' ? null : Number($event.target.value))"
-                class="w-14 px-2 py-1 border border-gray-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-indigo-600 text-gray-900 font-bold"
+                class="w-14 px-2 py-1 border border-gray-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-indigo-600 text-gray-900 font-bold flex-shrink-0"
               >
-              <span x-show="!canEdit" class="font-bold text-sm text-gray-900" x-text="localData[activeE]?.[dim] ?? '—'"></span>
+              <span x-show="!canEdit" class="font-bold text-sm text-gray-900 flex-shrink-0" x-text="localData[activeE]?.[dim] ?? '—'"></span>
             </div>
-            <p class="text-xs text-gray-600 mb-2 font-medium" x-text="criterioActual(dim)"></p>
             <input 
               x-show="canEdit"
               placeholder="Retroalimentación..."
