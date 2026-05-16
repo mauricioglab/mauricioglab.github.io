@@ -12,9 +12,21 @@
   <header class="bg-white border-b border-gray-300 sticky top-0 z-30 shadow-sm">
     <div class="max-w-6xl mx-auto px-4 py-3">
       <div class="flex items-center justify-between">
-        <div>
-          <h1 class="text-lg font-bold text-gray-900">Práctica Profesionalizante</h1>
-          <p class="text-xs text-gray-600" x-text="`${gruposFiltrados.length} grupos activos`"></p>
+        <div class="flex items-center gap-3">
+          <div>
+            <h1 class="text-lg font-bold text-gray-900">Práctica Profesionalizante</h1>
+            <p class="text-xs text-gray-600" x-text="`${gruposFiltrados.length} grupos activos`"></p>
+          </div>
+          <nav class="flex gap-1 overflow-x-auto" x-show="view === 'resumen' || view === 'encuentros' || view === 'stats'">
+            <template x-for="p in practicas" :key="p.id">
+              <button 
+                @click="practicaFilter = p.id"
+                class="px-2.5 py-1 text-xs font-bold rounded-md transition whitespace-nowrap"
+                :class="practicaFilter === p.id ? 'bg-indigo-700 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+                x-text="p.label"
+              ></button>
+            </template>
+          </nav>
         </div>
         <div class="flex items-center gap-3">
           <button 
@@ -46,18 +58,6 @@
           </template>
         </div>
       </div>
-      
-      <!-- Tabs de práctica -->
-      <nav class="flex gap-1 mt-2 mb-1 overflow-x-auto">
-        <template x-for="p in practicas" :key="p.id">
-          <button 
-            @click="practicaFilter = p.id"
-            class="px-3 py-1.5 text-xs font-bold rounded-md transition whitespace-nowrap"
-            :class="practicaFilter === p.id ? 'bg-indigo-700 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-            x-text="p.label"
-          ></button>
-        </template>
-      </nav>
       
       <!-- Tabs de navegación -->
       <nav class="flex gap-0 mt-2 -mb-px" x-show="view === 'resumen' || view === 'encuentros' || view === 'stats'">
@@ -362,12 +362,26 @@
         <button @click="view = 'resumen'" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
         </button>
-        <div class="flex-1">
+        <div class="flex-1 min-w-0">
           <h2 class="text-lg font-extrabold text-gray-900" x-text="`G${grupoActual?.id} · ${grupoActual?.proyecto}`"></h2>
           <p class="text-xs text-gray-600 font-medium" x-text="`Grupo ${grupoActual?.id} ${grupoActual?.comision ? '· ' + grupoActual.comision : ''} ${grupoActual?.practica ? '· ' + grupoActual.practica : ''}`"></p>
         </div>
+        
+        <!-- Selector de encuentros -->
+        <div class="flex gap-1 overflow-x-auto">
+          <template x-for="enc in encuentrosMeta" :key="enc.id">
+            <button 
+              @click="activeE = enc.id"
+              class="flex-shrink-0 px-2 py-1 rounded-md border text-xs font-bold transition"
+              :class="activeE === enc.id ? 'border-indigo-700 bg-indigo-700 text-white' : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'"
+            >
+              <span x-text="enc.id"></span>
+            </button>
+          </template>
+        </div>
+        
         <div 
-          class="px-3 py-1 rounded-full text-sm font-extrabold"
+          class="px-3 py-1 rounded-full text-sm font-extrabold flex-shrink-0"
           :class="notaBadgeClass(calcNota(promedioEncuentros(grupoActual?.id)))"
           x-text="'Prom: ' + calcNota(promedioEncuentros(grupoActual?.id))"
         ></div>
@@ -397,29 +411,6 @@
             <span x-text="saved ? '¡Guardado!' : 'Guardar'"></span>
           </button>
         </div>
-      </div>
-
-      <!-- Tabs de encuentros -->
-      <div class="flex gap-1.5 mb-4 overflow-x-auto pb-1">
-        <template x-for="enc in encuentrosMeta" :key="enc.id">
-          <button 
-            @click="activeE = enc.id"
-            class="flex-shrink-0 px-3 py-1.5 rounded-lg border-2 text-xs font-bold transition"
-            :class="activeE === enc.id ? 'border-indigo-700 bg-indigo-700 text-white' : 'border-gray-300 bg-white text-gray-600'"
-          >
-            <span x-text="enc.id"></span>
-            <span 
-              class="block text-center text-[10px] mt-0.5"
-              :class="activeE === enc.id ? 'text-white/80' : notaColorClass(calcNota(calcPct(localData[enc.id])))"
-              x-text="calcNota(calcPct(localData[enc.id]))"
-            ></span>
-            <span 
-              class="block text-center text-[9px] mt-0.5 opacity-70"
-              :class="activeE === enc.id ? 'text-white/60' : 'text-gray-500'"
-              x-text="'G:' + calcNota(promedioEncuentros(selectedGrupo))"
-            ></span>
-          </button>
-        </template>
       </div>
 
       <!-- Encuentro activo -->
