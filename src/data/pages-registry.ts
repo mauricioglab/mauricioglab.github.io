@@ -36,6 +36,8 @@ export const pagesRegistry: PageEntry[] = [
   { id: 'urls', name: 'URLs Útiles', url: '/urls/', category: 'public', icon: '🔗' },
   { id: 'noticias', name: 'Noticias IA', url: '/noticias/', category: 'public', icon: '📰' },
   { id: 'main', name: 'Main (Retro)', url: '/main/', category: 'public', icon: '🏠' },
+  { id: 'seguimiento-alumnos', name: 'Seguimiento de Alumnos', url: '/seguimiento-alumnos/', category: 'public', icon: '🎓' },
+  { id: 'seguimiento', name: 'Panel de Seguimiento', url: '/seguimiento/', category: 'public', icon: '📊' },
 
   // =====================
   // LANDINGS (solo en admin, solo español)
