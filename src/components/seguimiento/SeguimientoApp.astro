@@ -380,11 +380,6 @@
           </template>
         </div>
         
-        <div 
-          class="px-3 py-1 rounded-full text-sm font-extrabold flex-shrink-0"
-          :class="notaBadgeClass(calcNota(promedioEncuentros(grupoActual?.id)))"
-          x-text="'Prom: ' + calcNota(promedioEncuentros(grupoActual?.id))"
-        ></div>
         <div class="flex items-center gap-2">
           <button 
             x-show="canEdit"
@@ -415,14 +410,7 @@
 
       <!-- Encuentro activo -->
       <div class="bg-white rounded-xl p-4 mb-3 border border-gray-200 shadow-sm" x-show="encuentroActual">
-        <div class="flex items-center justify-between mb-1">
-          <h3 class="font-bold text-sm text-gray-900" x-text="encuentroActual?.nombre"></h3>
-          <span 
-            class="px-2 py-0.5 rounded-full text-xs font-extrabold"
-            :class="notaBadgeClass(calcNota(promedioEncuentros(selectedGrupo)))"
-            x-text="'Promedio general: ' + calcNota(promedioEncuentros(selectedGrupo))"
-          ></span>
-        </div>
+        <h3 class="font-bold text-sm text-gray-900 mb-1" x-text="encuentroActual?.nombre"></h3>
         <p class="text-xs text-gray-600 italic mb-4 font-medium" x-text="encuentroActual?.pregunta"></p>
 
         <!-- Asistencia -->
