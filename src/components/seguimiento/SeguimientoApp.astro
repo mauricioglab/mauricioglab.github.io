@@ -267,91 +267,14 @@
       <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
         <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">📊 Estadísticas de Ausencias</h3>
         
-        <!-- Grupos con más ausentes -->
         <div class="mb-6">
-          <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Grupos con más ausencias</h4>
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-              <thead>
-                <tr class="bg-gray-50">
-                  <th class="px-3 py-2 text-left text-xs font-bold text-gray-700">Grupo</th>
-                  <th class="px-3 py-2 text-center text-xs font-bold text-red-700">Ausentes</th>
-                  <th class="px-3 py-2 text-center text-xs font-bold text-amber-700">Justificados</th>
-                  <th class="px-3 py-2 text-center text-xs font-bold text-gray-700">Total inasistencias</th>
-                  <th class="px-3 py-2 text-center text-xs font-bold text-gray-700">%</th>
-                </tr>
-              </thead>
-              <tbody>
-                <template x-for="item in getAusenciasPorGrupo()" :key="item.grupo">
-                  <tr class="border-b border-gray-100 hover:bg-gray-50">
-                    <td class="px-3 py-2 font-medium text-gray-900" x-text="item.grupo"></td>
-                    <td class="px-3 py-2 text-center text-red-600 font-bold" x-text="item.ausentes"></td>
-                    <td class="px-3 py-2 text-center text-amber-600 font-bold" x-text="item.justificados"></td>
-                    <td class="px-3 py-2 text-center font-bold text-gray-900" x-text="item.totalInasistencias"></td>
-                    <td class="px-3 py-2 text-center text-gray-600" x-text="item.porcentaje + '%'"></td>
-                  </tr>
-                </template>
-              </tbody>
-            </table>
-          </div>
+          <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Alumnos x Encuentros (Heatmap)</h4>
+          <div id="plot-ausencias-heatmap" class="w-full" style="min-height: 500px;"></div>
         </div>
         
-        <!-- Ausentes por encuentro -->
-        <div class="mb-6">
-          <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Ausencias por encuentro</h4>
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-              <thead>
-                <tr class="bg-gray-50">
-                  <th class="px-3 py-2 text-left text-xs font-bold text-gray-700">Encuentro</th>
-                  <th class="px-3 py-2 text-center text-xs font-bold text-red-700">Ausentes</th>
-                  <th class="px-3 py-2 text-center text-xs font-bold text-amber-700">Justificados</th>
-                  <th class="px-3 py-2 text-center text-xs font-bold text-gray-700">Total inasistencias</th>
-                  <th class="px-3 py-2 text-center text-xs font-bold text-gray-700">%</th>
-                </tr>
-              </thead>
-              <tbody>
-                <template x-for="item in getAusenciasPorEncuentro()" :key="item.encuentro">
-                  <tr class="border-b border-gray-100 hover:bg-gray-50">
-                    <td class="px-3 py-2 font-medium text-gray-900" x-text="item.encuentro + ' — ' + item.nombre.split('—')[1]?.trim()"></td>
-                    <td class="px-3 py-2 text-center text-red-600 font-bold" x-text="item.ausentes"></td>
-                    <td class="px-3 py-2 text-center text-amber-600 font-bold" x-text="item.justificados"></td>
-                    <td class="px-3 py-2 text-center font-bold text-gray-900" x-text="item.totalInasistencias"></td>
-                    <td class="px-3 py-2 text-center text-gray-600" x-text="item.porcentaje + '%'"></td>
-                  </tr>
-                </template>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        
-        <!-- Alumnos con más ausentes -->
         <div>
-          <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Alumnos con más ausencias</h4>
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-              <thead>
-                <tr class="bg-gray-50">
-                  <th class="px-3 py-2 text-left text-xs font-bold text-gray-700">Alumno</th>
-                  <th class="px-3 py-2 text-left text-xs font-bold text-gray-700">Grupo</th>
-                  <th class="px-3 py-2 text-center text-xs font-bold text-red-700">Ausentes</th>
-                  <th class="px-3 py-2 text-center text-xs font-bold text-amber-700">Justificados</th>
-                  <th class="px-3 py-2 text-center text-xs font-bold text-gray-700">Total inasistencias</th>
-                </tr>
-              </thead>
-              <tbody>
-                <template x-for="item in getAusenciasPorAlumno()" :key="item.nombre">
-                  <tr class="border-b border-gray-100 hover:bg-gray-50">
-                    <td class="px-3 py-2 font-medium text-gray-900" x-text="item.nombre"></td>
-                    <td class="px-3 py-2 text-gray-600 text-xs" x-text="item.grupo"></td>
-                    <td class="px-3 py-2 text-center text-red-600 font-bold" x-text="item.ausentes"></td>
-                    <td class="px-3 py-2 text-center text-amber-600 font-bold" x-text="item.justificados"></td>
-                    <td class="px-3 py-2 text-center font-bold text-gray-900" x-text="item.ausentes + item.justificados"></td>
-                  </tr>
-                </template>
-              </tbody>
-            </table>
-          </div>
+          <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Ausencias por Encuentro (Stacked Bars)</h4>
+          <div id="plot-ausencias-barras" class="w-full" style="min-height: 400px;"></div>
         </div>
       </div>
     </div>
@@ -1573,101 +1496,141 @@
       };
     },
 
-    // --- AUSENCIAS STATS ---
-    getAusenciasPorGrupo() {
+    // --- AUSENCIAS GRÁFICOS ---
+    getAusenciasHeatmapData() {
       const grupos = this.gruposStatsFiltrados();
-      const resultados = [];
-      
+      const alumnosRows = [];
+      const yLabels = [];
+      const hoverText = [];
+
+      // Recolectar alumnos ordenados por grupo
       grupos.forEach(g => {
-        let ausentes = 0;
-        let justificados = 0;
-        let total = 0;
-        
-        ENCUENTROS_META.forEach(enc => {
-          const asist = this.data[enc.id]?.[g.id]?.asistencia || {};
-          g.integrantes?.forEach(int => {
+        g.integrantes?.forEach(int => {
+          const row = [];
+          const hoverRow = [];
+          let tieneDatos = false;
+
+          ENCUENTROS_META.forEach(enc => {
+            const asist = this.data[enc.id]?.[g.id]?.asistencia || {};
             const estado = asist[int.nombre];
-            total++;
-            if (estado === 'Ausente') ausentes++;
-            else if (estado === 'Justificado') justificados++;
+            let val, label;
+            if (estado === 'Presente') { val = 1; label = 'Presente'; tieneDatos = true; }
+            else if (estado === 'Justificado') { val = 2; label = 'Justificado'; tieneDatos = true; }
+            else if (estado === 'Ausente') { val = 3; label = 'Ausente'; tieneDatos = true; }
+            else { val = 0; label = 'Sin dato'; }
+            row.push(val);
+            hoverRow.push(`${int.nombre}<br>${enc.id}: ${label}`);
           });
+
+          if (tieneDatos) {
+            alumnosRows.push(row);
+            yLabels.push(`${int.nombre} (G${g.id})`);
+            hoverText.push(hoverRow);
+          }
         });
-        
-        if (total > 0) {
-          resultados.push({
-            grupo: `G${g.id} · ${g.proyecto}`,
-            ausentes,
-            justificados,
-            totalInasistencias: ausentes + justificados,
-            porcentaje: ((ausentes + justificados) / total * 100).toFixed(1)
-          });
-        }
       });
-      
-      return resultados.sort((a, b) => b.totalInasistencias - a.totalInasistencias);
+
+      if (alumnosRows.length === 0) return { data: [], layout: {} };
+
+      // Ordenar por cantidad de ausencias+justificados (más ausentes arriba)
+      const counts = alumnosRows.map(row => row.filter(v => v >= 2).length);
+      const indices = counts.map((_, i) => i);
+      indices.sort((a, b) => counts[b] - counts[a]);
+
+      const sortedRows = indices.map(i => alumnosRows[i]);
+      const sortedY = indices.map(i => yLabels[i]);
+      const sortedHover = indices.map(i => hoverText[i]);
+
+      const z = sortedRows;
+      const x = ENCUENTROS_META.map(e => e.id);
+
+      return {
+        data: [{
+          z,
+          x,
+          y: sortedY,
+          type: 'heatmap',
+          colorscale: [
+            [0, '#e5e7eb'],
+            [0.33, '#10b981'],
+            [0.66, '#f59e0b'],
+            [1, '#ef4444']
+          ],
+          zmin: 0,
+          zmax: 3,
+          showscale: false,
+          text: sortedHover,
+          hovertemplate: '%{text}<extra></extra>',
+          xgap: 2,
+          ygap: 2,
+        }],
+        layout: {
+          margin: { t: 10, r: 10, b: 40, l: 180 },
+          paper_bgcolor: 'rgba(0,0,0,0)',
+          plot_bgcolor: 'rgba(0,0,0,0)',
+          font: { family: 'sans-serif', size: 11 },
+          yaxis: { automargin: true, tickfont: { size: 10 } },
+          xaxis: { tickfont: { size: 11, weight: 700 } },
+        }
+      };
     },
 
-    getAusenciasPorEncuentro() {
+    getAusenciasStackedData() {
       const grupos = this.gruposStatsFiltrados();
-      const resultados = [];
-      
+      const x = ENCUENTROS_META.map(e => e.id);
+      const ausentes = [];
+      const justificados = [];
+      const presentes = [];
+
       ENCUENTROS_META.forEach(enc => {
-        let ausentes = 0;
-        let justificados = 0;
-        let total = 0;
-        
+        let a = 0, j = 0, p = 0;
         grupos.forEach(g => {
           const asist = this.data[enc.id]?.[g.id]?.asistencia || {};
           g.integrantes?.forEach(int => {
             const estado = asist[int.nombre];
-            if (estado) {
-              total++;
-              if (estado === 'Ausente') ausentes++;
-              else if (estado === 'Justificado') justificados++;
-            }
+            if (estado === 'Ausente') a++;
+            else if (estado === 'Justificado') j++;
+            else if (estado === 'Presente') p++;
           });
         });
-        
-        if (total > 0) {
-          resultados.push({
-            encuentro: enc.id,
-            nombre: enc.nombre,
-            ausentes,
-            justificados,
-            totalInasistencias: ausentes + justificados,
-            porcentaje: ((ausentes + justificados) / total * 100).toFixed(1)
-          });
-        }
+        ausentes.push(a);
+        justificados.push(j);
+        presentes.push(p);
       });
-      
-      return resultados;
-    },
 
-    getAusenciasPorAlumno() {
-      const grupos = this.gruposStatsFiltrados();
-      const alumnos = {};
-      
-      grupos.forEach(g => {
-        g.integrantes?.forEach(int => {
-          if (!alumnos[int.nombre]) {
-            alumnos[int.nombre] = { nombre: int.nombre, grupo: `G${g.id} · ${g.proyecto}`, ausentes: 0, justificados: 0, total: 0 };
+      const hasData = ausentes.some(v => v > 0) || justificados.some(v => v > 0) || presentes.some(v => v > 0);
+      if (!hasData) return { data: [], layout: {} };
+
+      return {
+        data: [
+          {
+            x, y: ausentes, name: 'Ausente', type: 'bar',
+            marker: { color: '#ef4444' },
+            hovertemplate: '%{x}: %{y} ausentes<extra></extra>'
+          },
+          {
+            x, y: justificados, name: 'Justificado', type: 'bar',
+            marker: { color: '#f59e0b' },
+            hovertemplate: '%{x}: %{y} justificados<extra></extra>'
+          },
+          {
+            x, y: presentes, name: 'Presente', type: 'bar',
+            marker: { color: '#10b981' },
+            hovertemplate: '%{x}: %{y} presentes<extra></extra>'
           }
-          
-          ENCUENTROS_META.forEach(enc => {
-            const asist = this.data[enc.id]?.[g.id]?.asistencia || {};
-            const estado = asist[int.nombre];
-            if (estado) {
-              alumnos[int.nombre].total++;
-              if (estado === 'Ausente') alumnos[int.nombre].ausentes++;
-              else if (estado === 'Justificado') alumnos[int.nombre].justificados++;
-            }
-          });
-        });
-      });
-      
-      return Object.values(alumnos)
-        .filter(a => a.total > 0)
-        .sort((a, b) => (b.ausentes + b.justificados) - (a.ausentes + a.justificados));
+        ],
+        layout: {
+          barmode: 'stack',
+          margin: { t: 10, r: 10, b: 40, l: 50 },
+          paper_bgcolor: 'rgba(0,0,0,0)',
+          plot_bgcolor: 'rgba(0,0,0,0)',
+          font: { family: 'sans-serif', size: 12 },
+          xaxis: { tickfont: { size: 11, weight: 700 } },
+          yaxis: { title: 'Alumnos', titlefont: { size: 11 } },
+          legend: { orientation: 'h', y: -0.15, x: 0.5, xanchor: 'center' },
+          bargap: 0.3,
+        }
+      };
     },
 
     renderStats() {
@@ -1684,6 +1647,8 @@
           { id: 'plot-histogram', getData: () => this.getHistogramData() },
           { id: 'plot-heatmap', getData: () => this.getHeatmapData() },
           { id: 'plot-estados', getData: () => this.getEstadosData() },
+          { id: 'plot-ausencias-heatmap', getData: () => this.getAusenciasHeatmapData() },
+          { id: 'plot-ausencias-barras', getData: () => this.getAusenciasStackedData() },
         ];
         
         charts.forEach(({ id, getData }) => {
