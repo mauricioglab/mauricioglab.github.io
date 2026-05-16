@@ -69,6 +69,7 @@
           Resumen
         </button>
         <button 
+          x-show="canEdit"
           @click="view = 'encuentros'"
           class="flex-1 py-2 text-sm font-bold border-b-2 transition"
           :class="view === 'encuentros' ? 'border-indigo-700 text-indigo-700' : 'border-transparent text-gray-600 hover:text-gray-800'"
@@ -76,6 +77,7 @@
           Encuentros
         </button>
         <button 
+          x-show="canEdit"
           @click="view = 'stats'"
           class="flex-1 py-2 text-sm font-bold border-b-2 transition"
           :class="view === 'stats' ? 'border-indigo-700 text-indigo-700' : 'border-transparent text-gray-600 hover:text-gray-800'"
@@ -925,6 +927,9 @@
       this.loadFallbackData();
       await this.loadFromSupabase();
       await this.checkSession();
+      if (!this.canEdit) {
+        this.view = 'resumen';
+      }
       this.loadingData = false;
     },
 
@@ -1151,6 +1156,7 @@
     },
 
     selectGrupo(id) {
+      if (!this.canEdit) return;
       this.selectedGrupo = id;
       this.view = 'grupo';
       this.activeE = 'E1';
@@ -1158,11 +1164,13 @@
     },
 
     selectEncuentro(id) {
+      if (!this.canEdit) return;
       this.selectedEnc = id;
       this.view = 'encuentro';
     },
 
     editGrupoEncuentro(grupoId) {
+      if (!this.canEdit) return;
       this.selectedGrupo = grupoId;
       this.activeE = this.selectedEnc;
       this.view = 'grupo';
