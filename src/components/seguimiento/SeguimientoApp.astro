@@ -516,6 +516,13 @@
             :class="notaBadgeClass(calcNota(calcPct(localData[activeE])))"
             x-text="calcNota(calcPct(localData[activeE]))"
           ></span>
+          <span class="text-gray-400 mx-1">|</span>
+          <span class="text-sm text-gray-600 font-medium">Promedio grupo:</span>
+          <span 
+            class="inline-flex items-center justify-center min-w-[3rem] h-8 rounded-lg text-sm font-bold"
+            :class="notaBadgeClass(calcNota(promedioEncuentros(selectedGrupo)))"
+            x-text="calcNota(promedioEncuentros(selectedGrupo))"
+          ></span>
         </div>
       </div>
     </div>
