@@ -366,6 +366,11 @@
           <h2 class="text-lg font-extrabold text-gray-900" x-text="`G${grupoActual?.id} · ${grupoActual?.proyecto}`"></h2>
           <p class="text-xs text-gray-600 font-medium" x-text="`Grupo ${grupoActual?.id} ${grupoActual?.comision ? '· ' + grupoActual.comision : ''} ${grupoActual?.practica ? '· ' + grupoActual.practica : ''}`"></p>
         </div>
+        <div 
+          class="px-3 py-1 rounded-full text-sm font-extrabold"
+          :class="notaBadgeClass(calcNota(promedioEncuentros(grupoActual?.id)))"
+          x-text="'Prom: ' + calcNota(promedioEncuentros(grupoActual?.id))"
+        ></div>
         <div class="flex items-center gap-2">
           <button 
             x-show="canEdit"
@@ -408,13 +413,25 @@
               :class="activeE === enc.id ? 'text-white/80' : notaColorClass(calcNota(calcPct(localData[enc.id])))"
               x-text="calcNota(calcPct(localData[enc.id]))"
             ></span>
+            <span 
+              class="block text-center text-[9px] mt-0.5 opacity-70"
+              :class="activeE === enc.id ? 'text-white/60' : 'text-gray-500'"
+              x-text="'G:' + calcNota(promedioEncuentros(selectedGrupo))"
+            ></span>
           </button>
         </template>
       </div>
 
       <!-- Encuentro activo -->
       <div class="bg-white rounded-xl p-4 mb-3 border border-gray-200 shadow-sm" x-show="encuentroActual">
-        <h3 class="font-bold text-sm text-gray-900" x-text="encuentroActual?.nombre"></h3>
+        <div class="flex items-center justify-between mb-1">
+          <h3 class="font-bold text-sm text-gray-900" x-text="encuentroActual?.nombre"></h3>
+          <span 
+            class="px-2 py-0.5 rounded-full text-xs font-extrabold"
+            :class="notaBadgeClass(calcNota(promedioEncuentros(selectedGrupo)))"
+            x-text="'Promedio general: ' + calcNota(promedioEncuentros(selectedGrupo))"
+          ></span>
+        </div>
         <p class="text-xs text-gray-600 italic mb-4 font-medium" x-text="encuentroActual?.pregunta"></p>
 
         <!-- Asistencia -->
