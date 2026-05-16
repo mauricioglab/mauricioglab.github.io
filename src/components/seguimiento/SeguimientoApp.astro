@@ -334,6 +334,7 @@
                 <div>
                   <span class="text-sm text-gray-900 font-bold" x-text="int.nombre"></span>
                   <span class="text-xs text-gray-600 ml-1 font-medium" x-text="int.rol"></span>
+                  <span x-show="int.obs" class="text-xs text-amber-600 ml-1 font-bold" x-text="'('+int.obs+')'"></span>
                 </div>
                 <div class="flex gap-1" x-show="canEdit">
                   <template x-for="opt in ['Presente (Presencial)','Presente (Virtual)','Ausente','Justificado']" :key="opt">
