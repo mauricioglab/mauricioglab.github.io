@@ -718,82 +718,9 @@
   import Alpine from 'alpinejs';
   import Plotly from 'plotly.js-dist-min';
   import { supabase } from '../../lib/supabase';
+  import { ENCUENTROS_META, ENCUENTROS_CARGADOS, GRUPOS_INICIALES } from './encuentros-data.js';
 
   window.Alpine = Alpine;
-
-  const ENCUENTROS_META = [
-    { id: "E1", nombre: "E1 — Informativo", pregunta: "¿Cómo vamos a trabajar?", criterios: { FN: "Presentación del Proyecto.", DEV: "Presentación del sistema base. Tecnologías elegidas y justificadas.", SM: "Presentación del Sprint 0: equipo, roles, backlog inicial, herramienta." } },
-    { id: "E2", nombre: "E2 — Validación de Dominio", pregunta: "¿De qué trata esto y tiene sentido el modelo?", criterios: { FN: "Procesos del negocio relevados. Justificación de entidades del DER. Actores identificados.", DEV: "DER con 8-12 entidades. Al menos una entidad transaccional. Relaciones reales.", SM: "Story Map inicial. Template de US definido." } },
-    { id: "E3", nombre: "E3 — Profundización", pregunta: "¿Está bien construido?", criterios: { FN: "Casos de uso o flujos funcionales completos.", DEV: "Arquitectura técnica definida. Módulos planificados.", SM: "Sprint 1 planificado con US estimadas." } },
-    { id: "E4", nombre: "E4 — Avance Técnico", pregunta: "¿Hay algo funcionando?", criterios: { FN: "Requerimientos actualizados según feedback.", DEV: "Módulo base implementado y demo.", SM: "Retrospectiva Sprint 1. Sprint 2 planificado." } },
-    { id: "E5", nombre: "E5 — Integración", pregunta: "¿Las partes se conectan?", criterios: { FN: "Escenarios de prueba definidos.", DEV: "Integración de módulos. Base de datos poblada.", SM: "Burndown actualizado. Impedimentos resueltos." } },
-    { id: "E6", nombre: "E6 — Pre-entrega", pregunta: "¿Está listo para mostrar?", criterios: { FN: "Manual de usuario borrador.", DEV: "Sistema desplegado o en staging.", SM: "Sprint final planificado." } },
-    { id: "E7", nombre: "E7 — Presentación Final", pregunta: "¿Cumplió con lo prometido?", criterios: { FN: "Documentación final entregada.", DEV: "Demo completa sin errores críticos.", SM: "Cierre de sprints y lecciones aprendidas." } },
-  ];
-
-  const GRUPOS_INICIALES = [
-    { id: 1, proyecto: "Teka Manager", comision: "51NMS", practica: "P2", integrantes: [{ nombre: "Zagales, Mara", rol: "FN / DEV" }, { nombre: "Benetti, Gabriela", rol: "SM (Scrum Master)" }, { nombre: "Pigini, Fernando", rol: "FN (Análisis)" }, { nombre: "Molina, Carlos", rol: "DEV (Desarrollo)" }, { nombre: "Gaitan, Rocio", rol: "FN (Análisis)", obs: "Vive en España" }] },
-    { id: 2, proyecto: "SITMAS", comision: "51NMS", practica: "P2", integrantes: [{ nombre: "Videla, Juan", rol: "FN / DEV" }, { nombre: "Lopez Diaz, Erika", rol: "DEV (Desarrollo)" }, { nombre: "Rivero, Cristina", rol: "SM (Scrum Master)" }, { nombre: "Cognini, Facundo", rol: "DEV (Desarrollo)" }, { nombre: "Zamora, Ramiro", rol: "DEV (Desarrollo)" }] },
-    { id: 3, proyecto: "YO SOY", comision: "51NMS", practica: "P2", integrantes: [{ nombre: "Herrera Agustin", rol: "SM (Scrum Master)" }, { nombre: "Mantovani, Santiago", rol: "PO (Product Owner)" }, { nombre: "Gallo, Mariana", rol: "DEV (Desarrollo)" }, { nombre: "Armas, Alejandra", rol: "DEV (Desarrollo)" }] },
-    { id: 4, proyecto: "NODUS", comision: "51NMS", practica: "P2", integrantes: [{ nombre: "Arias, Ayelen", rol: "DEV / SM" }, { nombre: "Arias, Mariana", rol: "DEV (Desarrollo)" }, { nombre: "Cerutti, Franco", rol: "FN / DEV" }, { nombre: "Barros, Claudia", rol: "FN / DEV" }] },
-    { id: 5, proyecto: "SocioApp Rancul", comision: "", practica: "P2", integrantes: [{ nombre: "Emiliano Lafuria", rol: "SM (Scrum Master)" }, { nombre: "Romina Salome", rol: "" }, { nombre: "Asis Maleh", rol: "", obs: "Salió del grupo" }, { nombre: "Pereyra Débora Zulema", rol: "" }, { nombre: "Fernández Joaquín Tomas", rol: "" }, { nombre: "Torralba Silvana Beatriz", rol: "" }] },
-    { id: 6, proyecto: "GeoLocalizacion Biosa", comision: "", practica: "P2", integrantes: [{ nombre: "Bustamante Danilo", rol: "SM (Scrum Master)" }, { nombre: "Baldironi Tomas", rol: "" }, { nombre: "Zurschmittn Maximo", rol: "" }, { nombre: "Nieto Samira", rol: "" }, { nombre: "Ferrara Melanie", rol: "", obs: "No cursa más" }] },
-    { id: 7, proyecto: "Punto Cell", comision: "51", practica: "P2", integrantes: [{ nombre: "Fanara Maximilian", rol: "" }, { nombre: "Guerrini Juan Pablo", rol: "FN (Análisis)" }, { nombre: "Sclarandi Leandro Simon", rol: "" }, { nombre: "Yona Natan", rol: "" }] },
-    { id: 8, proyecto: "Metalurgica", comision: "51", practica: "P2", integrantes: [{ nombre: "Noelia Pereyra", rol: "FN (Análisis)" }, { nombre: "Mariana Cepeda", rol: "SM (Scrum Master)" }, { nombre: "Federico Masin", rol: "DEV (Desarrollo)" }, { nombre: "Angel Ceballos", rol: "DEV (Desarrollo)" }] },
-    { id: 9, proyecto: "Condado", comision: "", practica: "P2", integrantes: [{ nombre: "Bustos Pacheco Tomas Ezequiel", rol: "FN (Análisis)" }, { nombre: "Villegas Atoche Dylan Alexis", rol: "SM (Scrum Master)" }, { nombre: "Heredia Maximo", rol: "DEV (Desarrollo)" }, { nombre: "Escudero Mauricio", rol: "DEV (Desarrollo)" }] },
-    { id: 10, proyecto: "Salus Aequitas", comision: "", practica: "P2", integrantes: [{ nombre: "Samira Nieto", rol: "" }, { nombre: "Maximo Zurshmitten", rol: "" }, { nombre: "Tomas Baldironi", rol: "SM (Scrum Master)" }, { nombre: "Danilo Bustamente", rol: "DEV (Desarrollo)" }] },
-    { id: 11, proyecto: "Mapla Joyas", comision: "", practica: "P2", integrantes: [{ nombre: "Fazundo Zambrano", rol: "" }, { nombre: "Milagros Cordoba", rol: "" }, { nombre: "Belen Insegna", rol: "" }, { nombre: "Nazareno Cano", rol: "" }, { nombre: "Santiago Castro", rol: "" }] },
-    { id: 12, proyecto: "Dentisware", comision: "", practica: "P2", integrantes: [{ nombre: "Edgar Narvaez Lavalle", rol: "" }, { nombre: "Leandro Saiz Zonni", rol: "" }, { nombre: "Rodrigo Good Carpio", rol: "" }] },
-    { id: 13, proyecto: "Arguello Infancias", comision: "", practica: "P2", integrantes: [{ nombre: "Lozano Melani", rol: "" }, { nombre: "Tolomey Agostina", rol: "" }, { nombre: "Galvan Camila Anabel", rol: "" }, { nombre: "Marinez Sofia Del Valle", rol: "" }, { nombre: "Huansi Jordy", rol: "" }] },
-    { id: 14, proyecto: "Tamcat", comision: "", practica: "P2", integrantes: [{ nombre: "Carballo Juan", rol: "" }, { nombre: "Gorosito Ezequiel", rol: "" }, { nombre: "Cunningham Luciano", rol: "" }, { nombre: "Matias Lopez", rol: "" }] },
-    { id: 15, proyecto: "Inclusion", comision: "", practica: "P2", integrantes: [{ nombre: "Aparicio Fernando", rol: "DEV (Desarrollo)" }, { nombre: "Wlk, Mirko", rol: "DEV (Desarrollo)" }, { nombre: "Del Barrio Sacha", rol: "FN (Análisis)" }, { nombre: "Cochis German", rol: "FN (Análisis)" }, { nombre: "Decalli Mariano", rol: "SM (Scrum Master)" }] },
-    { id: 16, proyecto: "Daytona Repuesto de Autos", comision: "", practica: "P2", integrantes: [{ nombre: "Ludueña Sofia", rol: "DEV / SM" }, { nombre: "Pereyra Hernan", rol: "DEV / SM" }] },
-  ];
-
-  const ENCUENTROS_CARGADOS = {
-    E1: {
-      1: { FN: 10, DEV: 10, SM: 10, fb: { FN: "Mueblería. Gestión-Trazabilidad-Ecommerce-Recortes", DEV: "React .Net Sql Server", SM: "Ok. Viernes" }, asistencia: { "Zagales, Mara": "Presente", "Benetti, Gabriela": "Presente", "Gaitan, Rocio": "Justificado" } },
-      2: { FN: 10, DEV: 10, SM: 10, fb: { SM: "Martes. OK" }, asistencia: { "Videla, Juan": "Presente", "Lopez Diaz, Erika": "Presente", "Rivero, Cristina": "Presente" } },
-      3: { FN: 10, DEV: 10, SM: 10, fb: { DEV: ".net - react - n8n - sql server", SM: "Sabado" }, asistencia: { "Gallo, Mariana": "Presente", "Armas, Alejandra": "Presente" } },
-      4: { FN: 10, DEV: 10, SM: 9, fb: { FN: "Bioingenieria-Mantenimiento-Equipamiento-SoporteVital", DEV: "SQL Server - .net - html-js-css (prob react)", SM: "Ok" }, asistencia: {} },
-    },
-    E2: {
-      1: { FN: 10, DEV: 10, SM: 10, fb: { FN: "Procesos: 9. Justos" }, asistencia: {} },
-      2: { FN: 10, DEV: 9, SM: 9, asistencia: { "Videla, Juan": "Presente", "Lopez Diaz, Erika": "Presente", "Rivero, Cristina": "Presente" } },
-      3: { FN: 6, DEV: 7, SM: 8, fb: { FN: "Falta gráficos y derivaciones", DEV: "Faltan entidades", SM: "Falta Story Map" }, asistencia: { "Gallo, Mariana": "Presente", "Armas, Alejandra": "Presente" } },
-      4: { FN: 6, DEV: 7, SM: 8, fb: { FN: "Faltan gráficos", DEV: "Falta armar gráfico", SM: "Faltó" }, asistencia: {} },
-      5: { FN: 8, DEV: 6, SM: 0, fb: { FN: "Procesos sin tomar en los alcances", DEV: "Poca relación entre entidades y procesos", SM: "No entregaron" }, asistencia: {} },
-      7: { FN: 8, DEV: 8, SM: 8, fb: { FN: "Escritos sin gráficos", DEV: "Der algo chico para leerlo bien", SM: "Podría incorporar más al mvp" }, asistencia: {} },
-      8: { FN: 8, DEV: 10, SM: 10, fb: { FN: "No pude ver bien los procesos, solo un resumen", DEV: "Correcto", SM: "Correcto. Aun creo que se podría agregar un poco más al mvp" }, asistencia: {} },
-      9: { FN: 6, DEV: 8, SM: 6, fb: { FN: "Por chat me pasaron solo 4 procesos", DEV: "No me pasan imagen de DER.", SM: "Por el DER se puede llegar a inferir que no tiene muchas historias" }, asistencia: {} },
-      10: { FN: 9, DEV: 8, SM: 4, fb: { FN: "Definidos", DEV: "Justo", SM: "Cumple pero no se lee, es una captura del Jira" }, asistencia: {} },
-      11: { FN: 8, DEV: 8, SM: 10, fb: { FN: "Creo que son pocos y se pueden quedar cortos de requerimientos", DEV: "Justos no se puede leer bien", SM: "Está correcto. Aunque como derivado de los procesos es algo corto" }, asistencia: {} },
-      12: { FN: 8, DEV: 4, SM: 2, fb: { FN: "Procesos correctos pero no se puede apreciar si están bien implementados en el DER", DEV: "DER - El gráfico no corresponde", SM: "Se presenta un anexo. Pero la imagen no es la de un story map" }, asistencia: {} },
-      13: { FN: 7, DEV: 5, SM: 8, fb: { FN: "Redactados", DEV: "No se logra apreciar", SM: "Está correcta, podría incorporar más cosas al mvp" }, asistencia: {} },
-      14: { FN: 7, DEV: 6, SM: 7, fb: {}, asistencia: {} },
-      15: { FN: 8, DEV: 8, SM: 8, fb: {}, asistencia: {} },
-      16: { FN: 4, DEV: 4, SM: 4, fb: {}, asistencia: {} },
-    },
-    E3: {
-      1: { FN: 9, DEV: 9, SM: 9, fb: {}, asistencia: {} },
-      2: { FN: 8, DEV: 8, SM: 8, fb: {}, asistencia: {} },
-      3: { FN: 5, DEV: 6, SM: 6, fb: {}, asistencia: {} },
-      4: { FN: 5, DEV: 6, SM: 6, fb: {}, asistencia: {} },
-      6: { FN: 7, DEV: 6, SM: 6, fb: {}, asistencia: {} },
-      7: { FN: 5, DEV: 6, SM: 7, fb: {}, asistencia: {} },
-      9: { FN: 5, DEV: 6, SM: 6, fb: {}, asistencia: {} },
-      11: { FN: 8, DEV: 9, SM: 9, fb: {}, asistencia: {} },
-      15: { FN: 9, DEV: 8, SM: 9, fb: {}, asistencia: {} },
-      16: { FN: 6, DEV: 6, SM: 6, fb: {}, asistencia: {} },
-    },
-    E4: {
-      6: { FN: 7, DEV: 6, SM: 6, fb: {}, asistencia: {} },
-      7: { FN: 9, DEV: 9, SM: 10, fb: {}, asistencia: {} },
-      8: { FN: 7, DEV: 7, SM: 8, fb: {}, asistencia: {} },
-      9: { FN: 1, DEV: 2, SM: 3, fb: {}, asistencia: {} },
-      11: { FN: 4, DEV: 5, SM: 5, fb: {}, asistencia: {} },
-    },
-  };
 
   Alpine.data('seguimientoApp', () => ({
     // --- STATE ---
