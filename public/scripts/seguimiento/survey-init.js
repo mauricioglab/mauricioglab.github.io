@@ -193,18 +193,6 @@ function getSurveySchema() {
           }
         ]
       },
-      {
-        name: "resumen",
-        title: "Resumen",
-        description: "Revisá tus datos antes de enviar.",
-        elements: [
-          {
-            type: "html",
-            name: "resumen_html",
-            html: '<div id="resumen-dinamico" style="padding:12px;background:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;font-size:14px;"></div>'
-          }
-        ]
-      }
     ],
     questionTitleLocation: "top",
     showQuestionNumbers: "off",
@@ -256,100 +244,6 @@ function calcularElegibilidad(data) {
   return { estado, motivos: reglas[estado].motivos, alertas: reglas[estado].alertas };
 }
 
-function buildResumenHTML(survey) {
-  const d = survey.data;
-  let html = "";
-
-  html += '<h3 style="margin:0 0 8px;font-weight:700;font-size:15px;">Datos personales</h3>';
-  html += `<p><strong>Nombre:</strong> ${d.nombre_completo || "—"}</p>`;
-  html += `<p><strong>DNI:</strong> ${d.dni || "—"}</p>`;
-  html += `<p><strong>Email:</strong> ${d.email || "—"}</p>`;
-  html += `<p><strong>Teléfono:</strong> ${d.telefono || "—"}</p>`;
-  html += `<p><strong>Teams:</strong> ${d.usuario_teams || "—"}</p>`;
-  html += `<p><strong>Comisión:</strong> ${d.comision || "—"}</p>`;
-
-  html += '<hr style="border-color:#e5e7eb;margin:12px 0">';
-  html += '<h3 style="margin:0 0 8px;font-weight:700;font-size:15px;">PP2</h3>';
-  html += `<p><strong>Estado:</strong> ${PP_ESTADO_LABELS[d.pp2_estado] || d.pp2_estado || "—"}</p>`;
-  if (d.pp2_mes_regularizada) {
-    html += `<p><strong>Regularizada en:</strong> ${d.pp2_mes_regularizada}</p>`;
-  }
-
-  if (d.pp2_estado === "regularizada") {
-    html += '<hr style="border-color:#e5e7eb;margin:12px 0">';
-    html += '<h3 style="margin:0 0 8px;font-weight:700;font-size:15px;">PP3</h3>';
-    html += `<p><strong>Estado:</strong> ${PP_ESTADO_LABELS[d.pp3_estado] || d.pp3_estado || "—"}</p>`;
-    if (d.pp3_mes_regularizada) {
-      html += `<p><strong>Regularizada en:</strong> ${d.pp3_mes_regularizada}</p>`;
-    }
-  }
-
-  if (d.tiene_materias_pendientes && d.materias_pendientes && d.materias_pendientes.length > 0) {
-    html += '<hr style="border-color:#e5e7eb;margin:12px 0">';
-    html += '<h3 style="margin:0 0 8px;font-weight:700;font-size:15px;">Materias pendientes</h3>';
-    html += "<ul>";
-    for (const m of d.materias_pendientes) {
-      const estadoText = m.estado === "a_cursar" ? "A cursar/recursar" : "Regularizada, pendiente de final";
-      html += `<li>${m.nombre} — ${estadoText}${m.regularizada_en ? " (" + m.regularizada_en + ")" : ""}</li>`;
-    }
-    html += "</ul>";
-  }
-
-  html += '<hr style="border-color:#e5e7eb;margin:12px 0">';
-  html += '<h3 style="margin:0 0 8px;font-weight:700;font-size:15px;">Proyecto</h3>';
-  if (d.tiene_proyecto) {
-    html += `<p><strong>Tiene proyecto:</strong> Sí</p>`;
-    html += `<p><strong>Nombre del sistema:</strong> ${d.proyecto_nombre || "—"}</p>`;
-    html += `<p><strong>Objetivo:</strong> ${d.proyecto_objetivo || "—"}</p>`;
-    html += `<p><strong>Tutor:</strong> ${d.proyecto_tutor || "—"}</p>`;
-  } else {
-    html += `<p><strong>Tiene proyecto:</strong> No</p>`;
-  }
-
-  html += '<hr style="border-color:#e5e7eb;margin:12px 0">';
-  html += '<h3 style="margin:0 0 8px;font-weight:700;font-size:15px;">Grupo</h3>';
-  if (d.tiene_grupo) {
-    html += `<p><strong>Tiene grupo:</strong> Sí</p>`;
-    html += `<p><strong>Integrantes:</strong> ${d.grupo_detalle || "—"}</p>`;
-  } else {
-    html += `<p><strong>Tiene grupo:</strong> No</p>`;
-  }
-
-  const alumnoData = {
-    pp2_estado: d.pp2_estado || "no_cursada",
-    pp3_estado: d.pp2_estado === "regularizada" ? (d.pp3_estado || "no_cursada") : "no_cursada",
-    materias_pendientes: d.materias_pendientes || [],
-    tiene_proyecto: d.tiene_proyecto,
-    tiene_grupo: d.tiene_grupo
-  };
-  const resultado = calcularElegibilidad(alumnoData);
-
-  html += '<hr style="border-color:#e5e7eb;margin:12px 0">';
-  const estadoColors = { habilitado: "#10b981", condicional: "#f59e0b", a_recurrir: "#ef4444" };
-  const estadoLabels = { habilitado: "Habilitado", condicional: "Condicional", a_recurrir: "A recursar" };
-  const color = estadoColors[resultado.estado] || "#9ca3af";
-  const label = estadoLabels[resultado.estado] || resultado.estado;
-  html += `<div style="padding:12px;border-radius:8px;border:2px solid ${color};background:${color}11;margin-top:8px">`;
-  html += `<h3 style="margin:0 0 4px;font-weight:700;font-size:15px;color:${color}">Estado: ${label}</h3>`;
-  if (resultado.motivos.length > 0) {
-    html += "<ul style='margin:4px 0;padding-left:20px;'>";
-    for (const m of resultado.motivos) {
-      html += `<li style="color:${color}">${m}</li>`;
-    }
-    html += "</ul>";
-  }
-  if (resultado.alertas.length > 0) {
-    html += "<ul style='margin:4px 0;padding-left:20px;'>";
-    for (const a of resultado.alertas) {
-      html += `<li style="color:#6366f1">⚠ ${a.mensaje}</li>`;
-    }
-    html += "</ul>";
-  }
-  html += "</div>";
-
-  return html;
-}
-
 window.initSurvey = function(containerId) {
   console.log('initSurvey called, containerId:', containerId);
 
@@ -384,20 +278,6 @@ window.initSurvey = function(containerId) {
       "--sjs-general-backcolor-dim": "#f9fafb",
       "--sjs-font-questiontitle-size": "14px",
       "--sjs-font-pagetitle-size": "18px",
-    }
-  });
-
-  survey.onAfterRenderPage.add(function(sender) {
-    const el = document.getElementById("resumen-dinamico");
-    if (el && sender.currentPage && sender.currentPage.name === "resumen") {
-      el.innerHTML = buildResumenHTML(sender);
-    }
-  });
-
-  survey.onValueChanged.add(function(sender) {
-    const el = document.getElementById("resumen-dinamico");
-    if (el && sender.currentPage && sender.currentPage.name === "resumen") {
-      el.innerHTML = buildResumenHTML(sender);
     }
   });
 
@@ -452,9 +332,7 @@ window.initSurvey = function(containerId) {
             <div style="font-size:48px;margin-bottom:16px">✓</div>
             <h2 style="font-size:20px;font-weight:700;margin-bottom:8px;color:#111827">Datos enviados</h2>
             <p style="color:#6b7280;font-size:14px">Tu información fue registrada correctamente.</p>
-            <p style="color:#6b7280;font-size:14px;margin-top:4px">Estado: <strong style="color:${resultado.estado === "habilitado" ? "#10b981" : resultado.estado === "condicional" ? "#f59e0b" : "#ef4444"}">${resultado.estado === "habilitado" ? "Habilitado" : resultado.estado === "condicional" ? "Condicional" : "A recursar"}</strong></p>
-            ${resultado.motivos.length ? '<p style="color:#6b7280;font-size:13px;margin-top:8px">Motivos: ' + resultado.motivos.join(", ") + "</p>" : ""}
-            ${resultado.alertas.length ? '<p style="color:#6366f1;font-size:13px;margin-top:4px">Alertas: ' + resultado.alertas.map(function(a) { return a.mensaje; }).join(", ") + "</p>" : ""}
+            <p style="color:#6b7280;font-size:14px;margin-top:4px">Te contactaremos a la brevedad.</p>
           </div>`;
       }
     } catch (e) {
