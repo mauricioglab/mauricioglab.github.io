@@ -397,14 +397,7 @@
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
           </button>
-          <button 
-            x-show="canEdit"
-            @click="guardar()"
-            class="px-3 py-2 text-white text-sm font-bold rounded-lg hover:bg-indigo-800 transition flex items-center gap-2"
-            :class="saved ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-700 hover:bg-indigo-800'"
-          >
-            <span x-text="saved ? '¡Guardado!' : 'Guardar'"></span>
-          </button>
+          <span x-show="saved" class="text-xs text-green-700 font-bold">✓ Guardado</span>
         </div>
       </div>
 
@@ -452,7 +445,7 @@
                 x-show="canEdit"
                 type="number" min="0" :max="((evalMeta[activeE + '_' + selectedGrupo]?.es_modificacion || (data[activeE]?.[selectedGrupo]?.FN || data[activeE]?.[selectedGrupo]?.DEV || data[activeE]?.[selectedGrupo]?.SM)) && !localOverride[activeE]) ? 7 : 10" step="0.5"
                 :value="localData[activeE]?.[dim] ?? ''"
-                @input="setField(activeE, dim, $event.target.value === '' ? null : Number($event.target.value))"
+                @change="setField(activeE, dim, $event.target.value === '' ? null : Number($event.target.value))"
                 class="w-14 px-2 py-1 border border-gray-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-indigo-600 text-gray-900 font-bold flex-shrink-0"
               >
               <span x-show="!canEdit" class="font-bold text-sm text-gray-900 flex-shrink-0" x-text="localData[activeE]?.[dim] ?? '—'"></span>
@@ -461,7 +454,7 @@
               x-show="canEdit"
               placeholder="Retroalimentación..."
               :value="localData[activeE]?.feedback?.[dim] ?? ''"
-              @input="setFb(activeE, dim, $event.target.value)"
+                @change="setFb(activeE, dim, $event.target.value)"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-indigo-600 text-gray-900"
             >
             <p x-show="!canEdit" class="text-xs text-gray-700 font-medium" x-text="localData[activeE]?.feedback?.[dim] || 'Sin feedback'"></p>
@@ -843,6 +836,7 @@
     user: null,
     userRole: null,
     saved: false,
+    saveTimeout: null,
     practicaFilter: 'Todas',
     editingGrupoId: null,
     
@@ -1225,17 +1219,27 @@
     setField(enc, dim, val) {
       if (!this.localData[enc]) this.localData[enc] = {};
       this.localData[enc][dim] = val;
+      this.debounceGuardar(enc);
     },
 
     setFb(enc, dim, val) {
       if (!this.localData[enc]) this.localData[enc] = {};
       if (!this.localData[enc].feedback) this.localData[enc].feedback = {};
       this.localData[enc].feedback[dim] = val;
+      this.debounceGuardar(enc);
     },
 
     setAsist(nombre, val) {
       if (!this.localAsist[this.activeE]) this.localAsist[this.activeE] = {};
       this.localAsist[this.activeE][nombre] = val;
+      this.guardarEncuentro(this.activeE);
+    },
+
+    debounceGuardar(enc) {
+      if (this.saveTimeout) clearTimeout(this.saveTimeout);
+      this.saveTimeout = setTimeout(() => {
+        this.guardarEncuentro(enc);
+      }, 1000);
     },
 
     criterioActual(dim) {
@@ -1723,116 +1727,111 @@
       this.userRole = null;
     },
 
-    async guardar() {
+    async guardarEncuentro(encId) {
       if (!this.canEdit) return;
       this.saved = false;
       
       try {
         const grupoId = this.selectedGrupo;
+        const local = this.localData[encId];
+        const asist = this.localAsist[encId];
         
-        for (const enc of ENCUENTROS_META) {
-          const local = this.localData[enc.id];
-          const asist = this.localAsist[enc.id];
-          
-          if (!local) continue;
-          
-          // Determinar si es primera vez o modificación
-          const key = `${enc.id}_${grupoId}`;
-          const hasExisting = !!this.data[enc.id]?.[grupoId]?.FN || !!this.data[enc.id]?.[grupoId]?.DEV || !!this.data[enc.id]?.[grupoId]?.SM;
-          const isModificacion = hasExisting || (this.evalMeta[key]?.es_modificacion);
-          const override = this.localOverride[enc.id] || false;
-          const maxNota = (isModificacion && !override) ? 7 : 10;
-          
-          // Validar notas
-          const dims = ['FN', 'DEV', 'SM'];
-          for (const dim of dims) {
-            const val = local[dim];
-            if (val !== null && val !== '' && val !== undefined) {
-              const numVal = Number(val);
-              if (numVal < 1 || numVal > maxNota) {
-                alert(`La nota de ${dim} para ${enc.id} debe estar entre 1 y ${maxNota}. ${isModificacion ? 'Es una modificación.' : ''}`);
-                return;
-              }
+        if (!local && !asist) return;
+        
+        // Determinar si es primera vez o modificación
+        const key = `${encId}_${grupoId}`;
+        const hasExisting = !!this.data[encId]?.[grupoId]?.FN || !!this.data[encId]?.[grupoId]?.DEV || !!this.data[encId]?.[grupoId]?.SM;
+        const isModificacion = hasExisting || (this.evalMeta[key]?.es_modificacion);
+        const override = this.localOverride[encId] || false;
+        const maxNota = (isModificacion && !override) ? 7 : 10;
+        
+        // Validar notas
+        const dims = ['FN', 'DEV', 'SM'];
+        for (const dim of dims) {
+          const val = local?.[dim];
+          if (val !== null && val !== '' && val !== undefined) {
+            const numVal = Number(val);
+            if (numVal < 1 || numVal > maxNota) {
+              alert(`La nota de ${dim} para ${encId} debe estar entre 1 y ${maxNota}. ${isModificacion ? 'Es una modificación.' : ''}`);
+              return;
             }
           }
-          
-          const evalPayload = {
-            grupo_id: grupoId,
-            encuentro_meta_id: enc.id,
-            fn: local.FN || null,
-            dev: local.DEV || null,
-            sm: local.SM || null,
-            feedback_fn: local.feedback?.FN || '',
-            feedback_dev: local.feedback?.DEV || '',
-            feedback_sm: local.feedback?.SM || '',
-          };
-          
-          // Manejar fechas y estado de modificación
-          if (isModificacion) {
-            evalPayload.es_modificacion = true;
-            evalPayload.fecha_modificacion = new Date().toISOString();
-            evalPayload.override_limite = override;
-            // Mantener fecha_primera_nota existente
-            if (this.evalMeta[key]?.fecha_primera_nota) {
-              evalPayload.fecha_primera_nota = this.evalMeta[key].fecha_primera_nota;
-            }
-          } else {
-            evalPayload.fecha_primera_nota = new Date().toISOString();
-            evalPayload.es_modificacion = false;
-            evalPayload.override_limite = false;
-          }
-          
-          const { data: evalData, error: evalError } = await supabase
-            .from('evaluaciones')
-            .upsert(evalPayload, { onConflict: 'grupo_id,encuentro_meta_id' })
-            .select()
-            .single();
-          
-          if (evalError) {
-            console.error('Error saving evaluacion:', evalError);
-            continue;
-          }
-          
-          if (asist && evalData) {
-            for (const [nombre, estado] of Object.entries(asist)) {
-              if (!estado) continue;
-              
-              const { error: asistError } = await supabase
-                .from('asistencias')
-                .upsert({
-                  evaluacion_id: evalData.id,
-                  integrante_nombre: nombre,
-                  estado: estado,
-                }, { onConflict: 'evaluacion_id,integrante_nombre' });
-              
-              if (asistError) {
-                console.error('Error saving asistencia:', asistError);
-              }
-            }
-          }
-          
-          if (!this.data[enc.id]) this.data[enc.id] = {};
-          if (!this.data[enc.id][grupoId]) this.data[enc.id][grupoId] = {};
-          this.data[enc.id][grupoId] = {
-            FN: local.FN || undefined,
-            DEV: local.DEV || undefined,
-            SM: local.SM || undefined,
-            fb: {
-              FN: local.feedback?.FN || '',
-              DEV: local.feedback?.DEV || '',
-              SM: local.feedback?.SM || '',
-            },
-            asistencia: { ...asist },
-          };
-          
-          // Actualizar evalMeta local
-          this.evalMeta[key] = {
-            fecha_primera_nota: evalPayload.fecha_primera_nota,
-            fecha_modificacion: evalPayload.fecha_modificacion,
-            es_modificacion: evalPayload.es_modificacion,
-            override_limite: evalPayload.override_limite
-          };
         }
+        
+        const evalPayload = {
+          grupo_id: grupoId,
+          encuentro_meta_id: encId,
+          fn: local?.FN || null,
+          dev: local?.DEV || null,
+          sm: local?.SM || null,
+          feedback_fn: local?.feedback?.FN || '',
+          feedback_dev: local?.feedback?.DEV || '',
+          feedback_sm: local?.feedback?.SM || '',
+        };
+        
+        // Manejar fechas y estado de modificación
+        if (isModificacion) {
+          evalPayload.es_modificacion = true;
+          evalPayload.fecha_modificacion = new Date().toISOString();
+          evalPayload.override_limite = override;
+          if (this.evalMeta[key]?.fecha_primera_nota) {
+            evalPayload.fecha_primera_nota = this.evalMeta[key].fecha_primera_nota;
+          }
+        } else {
+          evalPayload.fecha_primera_nota = new Date().toISOString();
+          evalPayload.es_modificacion = false;
+          evalPayload.override_limite = false;
+        }
+        
+        const { data: evalData, error: evalError } = await supabase
+          .from('evaluaciones')
+          .upsert(evalPayload, { onConflict: 'grupo_id,encuentro_meta_id' })
+          .select()
+          .single();
+        
+        if (evalError) {
+          console.error('Error saving evaluacion:', evalError);
+          return;
+        }
+        
+        if (asist && evalData) {
+          for (const [nombre, estado] of Object.entries(asist)) {
+            if (!estado) continue;
+            
+            const { error: asistError } = await supabase
+              .from('asistencias')
+              .upsert({
+                evaluacion_id: evalData.id,
+                integrante_nombre: nombre,
+                estado: estado,
+              }, { onConflict: 'evaluacion_id,integrante_nombre' });
+            
+            if (asistError) {
+              console.error('Error saving asistencia:', asistError);
+            }
+          }
+        }
+        
+        if (!this.data[encId]) this.data[encId] = {};
+        if (!this.data[encId][grupoId]) this.data[encId][grupoId] = {};
+        this.data[encId][grupoId] = {
+          FN: local?.FN || undefined,
+          DEV: local?.DEV || undefined,
+          SM: local?.SM || undefined,
+          fb: {
+            FN: local?.feedback?.FN || '',
+            DEV: local?.feedback?.DEV || '',
+            SM: local?.feedback?.SM || '',
+          },
+          asistencia: { ...asist },
+        };
+        
+        this.evalMeta[key] = {
+          fecha_primera_nota: evalPayload.fecha_primera_nota,
+          fecha_modificacion: evalPayload.fecha_modificacion,
+          es_modificacion: evalPayload.es_modificacion,
+          override_limite: evalPayload.override_limite
+        };
         
         this.saved = true;
         setTimeout(() => this.saved = false, 2000);
