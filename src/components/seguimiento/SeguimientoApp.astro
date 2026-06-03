@@ -584,10 +584,10 @@
         <p class="text-sm text-gray-600 mt-2 font-medium" x-text="importLoadingMsg"></p>
       </div>
 
-      <!-- Diff content -->
-      <div x-show="!importLoading && importDiff">
+      <!-- Diff content grouped by group -->
+      <div x-show="!importLoading && importDiff" class="space-y-3">
         <!-- Summary -->
-        <div class="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200 text-xs">
+        <div class="p-3 bg-gray-50 rounded-lg border border-gray-200 text-xs">
           <div class="grid grid-cols-4 gap-2 text-center">
             <div>
               <div class="text-green-700 font-extrabold text-lg" x-text="importDiff?.grupos?.added?.length + (importDiff?.integrantes?.added?.length || 0)"></div>
@@ -598,7 +598,7 @@
               <div class="text-gray-600 font-bold">Modificados</div>
             </div>
             <div>
-              <div class="text-gray-400 font-extrabold text-lg" x-text="(importDiff?.grupos?.unchanged?.length || 0) + (importDiff?.integrantes?.unchanged?.length || 0) + (importDiff?.evaluaciones?.unchanged?.length || 0) + (importDiff?.asistencias?.unchanged?.length || 0)"></div>
+              <div class="text-gray-400 font-extrabold text-lg" x-text="(importDiff?.grupos?.unchanged?.length || 0) + (importDiff?.integrantes?.unchanged?.length || 0)"></div>
               <div class="text-gray-600 font-bold">Sin cambios</div>
             </div>
             <div>
@@ -613,108 +613,153 @@
           </template>
         </div>
 
-        <!-- Grupos -->
-        <template x-if="importDiff && (importDiff.grupos.added.length > 0 || importDiff.grupos.modified.length > 0)">
-          <div class="mb-4">
-            <h3 class="text-sm font-bold text-gray-900 mb-2">Grupos</h3>
-            <div class="space-y-1">
-              <template x-for="g in importDiff.grupos.added" :key="'ga-' + g.id">
-                <div class="flex items-center gap-2 text-xs p-2 bg-green-50 rounded border border-green-200">
-                  <span class="text-green-700 font-bold">+</span>
-                  <span class="font-bold text-gray-900" x-text="`G${g.id}: ${g.proyecto}`"></span>
-                  <span class="text-gray-500" x-text="g.comision || 'Sin comisión'"></span>
-                  <span class="text-gray-400 ml-auto" x-text="`${g.integrantes.length} integrantes`"></span>
-                </div>
-              </template>
-              <template x-for="g in importDiff.grupos.modified" :key="'gm-' + g.id">
-                <div class="flex items-center gap-2 text-xs p-2 bg-amber-50 rounded border border-amber-200">
-                  <span class="text-amber-700 font-bold">~</span>
-                  <span class="font-bold text-gray-900" x-text="`G${g.id}: ${g.proyecto}`"></span>
-                  <template x-for="ch in g.changes" :key="ch.field">
-                    <span class="text-amber-700" x-text="`${ch.field}: ${ch.from} → ${ch.to}`"></span>
-                  </template>
-                </div>
+        <!-- Grouped by group -->
+        <template x-for="grp in importDiffByGroup" :key="'grp-' + grp.id">
+          <div class="rounded-lg border" :class="grp.isNew ? 'border-green-300 bg-green-50/30' : 'border-gray-200 bg-white'">
+            <!-- Group header -->
+            <div class="px-3 py-2 flex items-center gap-2 border-b" :class="grp.isNew ? 'border-green-300 bg-green-50' : 'border-gray-200 bg-gray-50'">
+              <span class="text-xs font-bold px-1.5 py-0.5 rounded" :class="grp.isNew ? 'bg-green-600 text-white' : 'bg-gray-500 text-white'" x-text="grp.isNew ? '+ Nuevo' : '~ Cambios'"></span>
+              <span class="font-bold text-sm text-gray-900" x-text="`G${grp.id} · ${grp.proyecto}`"></span>
+              <span x-show="grp.comision" class="text-xs text-gray-600" x-text="grp.comision"></span>
+              <template x-for="ch in grp.grupoChanges">
+                <span class="text-xs text-amber-700 font-medium" x-text="`${ch.field}: ${ch.from} → ${ch.to}`"></span>
               </template>
             </div>
-          </div>
-        </template>
 
-        <!-- Integrantes -->
-        <template x-if="importDiff && (importDiff.integrantes.added.length > 0 || importDiff.integrantes.modified.length > 0)">
-          <div class="mb-4">
-            <h3 class="text-sm font-bold text-gray-900 mb-2">Integrantes</h3>
-            <div class="space-y-1">
-              <template x-for="i in importDiff.integrantes.added" :key="'ia-' + i.grupo_id + i.nombre">
-                <div class="flex items-center gap-2 text-xs p-2 bg-green-50 rounded border border-green-200">
-                  <span class="text-green-700 font-bold">+</span>
-                  <span class="font-bold text-gray-900" x-text="`G${i.grupo_id}`"></span>
-                  <span class="text-gray-700" x-text="i.nombre"></span>
-                  <span class="text-gray-400" x-text="i.rol"></span>
-                  <span x-show="i.observacion" class="text-amber-600" x-text="`(${i.observacion})`"></span>
+            <div class="px-3 py-2 space-y-2">
+              <!-- New group integrantes -->
+              <template x-if="grp.isNew && grp.integrantesAdded.length > 0">
+                <div>
+                  <div class="text-xs font-bold text-gray-600 mb-1">Integrantes</div>
+                  <div class="flex flex-wrap gap-1">
+                    <template x-for="i in grp.integrantesAdded" :key="'ia-' + grp.id + i.nombre">
+                      <span class="inline-flex items-center text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-800 border border-green-200">
+                        <span class="font-medium" x-text="i.nombre"></span>
+                        <span x-show="i.rol" class="text-green-600 ml-1" x-text="`(${i.rol})`"></span>
+                      </span>
+                    </template>
+                  </div>
                 </div>
               </template>
-              <template x-for="i in importDiff.integrantes.modified" :key="'im-' + i.grupo_id + i.nombre">
-                <div class="flex items-center gap-2 text-xs p-2 bg-amber-50 rounded border border-amber-200">
-                  <span class="text-amber-700 font-bold">~</span>
-                  <span class="font-bold text-gray-900" x-text="`G${i.grupo_id}`"></span>
-                  <span class="text-gray-700" x-text="i.nombre"></span>
-                  <template x-for="ch in i.changes" :key="ch.field">
-                    <span class="text-amber-700" x-text="`${ch.field}: ${ch.from} → ${ch.to}`"></span>
-                  </template>
-                </div>
-              </template>
-            </div>
-          </div>
-        </template>
 
-        <!-- Evaluaciones -->
-        <template x-if="importDiff && (importDiff.evaluaciones.added.length > 0 || importDiff.evaluaciones.modified.length > 0)">
-          <div class="mb-4">
-            <h3 class="text-sm font-bold text-gray-900 mb-2">Evaluaciones</h3>
-            <div class="space-y-1">
-              <template x-for="e in importDiff.evaluaciones.added" :key="'ea-' + e.grupo_id + e.encuentro_meta_id">
-                <div class="flex items-center gap-2 text-xs p-2 bg-green-50 rounded border border-green-200">
-                  <span class="text-green-700 font-bold">+</span>
-                  <span class="font-bold text-gray-900" x-text="`G${e.grupo_id} ${e.encuentro_meta_id}`"></span>
-                  <template x-for="(val, dim) in e.dimensions" :key="dim">
-                    <span class="text-gray-600" x-text="`${dim}: ${val.puntaje}`"></span>
-                  </template>
+              <!-- Integrantes added to existing group -->
+              <template x-if="!grp.isNew && grp.integrantesAdded.length > 0">
+                <div>
+                  <div class="text-xs font-bold text-green-700 mb-1">+ Integrantes nuevos</div>
+                  <div class="flex flex-wrap gap-1">
+                    <template x-for="i in grp.integrantesAdded" :key="'ia2-' + grp.id + i.nombre">
+                      <span class="inline-flex items-center text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-800 border border-green-200">
+                        <span class="font-medium" x-text="i.nombre"></span>
+                        <span x-show="i.rol" class="text-green-600 ml-1" x-text="`(${i.rol})`"></span>
+                      </span>
+                    </template>
+                  </div>
                 </div>
               </template>
-              <template x-for="e in importDiff.evaluaciones.modified" :key="'em-' + e.grupo_id + e.encuentro_meta_id">
-                <div class="flex items-center gap-2 text-xs p-2 bg-amber-50 rounded border border-amber-200 flex-wrap">
-                  <span class="text-amber-700 font-bold">~</span>
-                  <span class="font-bold text-gray-900" x-text="`G${e.grupo_id} ${e.encuentro_meta_id}`"></span>
-                  <template x-for="ch in e.changes" :key="ch.dimension + ch.type">
-                    <span class="text-amber-700" x-text="ch.type === 'nota_added' ? `${ch.dimension}: +${ch.value}` : ch.type === 'nota_modified' ? `${ch.dimension}: ${ch.from}→${ch.to}` : ch.type === 'fb_added' ? `${ch.dimension} fb: +` : `${ch.dimension} fb: →`"></span>
-                  </template>
-                </div>
-              </template>
-            </div>
-          </div>
-        </template>
 
-        <!-- Asistencias -->
-        <template x-if="importDiff && (importDiff.asistencias.added.length > 0 || importDiff.asistencias.modified.length > 0)">
-          <div class="mb-4">
-            <h3 class="text-sm font-bold text-gray-900 mb-2">Asistencias</h3>
-            <div class="space-y-1 max-h-40 overflow-y-auto">
-              <template x-for="a in importDiff.asistencias.added" :key="'aa-' + a.grupo_id + a.encuentro_meta_id + a.integrante_nombre">
-                <div class="flex items-center gap-2 text-xs p-1.5 bg-green-50 rounded border border-green-200">
-                  <span class="text-green-700 font-bold">+</span>
-                  <span class="font-bold text-gray-900" x-text="`G${a.grupo_id} ${a.encuentro_meta_id}`"></span>
-                  <span class="text-gray-700" x-text="a.integrante_nombre"></span>
-                  <span class="text-green-700 font-bold" x-text="a.estado"></span>
+              <!-- Integrantes modified -->
+              <template x-if="grp.integrantesModified.length > 0">
+                <div>
+                  <div class="text-xs font-bold text-amber-700 mb-1">~ Integrantes modificados</div>
+                  <div class="space-y-1">
+                    <template x-for="i in grp.integrantesModified" :key="'im-' + grp.id + i.nombre">
+                      <div class="text-xs flex flex-wrap items-center gap-1">
+                        <span class="font-bold text-gray-900" x-text="i.nombre"></span>
+                        <template x-for="ch in i.changes" :key="ch.field">
+                          <span class="text-amber-700" x-text="ch.field + ': &quot;' + ch.from + '&quot; → &quot;' + ch.to + '&quot;'"></span>
+                        </template>
+                      </div>
+                    </template>
+                  </div>
                 </div>
               </template>
-              <template x-for="a in importDiff.asistencias.modified" :key="'am-' + a.grupo_id + a.encuentro_meta_id + a.integrante_nombre">
-                <div class="flex items-center gap-2 text-xs p-1.5 bg-amber-50 rounded border border-amber-200">
-                  <span class="text-amber-700 font-bold">~</span>
-                  <span class="font-bold text-gray-900" x-text="`G${a.grupo_id} ${a.encuentro_meta_id}`"></span>
-                  <span class="text-gray-700" x-text="a.integrante_nombre"></span>
-                  <span class="text-red-600 line-through" x-text="a.from"></span>
-                  <span class="text-gray-400">→</span>
-                  <span class="text-green-700 font-bold" x-text="a.estado"></span>
+
+              <!-- Encuentros -->
+              <template x-for="enc in grp.encuentrosOrdered" :key="'enc-' + grp.id + enc.id">
+                <div class="rounded-md border border-gray-200 bg-gray-50/50 overflow-hidden">
+                  <div class="px-2 py-1.5 bg-indigo-50 border-b border-indigo-100">
+                    <span class="text-xs font-bold text-indigo-700" x-text="enc.id"></span>
+                  </div>
+                  <div class="px-2 py-1.5 space-y-1">
+                    <!-- Notas nuevas -->
+                    <template x-if="enc.notasAdded.length > 0">
+                      <div class="flex flex-wrap gap-x-3 gap-y-0.5">
+                        <template x-for="n in enc.notasAdded" :key="'na-' + n.dimension">
+                          <span class="text-xs">
+                            <span class="font-bold text-gray-700" x-text="n.dimension"></span>
+                            <span class="text-green-700 font-bold" x-text="`+${n.puntaje}`"></span>
+                          </span>
+                        </template>
+                      </div>
+                    </template>
+                    <!-- Notas modificadas -->
+                    <template x-if="enc.notasModified.length > 0">
+                      <div class="flex flex-wrap gap-x-3 gap-y-0.5">
+                        <template x-for="n in enc.notasModified" :key="'nm-' + n.dimension">
+                          <span class="text-xs">
+                            <span class="font-bold text-gray-700" x-text="n.dimension"></span>
+                            <span class="text-red-600 line-through" x-text="n.from"></span>
+                            <span class="text-gray-400 mx-0.5">→</span>
+                            <span class="text-green-700 font-bold" x-text="n.to"></span>
+                          </span>
+                        </template>
+                      </div>
+                    </template>
+                    <!-- Feedback nuevo -->
+                    <template x-if="enc.fbAdded.length > 0">
+                      <div class="space-y-0.5">
+                        <template x-for="f in enc.fbAdded" :key="'fba-' + f.dimension">
+                          <div class="text-xs text-gray-600">
+                            <span class="font-medium" x-text="f.dimension + ' retro:'"></span>
+                            <span class="text-green-700" x-text="f.feedback ? '&quot;' + f.feedback + '&quot;' : ' (vacío)'"></span>
+                          </div>
+                        </template>
+                      </div>
+                    </template>
+                    <!-- Feedback modificado -->
+                    <template x-if="enc.fbModified.length > 0">
+                      <div class="space-y-0.5">
+                        <template x-for="f in enc.fbModified" :key="'fbm-' + f.dimension">
+                          <div class="text-xs text-gray-600">
+                            <span class="font-medium" x-text="f.dimension + ' retro:'"></span>
+                            <span class="text-red-600 line-through" x-text="f.from ? '&quot;' + f.from + '&quot;' : '(vacío)'"></span>
+                            <span class="text-gray-400 mx-0.5">→</span>
+                            <span class="text-green-700" x-text="f.to ? '&quot;' + f.to + '&quot;' : '(vacío)'"></span>
+                          </div>
+                        </template>
+                      </div>
+                    </template>
+                    <!-- Asistencias nuevas -->
+                    <template x-if="enc.asistAdded.length > 0">
+                      <div>
+                        <div class="text-xs font-bold text-green-700 mt-1">Asistencia</div>
+                        <div class="flex flex-wrap gap-1">
+                          <template x-for="a in enc.asistAdded" :key="'aa-' + a.integrante_nombre">
+                            <span class="inline-flex items-center text-xs px-1.5 py-0.5 rounded bg-green-50 text-green-800 border border-green-200">
+                              <span x-text="a.integrante_nombre"></span>
+                              <span class="font-bold ml-1" x-text="a.estado"></span>
+                            </span>
+                          </template>
+                        </div>
+                      </div>
+                    </template>
+                    <!-- Asistencias modificadas -->
+                    <template x-if="enc.asistModified.length > 0">
+                      <div>
+                        <div class="text-xs font-bold text-amber-700 mt-1">Asistencia</div>
+                        <div class="flex flex-wrap gap-1">
+                          <template x-for="a in enc.asistModified" :key="'am-' + a.integrante_nombre">
+                            <span class="inline-flex items-center text-xs px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200">
+                              <span x-text="a.integrante_nombre"></span>
+                              <span class="text-red-600 line-through ml-1" x-text="a.from"></span>
+                              <span class="text-gray-400 mx-0.5">→</span>
+                              <span class="font-bold" x-text="a.estado"></span>
+                            </span>
+                          </template>
+                        </div>
+                      </div>
+                    </template>
+                  </div>
                 </div>
               </template>
             </div>
@@ -2456,6 +2501,92 @@
         + (d.evaluaciones?.modified?.length || 0)
         + (d.asistencias?.added?.length || 0)
         + (d.asistencias?.modified?.length || 0);
+    },
+    
+    get importDiffByGroup() {
+      if (!this.importDiff) return [];
+      const d = this.importDiff;
+      const groupMap = {};
+      const getGroup = (id) => {
+        if (!groupMap[id]) {
+          const g = this.grupos.find(g => g.id === id);
+          groupMap[id] = {
+            id: id,
+            proyecto: g ? g.proyecto : `Grupo ${id}`,
+            comision: g ? g.comision : '',
+            isNew: false,
+            grupoChanges: [],
+            integrantesAdded: [],
+            integrantesModified: [],
+            encuentros: {},
+          };
+        }
+        return groupMap[id];
+      };
+
+      d.grupos.added.forEach(g => {
+        const grp = getGroup(g.id);
+        grp.isNew = true;
+        grp.proyecto = g.proyecto;
+        grp.comision = g.comision || '';
+        grp.integrantesAdded = g.integrantes.map(i => ({ ...i }));
+      });
+      d.grupos.modified.forEach(g => {
+        const grp = getGroup(g.id);
+        grp.proyecto = g.proyecto;
+        grp.comision = g.comision || '';
+        grp.grupoChanges = g.changes || [];
+      });
+      d.integrantes.added.forEach(i => {
+        const grp = getGroup(i.grupo_id);
+        grp.integrantesAdded.push(i);
+      });
+      d.integrantes.modified.forEach(i => {
+        const grp = getGroup(i.grupo_id);
+        grp.integrantesModified.push(i);
+      });
+      d.evaluaciones.added.forEach(e => {
+        const grp = getGroup(e.grupo_id);
+        if (!grp.encuentros[e.encuentro_meta_id]) grp.encuentros[e.encuentro_meta_id] = { notasAdded: [], notasModified: [], fbAdded: [], fbModified: [], asistAdded: [], asistModified: [] };
+        const enc = grp.encuentros[e.encuentro_meta_id];
+        ['FN', 'DEV', 'SM'].forEach(dim => {
+          if (e.dimensions[dim]) {
+            if (e.dimensions[dim].puntaje) enc.notasAdded.push({ dimension: dim, puntaje: e.dimensions[dim].puntaje });
+            if (e.dimensions[dim].feedback && e.dimensions[dim].feedback.trim()) {
+              const txt = e.dimensions[dim].feedback.trim();
+              enc.fbAdded.push({ dimension: dim, feedback: txt.length > 60 ? txt.substring(0, 60) + '...' : txt });
+            }
+          }
+        });
+      });
+      d.evaluaciones.modified.forEach(e => {
+        const grp = getGroup(e.grupo_id);
+        if (!grp.encuentros[e.encuentro_meta_id]) grp.encuentros[e.encuentro_meta_id] = { notasAdded: [], notasModified: [], fbAdded: [], fbModified: [], asistAdded: [], asistModified: [] };
+        const enc = grp.encuentros[e.encuentro_meta_id];
+        (e.changes || []).forEach(ch => {
+          if (ch.type === 'nota_added') enc.notasAdded.push({ dimension: ch.dimension, puntaje: ch.value });
+          else if (ch.type === 'nota_modified') enc.notasModified.push({ dimension: ch.dimension, from: ch.from, to: ch.to });
+          else if (ch.type === 'fb_added') enc.fbAdded.push({ dimension: ch.dimension, feedback: ch.value });
+          else if (ch.type === 'fb_modified') enc.fbModified.push({ dimension: ch.dimension, from: ch.from, to: ch.to });
+        });
+      });
+      d.asistencias.added.forEach(a => {
+        const grp = getGroup(a.grupo_id);
+        if (!grp.encuentros[a.encuentro_meta_id]) grp.encuentros[a.encuentro_meta_id] = { notasAdded: [], notasModified: [], fbAdded: [], fbModified: [], asistAdded: [], asistModified: [] };
+        grp.encuentros[a.encuentro_meta_id].asistAdded.push(a);
+      });
+      d.asistencias.modified.forEach(a => {
+        const grp = getGroup(a.grupo_id);
+        if (!grp.encuentros[a.encuentro_meta_id]) grp.encuentros[a.encuentro_meta_id] = { notasAdded: [], notasModified: [], fbAdded: [], fbModified: [], asistAdded: [], asistModified: [] };
+        grp.encuentros[a.encuentro_meta_id].asistModified.push(a);
+      });
+
+      const encIds = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7'];
+      const result = Object.values(groupMap).sort((a, b) => a.id - b.id);
+      result.forEach(grp => {
+        grp.encuentrosOrdered = encIds.filter(eid => grp.encuentros[eid]).map(eid => ({ id: eid, ...grp.encuentros[eid] }));
+      });
+      return result;
     },
     
     async handleExcelImport(event) {

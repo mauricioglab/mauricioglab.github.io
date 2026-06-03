@@ -364,10 +364,14 @@ export function buildDiff(excelData, currentGrupos, currentData, evalMeta, integ
       }
 
       if (excelDim.feedback && excelDim.feedback.trim()) {
+        const fbText = excelDim.feedback.trim();
+        const truncLen = 60;
+        const truncated = fbText.length > truncLen ? fbText.substring(0, truncLen) + '...' : fbText;
         if (!existingFb || existingFb.trim() === '') {
-          changes.push({ dimension: dim, type: 'fb_added', value: excelDim.feedback });
-        } else if (excelDim.feedback.trim() !== existingFb.trim()) {
-          changes.push({ dimension: dim, type: 'fb_modified', from: existingFb, to: excelDim.feedback });
+          changes.push({ dimension: dim, type: 'fb_added', value: truncated, fullValue: fbText });
+        } else if (fbText !== existingFb.trim()) {
+          const fromTrunc = existingFb.trim().length > truncLen ? existingFb.trim().substring(0, truncLen) + '...' : existingFb.trim();
+          changes.push({ dimension: dim, type: 'fb_modified', from: fromTrunc, to: truncated, fullTo: fbText, fullFrom: existingFb.trim() });
         }
       }
     });
