@@ -558,7 +558,23 @@
   >
     <div class="bg-white rounded-xl p-6 w-full max-w-2xl border border-gray-300 shadow-lg max-h-[85vh] overflow-y-auto">
       <h2 class="text-lg font-bold text-gray-900 mb-1">Importar desde Excel</h2>
-      <p class="text-xs text-gray-500 mb-4">Revisá los cambios antes de confirmar.</p>
+      <p class="text-xs text-gray-500 mb-3">Revisá los cambios antes de confirmar.</p>
+
+      <label class="flex items-start gap-2 mb-3 p-3 rounded-lg border-2 cursor-pointer select-none transition"
+        :class="importDryRun ? 'border-amber-400 bg-amber-50' : 'border-gray-200 bg-white'">
+        <input type="checkbox" x-model="importDryRun" class="w-4 h-4 mt-0.5 rounded border-gray-300 text-amber-600 focus:ring-amber-500">
+        <div>
+          <span class="text-sm font-bold" :class="importDryRun ? 'text-amber-800' : 'text-gray-700'">Modo práctica</span>
+          <p class="text-xs" :class="importDryRun ? 'text-amber-700' : 'text-gray-500'">
+            Solo ver cambios sin guardar. Activado por defecto para revisar qué se pisaría. Desactivá esta opción para poder confirmar la importación.
+          </p>
+        </div>
+      </label>
+
+      <div x-show="importDryRun" class="mb-3 p-3 bg-amber-100 border border-amber-300 rounded-lg text-xs text-amber-800 flex items-center gap-2">
+        <svg class="w-5 h-5 flex-shrink-0 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+        <span class="font-medium">No se guardarán cambios. Desactivá "Modo práctica" para habilitar la confirmación.</span>
+      </div>
 
       <!-- Loading -->
       <div x-show="importLoading" class="text-center py-8">
@@ -588,6 +604,11 @@
               <div class="text-gray-600 font-bold">A aplicar</div>
             </div>
           </div>
+          <template x-if="((importDiff?.evaluaciones?.modified?.length || 0) + (importDiff?.asistencias?.modified?.length || 0) + (importDiff?.grupos?.modified?.length || 0) + (importDiff?.integrantes?.modified?.length || 0)) > 0">
+            <div class="mt-2 pt-2 border-t border-amber-200 text-center">
+              <span class="text-amber-700 font-bold">⚠ Se sobreescribirán <span x-text="(importDiff?.evaluaciones?.modified?.length || 0) + (importDiff?.asistencias?.modified?.length || 0) + (importDiff?.grupos?.modified?.length || 0) + (importDiff?.integrantes?.modified?.length || 0)"></span> valores existentes</span>
+            </div>
+          </template>
         </div>
 
         <!-- Grupos -->
@@ -720,12 +741,19 @@
 
       <div class="flex gap-2 mt-4">
         <button 
-          x-show="!importResult"
+          x-show="!importResult && !importDryRun"
           @click="applyImport()"
           :disabled="importLoading || importTotalChanges === 0"
           class="flex-1 py-2.5 bg-emerald-700 text-white text-sm font-bold rounded-lg hover:bg-emerald-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Confirmar importación
+        </button>
+        <button 
+          x-show="!importResult && importDryRun"
+          :disabled="true"
+          class="flex-1 py-2.5 bg-gray-300 text-gray-500 text-sm font-bold rounded-lg cursor-not-allowed"
+        >
+          Confirmar importación (desactivar modo práctica primero)
         </button>
         <button 
           @click="showImportModal = false; importDiff = null; importResult = null;"
@@ -1020,6 +1048,7 @@
     importLoadingMsg: '',
     importDiff: null,
     importResult: null,
+    importDryRun: true,
     loginEmail: '',
     loginPassword: '',
     loginError: '',
@@ -2378,6 +2407,7 @@
     },
     
     async applyImport() {
+      if (this.importDryRun) return;
       if (!this.importDiff || this.importTotalChanges === 0) return;
       
       this.importLoading = true;
