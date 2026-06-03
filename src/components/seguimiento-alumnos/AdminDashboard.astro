@@ -488,24 +488,57 @@
       @click.self="showLogin = false"
     >
       <div class="bg-white rounded-xl p-6 w-full max-w-sm border border-gray-300 shadow-lg">
-        <h2 class="text-lg font-bold text-gray-900 mb-4">Ingresar como docente</h2>
-        <form @submit.prevent="login()">
-          <div class="mb-3">
-            <label class="block text-xs font-bold text-gray-700 mb-1">Email</label>
-            <input x-model="loginEmail" type="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" required>
+        <!-- Login view -->
+        <template x-if="!showForgotPassword">
+          <div>
+            <h2 class="text-lg font-bold text-gray-900 mb-1">Acceso para equipo docente</h2>
+            <p class="text-xs text-gray-500 mb-4">Este espacio es exclusivo para la gestión del seguimiento por parte del equipo docente. Si sos estudiante, tus datos se cargan desde el formulario correspondiente.</p>
+            <form @submit.prevent="login()">
+              <div class="mb-3">
+                <label class="block text-xs font-bold text-gray-700 mb-1">Email</label>
+                <input x-model="loginEmail" type="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" required>
+              </div>
+              <div class="mb-4">
+                <label class="block text-xs font-bold text-gray-700 mb-1">Contraseña</label>
+                <input x-model="loginPassword" type="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" required>
+              </div>
+              <p x-show="loginError" class="text-xs text-red-600 mb-3 font-bold" x-text="loginError"></p>
+              <div class="flex gap-2">
+                <button type="button" @click="showLogin = false" class="flex-1 py-2 border border-gray-300 text-gray-700 text-sm font-bold rounded-lg hover:bg-gray-50">Cancelar</button>
+                <button type="submit" class="flex-1 py-2 bg-indigo-700 text-white text-sm font-bold rounded-lg hover:bg-indigo-800" :disabled="loadingAuth">
+                  <span x-text="loadingAuth ? '...' : 'Ingresar'"></span>
+                </button>
+              </div>
+            </form>
+            <button type="button" @click="showForgotPassword = true; loginError = ''" class="block w-full text-center text-xs text-indigo-700 hover:text-indigo-900 mt-3 font-medium">¿Olvidaste tu contraseña?</button>
           </div>
-          <div class="mb-4">
-            <label class="block text-xs font-bold text-gray-700 mb-1">Contraseña</label>
-            <input x-model="loginPassword" type="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" required>
+        </template>
+        <!-- Forgot password view -->
+        <template x-if="showForgotPassword">
+          <div>
+            <h2 class="text-lg font-bold text-gray-900 mb-1">Recuperar contraseña</h2>
+            <p class="text-xs text-gray-500 mb-4" x-show="!forgotPasswordSent">Ingresá tu email y te enviaremos un enlace para restablecer tu contraseña.</p>
+            <div x-show="forgotPasswordSent" class="text-center py-2">
+              <svg class="w-10 h-10 mx-auto text-green-500 mb-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <p class="text-sm text-gray-700 font-bold mb-1">Enlace enviado</p>
+              <p class="text-xs text-gray-500">Revisá tu casilla de email (y la carpeta de spam) para restablecer tu contraseña.</p>
+            </div>
+            <form x-show="!forgotPasswordSent" @submit.prevent="sendPasswordReset()">
+              <div class="mb-3">
+                <label class="block text-xs font-bold text-gray-700 mb-1">Email</label>
+                <input x-model="forgotPasswordEmail" type="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" required>
+              </div>
+              <p x-show="forgotPasswordError" class="text-xs text-red-600 mb-3 font-bold" x-text="forgotPasswordError"></p>
+              <div class="flex gap-2">
+                <button type="button" @click="showForgotPassword = false; forgotPasswordError = ''; forgotPasswordSent = false" class="flex-1 py-2 border border-gray-300 text-gray-700 text-sm font-bold rounded-lg hover:bg-gray-50">Volver</button>
+                <button type="submit" class="flex-1 py-2 bg-indigo-700 text-white text-sm font-bold rounded-lg hover:bg-indigo-800" :disabled="loadingAuth">
+                  <span x-text="loadingAuth ? '...' : 'Enviar enlace'"></span>
+                </button>
+              </div>
+            </form>
+            <button x-show="forgotPasswordSent" type="button" @click="showForgotPassword = false; forgotPasswordSent = false; showLogin = false" class="block w-full text-center text-xs text-indigo-700 hover:text-indigo-900 mt-3 font-medium">Volver al inicio de sesión</button>
           </div>
-          <p x-show="loginError" class="text-xs text-red-600 mb-3 font-bold" x-text="loginError"></p>
-          <div class="flex gap-2">
-            <button type="button" @click="showLogin = false" class="flex-1 py-2 border border-gray-300 text-gray-700 text-sm font-bold rounded-lg hover:bg-gray-50">Cancelar</button>
-            <button type="submit" class="flex-1 py-2 bg-indigo-700 text-white text-sm font-bold rounded-lg hover:bg-indigo-800" :disabled="loadingAuth">
-              <span x-text="loadingAuth ? '...' : 'Ingresar'"></span>
-            </button>
-          </div>
-        </form>
+        </template>
       </div>
     </div>
   </main>
@@ -568,6 +601,10 @@
     loginEmail: '',
     loginPassword: '',
     loginError: '',
+    showForgotPassword: false,
+    forgotPasswordEmail: '',
+    forgotPasswordSent: false,
+    forgotPasswordError: '',
     addAlumnoError: '',
     loadingData: true,
     loadingAuth: false,
@@ -710,6 +747,23 @@
         this.loginPassword = '';
       } catch (e) {
         this.loginError = e.message || 'Error al iniciar sesión';
+      } finally {
+        this.loadingAuth = false;
+      }
+    },
+
+    async sendPasswordReset() {
+      this.loadingAuth = true;
+      this.forgotPasswordError = '';
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(
+          this.forgotPasswordEmail,
+          { redirectTo: 'https://mauricioglab.github.io/seguimiento/reset-password/' }
+        );
+        if (error) throw error;
+        this.forgotPasswordSent = true;
+      } catch (e) {
+        this.forgotPasswordError = e.message || 'Error al enviar el enlace';
       } finally {
         this.loadingAuth = false;
       }
