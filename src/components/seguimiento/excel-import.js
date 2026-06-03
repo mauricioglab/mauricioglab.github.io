@@ -196,8 +196,8 @@ function parseEncuentroSheet(sheet, encId) {
       else if (dimLower.startsWith('sm') || dimLower.startsWith('sm/po')) dim = 'SM';
 
       if (dim) {
-        const puntaje = col3 !== '' ? Number(col3) : null;
-        const feedback = cleanStr(col4);
+        const puntaje = col2 !== '' ? Number(col2) : null;
+        const feedback = cleanStr(col3);
 
         if (puntaje !== null && !isNaN(puntaje) && puntaje > 0) {
           evaluaciones.push({
