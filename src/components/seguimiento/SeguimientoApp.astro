@@ -154,9 +154,18 @@
               <tr 
                 @click="selectGrupo(grupo.id)"
                 class="bg-white cursor-pointer hover:bg-gray-50 transition shadow-sm border-b border-gray-100"
+                :class="grupoAlertas(grupo.id).length > 0 ? (grupoAlertas(grupo.id).includes('riesgo') ? 'bg-amber-50' : 'bg-blue-50') : ''"
               >
-                <td class="px-2 py-2.5 rounded-l-lg">
+                <td class="px-2 py-2.5 rounded-l-lg whitespace-nowrap">
                   <span class="text-gray-500 text-xs mr-1 font-bold" x-text="`G${grupo.id}`"></span>
+                  <template x-for="alertaId in grupoAlertas(grupo.id)" :key="alertaId">
+                    <span 
+                      class="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs ml-0.5"
+                      :class="alertaColor(alertaId)"
+                      :title="alertaNombre(alertaId)"
+                      x-text="alertaIcon(alertaId)"
+                    ></span>
+                  </template>
                 </td>
                 <td class="px-2 py-2.5 text-gray-900 font-bold" x-text="grupo.proyecto"></td>
                 <td class="px-2 py-2.5 text-gray-700 font-medium" x-text="grupo.comision || '—'"></td>
@@ -459,6 +468,22 @@
           </button>
           <span x-show="saved" class="text-xs text-green-700 font-bold">✓ Guardado</span>
         </div>
+      </div>
+
+      <!-- Alertas del grupo -->
+      <div x-show="grupoActual" class="flex flex-wrap items-center gap-2 mb-3">
+        <template x-for="at in alertasTipos" :key="at.id">
+          <button 
+            @click="toggleAlerta(selectedGrupo, at.id)"
+            class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border text-xs font-bold transition"
+            :class="tieneAlerta(selectedGrupo, at.id) ? alertaColor(at.id) : 'border-gray-200 bg-white text-gray-400 hover:bg-gray-50'"
+            :title="tieneAlerta(selectedGrupo, at.id) ? 'Quitar ' + at.nombre : 'Marcar ' + at.nombre"
+          >
+            <span x-text="alertaIcon(at.id)"></span>
+            <span x-text="at.nombre"></span>
+          </button>
+        </template>
+        <span x-show="!canEdit && grupoAlertas(selectedGrupo).length === 0" class="text-xs text-gray-400">Sin alertas</span>
       </div>
 
       <!-- Encuentro activo -->
@@ -1238,6 +1263,7 @@
     sortDir: 'asc',
     page: 1,
     perPage: 25,
+    alertasTipos: [],
     selectedGrupo: null,
     selectedEnc: null,
     activeE: 'E1',
@@ -1370,6 +1396,53 @@
       return map[val] || "text-gray-500";
     },
 
+    tieneAlerta(grupoId, alertaId) {
+      const g = this.grupos.find(g => g.id === grupoId);
+      return g && g.alertas && g.alertas.includes(alertaId);
+    },
+
+    alertaIcon(alertaId) {
+      const map = { riesgo: '⚠️', comunicarse: '📞' };
+      return map[alertaId] || '🔔';
+    },
+
+    alertaColor(alertaId) {
+      const map = { riesgo: 'bg-amber-100 text-amber-700 border-amber-300', comunicarse: 'bg-blue-100 text-blue-700 border-blue-300' };
+      return map[alertaId] || 'bg-gray-100 text-gray-700 border-gray-300';
+    },
+
+    alertaNombre(alertaId) {
+      const t = this.alertasTipos.find(a => a.id === alertaId);
+      return t ? t.nombre : alertaId;
+    },
+
+    grupoAlertas(grupoId) {
+      const g = this.grupos.find(g => g.id === grupoId);
+      return g && g.alertas ? g.alertas : [];
+    },
+
+    async toggleAlerta(grupoId, alertaId) {
+      if (!this.canEdit) return;
+      const g = this.grupos.find(g => g.id === grupoId);
+      if (!g) return;
+      const alertas = g.alertas ? [...g.alertas] : [];
+      const idx = alertas.indexOf(alertaId);
+      if (idx >= 0) {
+        alertas.splice(idx, 1);
+      } else {
+        alertas.push(alertaId);
+      }
+      const { error } = await supabase
+        .from('grupos')
+        .update({ alertas })
+        .eq('id', grupoId);
+      if (!error) {
+        g.alertas = alertas;
+      } else {
+        console.error('Error toggling alerta:', error);
+      }
+    },
+
     dimColor(dim) {
       const map = { FN: "text-indigo-700", DEV: "text-sky-700", SM: "text-amber-700" };
       return map[dim] || "";
@@ -1418,6 +1491,17 @@
         }
         if (comisionesData && comisionesData.length > 0) {
           this.comisiones = comisionesData;
+        }
+
+        const { data: alertasTiposData, error: alertasTiposError } = await supabase
+          .from('alertas_tipos')
+          .select('*');
+        
+        if (alertasTiposError) {
+          console.warn('Supabase alertas_tipos error:', alertasTiposError.message);
+        }
+        if (alertasTiposData && alertasTiposData.length > 0) {
+          this.alertasTipos = alertasTiposData;
         }
 
         const { data: gruposData, error: gruposError } = await supabase
