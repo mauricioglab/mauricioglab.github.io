@@ -37,6 +37,15 @@
           >
             +
           </button>
+          <button 
+            x-show="canEdit && (view === 'resumen' || view === 'encuentros' || view === 'stats')"
+            @click="document.getElementById('excelFileInput').click()"
+            class="w-8 h-8 flex items-center justify-center rounded-lg bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition"
+            title="Importar desde Excel"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+          </button>
+          <input type="file" id="excelFileInput" accept=".xlsx,.xls" class="hidden" @change="handleExcelImport($event)">
           <template x-if="!user">
             <button 
               @click="showLogin = true"
@@ -540,6 +549,194 @@
     </div>
   </main>
 
+  <!-- Import Excel Modal -->
+  <div 
+    x-show="showImportModal"
+    x-transition
+    class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+    @click.self="showImportModal = false"
+  >
+    <div class="bg-white rounded-xl p-6 w-full max-w-2xl border border-gray-300 shadow-lg max-h-[85vh] overflow-y-auto">
+      <h2 class="text-lg font-bold text-gray-900 mb-1">Importar desde Excel</h2>
+      <p class="text-xs text-gray-500 mb-4">Revisá los cambios antes de confirmar.</p>
+
+      <!-- Loading -->
+      <div x-show="importLoading" class="text-center py-8">
+        <div class="inline-block w-8 h-8 border-2 border-indigo-700 border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-sm text-gray-600 mt-2 font-medium" x-text="importLoadingMsg"></p>
+      </div>
+
+      <!-- Diff content -->
+      <div x-show="!importLoading && importDiff">
+        <!-- Summary -->
+        <div class="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200 text-xs">
+          <div class="grid grid-cols-4 gap-2 text-center">
+            <div>
+              <div class="text-green-700 font-extrabold text-lg" x-text="importDiff?.grupos?.added?.length + (importDiff?.integrantes?.added?.length || 0)"></div>
+              <div class="text-gray-600 font-bold">Nuevos</div>
+            </div>
+            <div>
+              <div class="text-amber-700 font-extrabold text-lg" x-text="(importDiff?.grupos?.modified?.length || 0) + (importDiff?.integrantes?.modified?.length || 0) + (importDiff?.evaluaciones?.modified?.length || 0) + (importDiff?.asistencias?.modified?.length || 0)"></div>
+              <div class="text-gray-600 font-bold">Modificados</div>
+            </div>
+            <div>
+              <div class="text-gray-400 font-extrabold text-lg" x-text="(importDiff?.grupos?.unchanged?.length || 0) + (importDiff?.integrantes?.unchanged?.length || 0) + (importDiff?.evaluaciones?.unchanged?.length || 0) + (importDiff?.asistencias?.unchanged?.length || 0)"></div>
+              <div class="text-gray-600 font-bold">Sin cambios</div>
+            </div>
+            <div>
+              <div class="text-indigo-700 font-extrabold text-lg" x-text="importTotalChanges"></div>
+              <div class="text-gray-600 font-bold">A aplicar</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grupos -->
+        <template x-if="importDiff && (importDiff.grupos.added.length > 0 || importDiff.grupos.modified.length > 0)">
+          <div class="mb-4">
+            <h3 class="text-sm font-bold text-gray-900 mb-2">Grupos</h3>
+            <div class="space-y-1">
+              <template x-for="g in importDiff.grupos.added" :key="'ga-' + g.id">
+                <div class="flex items-center gap-2 text-xs p-2 bg-green-50 rounded border border-green-200">
+                  <span class="text-green-700 font-bold">+</span>
+                  <span class="font-bold text-gray-900" x-text="`G${g.id}: ${g.proyecto}`"></span>
+                  <span class="text-gray-500" x-text="g.comision || 'Sin comisión'"></span>
+                  <span class="text-gray-400 ml-auto" x-text="`${g.integrantes.length} integrantes`"></span>
+                </div>
+              </template>
+              <template x-for="g in importDiff.grupos.modified" :key="'gm-' + g.id">
+                <div class="flex items-center gap-2 text-xs p-2 bg-amber-50 rounded border border-amber-200">
+                  <span class="text-amber-700 font-bold">~</span>
+                  <span class="font-bold text-gray-900" x-text="`G${g.id}: ${g.proyecto}`"></span>
+                  <template x-for="ch in g.changes" :key="ch.field">
+                    <span class="text-amber-700" x-text="`${ch.field}: ${ch.from} → ${ch.to}`"></span>
+                  </template>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+
+        <!-- Integrantes -->
+        <template x-if="importDiff && (importDiff.integrantes.added.length > 0 || importDiff.integrantes.modified.length > 0)">
+          <div class="mb-4">
+            <h3 class="text-sm font-bold text-gray-900 mb-2">Integrantes</h3>
+            <div class="space-y-1">
+              <template x-for="i in importDiff.integrantes.added" :key="'ia-' + i.grupo_id + i.nombre">
+                <div class="flex items-center gap-2 text-xs p-2 bg-green-50 rounded border border-green-200">
+                  <span class="text-green-700 font-bold">+</span>
+                  <span class="font-bold text-gray-900" x-text="`G${i.grupo_id}`"></span>
+                  <span class="text-gray-700" x-text="i.nombre"></span>
+                  <span class="text-gray-400" x-text="i.rol"></span>
+                  <span x-show="i.observacion" class="text-amber-600" x-text="`(${i.observacion})`"></span>
+                </div>
+              </template>
+              <template x-for="i in importDiff.integrantes.modified" :key="'im-' + i.grupo_id + i.nombre">
+                <div class="flex items-center gap-2 text-xs p-2 bg-amber-50 rounded border border-amber-200">
+                  <span class="text-amber-700 font-bold">~</span>
+                  <span class="font-bold text-gray-900" x-text="`G${i.grupo_id}`"></span>
+                  <span class="text-gray-700" x-text="i.nombre"></span>
+                  <template x-for="ch in i.changes" :key="ch.field">
+                    <span class="text-amber-700" x-text="`${ch.field}: ${ch.from} → ${ch.to}`"></span>
+                  </template>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+
+        <!-- Evaluaciones -->
+        <template x-if="importDiff && (importDiff.evaluaciones.added.length > 0 || importDiff.evaluaciones.modified.length > 0)">
+          <div class="mb-4">
+            <h3 class="text-sm font-bold text-gray-900 mb-2">Evaluaciones</h3>
+            <div class="space-y-1">
+              <template x-for="e in importDiff.evaluaciones.added" :key="'ea-' + e.grupo_id + e.encuentro_meta_id">
+                <div class="flex items-center gap-2 text-xs p-2 bg-green-50 rounded border border-green-200">
+                  <span class="text-green-700 font-bold">+</span>
+                  <span class="font-bold text-gray-900" x-text="`G${e.grupo_id} ${e.encuentro_meta_id}`"></span>
+                  <template x-for="(val, dim) in e.dimensions" :key="dim">
+                    <span class="text-gray-600" x-text="`${dim}: ${val.puntaje}`"></span>
+                  </template>
+                </div>
+              </template>
+              <template x-for="e in importDiff.evaluaciones.modified" :key="'em-' + e.grupo_id + e.encuentro_meta_id">
+                <div class="flex items-center gap-2 text-xs p-2 bg-amber-50 rounded border border-amber-200 flex-wrap">
+                  <span class="text-amber-700 font-bold">~</span>
+                  <span class="font-bold text-gray-900" x-text="`G${e.grupo_id} ${e.encuentro_meta_id}`"></span>
+                  <template x-for="ch in e.changes" :key="ch.dimension + ch.type">
+                    <span class="text-amber-700" x-text="ch.type === 'nota_added' ? `${ch.dimension}: +${ch.value}` : ch.type === 'nota_modified' ? `${ch.dimension}: ${ch.from}→${ch.to}` : ch.type === 'fb_added' ? `${ch.dimension} fb: +` : `${ch.dimension} fb: →`"></span>
+                  </template>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+
+        <!-- Asistencias -->
+        <template x-if="importDiff && (importDiff.asistencias.added.length > 0 || importDiff.asistencias.modified.length > 0)">
+          <div class="mb-4">
+            <h3 class="text-sm font-bold text-gray-900 mb-2">Asistencias</h3>
+            <div class="space-y-1 max-h-40 overflow-y-auto">
+              <template x-for="a in importDiff.asistencias.added" :key="'aa-' + a.grupo_id + a.encuentro_meta_id + a.integrante_nombre">
+                <div class="flex items-center gap-2 text-xs p-1.5 bg-green-50 rounded border border-green-200">
+                  <span class="text-green-700 font-bold">+</span>
+                  <span class="font-bold text-gray-900" x-text="`G${a.grupo_id} ${a.encuentro_meta_id}`"></span>
+                  <span class="text-gray-700" x-text="a.integrante_nombre"></span>
+                  <span class="text-green-700 font-bold" x-text="a.estado"></span>
+                </div>
+              </template>
+              <template x-for="a in importDiff.asistencias.modified" :key="'am-' + a.grupo_id + a.encuentro_meta_id + a.integrante_nombre">
+                <div class="flex items-center gap-2 text-xs p-1.5 bg-amber-50 rounded border border-amber-200">
+                  <span class="text-amber-700 font-bold">~</span>
+                  <span class="font-bold text-gray-900" x-text="`G${a.grupo_id} ${a.encuentro_meta_id}`"></span>
+                  <span class="text-gray-700" x-text="a.integrante_nombre"></span>
+                  <span class="text-red-600 line-through" x-text="a.from"></span>
+                  <span class="text-gray-400">→</span>
+                  <span class="text-green-700 font-bold" x-text="a.estado"></span>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+
+        <!-- No changes -->
+        <div x-show="importDiff && importTotalChanges === 0" class="text-center py-8">
+          <p class="text-sm text-gray-500 font-medium">No hay cambios para aplicar.</p>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div x-show="importResult" class="mb-4 p-3 bg-green-50 rounded-lg border border-green-200 text-xs">
+        <h3 class="font-bold text-green-800 mb-1">Importación exitosa</h3>
+        <p x-text="`Grupos: ${importResult?.grupos || 0} | Integrantes: ${importResult?.integrantes || 0} | Evaluaciones: ${importResult?.evaluaciones || 0} | Asistencias: ${importResult?.asistencias || 0}`"></p>
+        <template x-if="importResult?.errors?.length > 0">
+          <div class="mt-2">
+            <p class="font-bold text-red-700">Errores:</p>
+            <template x-for="err in importResult?.errors" :key="err">
+              <p class="text-red-600" x-text="err"></p>
+            </template>
+          </div>
+        </template>
+      </div>
+
+      <div class="flex gap-2 mt-4">
+        <button 
+          x-show="!importResult"
+          @click="applyImport()"
+          :disabled="importLoading || importTotalChanges === 0"
+          class="flex-1 py-2.5 bg-emerald-700 text-white text-sm font-bold rounded-lg hover:bg-emerald-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Confirmar importación
+        </button>
+        <button 
+          @click="showImportModal = false; importDiff = null; importResult = null;"
+          class="flex-1 py-2.5 border border-gray-300 text-gray-700 text-sm font-bold rounded-lg hover:bg-gray-50 transition"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Login Modal -->
   <div 
     x-show="showLogin" 
@@ -803,6 +1000,7 @@
   import Plotly from 'plotly.js-dist-min';
   import { supabase } from '../../lib/supabase';
   import { ENCUENTROS_META, ENCUENTROS_CARGADOS, GRUPOS_INICIALES } from './encuentros-data.js';
+  import { parseExcelFile, buildDiff, applyDiffToSupabase } from './excel-import.js';
 
   window.Alpine = Alpine;
 
@@ -817,6 +1015,11 @@
     showAddGrupo: false,
     showConfirmDelete: false,
     showAddComision: false,
+    showImportModal: false,
+    importLoading: false,
+    importLoadingMsg: '',
+    importDiff: null,
+    importResult: null,
     loginEmail: '',
     loginPassword: '',
     loginError: '',
@@ -2126,6 +2329,70 @@
         
       } catch (e) {
         this.addComisionError = e.message || 'Error al crear comisión';
+      }
+    },
+    
+    get importTotalChanges() {
+      if (!this.importDiff) return 0;
+      const d = this.importDiff;
+      return (d.grupos?.added?.length || 0) 
+        + (d.grupos?.modified?.length || 0)
+        + (d.integrantes?.added?.length || 0)
+        + (d.integrantes?.modified?.length || 0)
+        + (d.evaluaciones?.added?.length || 0)
+        + (d.evaluaciones?.modified?.length || 0)
+        + (d.asistencias?.added?.length || 0)
+        + (d.asistencias?.modified?.length || 0);
+    },
+    
+    async handleExcelImport(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      this.importLoading = true;
+      this.importLoadingMsg = 'Leyendo archivo Excel...';
+      this.importDiff = null;
+      this.importResult = null;
+      this.showImportModal = true;
+      
+      try {
+        const excelData = await parseExcelFile(file);
+        
+        this.importLoadingMsg = 'Comparando con datos existentes...';
+        
+        const { data: integrantesData } = await supabase
+          .from('integrantes')
+          .select('*');
+        
+        const diff = buildDiff(excelData, this.grupos, this.data, this.evalMeta, integrantesData || []);
+        this.importDiff = diff;
+        this.importLoading = false;
+      } catch (e) {
+        console.error('Error importando Excel:', e);
+        alert('Error al leer el archivo Excel: ' + e.message);
+        this.showImportModal = false;
+        this.importLoading = false;
+      }
+      
+      event.target.value = '';
+    },
+    
+    async applyImport() {
+      if (!this.importDiff || this.importTotalChanges === 0) return;
+      
+      this.importLoading = true;
+      this.importLoadingMsg = 'Aplicando cambios a la base de datos...';
+      
+      try {
+        const result = await applyDiffToSupabase(this.importDiff, supabase);
+        this.importResult = result;
+        this.importLoading = false;
+        
+        await this.loadFromSupabase();
+      } catch (e) {
+        console.error('Error aplicando importación:', e);
+        alert('Error al aplicar cambios: ' + e.message);
+        this.importLoading = false;
       }
     }
   }));

@@ -21,7 +21,8 @@
     "reading-time": "^1.5.0",
     "shiki": "^3.21.0",
     "survey-core": "^2.5.24",
-    "survey-js-ui": "^2.5.24"
+    "survey-js-ui": "^2.5.24",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@astrojs/tailwind": "^6.0.2",
