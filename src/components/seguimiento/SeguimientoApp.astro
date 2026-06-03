@@ -150,6 +150,7 @@
                       :class="notaBadgeClass(calcNota(calcPct(data[enc.id]?.[grupo.id])))"
                       x-text="calcNota(calcPct(data[enc.id]?.[grupo.id]))"
                     ></span>
+                    <span class="block text-[10px] text-gray-400 mt-0.5" x-text="calcPctStr(calcPct(data[enc.id]?.[grupo.id]))"></span>
                   </td>
                 </template>
                 <td class="px-2 py-2.5 text-center rounded-r-lg">
@@ -158,6 +159,7 @@
                     :class="notaBadgeClass(calcNota(promedioEncuentros(grupo.id)))"
                     x-text="calcNota(promedioEncuentros(grupo.id))"
                   ></span>
+                  <span class="block text-[10px] text-gray-400 mt-0.5" x-text="calcPctStr(promedioEncuentros(grupo.id))"></span>
                 </td>
               </tr>
             </template>
@@ -243,12 +245,12 @@
           </div>
         </div>
         
-        <!-- Habilitados -->
+        <!-- Promocionados -->
         <div class="bg-white rounded-xl p-4 border border-green-200 shadow-sm">
           <div class="flex items-start justify-between mb-2">
             <div>
-              <div class="text-[10px] text-green-700 font-bold uppercase tracking-wider">Habilitados</div>
-              <div class="text-3xl font-extrabold text-green-700 leading-tight" x-text="statsResumen.habilitados"></div>
+              <div class="text-[10px] text-green-700 font-bold uppercase tracking-wider">Promocionados</div>
+              <div class="text-3xl font-extrabold text-green-700 leading-tight" x-text="statsResumen.promocionados"></div>
             </div>
             <div class="w-9 h-9 rounded-lg bg-green-50 flex items-center justify-center text-green-600">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -256,21 +258,21 @@
           </div>
           <div class="mb-1">
             <div class="w-full bg-green-50 rounded-full h-1.5">
-              <div class="bg-green-500 h-1.5 rounded-full transition-all duration-500" :style="`width: ${statsResumen.pctHab}%`"></div>
+              <div class="bg-green-500 h-1.5 rounded-full transition-all duration-500" :style="`width: ${statsResumen.pctProm}%`"></div>
             </div>
           </div>
           <div class="flex justify-between text-[10px] font-bold">
-            <span class="text-green-700" x-text="`${statsResumen.pctHab}% de evaluados`"></span>
-            <span x-show="statsResumen.habilitados > 0" class="text-green-600">≥ 8 pts</span>
+            <span class="text-green-700" x-text="`${statsResumen.pctProm}% de evaluados`"></span>
+            <span x-show="statsResumen.promocionados > 0" class="text-green-600">Nota ≥ 7</span>
           </div>
         </div>
         
-        <!-- Condicionales -->
+        <!-- Regulares -->
         <div class="bg-white rounded-xl p-4 border border-amber-200 shadow-sm">
           <div class="flex items-start justify-between mb-2">
             <div>
-              <div class="text-[10px] text-amber-700 font-bold uppercase tracking-wider">Condicionales</div>
-              <div class="text-3xl font-extrabold text-amber-700 leading-tight" x-text="statsResumen.condicionales"></div>
+              <div class="text-[10px] text-amber-700 font-bold uppercase tracking-wider">Regulares</div>
+              <div class="text-3xl font-extrabold text-amber-700 leading-tight" x-text="statsResumen.regulares"></div>
             </div>
             <div class="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
@@ -278,21 +280,21 @@
           </div>
           <div class="mb-1">
             <div class="w-full bg-amber-50 rounded-full h-1.5">
-              <div class="bg-amber-500 h-1.5 rounded-full transition-all duration-500" :style="`width: ${statsResumen.pctCond}%`"></div>
+              <div class="bg-amber-500 h-1.5 rounded-full transition-all duration-500" :style="`width: ${statsResumen.pctReg}%`"></div>
             </div>
           </div>
           <div class="flex justify-between text-[10px] font-bold">
-            <span class="text-amber-700" x-text="`${statsResumen.pctCond}% de evaluados`"></span>
-            <span x-show="statsResumen.condicionales > 0" class="text-amber-600">6 – 7.9 pts</span>
+            <span class="text-amber-700" x-text="`${statsResumen.pctReg}% de evaluados`"></span>
+            <span x-show="statsResumen.regulares > 0" class="text-amber-600">Nota 4 – 6.9</span>
           </div>
         </div>
         
-        <!-- Críticos -->
+        <!-- Libres -->
         <div class="bg-white rounded-xl p-4 border border-red-200 shadow-sm">
           <div class="flex items-start justify-between mb-2">
             <div>
-              <div class="text-[10px] text-red-700 font-bold uppercase tracking-wider">Críticos</div>
-              <div class="text-3xl font-extrabold text-red-700 leading-tight" x-text="statsResumen.criticos"></div>
+              <div class="text-[10px] text-red-700 font-bold uppercase tracking-wider">Libres</div>
+              <div class="text-3xl font-extrabold text-red-700 leading-tight" x-text="statsResumen.libres"></div>
             </div>
             <div class="w-9 h-9 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
@@ -300,12 +302,12 @@
           </div>
           <div class="mb-1">
             <div class="w-full bg-red-50 rounded-full h-1.5">
-              <div class="bg-red-500 h-1.5 rounded-full transition-all duration-500" :style="`width: ${statsResumen.pctCrit}%`"></div>
+              <div class="bg-red-500 h-1.5 rounded-full transition-all duration-500" :style="`width: ${statsResumen.pctLib}%`"></div>
             </div>
           </div>
           <div class="flex justify-between text-[10px] font-bold">
-            <span class="text-red-700" x-text="`${statsResumen.pctCrit}% de evaluados`"></span>
-            <span x-show="statsResumen.criticos > 0" class="text-red-600">&lt; 6 pts</span>
+            <span class="text-red-700" x-text="`${statsResumen.pctLib}% de evaluados`"></span>
+            <span x-show="statsResumen.libres > 0" class="text-red-600">Nota &lt; 4</span>
           </div>
         </div>
       </div>
@@ -488,19 +490,21 @@
 
         <!-- Nota calculada -->
         <div class="flex items-center justify-end gap-2 mt-2">
-          <span class="text-sm text-gray-700 font-bold">Nota del encuentro:</span>
+          <span class="text-sm text-gray-700 font-bold">Nota:</span>
           <span 
             class="inline-flex items-center justify-center min-w-[3rem] h-8 rounded-lg text-sm font-bold"
             :class="notaBadgeClass(calcNota(calcPct(localData[activeE])))"
             x-text="calcNota(calcPct(localData[activeE]))"
           ></span>
+          <span class="text-xs text-gray-400" x-text="calcPctStr(calcPct(localData[activeE]))"></span>
           <span class="text-gray-400 mx-1">|</span>
-          <span class="text-sm text-gray-600 font-medium">Promedio grupo:</span>
+          <span class="text-sm text-gray-600 font-medium">Promedio:</span>
           <span 
             class="inline-flex items-center justify-center min-w-[3rem] h-8 rounded-lg text-sm font-bold"
             :class="notaBadgeClass(calcNota(promedioEncuentros(selectedGrupo)))"
             x-text="calcNota(promedioEncuentros(selectedGrupo))"
           ></span>
+          <span class="text-xs text-gray-400" x-text="calcPctStr(promedioEncuentros(selectedGrupo))"></span>
         </div>
       </div>
     </div>
@@ -538,6 +542,7 @@
               :class="notaBadgeClass(calcNota(calcPct(data[selectedEnc]?.[grupo.id])))"
               x-text="calcNota(calcPct(data[selectedEnc]?.[grupo.id]))"
             ></span>
+            <span class="text-[10px] text-gray-400" x-text="calcPctStr(calcPct(data[selectedEnc]?.[grupo.id]))"></span>
             <button 
               x-show="canEdit"
               @click="editGrupoEncuentro(grupo.id)"
@@ -629,15 +634,27 @@
                   <span class="font-bold text-sm text-gray-900 truncate" x-text="`G${grp.id} · ${grp.proyecto}`"></span>
                   <span x-show="grp.comision" class="text-xs text-gray-600" x-text="grp.comision"></span>
                 </div>
-                <div class="flex items-center gap-2 mt-0.5" x-show="grp.projectedAvg !== null">
+                <div class="flex items-center gap-1 mt-0.5" x-show="grp.projectedAvg !== null || grp.currentAvg !== null">
                   <span class="text-xs text-gray-500">Promedio:</span>
-                  <span class="text-xs" x-text="grp.currentAvg !== null ? grp.currentAvg : '—'"></span>
-                  <span x-show="grp.currentAvg !== null && grp.projectedAvg !== null && grp.projectedAvg !== grp.currentAvg" class="text-xs text-gray-400">→</span>
-                  <span x-show="grp.currentAvg !== null && grp.projectedAvg !== null && grp.projectedAvg !== grp.currentAvg" class="text-xs font-bold" :class="grp.projectedAvg > grp.currentAvg ? 'text-green-700' : grp.projectedAvg < grp.currentAvg ? 'text-red-600' : 'text-gray-500'" x-text="grp.projectedAvg"></span>
-                  <span x-show="grp.currentAvg === null && grp.projectedAvg !== null" class="text-xs text-gray-400">→</span>
-                  <span x-show="grp.currentAvg === null && grp.projectedAvg !== null" class="text-xs font-bold text-green-700" x-text="grp.projectedAvg"></span>
-                  <span x-show="grp.currentAvg !== null && grp.projectedAvg !== null && grp.projectedAvg > grp.currentAvg" class="text-xs text-green-600">↑</span>
-                  <span x-show="grp.currentAvg !== null && grp.projectedAvg !== null && grp.projectedAvg < grp.currentAvg" class="text-xs text-red-500">↓</span>
+                  <span class="text-xs font-medium" x-text="grp.currentAvg || '—'"></span>
+                  <template x-if="grp.currentPct">
+                    <span class="text-[10px] text-gray-400" x-text="grp.currentPct"></span>
+                  </template>
+                  <template x-if="grp.currentAvg !== null && grp.projectedAvg !== null && grp.projectedAvg !== grp.currentAvg">
+                    <span class="text-xs text-gray-400">→</span>
+                  </template>
+                  <template x-if="grp.currentAvg !== null && grp.projectedAvg !== null && grp.projectedAvg !== grp.currentAvg">
+                    <span class="text-xs font-bold" :class="parseFloat(grp.projectedAvg) > parseFloat(grp.currentAvg) ? 'text-green-700' : 'text-red-600'" x-text="grp.projectedAvg"></span>
+                  </template>
+                  <template x-if="grp.currentAvg !== null && grp.projectedAvg !== null && parseFloat(grp.projectedAvg) > parseFloat(grp.currentAvg)">
+                    <span class="text-xs text-green-600">↑</span>
+                  </template>
+                  <template x-if="grp.currentAvg !== null && grp.projectedAvg !== null && parseFloat(grp.projectedAvg) < parseFloat(grp.currentAvg)">
+                    <span class="text-xs text-red-500">↓</span>
+                  </template>
+                  <template x-if="grp.currentAvg === null && grp.projectedAvg !== null">
+                    <span class="text-xs font-bold text-green-700" x-text="grp.projectedAvg"></span>
+                  </template>
                 </div>
                 <template x-for="ch in grp.grupoChanges">
                   <span class="text-xs text-amber-700 font-medium" x-text="`${ch.field}: ${ch.from} → ${ch.to}`"></span>
@@ -1202,7 +1219,7 @@
     statsComisionFilter: '',
     statsPracticaFilter: '',
     statsEncuentroFilter: '',
-    statsResumen: { evaluados: 0, habilitados: 0, condicionales: 0, criticos: 0 },
+    statsResumen: { evaluados: 0, promocionados: 0, regulares: 0, libres: 0 },
     
     encuentrosMeta: ENCUENTROS_META,
     grupos: [],
@@ -1243,28 +1260,35 @@
     },
 
     calcNota(pct) {
-      return pct !== null ? (pct * 10).toFixed(1) : "—";
+      if (pct === null || pct === undefined) return "—";
+      const nota = pct < 0.6 ? 1 + pct * 5 : pct * 15 - 5;
+      return nota.toFixed(1);
+    },
+
+    calcPctStr(pct) {
+      if (pct === null || pct === undefined) return "—";
+      return Math.round(pct * 100) + "%";
     },
 
     notaColor(nota) {
       if (nota === "—") return "text-gray-400";
       const n = parseFloat(nota);
-      if (n >= 8) return "text-green-700";
-      if (n >= 6) return "text-amber-700";
+      if (n >= 7) return "text-green-700";
+      if (n >= 4) return "text-amber-700";
       return "text-red-700";
     },
 
     notaBadgeClass(nota) {
       if (nota === "—") return "bg-gray-100 text-gray-400";
       const n = parseFloat(nota);
-      if (n >= 8) return "bg-green-100 text-green-700";
-      if (n >= 6) return "bg-amber-100 text-amber-700";
+      if (n >= 7) return "bg-green-100 text-green-700";
+      if (n >= 4) return "bg-amber-100 text-amber-700";
       return "bg-red-100 text-red-700";
     },
 
     pctColor(pct) {
-      if (pct >= 80) return "bg-green-600";
-      if (pct >= 60) return "bg-amber-500";
+      if (pct >= 0.8) return "bg-green-600";
+      if (pct >= 0.6) return "bg-amber-500";
       return "bg-red-600";
     },
 
@@ -1528,7 +1552,9 @@
         const v = this.data[e.id]?.[grupoId]?.[dim];
         if (v !== undefined && v !== null && v !== "") { sum += Number(v); count++; }
       });
-      return count ? (sum / count).toFixed(1) : "—";
+      if (!count) return "—";
+      const pct = sum / count / 10;
+      return this.calcNota(pct);
     },
 
     selectGrupo(id) {
@@ -1618,18 +1644,13 @@
           if (v !== undefined && v !== null && v !== "") { sum += Number(v); count++; }
         });
       });
-      return count ? (sum / count) * 10 : 0;
+      const avgPct = count ? (sum / count) / 10 : 0;
+      return count ? parseFloat(this.calcNota(avgPct)) : 0;
     },
 
     dimAvg(dim) {
-      let sum = 0, count = 0;
-      this.gruposConProyecto.forEach(g => {
-        ENCUENTROS_META.forEach(e => {
-          const v = this.data[e.id]?.[g.id]?.[dim];
-          if (v !== undefined && v !== null && v !== "") { sum += Number(v); count++; }
-        });
-      });
-      return count ? (sum / count).toFixed(1) : "—";
+      const prom = this.dimProm(dim);
+      return prom > 0 ? prom.toFixed(1) : "—";
     },
 
     encProm(encId) {
@@ -1637,19 +1658,14 @@
       this.gruposConProyecto.forEach(g => {
         const sc = this.data[encId]?.[g.id];
         const p = this.calcPct(sc);
-        if (p !== null) { sum += p * 10; count++; }
+        if (p !== null) { sum += parseFloat(this.calcNota(p)); count++; }
       });
-      return count ? (sum / count) * 10 : 0;
+      return count ? sum / count : 0;
     },
 
     encAvg(encId) {
-      let sum = 0, count = 0;
-      this.gruposConProyecto.forEach(g => {
-        const sc = this.data[encId]?.[g.id];
-        const p = this.calcPct(sc);
-        if (p !== null) { sum += p * 10; count++; }
-      });
-      return count ? (sum / count).toFixed(1) : "—";
+      const prom = this.encProm(encId);
+      return prom > 0 ? prom.toFixed(1) : "—";
     },
 
     encCount(encId) {
@@ -1663,8 +1679,8 @@
     },
 
     encPromColor(encId) {
-      const avg = this.encProm(encId) / 10;
-      return this.pctColor(avg * 100);
+      const avg = this.encProm(encId);
+      return this.pctColor(avg >= 7 ? 0.8 : avg >= 4 ? 0.6 : 0.3);
     },
 
     notaColorClass(nota) {
@@ -1685,26 +1701,26 @@
 
     calcStatsResumen() {
       const grupos = this.gruposStatsFiltrados();
-      let evaluados = 0, habilitados = 0, condicionales = 0, criticos = 0;
+      let evaluados = 0, promocionados = 0, regulares = 0, libres = 0;
       const total = grupos.length;
       
       grupos.forEach(g => {
         const prom = this.promedioEncuentros(g.id);
         if (prom !== null) {
           evaluados++;
-          const nota = prom * 10;
-          if (nota >= 8) habilitados++;
-          else if (nota >= 6) condicionales++;
-          else criticos++;
+          const nota = parseFloat(this.calcNota(prom));
+          if (nota >= 7) promocionados++;
+          else if (nota >= 4) regulares++;
+          else libres++;
         }
       });
       
-      const pctHab = evaluados > 0 ? Math.round((habilitados / evaluados) * 100) : 0;
-      const pctCond = evaluados > 0 ? Math.round((condicionales / evaluados) * 100) : 0;
-      const pctCrit = evaluados > 0 ? Math.round((criticos / evaluados) * 100) : 0;
+      const pctProm = evaluados > 0 ? Math.round((promocionados / evaluados) * 100) : 0;
+      const pctReg = evaluados > 0 ? Math.round((regulares / evaluados) * 100) : 0;
+      const pctLib = evaluados > 0 ? Math.round((libres / evaluados) * 100) : 0;
       const pctEval = total > 0 ? Math.round((evaluados / total) * 100) : 0;
       
-      this.statsResumen = { evaluados, habilitados, condicionales, criticos, total, sinEvaluar: total - evaluados, pctHab, pctCond, pctCrit, pctEval };
+      this.statsResumen = { evaluados, promocionados, regulares, libres, total, sinEvaluar: total - evaluados, pctProm, pctReg, pctLib, pctEval };
     },
 
     getEvolucionData() {
@@ -1724,13 +1740,13 @@
           });
           if (count > 0) {
             x.push(enc.id);
-            y.push(sum / count);
+            y.push(parseFloat(this.calcNota(sum / count / 10)));
           }
         });
         return { x, y, mode: 'lines+markers', name: dim, line: { color: colors[idx], width: 3 }, marker: { size: 8 } };
       });
       
-      return { data: traces, layout: { margin: { t: 20, r: 20, b: 40, l: 40 }, xaxis: { title: 'Encuentro' }, yaxis: { title: 'Nota promedio', range: [0, 10] }, legend: { orientation: 'h', y: -0.2 }, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { family: 'sans-serif', size: 12 } } };
+      return { data: traces, layout: { margin: { t: 20, r: 20, b: 40, l: 40 }, xaxis: { title: 'Encuentro' }, yaxis: { title: 'Nota', range: [0, 10] }, legend: { orientation: 'h', y: -0.2 }, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { family: 'sans-serif', size: 12 } } };
     },
 
     getScatterData() {
@@ -1757,12 +1773,13 @@
           });
           
           if (count > 0 && total > 0) {
-            const notaAvg = sum / count;
+            const pctAvg = sum / count / 10;
+            const notaAvg = parseFloat(this.calcNota(pctAvg));
             const asistPct = (presentes / total) * 100;
             x.push(asistPct);
             y.push(notaAvg);
             text.push(`G${g.id} · ${enc.id}`);
-            color.push(notaAvg >= 7 ? '#10b981' : notaAvg >= 5 ? '#f59e0b' : '#ef4444');
+            color.push(notaAvg >= 7 ? '#10b981' : notaAvg >= 4 ? '#f59e0b' : '#ef4444');
             size.push(10 + total * 2);
           }
         });
@@ -1781,7 +1798,7 @@
         layout: {
           margin: { t: 20, r: 20, b: 40, l: 40 },
           xaxis: { title: '% Asistencia', range: [0, 105] },
-          yaxis: { title: 'Nota promedio', range: [0, 10] },
+          yaxis: { title: 'Nota', range: [0, 10] },
           paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
           font: { family: 'sans-serif', size: 12 }
         }
@@ -1794,7 +1811,7 @@
       
       grupos.forEach(g => {
         const dims = ['FN','DEV','SM'];
-        const avgs = [];
+        const notas = [];
         
         ENCUENTROS_META.forEach(enc => {
           let sum = 0, count = 0;
@@ -1802,15 +1819,15 @@
             const v = this.data[enc.id]?.[g.id]?.[d];
             if (v !== undefined && v !== null && v !== '') { sum += Number(v); count++; }
           });
-          avgs.push(count > 0 ? sum / count : null);
+          notas.push(count > 0 ? parseFloat(this.calcNota(sum / count / 10)) : null);
         });
         
-        for (let i = 1; i < avgs.length; i++) {
-          if (avgs[i] !== null && avgs[i-1] !== null) {
-            const delta = avgs[i] - avgs[i-1];
+        for (let i = 1; i < notas.length; i++) {
+          if (notas[i] !== null && notas[i-1] !== null) {
+            const delta = notas[i] - notas[i-1];
             y.push(`G${g.id}: ${ENCUENTROS_META[i-1].id} → ${ENCUENTROS_META[i].id}`);
             x.push(delta);
-            text.push(`${delta >= 0 ? '+' : ''}${delta.toFixed(2)} pts`);
+            text.push(`${delta >= 0 ? '+' : ''}${delta.toFixed(1)} nota`);
           }
         }
       });
@@ -1821,7 +1838,7 @@
         data: [{ x, y, type: 'bar', orientation: 'h', marker: { color: x.map(v => v >= 0 ? '#10b981' : '#ef4444') }, text, textposition: 'auto', hovertemplate: '%{text}<extra></extra>' }],
         layout: {
           margin: { t: 20, r: 20, b: 40, l: 160 },
-          xaxis: { title: 'Δ Nota (pts)' },
+          xaxis: { title: 'Δ Nota' },
           paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
           font: { family: 'sans-serif', size: 12 }
         }
@@ -1849,7 +1866,7 @@
         data: traces,
         layout: {
           margin: { t: 20, r: 20, b: 40, l: 40 },
-          xaxis: { title: 'Nota', range: [0, 10] },
+          xaxis: { title: 'Completitud (%)', range: [0, 10] },
           yaxis: { title: 'Frecuencia' },
           barmode: 'overlay',
           legend: { orientation: 'h', y: -0.2 },
@@ -1874,9 +1891,9 @@
           grupos.filter(g => (g.comision || 'Sin comisión') === com).forEach(g => {
             const sc = this.data[enc.id]?.[g.id];
             const p = this.calcPct(sc);
-            if (p !== null) { sum += p * 10; count++; }
+            if (p !== null) { sum += p; count++; }
           });
-          row.push(count > 0 ? (sum / count).toFixed(1) : null);
+          row.push(count > 0 ? parseFloat(this.calcNota(sum / count)) : null);
         });
         z.push(row);
       });
@@ -1898,23 +1915,23 @@
 
     getEstadosData() {
       const grupos = this.gruposStatsFiltrados();
-      let hab = 0, cond = 0, crit = 0, ne = 0;
+      let prom = 0, reg = 0, lib = 0, ne = 0;
       
       grupos.forEach(g => {
-        const prom = this.promedioEncuentros(g.id);
-        if (prom === null) ne++;
+        const promVal = this.promedioEncuentros(g.id);
+        if (promVal === null) ne++;
         else {
-          const nota = prom * 10;
-          if (nota >= 8) hab++;
-          else if (nota >= 6) cond++;
-          else crit++;
+          const nota = parseFloat(this.calcNota(promVal));
+          if (nota >= 7) prom++;
+          else if (nota >= 4) reg++;
+          else lib++;
         }
       });
       
       return {
         data: [{
-          values: [hab, cond, crit, ne],
-          labels: ['Habilitados', 'Condicionales', 'Críticos', 'Sin evaluar'],
+          values: [prom, reg, lib, ne],
+          labels: ['Promocionados', 'Regulares', 'Libres', 'Sin evaluar'],
           type: 'pie',
           hole: 0.45,
           marker: { colors: ['#10b981', '#f59e0b', '#ef4444', '#9ca3af'] },
@@ -2643,7 +2660,8 @@
         grp.encuentrosOrdered = encIds.filter(eid => grp.encuentros[eid]).map(eid => ({ id: eid, ...grp.encuentros[eid] }));
         
         const g = this.grupos.find(g => g.id === grp.id);
-        grp.currentAvg = this.promedioEncuentros(grp.id);
+        grp.currentAvg = this.calcNota(this.promedioEncuentros(grp.id));
+        grp.currentPct = this.calcPctStr(this.promedioEncuentros(grp.id));
         
         const projectedData = {};
         ENCUENTROS_META.forEach(enc => {
@@ -2685,7 +2703,9 @@
             count++;
           }
         });
-        grp.projectedAvg = count > 0 ? (sum / count * 10).toFixed(1) : null;
+        const projectedPct = count > 0 ? sum / count : null;
+        grp.projectedAvg = projectedPct !== null ? this.calcNota(projectedPct) : null;
+        grp.projectedPct = projectedPct !== null ? this.calcPctStr(projectedPct) : null;
       });
       return result;
     },
