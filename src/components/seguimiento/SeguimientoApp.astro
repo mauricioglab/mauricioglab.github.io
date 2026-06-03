@@ -558,7 +558,7 @@
     class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
     @click.self="showImportModal = false"
   >
-    <div class="bg-white rounded-xl p-6 w-full max-w-2xl border border-gray-300 shadow-lg max-h-[85vh] overflow-y-auto">
+    <div class="bg-white rounded-xl p-6 w-full max-w-5xl border border-gray-300 shadow-lg max-h-[90vh] flex flex-col">
       <h2 class="text-lg font-bold text-gray-900 mb-1">Importar desde Excel</h2>
       <p class="text-xs text-gray-500 mb-3">Revisá los cambios antes de confirmar.</p>
 
@@ -585,45 +585,64 @@
       </div>
 
       <!-- Diff content grouped by group -->
-      <div x-show="!importLoading && importDiff" class="space-y-3">
+      <div x-show="!importLoading && importDiff" class="space-y-3 overflow-y-auto flex-1 min-h-0">
         <!-- Summary -->
         <div class="p-3 bg-gray-50 rounded-lg border border-gray-200 text-xs">
           <div class="grid grid-cols-4 gap-2 text-center">
             <div>
-              <div class="text-green-700 font-extrabold text-lg" x-text="importDiff?.grupos?.added?.length + (importDiff?.integrantes?.added?.length || 0)"></div>
+              <div class="text-green-700 font-extrabold text-lg" x-text="importSelectedNew"></div>
               <div class="text-gray-600 font-bold">Nuevos</div>
             </div>
             <div>
-              <div class="text-amber-700 font-extrabold text-lg" x-text="(importDiff?.grupos?.modified?.length || 0) + (importDiff?.integrantes?.modified?.length || 0) + (importDiff?.evaluaciones?.modified?.length || 0) + (importDiff?.asistencias?.modified?.length || 0)"></div>
+              <div class="text-amber-700 font-extrabold text-lg" x-text="importSelectedModified"></div>
               <div class="text-gray-600 font-bold">Modificados</div>
             </div>
             <div>
-              <div class="text-gray-400 font-extrabold text-lg" x-text="(importDiff?.grupos?.unchanged?.length || 0) + (importDiff?.integrantes?.unchanged?.length || 0)"></div>
-              <div class="text-gray-600 font-bold">Sin cambios</div>
+              <div class="text-gray-400 font-extrabold text-lg" x-text="importTotalChanges"></div>
+              <div class="text-gray-600 font-bold">Total</div>
             </div>
             <div>
-              <div class="text-indigo-700 font-extrabold text-lg" x-text="importTotalChanges"></div>
-              <div class="text-gray-600 font-bold">A aplicar</div>
+              <div class="text-red-600 font-extrabold text-lg" x-text="importSelectedOverwrites"></div>
+              <div class="text-gray-600 font-bold">Se sobreescriben</div>
             </div>
           </div>
-          <template x-if="((importDiff?.evaluaciones?.modified?.length || 0) + (importDiff?.asistencias?.modified?.length || 0) + (importDiff?.grupos?.modified?.length || 0) + (importDiff?.integrantes?.modified?.length || 0)) > 0">
-            <div class="mt-2 pt-2 border-t border-amber-200 text-center">
-              <span class="text-amber-700 font-bold">⚠ Se sobreescribirán <span x-text="(importDiff?.evaluaciones?.modified?.length || 0) + (importDiff?.asistencias?.modified?.length || 0) + (importDiff?.grupos?.modified?.length || 0) + (importDiff?.integrantes?.modified?.length || 0)"></span> valores existentes</span>
-            </div>
-          </template>
         </div>
 
         <!-- Grouped by group -->
         <template x-for="grp in importDiffByGroup" :key="'grp-' + grp.id">
-          <div class="rounded-lg border" :class="grp.isNew ? 'border-green-300 bg-green-50/30' : 'border-gray-200 bg-white'">
-            <!-- Group header -->
-            <div class="px-3 py-2 flex items-center gap-2 border-b" :class="grp.isNew ? 'border-green-300 bg-green-50' : 'border-gray-200 bg-gray-50'">
-              <span class="text-xs font-bold px-1.5 py-0.5 rounded" :class="grp.isNew ? 'bg-green-600 text-white' : 'bg-gray-500 text-white'" x-text="grp.isNew ? '+ Nuevo' : '~ Cambios'"></span>
-              <span class="font-bold text-sm text-gray-900" x-text="`G${grp.id} · ${grp.proyecto}`"></span>
-              <span x-show="grp.comision" class="text-xs text-gray-600" x-text="grp.comision"></span>
-              <template x-for="ch in grp.grupoChanges">
-                <span class="text-xs text-amber-700 font-medium" x-text="`${ch.field}: ${ch.from} → ${ch.to}`"></span>
-              </template>
+          <div class="rounded-lg border transition-opacity" :class="importGroupSelection[grp.id] !== false ? (grp.isNew ? 'border-green-300 bg-green-50/30 opacity-100' : 'border-gray-200 bg-white opacity-100') : 'border-gray-300 bg-gray-50 opacity-50'">
+            <!-- Group header with radio + projected average -->
+            <div class="px-3 py-2 flex items-center gap-3 border-b" :class="grp.isNew ? 'border-green-300 bg-green-50' : 'border-gray-200 bg-gray-50'">
+              <div class="flex items-center gap-2 flex-shrink-0">
+                <label class="flex items-center gap-1 cursor-pointer">
+                  <input type="radio" :name="'import-grp-' + grp.id" value="1" class="w-3.5 h-3.5 text-emerald-600 focus:ring-emerald-500 border-gray-300" :checked="importGroupSelection[grp.id] !== false" @change="importGroupSelection[grp.id] = true">
+                  <span class="text-xs font-bold text-emerald-700">Sí</span>
+                </label>
+                <label class="flex items-center gap-1 cursor-pointer">
+                  <input type="radio" :name="'import-grp-' + grp.id" value="0" class="w-3.5 h-3.5 text-gray-400 focus:ring-gray-400 border-gray-300" :checked="importGroupSelection[grp.id] === false" @change="importGroupSelection[grp.id] = false">
+                  <span class="text-xs font-bold text-gray-500">No</span>
+                </label>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold px-1.5 py-0.5 rounded" :class="grp.isNew ? 'bg-green-600 text-white' : 'bg-gray-500 text-white'" x-text="grp.isNew ? '+ Nuevo' : '~ Cambios'"></span>
+                  <span class="font-bold text-sm text-gray-900 truncate" x-text="`G${grp.id} · ${grp.proyecto}`"></span>
+                  <span x-show="grp.comision" class="text-xs text-gray-600" x-text="grp.comision"></span>
+                </div>
+                <div class="flex items-center gap-2 mt-0.5" x-show="grp.projectedAvg !== null">
+                  <span class="text-xs text-gray-500">Promedio:</span>
+                  <span class="text-xs" x-text="grp.currentAvg !== null ? grp.currentAvg : '—'"></span>
+                  <span x-show="grp.currentAvg !== null && grp.projectedAvg !== null && grp.projectedAvg !== grp.currentAvg" class="text-xs text-gray-400">→</span>
+                  <span x-show="grp.currentAvg !== null && grp.projectedAvg !== null && grp.projectedAvg !== grp.currentAvg" class="text-xs font-bold" :class="grp.projectedAvg > grp.currentAvg ? 'text-green-700' : grp.projectedAvg < grp.currentAvg ? 'text-red-600' : 'text-gray-500'" x-text="grp.projectedAvg"></span>
+                  <span x-show="grp.currentAvg === null && grp.projectedAvg !== null" class="text-xs text-gray-400">→</span>
+                  <span x-show="grp.currentAvg === null && grp.projectedAvg !== null" class="text-xs font-bold text-green-700" x-text="grp.projectedAvg"></span>
+                  <span x-show="grp.currentAvg !== null && grp.projectedAvg !== null && grp.projectedAvg > grp.currentAvg" class="text-xs text-green-600">↑</span>
+                  <span x-show="grp.currentAvg !== null && grp.projectedAvg !== null && grp.projectedAvg < grp.currentAvg" class="text-xs text-red-500">↓</span>
+                </div>
+                <template x-for="ch in grp.grupoChanges">
+                  <span class="text-xs text-amber-700 font-medium" x-text="`${ch.field}: ${ch.from} → ${ch.to}`"></span>
+                </template>
+              </div>
             </div>
 
             <div class="px-3 py-2 space-y-2">
@@ -773,9 +792,9 @@
       </div>
 
       <!-- Results -->
-      <div x-show="importResult" class="mb-4 p-3 bg-green-50 rounded-lg border border-green-200 text-xs">
+      <div x-show="importResult" class="mt-3 p-3 bg-green-50 rounded-lg border border-green-200 text-xs">
         <h3 class="font-bold text-green-800 mb-1">Importación exitosa</h3>
-        <p x-text="`Grupos: ${importResult?.grupos || 0} | Integrantes: ${importResult?.integrantes || 0} | Evaluaciones: ${importResult?.evaluaciones || 0} | Asistencias: ${importResult?.asistencias || 0}`"></p>
+        <p x-text="'Grupos: ' + (importResult?.grupos || 0) + ' | Integrantes: ' + (importResult?.integrantes || 0) + ' | Evaluaciones: ' + (importResult?.evaluaciones || 0) + ' | Asistencias: ' + (importResult?.asistencias || 0)"></p>
         <template x-if="importResult?.errors?.length > 0">
           <div class="mt-2">
             <p class="font-bold text-red-700">Errores:</p>
@@ -786,7 +805,7 @@
         </template>
       </div>
 
-      <div class="flex gap-2 mt-4">
+      <div class="flex gap-2 mt-3 flex-shrink-0">
         <button 
           x-show="!importResult && !importDryRun"
           @click="applyImport()"
@@ -1157,6 +1176,7 @@
     importDiff: null,
     importResult: null,
     importDryRun: true,
+    importGroupSelection: {},
     loginEmail: '',
     loginPassword: '',
     loginError: '',
@@ -2493,14 +2513,50 @@
     get importTotalChanges() {
       if (!this.importDiff) return 0;
       const d = this.importDiff;
-      return (d.grupos?.added?.length || 0) 
-        + (d.grupos?.modified?.length || 0)
-        + (d.integrantes?.added?.length || 0)
-        + (d.integrantes?.modified?.length || 0)
-        + (d.evaluaciones?.added?.length || 0)
-        + (d.evaluaciones?.modified?.length || 0)
-        + (d.asistencias?.added?.length || 0)
-        + (d.asistencias?.modified?.length || 0);
+      const sel = this.importGroupSelection || {};
+      const isSelected = (gId) => sel[gId] !== false;
+      const countItems = (arr, gField) => arr.filter(item => isSelected(item[gField])).length;
+      return countItems(d.grupos?.added || [], 'id')
+        + countItems(d.grupos?.modified || [], 'id')
+        + countItems(d.integrantes?.added || [], 'grupo_id')
+        + countItems(d.integrantes?.modified || [], 'grupo_id')
+        + countItems(d.evaluaciones?.added || [], 'grupo_id')
+        + countItems(d.evaluaciones?.modified || [], 'grupo_id')
+        + countItems(d.asistencias?.added || [], 'grupo_id')
+        + countItems(d.asistencias?.modified || [], 'grupo_id');
+    },
+    
+    get importSelectedNew() {
+      if (!this.importDiff) return 0;
+      const sel = this.importGroupSelection || {};
+      const isSelected = (gId) => sel[gId] !== false;
+      const d = this.importDiff;
+      return (d.grupos?.added || []).filter(g => isSelected(g.id)).length
+        + (d.integrantes?.added || []).filter(i => isSelected(i.grupo_id)).length
+        + (d.evaluaciones?.added || []).filter(e => isSelected(e.grupo_id)).length
+        + (d.asistencias?.added || []).filter(a => isSelected(a.grupo_id)).length;
+    },
+    
+    get importSelectedModified() {
+      if (!this.importDiff) return 0;
+      const sel = this.importGroupSelection || {};
+      const isSelected = (gId) => sel[gId] !== false;
+      const d = this.importDiff;
+      return (d.grupos?.modified || []).filter(g => isSelected(g.id)).length
+        + (d.integrantes?.modified || []).filter(i => isSelected(i.grupo_id)).length
+        + (d.evaluaciones?.modified || []).filter(e => isSelected(e.grupo_id)).length
+        + (d.asistencias?.modified || []).filter(a => isSelected(a.grupo_id)).length;
+    },
+    
+    get importSelectedOverwrites() {
+      if (!this.importDiff) return 0;
+      const sel = this.importGroupSelection || {};
+      const isSelected = (gId) => sel[gId] !== false;
+      const d = this.importDiff;
+      return (d.grupos?.modified || []).filter(g => isSelected(g.id)).length
+        + (d.integrantes?.modified || []).filter(i => isSelected(i.grupo_id)).length
+        + (d.evaluaciones?.modified || []).filter(e => isSelected(e.grupo_id)).length
+        + (d.asistencias?.modified || []).filter(a => isSelected(a.grupo_id)).length;
     },
     
     get importDiffByGroup() {
@@ -2585,6 +2641,51 @@
       const result = Object.values(groupMap).sort((a, b) => a.id - b.id);
       result.forEach(grp => {
         grp.encuentrosOrdered = encIds.filter(eid => grp.encuentros[eid]).map(eid => ({ id: eid, ...grp.encuentros[eid] }));
+        
+        const g = this.grupos.find(g => g.id === grp.id);
+        grp.currentAvg = this.promedioEncuentros(grp.id);
+        
+        const projectedData = {};
+        ENCUENTROS_META.forEach(enc => {
+          if (!projectedData[enc.id]) projectedData[enc.id] = {};
+          const existing = this.data[enc.id]?.[grp.id];
+          if (existing) {
+            projectedData[enc.id] = { ...existing, fb: { ...(existing.fb || {}) } };
+          }
+        });
+        if (this.importGroupSelection[grp.id] !== false) {
+          d.evaluaciones.added.forEach(e => {
+            if (e.grupo_id !== grp.id) return;
+            if (!projectedData[e.encuentro_meta_id]) projectedData[e.encuentro_meta_id] = {};
+            const entry = projectedData[e.encuentro_meta_id];
+            ['FN', 'DEV', 'SM'].forEach(dim => {
+              if (e.dimensions[dim] && e.dimensions[dim].puntaje) entry[dim] = e.dimensions[dim].puntaje;
+            });
+            if (e.dimensions.FN?.feedback) { if (!entry.fb) entry.fb = {}; entry.fb.FN = e.dimensions.FN.feedback; }
+            if (e.dimensions.DEV?.feedback) { if (!entry.fb) entry.fb = {}; entry.fb.DEV = e.dimensions.DEV.feedback; }
+            if (e.dimensions.SM?.feedback) { if (!entry.fb) entry.fb = {}; entry.fb.SM = e.dimensions.SM.feedback; }
+          });
+          d.evaluaciones.modified.forEach(e => {
+            if (e.grupo_id !== grp.id) return;
+            if (!projectedData[e.encuentro_meta_id]) projectedData[e.encuentro_meta_id] = {};
+            const entry = projectedData[e.encuentro_meta_id];
+            (e.changes || []).forEach(ch => {
+              if (ch.type === 'nota_added') entry[ch.dimension] = ch.value;
+              else if (ch.type === 'nota_modified') entry[ch.dimension] = ch.to;
+            });
+          });
+        }
+        let sum = 0, count = 0;
+        encIds.forEach(encId => {
+          const sc = projectedData[encId];
+          if (!sc) return;
+          const vals = [sc.FN, sc.DEV, sc.SM].filter(v => v !== undefined && v !== null && v !== '');
+          if (vals.length > 0) {
+            sum += vals.reduce((a, b) => a + Number(b), 0) / (vals.length * 10);
+            count++;
+          }
+        });
+        grp.projectedAvg = count > 0 ? (sum / count * 10).toFixed(1) : null;
       });
       return result;
     },
@@ -2610,6 +2711,8 @@
         
         const diff = buildDiff(excelData, this.grupos, this.data, this.evalMeta, integrantesData || []);
         this.importDiff = diff;
+        this.importGroupSelection = {};
+        this.importDiffByGroup.forEach(g => { this.importGroupSelection[g.id] = true; });
         this.importLoading = false;
       } catch (e) {
         console.error('Error importando Excel:', e);
@@ -2629,7 +2732,8 @@
       this.importLoadingMsg = 'Aplicando cambios a la base de datos...';
       
       try {
-        const result = await applyDiffToSupabase(this.importDiff, supabase);
+        const filteredDiff = this.filterDiffBySelection(this.importDiff);
+        const result = await applyDiffToSupabase(filteredDiff, supabase);
         this.importResult = result;
         this.importLoading = false;
         
@@ -2639,6 +2743,33 @@
         alert('Error al aplicar cambios: ' + e.message);
         this.importLoading = false;
       }
+    },
+    
+    filterDiffBySelection(diff) {
+      const sel = this.importGroupSelection || {};
+      const isSelected = (gId) => sel[gId] !== false;
+      return {
+        grupos: {
+          added: (diff.grupos?.added || []).filter(g => isSelected(g.id)),
+          modified: (diff.grupos?.modified || []).filter(g => isSelected(g.id)),
+          unchanged: diff.grupos?.unchanged || [],
+        },
+        integrantes: {
+          added: (diff.integrantes?.added || []).filter(i => isSelected(i.grupo_id)),
+          modified: (diff.integrantes?.modified || []).filter(i => isSelected(i.grupo_id)),
+          unchanged: diff.integrantes?.unchanged || [],
+        },
+        evaluaciones: {
+          added: (diff.evaluaciones?.added || []).filter(e => isSelected(e.grupo_id)),
+          modified: (diff.evaluaciones?.modified || []).filter(e => isSelected(e.grupo_id)),
+          unchanged: diff.evaluaciones?.unchanged || [],
+        },
+        asistencias: {
+          added: (diff.asistencias?.added || []).filter(a => isSelected(a.grupo_id)),
+          modified: (diff.asistencias?.modified || []).filter(a => isSelected(a.grupo_id)),
+          unchanged: diff.asistencias?.unchanged || [],
+        },
+      };
     }
   }));
 

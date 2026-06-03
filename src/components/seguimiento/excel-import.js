@@ -4,7 +4,7 @@ const ENCUESTA_IDS = ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7'];
 
 const ASISTENCIA_MAP = {
   'Presente (Presencial)': 'Presente (Presencial)',
-  'Presente': 'Presente',
+  'Presente': 'Presente (Presencial)',
   'Presente (Virtual)': 'Presente (Virtual)',
   'Ausente': 'Ausente',
   'Justificado': 'Justificado',
@@ -17,7 +17,7 @@ function normalizeAsistencia(val) {
   if (ASISTENCIA_MAP[str]) return ASISTENCIA_MAP[str];
   const lower = str.toLowerCase();
   if (lower.includes('presente') && lower.includes('virtual')) return 'Presente (Virtual)';
-  if (lower.includes('presente')) return 'Presente';
+  if (lower.includes('presente')) return 'Presente (Presencial)';
   if (lower.includes('justificado')) return 'Justificado';
   if (lower.includes('ausente')) return 'Ausente';
   return '';
