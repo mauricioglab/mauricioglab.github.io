@@ -16,13 +16,13 @@ const b = base.endsWith('/') ? base : `${base}/`;
     <!-- Presentación -->
     <section class="text-center">
       <svg viewBox="0 0 100 104" class="w-20 h-20 mx-auto mb-3" role="img" aria-label="Disquete de 3½ pulgadas">
-        <rect x="0" y="4" width="100" height="100" rx="8" fill="#1e293b" opacity="0.15" />
-        <rect x="0" y="0" width="100" height="100" rx="8" fill="#475569" stroke="#1e293b" stroke-width="2" />
-        <rect x="0" y="90" width="100" height="10" rx="5" fill="#334155" />
-        <rect x="60" y="20" width="20" height="17" rx="1" fill="#0f172a" />
+        <rect x="0" y="4" width="100" height="100" rx="8" fill="#000000" opacity="0.15" />
+        <rect x="0" y="0" width="100" height="100" rx="8" fill="#1f2937" stroke="#0f172a" stroke-width="2" />
+        <rect x="0" y="90" width="100" height="10" rx="5" fill="#111827" />
+        <rect x="60" y="20" width="20" height="17" rx="1" fill="#000000" />
         <rect x="56" y="15" width="28" height="26" rx="2" fill="#cbd5e1" stroke="#64748b" stroke-width="1.5" />
         <rect x="60" y="11" width="20" height="8" rx="1" fill="#94a3b8" />
-        <rect x="16" y="12" width="13" height="13" rx="2" fill="#0f172a" />
+        <rect x="16" y="12" width="13" height="13" rx="2" fill="#000000" />
         <rect x="18" y="14" width="9" height="9" rx="1" fill="#cbd5e1" />
         <rect x="10" y="70" width="80" height="20" rx="2" fill="#f8fafc" stroke="#94a3b8" stroke-width="1" />
         <rect x="14" y="74" width="48" height="3.5" rx="1.75" fill="#dc2626" />
@@ -30,18 +30,26 @@ const b = base.endsWith('/') ? base : `${base}/`;
         <rect x="14" y="84" width="40" height="2" rx="1" fill="#cbd5e1" />
       </svg>
 
-      <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-1">
-        ¡Hola! Soy {SITE_CONFIG.author}
+      <p class="text-sm uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1">¡Hola! Soy</p>
+      <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white mb-1">
+        {SITE_CONFIG.author}
       </h1>
-      <p class="text-base text-slate-600 dark:text-slate-400 mb-4">
-        {SITE_CONFIG.authorTitle} — {SITE_CONFIG.location}
+      <p class="text-base text-slate-500 dark:text-slate-400 mb-4">
+        {SITE_CONFIG.location}
       </p>
 
       <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm px-4 py-3 mb-5 transition-colors">
         <p class="text-sm text-slate-600 dark:text-slate-400 leading-snug">
           El disquete 3½ nació en <strong class="text-slate-900 dark:text-white">1981</strong> con Sony y guardaba
           <strong class="text-slate-900 dark:text-white">1.44 MB</strong> — menos que una canción.
-          Su «clic» al insertarlo era inconfundible. Hoy vive en el ícono de
+        </p>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-snug mt-2">
+          Su inventor fue <strong class="text-slate-900 dark:text-white">Alan Shugart</strong>, que en
+          <strong class="text-slate-900 dark:text-white">1971</strong> creó en IBM el primer disquete, de 8 pulgadas,
+          para cargar software en las mainframes.
+        </p>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-snug mt-2">
+          El 3½ fue la última generación: su «clic» al entrar era inconfundible y hoy vive en el ícono de
           <strong class="text-slate-900 dark:text-white">«guardar»</strong> de tus apps.
         </p>
       </div>

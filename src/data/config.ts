@@ -25,13 +25,13 @@ export const SITE_CONFIG = {
   formspreeEndpoint: 'https://formspree.io/f/xlgbvgek',
   
   phone: '',                                // Opcional: '+54 9 11 1234-5678'
-  location: 'Argentina (GMT-3)',
+  location: 'Argentina',
 
   // WhatsApp dividido en chunks (ofuscación, como emailParts)
   // Unido forma: whatsappChunks.join('') = número en formato internacional
   // Formato internacional argentino requiere el 9: 54 9 351 5137091
   whatsappChunks: ['54', '9', '351', '513', '7091'],
-  whatsappMessage: 'Hola Mauricio, te contacto por tu disquete 🧡',
+  whatsappMessage: 'Hola Mauricio, ¿cómo estás?',
   
   // =====================
   // REDES SOCIALES Y ENLACES
