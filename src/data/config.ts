@@ -31,7 +31,7 @@ export const SITE_CONFIG = {
   // Unido forma: whatsappChunks.join('') = número en formato internacional
   // Formato internacional argentino requiere el 9: 54 9 351 5137091
   whatsappChunks: ['54', '9', '351', '513', '7091'],
-  whatsappMessage: 'Hola Mauricio, te contacto por tu tarjeta disquete 🧡',
+  whatsappMessage: 'Hola Mauricio, te contacto por tu disquete 🧡',
   
   // =====================
   // REDES SOCIALES Y ENLACES
