@@ -1770,9 +1770,14 @@
           .select('*');
         if (evErr) throw evErr;
 
+        const practicaMap = {};
+        (this.grupos || []).forEach(g => { practicaMap[g.id] = g.practica; });
+
         (evalData || []).forEach(ev => {
           const encId = ev.encuentro_meta_id;
           const gid = ev.grupo_id;
+          const gp = practicaMap[gid];
+          if (ev.practica && gp && ev.practica !== gp) return;
           if (!this.data[encId]) this.data[encId] = {};
           if (!this.data[encId][gid]) this.data[encId][gid] = {};
           const entry = this.data[encId][gid];
@@ -2105,6 +2110,14 @@
           if (gErr) throw gErr;
           g.practica = destino;
           resumen.grupos++;
+
+          for (const encId of Object.keys(this.data)) {
+            if (this.data[encId] && this.data[encId][g.id]) delete this.data[encId][g.id];
+          }
+          const gidSufix = `_${g.id}`;
+          for (const k of Object.keys(this.evalMeta)) {
+            if (k.endsWith(gidSufix)) delete this.evalMeta[k];
+          }
 
           for (const [nombre, promovido] of Object.entries(sel.integrantes)) {
             if (!promovido) continue;
@@ -2874,6 +2887,7 @@
         const evalPayload = {
           grupo_id: grupoId,
           encuentro_meta_id: encId,
+          practica: this.grupoActual?.practica || 'P2',
           fn: local?.FN || null,
           dev: local?.DEV || null,
           sm: local?.SM || null,
@@ -3049,6 +3063,7 @@
 
           const gIdx = this.grupos.findIndex(g => g.id === grupoId);
           if (gIdx >= 0) {
+            const prevPractica = this.grupos[gIdx].practica;
             this.grupos[gIdx] = {
               ...this.grupos[gIdx],
               proyecto: this.newGrupo.proyecto.trim(),
@@ -3062,6 +3077,15 @@
                 tags: this.tagsParaIntegrante(this.newGrupo.practica, i.tagEstado)
               }))
             };
+            if (prevPractica !== this.newGrupo.practica) {
+              for (const encId of Object.keys(this.data)) {
+                if (this.data[encId] && this.data[encId][grupoId]) delete this.data[encId][grupoId];
+              }
+              const gidSufix = `_${grupoId}`;
+              for (const k of Object.keys(this.evalMeta)) {
+                if (k.endsWith(gidSufix)) delete this.evalMeta[k];
+              }
+            }
           }
 
         } else {

@@ -250,6 +250,7 @@ export function buildDiff(excelData, currentGrupos, currentData, evalMeta, integ
   };
 
   const currentGruposMap = new Map(currentGrupos.map(g => [g.id, g]));
+  const grupoPractica = (gid) => currentGruposMap.get(gid)?.practica || 'P2';
   const currentIntegrantesMap = new Map();
   (integrantesByGrupo || []).forEach(i => {
     const key = `${i.grupo_id}::${i.nombre}`;
@@ -376,7 +377,7 @@ export function buildDiff(excelData, currentGrupos, currentData, evalMeta, integ
       }
     });
 
-    const evalEntry = { grupo_id: grupoId, encuentro_meta_id: encId, dimensions: dims };
+    const evalEntry = { grupo_id: grupoId, encuentro_meta_id: encId, practica: grupoPractica(grupoId), dimensions: dims };
 
     if (!existingData || (!existingData.FN && !existingData.DEV && !existingData.SM)) {
       diff.evaluaciones.added.push(evalEntry);
@@ -390,12 +391,13 @@ export function buildDiff(excelData, currentGrupos, currentData, evalMeta, integ
   // --- ASISTENCIAS ---
   excelData.asistencias.forEach(ea => {
     const existingAsist = currentData[ea.encuentro_meta_id]?.[ea.grupo_id]?.asistencia?.[ea.integrante_nombre];
+    const eaEntry = { ...ea, practica: grupoPractica(ea.grupo_id) };
     if (!existingAsist || existingAsist === '' || existingAsist === '0') {
-      diff.asistencias.added.push(ea);
+      diff.asistencias.added.push(eaEntry);
     } else if (existingAsist !== ea.estado) {
-      diff.asistencias.modified.push({ ...ea, from: existingAsist });
+      diff.asistencias.modified.push({ ...eaEntry, from: existingAsist });
     } else {
-      diff.asistencias.unchanged.push(ea);
+      diff.asistencias.unchanged.push(eaEntry);
     }
   });
 
@@ -498,6 +500,7 @@ export async function applyDiffToSupabase(diff, supabase) {
         .from('evaluaciones')
         .select('id, fecha_primera_nota')
         .eq('grupo_id', ev.grupo_id)
+        .eq('practica', ev.practica || 'P2')
         .eq('encuentro_meta_id', ev.encuentro_meta_id)
         .maybeSingle();
       if (findErr) throw findErr;
@@ -518,6 +521,7 @@ export async function applyDiffToSupabase(diff, supabase) {
         const payload = {
           grupo_id: ev.grupo_id,
           encuentro_meta_id: ev.encuentro_meta_id,
+          practica: ev.practica || 'P2',
           fn: dims.FN?.puntaje || null,
           dev: dims.DEV?.puntaje || null,
           sm: dims.SM?.puntaje || null,
@@ -546,6 +550,7 @@ export async function applyDiffToSupabase(diff, supabase) {
         .from('evaluaciones')
         .select('id')
         .eq('grupo_id', ea.grupo_id)
+        .eq('practica', ea.practica || 'P2')
         .eq('encuentro_meta_id', ea.encuentro_meta_id)
         .maybeSingle();
       if (findErr) throw findErr;
