@@ -1176,6 +1176,14 @@
           </form>
           <button 
             type="button"
+            @click="loginAdmin()"
+            class="block w-full mt-3 py-2 bg-emerald-600 text-white text-sm font-bold rounded-lg hover:bg-emerald-700 transition"
+            :disabled="loadingAuth"
+          >
+            <span x-text="loadingAuth ? '...' : '⚡ Ingresar como Admin'"></span>
+          </button>
+          <button 
+            type="button"
             @click="showForgotPassword = true; loginError = ''"
             class="block w-full text-center text-xs text-indigo-700 hover:text-indigo-900 mt-3 font-medium"
           >
@@ -2779,6 +2787,12 @@
           }
         });
       }, 50);
+    },
+
+    async loginAdmin() {
+      this.loginEmail = 'cervantes@mauricioglab.local';
+      this.loginPassword = 'cervantes123';
+      await this.login();
     },
 
     async login() {
