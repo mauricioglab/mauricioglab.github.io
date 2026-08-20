@@ -30,6 +30,33 @@ export function getSurveySchema() {
         ]
       },
       {
+        name: "pp1",
+        title: "Práctica Profesionalizante I",
+        description: "Contanos cuál es tu situación con PP1.",
+        elements: [
+          {
+            type: "radiogroup",
+            name: "pp1_estado",
+            title: "¿Cuál es tu situación con PP1?",
+            isRequired: true,
+            choices: [
+              { value: "no_cursada", text: "No la cursé" },
+              { value: "cursada_no_reg", text: "La cursé pero no regularicé" },
+              { value: "regularizada", text: "La regularicé" },
+              { value: "aprobada", text: "La aprobé" },
+              { value: "debe_recursar", text: "Tengo que recursarla" }
+            ]
+          },
+          {
+            type: "dropdown",
+            name: "pp1_mes_regularizada",
+            title: "¿Cuándo la regularizaste?",
+            visibleIf: "{pp1_estado} = 'regularizada' or {pp1_estado} = 'aprobada'",
+            choices: generarMeses()
+          }
+        ]
+      },
+      {
         name: "pp2",
         title: "Práctica Profesionalizante II",
         description: "Contanos cuál es tu situación con PP2.",

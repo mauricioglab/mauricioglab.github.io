@@ -95,6 +95,14 @@
         >
           Stats
         </button>
+        <button 
+          x-show="canEdit"
+          @click="view = 'promocion'; initPromocion()"
+          class="flex-1 py-2 text-sm font-bold border-b-2 transition"
+          :class="view === 'promocion' ? 'border-indigo-700 text-indigo-700' : 'border-transparent text-gray-600 hover:text-gray-800'"
+        >
+          Promoción
+        </button>
       </nav>
     </div>
   </header>
@@ -422,6 +430,89 @@
           <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">Ausencias por Encuentro (Stacked Bars)</h4>
           <div id="plot-ausencias-barras" class="w-full" style="min-height: 400px;"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- VISTA PROMOCION -->
+    <div x-show="view === 'promocion' && !loadingData" x-transition>
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+        <div>
+          <h2 class="text-base font-bold text-gray-900 mb-0.5">Promoción / Transferencia de alumnos</h2>
+          <p class="text-xs text-gray-500">Marcá los grupos que pasan al siguiente cuatrimestre. Sugerencia automática: promedio ≥ 4 regulariza, ≥ 7 aprueba.</p>
+        </div>
+        <div class="flex gap-1.5">
+          <template x-for="p in promocionPPs" :key="p.id">
+            <button
+              @click="promocionPP = p.id; promoSel = {}; initPromocion()"
+              class="px-3 py-1.5 text-xs font-bold rounded-md transition"
+              :class="promocionPP === p.id ? 'bg-indigo-700 text-white' : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-100'"
+              x-text="p.label"
+            ></button>
+          </template>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 mb-3">
+        <label class="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">
+          <input type="checkbox" x-model="promocionFiltroPromovibles" class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+          Solo promovibles (promedio ≥ 4)
+        </label>
+        <span class="text-xs text-gray-400" x-text="`${gruposPromocion.length} grupos en ${promocionPP}`"></span>
+      </div>
+
+      <div x-show="promoResultado" class="mb-3 p-3 rounded-xl border text-sm" :class="promoResultadoError ? 'border-red-200 bg-red-50 text-red-700' : 'border-green-200 bg-green-50 text-green-700'" x-text="promoResultado"></div>
+
+      <div class="space-y-3">
+        <template x-for="g in gruposPromocion" :key="g.id">
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm" :class="promoSeleccion[g.id]?.promover ? 'border-indigo-400 ring-1 ring-indigo-200' : ''">
+            <div class="p-3 flex items-center gap-3">
+              <input type="checkbox" x-model="promoSeleccion[g.id].promover" class="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+              <div class="flex-1 min-w-0">
+                <div class="font-bold text-sm text-gray-900">
+                  <span class="text-gray-500 mr-1" x-text="`G${g.id}`"></span>
+                  <span x-text="g.proyecto"></span>
+                </div>
+                <div class="text-xs text-gray-500" x-text="`${g.comision || '—'} · ${g.integrantes?.length || 0} integrantes`"></div>
+              </div>
+              <div class="text-center">
+                <div class="text-[10px] text-gray-500 font-bold uppercase">Promedio</div>
+                <span class="inline-flex items-center justify-center min-w-[3rem] h-8 rounded-lg text-sm font-bold" :class="notaBadgeClass(calcNota(promedioEncuentros(g.id)))" x-text="calcNota(promedioEncuentros(g.id))"></span>
+              </div>
+              <div class="text-center">
+                <div class="text-[10px] text-gray-500 font-bold uppercase">Sugerido</div>
+                <span class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-bold" :class="promoSugeridoBadgeClass(promoSugeridoEstado(g))" x-text="promoSugeridoLabel(promoSugeridoEstado(g))"></span>
+              </div>
+            </div>
+            <div x-show="promoSeleccion[g.id].promover" class="border-t border-gray-100 px-3 py-2 bg-indigo-50/50">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-[10px] font-bold text-gray-600 uppercase tracking-wide">Override por integrante (desmarcá quien repite)</span>
+                <span class="text-[10px] text-gray-500 font-bold" x-text="`${promoPromovidosCount(g.id)} de ${g.integrantes?.length || 0}`"></span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
+                <template x-for="int in g.integrantes" :key="int.nombre">
+                  <label class="flex items-center gap-1.5 text-xs text-gray-700 cursor-pointer rounded px-1.5 py-0.5 hover:bg-white">
+                    <input type="checkbox" x-model="promoSeleccion[g.id].integrantes[int.nombre]" class="w-3.5 h-3.5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                    <span class="truncate" x-text="int.nombre"></span>
+                  </label>
+                </template>
+              </div>
+            </div>
+          </div>
+        </template>
+        <template x-if="gruposPromocion.length === 0">
+          <div class="bg-white rounded-xl p-8 text-center text-gray-500 text-sm border border-gray-200">No hay grupos en esta práctica.</div>
+        </template>
+      </div>
+
+      <div class="flex items-center justify-between mt-4">
+        <div class="text-xs text-gray-500" x-text="`${promoSeleccionadas} grupos seleccionados`"></div>
+        <button
+          @click="aplicarPromocion()"
+          :disabled="promoSeleccionadas === 0 || promoSaving"
+          class="px-5 py-2.5 bg-indigo-700 text-white text-sm font-bold rounded-xl hover:bg-indigo-800 transition disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          <span x-text="promoSaving ? 'Aplicando...' : 'Aplicar promoción'"></span>
+        </button>
       </div>
     </div>
 
@@ -941,10 +1032,10 @@
           <p class="text-xs text-gray-500 mb-4">Este espacio es exclusivo para la gestión del seguimiento por parte del equipo docente. Si sos estudiante, tus datos se cargan desde el formulario correspondiente.</p>
           <form @submit.prevent="login()">
             <div class="mb-3">
-              <label class="block text-xs font-bold text-gray-700 mb-1">Email</label>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Usuario o Email</label>
               <input 
                 x-model="loginEmail"
-                type="email"
+                type="text"
                 class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white"
                 required
               >
@@ -1248,7 +1339,7 @@
 <script>
   import Alpine from 'alpinejs';
   import Plotly from 'plotly.js-dist-min';
-  import { supabase } from '../../lib/supabase';
+  import { supabase, resolveLoginUser, markSessionStart, clearSessionStart, scheduleSessionEnd, enforceSessionExpiry } from '../../lib/supabase';
   import { ENCUENTROS_META, ENCUENTROS_CARGADOS, GRUPOS_INICIALES } from './encuentros-data.js';
   import { parseExcelFile, buildDiff, applyDiffToSupabase } from './excel-import.js';
 
@@ -1278,8 +1369,8 @@
     importResult: null,
     importDryRun: true,
     importGroupSelection: {},
-    loginEmail: '',
-    loginPassword: '',
+    loginEmail: 'cervantes',
+    loginPassword: 'cervantes123',
     loginError: '',
     showForgotPassword: false,
     forgotPasswordEmail: '',
@@ -1298,6 +1389,20 @@
     saveTimeout: null,
     practicaFilter: 'Todas',
     editingGrupoId: null,
+    
+    // Promoción / Transferencia
+    promocionPP: 'P1',
+    promocionPPs: [
+      { id: 'P1', label: 'PP1 (3er sem)' },
+      { id: 'P2', label: 'PP2 (5to sem)' },
+      { id: 'P3', label: 'PP3 (6to sem)' },
+    ],
+    promocionFiltroPromovibles: false,
+    promoSel: {},
+    promoSaving: false,
+    promoResultado: '',
+    promoResultadoError: false,
+    alumnosSeguimiento: [],
     
     // Stats filters
     statsComisionFilter: '',
@@ -1568,6 +1673,13 @@
           if (!this.data[encId][gid].asistencia) this.data[encId][gid].asistencia = {};
           this.data[encId][gid].asistencia[a.integrante_nombre] = a.estado;
         });
+
+        // Alumnos seguimiento (para promoción/transferencia)
+        const { data: alumData, error: alumErr } = await supabase
+          .from('alumnos_seguimiento')
+          .select('id, nombre_completo, pp1_estado, pp1_mes_regularizada, pp2_estado, pp2_mes_regularizada, pp3_estado, pp3_mes_regularizada');
+        if (alumErr) throw alumErr;
+        this.alumnosSeguimiento = alumData || [];
       } catch (e) {
         console.warn('Error loading from Supabase:', e);
         this.grupos = GRUPOS_INICIALES;
@@ -1576,10 +1688,16 @@
 
     async checkSession() {
       try {
+        if (await enforceSessionExpiry()) {
+          this.user = null;
+          this.userRole = null;
+          return;
+        }
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
           this.user = session.user;
           await this.loadProfile();
+          scheduleSessionEnd(() => this.logout(true));
         }
       } catch (e) {
         console.error('Error checking session:', e);
@@ -1716,6 +1834,127 @@
         if (p !== null) { sum += p; count++; }
       });
       return count ? sum / count : null;
+    },
+
+    // --- PROMOCIÓN / TRANSFERENCIA ---
+    get gruposPromocion() {
+      let list = this.grupos.filter(g => g.proyecto && g.practica === this.promocionPP);
+      if (this.promocionFiltroPromovibles) {
+        list = list.filter(g => this.promoSugeridoEstado(g) !== 'no_promueve');
+      }
+      list.sort((a, b) => a.id - b.id);
+      return list;
+    },
+
+    get promoSeleccionadas() {
+      return Object.values(this.promoSel).filter(s => s && s.promover).length;
+    },
+
+    promoSugeridoEstado(g) {
+      const nota = parseFloat(this.calcNota(this.promedioEncuentros(g.id)));
+      if (isNaN(nota)) return 'sin_nota';
+      if (nota >= 7) return 'aprobada';
+      if (nota >= 4) return 'regularizada';
+      return 'no_promueve';
+    },
+
+    promoSugeridoLabel(estado) {
+      const map = {
+        aprobada: 'Aprueba (≥7)',
+        regularizada: 'Regulariza (4–6.9)',
+        no_promueve: 'No promueve (<4)',
+        sin_nota: 'Sin notas'
+      };
+      return map[estado] || estado;
+    },
+
+    promoSugeridoBadgeClass(estado) {
+      const map = {
+        aprobada: 'bg-green-100 text-green-700',
+        regularizada: 'bg-amber-100 text-amber-700',
+        no_promueve: 'bg-red-100 text-red-700',
+        sin_nota: 'bg-gray-100 text-gray-500'
+      };
+      return map[estado] || 'bg-gray-100 text-gray-600';
+    },
+
+    promoPromovidosCount(grupoId) {
+      const sel = this.promoSel[grupoId];
+      if (!sel) return 0;
+      return Object.values(sel.integrantes).filter(Boolean).length;
+    },
+
+    initPromocion() {
+      this.grupos.forEach(g => {
+        if (!g.proyecto || g.practica !== this.promocionPP) return;
+        if (this.promoSel[g.id]) return;
+        const integrantes = {};
+        (g.integrantes || []).forEach(i => { integrantes[i.nombre] = true; });
+        this.promoSel[g.id] = {
+          promover: this.promoSugeridoEstado(g) !== 'no_promueve' && this.promoSugeridoEstado(g) !== 'sin_nota',
+          integrantes
+        };
+      });
+      this.promoResultado = '';
+    },
+
+    async aplicarPromocion() {
+      if (this.promoSeleccionadas === 0) return;
+      this.promoSaving = true;
+      this.promoResultado = '';
+      this.promoResultadoError = false;
+      const ppMap = { P1: 'pp1', P2: 'pp2', P3: 'pp3' };
+      const nextPP = { P1: 'P2', P2: 'P3', P3: 'TutoriasPost' };
+      const ppKey = ppMap[this.promocionPP];
+      const destino = nextPP[this.promocionPP];
+      const mesActual = new Date().toISOString().slice(0, 7); // YYYY-MM
+
+      const resumen = { grupos: 0, alumnos: 0, sinMatch: 0 };
+      try {
+        for (const [gid, sel] of Object.entries(this.promoSel)) {
+          if (!sel || !sel.promover) continue;
+          const g = this.grupos.find(x => String(x.id) === String(gid));
+          if (!g) continue;
+          const estado = this.promoSugeridoEstado(g);
+
+          const { error: gErr } = await supabase.from('grupos').update({ practica: destino }).eq('id', g.id);
+          if (gErr) throw gErr;
+          g.practica = destino;
+          resumen.grupos++;
+
+          for (const [nombre, promovido] of Object.entries(sel.integrantes)) {
+            if (!promovido) continue;
+            const alumno = this.alumnosSeguimiento.find(a => this.normalizarNombre(a.nombre_completo) === this.normalizarNombre(nombre));
+            if (!alumno) { resumen.sinMatch++; continue; }
+            const payload = {
+              [`${ppKey}_estado`]: estado === 'aprobada' ? 'aprobada' : 'regularizada',
+              [`${ppKey}_mes_regularizada`]: mesActual
+            };
+            const { error: aErr } = await supabase.from('alumnos_seguimiento').update(payload).eq('id', alumno.id);
+            if (aErr) throw aErr;
+            resumen.alumnos++;
+          }
+        }
+        const msg = `Promoción aplicada: ${resumen.grupos} grupo(s) pasaron a ${destino}, ${resumen.alumnos} alumno(s) actualizados.`;
+        this.promoResultado = resumen.sinMatch ? `${msg} ${resumen.sinMatch} integrante(s) sin match en alumnos_seguimiento.` : msg;
+        this.promoSel = {};
+        this.initPromocion();
+      } catch (e) {
+        this.promoResultado = 'Error al aplicar: ' + (e.message || e);
+        this.promoResultadoError = true;
+      } finally {
+        this.promoSaving = false;
+      }
+    },
+
+    normalizarNombre(nombre) {
+      return (nombre || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[.,;:]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
     },
 
     dimAvgForGrupo(grupoId, dim) {
@@ -2293,12 +2532,14 @@
       this.loginError = '';
       try {
         const { data, error } = await supabase.auth.signInWithPassword({
-          email: this.loginEmail,
+          email: resolveLoginUser(this.loginEmail),
           password: this.loginPassword
         });
         if (error) throw error;
         this.user = data.user;
         await this.loadProfile();
+        markSessionStart();
+        scheduleSessionEnd(() => this.logout(true));
         this.showLogin = false;
         this.loginEmail = '';
         this.loginPassword = '';
@@ -2325,7 +2566,8 @@
       }
     },
 
-    async logout() {
+    async logout(auto = false) {
+      if (!auto) clearSessionStart();
       await supabase.auth.signOut();
       this.user = null;
       this.userRole = null;

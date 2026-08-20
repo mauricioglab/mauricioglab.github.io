@@ -120,6 +120,7 @@
               </th>
               <th class="px-3 py-2.5 font-bold hidden md:table-cell">Teams</th>
               <th class="px-3 py-2.5 font-bold hidden lg:table-cell">Comisión</th>
+              <th class="px-3 py-2.5 font-bold">PP1</th>
               <th class="px-3 py-2.5 font-bold">PP2</th>
               <th class="px-3 py-2.5 font-bold">PP3</th>
               <th class="px-3 py-2.5 font-bold hidden md:table-cell">Proyecto</th>
@@ -141,6 +142,9 @@
                 </td>
                 <td class="px-3 py-2.5 text-xs hidden md:table-cell" x-text="alumno.usuario_teams || '—'"></td>
                 <td class="px-3 py-2.5 hidden lg:table-cell" x-text="alumno.comision || '—'"></td>
+                <td class="px-3 py-2.5">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold" :class="ppBadgeClass(alumno.pp1_estado)" x-text="ppLabel(alumno.pp1_estado)"></span>
+                </td>
                 <td class="px-3 py-2.5">
                   <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold" :class="ppBadgeClass(alumno.pp2_estado)" x-text="ppLabel(alumno.pp2_estado)"></span>
                 </td>
@@ -244,6 +248,20 @@
               <div class="border-t border-gray-200 pt-3">
                 <h3 class="text-sm font-bold text-gray-900 mb-2">Práctica Profesionalizante</h3>
                 <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">PP1</label>
+                    <select x-model="editAlumno.pp1_estado" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white" :disabled="!canEdit">
+                      <option value="no_cursada">No la cursé</option>
+                      <option value="cursada_no_reg">Cursé, no regularicé</option>
+                      <option value="regularizada">Regularizada</option>
+                      <option value="aprobada">Aprobada</option>
+                      <option value="debe_recursar">Debo recursar</option>
+                    </select>
+                  </div>
+                  <div x-show="editAlumno.pp1_estado === 'regularizada' || editAlumno.pp1_estado === 'aprobada'">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Mes regularización PP1</label>
+                    <input x-model="editAlumno.pp1_mes_regularizada" type="month" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" :disabled="!canEdit">
+                  </div>
                   <div>
                     <label class="block text-xs font-bold text-gray-700 mb-1">PP2</label>
                     <select x-model="editAlumno.pp2_estado" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white" :disabled="!canEdit">
@@ -432,6 +450,16 @@
           </div>
           <div class="grid grid-cols-2 gap-3">
             <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">PP1</label>
+              <select x-model="newAlumno.pp1_estado" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white">
+                <option value="no_cursada">No la cursé</option>
+                <option value="cursada_no_reg">Cursé, no regularicé</option>
+                <option value="regularizada">Regularizada</option>
+                <option value="aprobada">Aprobada</option>
+                <option value="debe_recursar">Debo recursar</option>
+              </select>
+            </div>
+            <div>
               <label class="block text-xs font-bold text-gray-700 mb-1">PP2</label>
               <select x-model="newAlumno.pp2_estado" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white">
                 <option value="no_cursada">No la cursé</option>
@@ -441,6 +469,8 @@
                 <option value="debe_recursar">Debo recursar</option>
               </select>
             </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="block text-xs font-bold text-gray-700 mb-1">PP3</label>
               <select x-model="newAlumno.pp3_estado" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white">
@@ -495,8 +525,8 @@
             <p class="text-xs text-gray-500 mb-4">Este espacio es exclusivo para la gestión del seguimiento por parte del equipo docente. Si sos estudiante, tus datos se cargan desde el formulario correspondiente.</p>
             <form @submit.prevent="login()">
               <div class="mb-3">
-                <label class="block text-xs font-bold text-gray-700 mb-1">Email</label>
-                <input x-model="loginEmail" type="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" required>
+                <label class="block text-xs font-bold text-gray-700 mb-1">Usuario o Email</label>
+                <input x-model="loginEmail" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600" required>
               </div>
               <div class="mb-4">
                 <label class="block text-xs font-bold text-gray-700 mb-1">Contraseña</label>
@@ -547,7 +577,7 @@
 
 <script>
   import Alpine from 'alpinejs';
-  import { supabase } from '../../lib/supabase';
+  import { supabase, resolveLoginUser, markSessionStart, clearSessionStart, scheduleSessionEnd, enforceSessionExpiry } from '../../lib/supabase';
 
   window.Alpine = Alpine;
 
@@ -598,8 +628,8 @@
     showLogin: false,
     showAddAlumno: false,
     showConfirmDelete: false,
-    loginEmail: '',
-    loginPassword: '',
+    loginEmail: 'cervantes',
+    loginPassword: 'cervantes123',
     loginError: '',
     showForgotPassword: false,
     forgotPasswordEmail: '',
@@ -620,6 +650,7 @@
       dni: '',
       comision: '',
       usuario_teams: '',
+      pp1_estado: 'no_cursada',
       pp2_estado: 'no_cursada',
       pp3_estado: 'no_cursada'
     },
@@ -703,10 +734,16 @@
 
     async checkSession() {
       try {
+        if (await enforceSessionExpiry()) {
+          this.user = null;
+          this.userRole = null;
+          return;
+        }
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
           this.user = session.user;
           await this.loadProfile();
+          scheduleSessionEnd(() => this.logout(true));
         }
       } catch (e) {
         console.error('Error checking session:', e);
@@ -732,12 +769,14 @@
       this.loginError = '';
       try {
         const { data, error } = await supabase.auth.signInWithPassword({
-          email: this.loginEmail,
+          email: resolveLoginUser(this.loginEmail),
           password: this.loginPassword
         });
         if (error) throw error;
         this.user = data.user;
         await this.loadProfile();
+        markSessionStart();
+        scheduleSessionEnd(() => this.logout(true));
         this.showLogin = false;
         this.loginEmail = '';
         this.loginPassword = '';
@@ -764,7 +803,8 @@
       }
     },
 
-    async logout() {
+    async logout(auto = false) {
+      if (!auto) clearSessionStart();
       await supabase.auth.signOut();
       this.user = null;
       this.userRole = null;
@@ -820,6 +860,7 @@
           dni: this.newAlumno.dni.trim() || null,
           comision: this.newAlumno.comision.trim() || null,
           usuario_teams: this.newAlumno.usuario_teams.trim(),
+          pp1_estado: this.newAlumno.pp1_estado,
           pp2_estado: this.newAlumno.pp2_estado,
           pp3_estado: this.newAlumno.pp3_estado,
           estado: 'pendiente_revision'
@@ -838,7 +879,7 @@
         if (error) throw error;
 
         this.alumnos.push({ id: newRow.id, ...payload, materias_a_cursar: [], materias_pendientes: [], grupo_miembros_anteriores: [] });
-        this.newAlumno = { nombre_completo: '', dni: '', comision: '', usuario_teams: '', pp2_estado: 'no_cursada', pp3_estado: 'no_cursada' };
+        this.newAlumno = { nombre_completo: '', dni: '', comision: '', usuario_teams: '', pp1_estado: 'no_cursada', pp2_estado: 'no_cursada', pp3_estado: 'no_cursada' };
         this.showAddAlumno = false;
       } catch (e) {
         this.addAlumnoError = e.message || 'Error al crear alumno';

@@ -83,6 +83,8 @@ export interface AlumnoSeguimiento {
   telefono: string
   usuario_teams: string
   comision: string
+  pp1_estado: PPEstado
+  pp1_mes_regularizada: string
   pp2_estado: PPEstado
   pp2_mes_regularizada: string
   pp3_estado: PPEstado

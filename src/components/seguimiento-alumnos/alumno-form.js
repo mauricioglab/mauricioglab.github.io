@@ -25,6 +25,13 @@ function buildResumenHTML(survey) {
   html += `<p><strong>Comisión:</strong> ${d.comision || "—"}</p>`;
 
   html += '<hr style="border-color:#e5e7eb;margin:12px 0">';
+  html += '<h3 style="margin:0 0 8px;font-weight:700;font-size:15px;">PP1</h3>';
+  html += `<p><strong>Estado:</strong> ${PP_ESTADO_LABELS[d.pp1_estado] || d.pp1_estado || "—"}</p>`;
+  if (d.pp1_mes_regularizada) {
+    html += `<p><strong>Regularizada en:</strong> ${d.pp1_mes_regularizada}</p>`;
+  }
+
+  html += '<hr style="border-color:#e5e7eb;margin:12px 0">';
   html += '<h3 style="margin:0 0 8px;font-weight:700;font-size:15px;">PP2</h3>';
   html += `<p><strong>Estado:</strong> ${PP_ESTADO_LABELS[d.pp2_estado] || d.pp2_estado || "—"}</p>`;
   if (d.pp2_mes_regularizada) {
@@ -162,6 +169,7 @@ export function initSurvey(containerId) {
   survey.onComplete.add(async (sender) => {
     const d = sender.data;
     const alumnoData = {
+      pp1_estado: d.pp1_estado || "no_cursada",
       pp2_estado: d.pp2_estado || "no_cursada",
       pp3_estado: d.pp2_estado === "regularizada" || d.pp2_estado === "aprobada" ? (d.pp3_estado || "no_cursada") : "no_cursada",
       materias_a_cursar: d.materias_a_cursar || [],
@@ -180,6 +188,8 @@ export function initSurvey(containerId) {
       telefono: d.telefono || null,
       usuario_teams: d.usuario_teams,
       comision: d.comision || null,
+      pp1_estado: d.pp1_estado || "no_cursada",
+      pp1_mes_regularizada: d.pp1_mes_regularizada || null,
       pp2_estado: d.pp2_estado || "no_cursada",
       pp2_mes_regularizada: d.pp2_mes_regularizada || null,
       pp3_estado: alumnoData.pp3_estado,
