@@ -10,12 +10,12 @@
 >
   <!-- Header -->
   <header class="bg-white border-b border-gray-300 sticky top-0 z-30 shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 py-3">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
+    <div class="max-w-6xl mx-auto px-3 sm:px-4 py-3">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-3 min-w-0">
           <div>
-            <h1 class="text-lg font-bold text-gray-900">Práctica Profesionalizante</h1>
-            <p class="text-xs text-gray-600" x-text="`${gruposFiltrados.length} grupos activos`"></p>
+            <h1 class="text-base sm:text-lg font-bold text-gray-900">Práctica Profesionalizante</h1>
+            <p class="text-[11px] sm:text-xs text-gray-600" x-text="`${gruposFiltrados.length} grupos activos`"></p>
           </div>
           <nav class="flex gap-1 overflow-x-auto" x-show="view === 'resumen' || view === 'encuentros' || view === 'stats'">
             <template x-for="p in practicas" :key="p.id">
@@ -28,11 +28,11 @@
             </template>
           </nav>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto sm:justify-end">
           <button 
             x-show="canEdit && (view === 'resumen' || view === 'encuentros' || view === 'stats')"
             @click="openAddGrupoModal()"
-            class="px-3 py-1.5 flex items-center gap-1.5 rounded-lg bg-indigo-600 text-white text-sm font-bold hover:bg-indigo-700 transition"
+            class="px-3 py-1.5 flex items-center gap-1.5 rounded-lg bg-indigo-600 text-white text-xs sm:text-sm font-bold hover:bg-indigo-700 transition whitespace-nowrap"
             title="Agregar grupo"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
@@ -40,8 +40,26 @@
           </button>
           <button 
             x-show="canEdit && (view === 'resumen' || view === 'encuentros' || view === 'stats')"
+            @click="showPromover = true; initPromocion()"
+            class="px-3 py-1.5 flex items-center gap-1.5 rounded-lg bg-emerald-600 text-white text-xs sm:text-sm font-bold hover:bg-emerald-700 transition whitespace-nowrap"
+            title="Promover grupos al siguiente cuatrimestre"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+            Promover
+          </button>
+          <button 
+            x-show="canEdit && (view === 'resumen' || view === 'encuentros' || view === 'stats')"
+            @click="openPlanillaEditor()"
+            class="px-3 py-1.5 flex items-center gap-1.5 rounded-lg bg-slate-600 text-white text-xs sm:text-sm font-bold hover:bg-slate-700 transition whitespace-nowrap"
+            title="Editar planilla por práctica"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Planilla
+          </button>
+          <button 
+            x-show="canEdit && (view === 'resumen' || view === 'encuentros' || view === 'stats')"
             @click="document.getElementById('excelFileInput').click()"
-            class="px-3 py-1.5 flex items-center gap-1.5 rounded-lg bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition"
+            class="px-3 py-1.5 flex items-center gap-1.5 rounded-lg bg-amber-600 text-white text-xs sm:text-sm font-bold hover:bg-amber-700 transition whitespace-nowrap"
             title="Importar desde Excel"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
@@ -51,17 +69,17 @@
           <template x-if="!user">
             <button 
               @click="showLogin = true"
-              class="px-3 py-1.5 bg-indigo-700 text-white text-sm font-medium rounded-lg hover:bg-indigo-800 transition"
+              class="px-3 py-1.5 bg-indigo-700 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-indigo-800 transition whitespace-nowrap"
             >
               Ingresar
             </button>
           </template>
           <template x-if="user">
-            <div class="flex items-center gap-2">
-              <span class="text-xs text-gray-700 font-medium" x-text="user.email"></span>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-[11px] sm:text-xs text-gray-700 font-medium max-w-[80px] sm:max-w-none truncate" x-text="user.email"></span>
               <button 
                 @click="logout()"
-                class="px-3 py-1.5 text-xs text-red-700 hover:bg-red-50 rounded-lg transition font-medium"
+                class="px-3 py-1.5 text-xs text-red-700 hover:bg-red-50 rounded-lg transition font-medium whitespace-nowrap"
               >
                 Salir
               </button>
@@ -71,7 +89,7 @@
       </div>
       
       <!-- Tabs de navegación -->
-      <nav class="flex gap-0 mt-2 -mb-px" x-show="view === 'resumen' || view === 'encuentros' || view === 'stats'">
+      <nav class="flex gap-0 mt-2 -mb-px overflow-x-auto" x-show="view === 'resumen' || view === 'encuentros' || view === 'stats'">
         <button 
           @click="view = 'resumen'"
           class="flex-1 py-2 text-sm font-bold border-b-2 transition"
@@ -95,15 +113,7 @@
         >
           Stats
         </button>
-        <button 
-          x-show="canEdit"
-          @click="view = 'promocion'; initPromocion()"
-          class="flex-1 py-2 text-sm font-bold border-b-2 transition"
-          :class="view === 'promocion' ? 'border-indigo-700 text-indigo-700' : 'border-transparent text-gray-600 hover:text-gray-800'"
-        >
-          Promoción
-        </button>
-      </nav>
+        </nav>
     </div>
   </header>
 
@@ -133,8 +143,15 @@
         >
       </div>
       
+      <div class="flex items-center gap-2 mb-2">
+        <label class="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">
+          <input type="checkbox" x-model="mostrarInactivos" class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+          Mostrar inactivos
+        </label>
+      </div>
+
       <div class="overflow-x-auto">
-        <table class="w-full text-sm">
+        <table class="w-full text-sm min-w-[640px]">
           <thead>
             <tr class="text-gray-600 text-left">
               <th class="px-2 py-2 font-bold cursor-pointer select-none hover:text-indigo-700" @click="toggleSort('id')">
@@ -162,7 +179,7 @@
               <tr 
                 @click="selectGrupo(grupo.id)"
                 class="bg-white cursor-pointer hover:bg-gray-50 transition shadow-sm border-b border-gray-100"
-                :class="grupoAlertas(grupo.id).length > 0 ? (grupoAlertas(grupo.id).includes('riesgo') ? 'bg-amber-50' : 'bg-blue-50') : ''"
+                :class="(grupo.activo === false ? 'opacity-50 grayscale' : '') + ' ' + (grupoAlertas(grupo.id).length > 0 ? (grupoAlertas(grupo.id).includes('riesgo') ? 'bg-amber-50' : 'bg-blue-50') : '')"
               >
                 <td class="px-2 py-2.5 rounded-l-lg whitespace-nowrap">
                   <span class="text-gray-500 text-xs mr-1 font-bold" x-text="`G${grupo.id}`"></span>
@@ -202,7 +219,7 @@
       </div>
 
       <!-- Paginación -->
-      <div class="flex items-center justify-between mt-4 text-sm text-gray-600">
+      <div class="flex flex-wrap items-center justify-between gap-3 mt-4 text-sm text-gray-600">
         <div class="flex items-center gap-2">
           <span>Mostrar</span>
           <template x-for="n in [10, 25, 50]" :key="n">
@@ -215,7 +232,7 @@
           </template>
         </div>
         <div x-text="`${paginationInfo.start}–${paginationInfo.end} de ${paginationInfo.total} grupos`"></div>
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-1 overflow-x-auto max-w-full">
           <button 
             @click="page = Math.max(1, page - 1)"
             :disabled="page <= 1"
@@ -285,7 +302,7 @@
         <label class="text-xs font-bold text-gray-700 ml-2">Encuentro:</label>
         <select x-model="statsEncuentroFilter" class="px-2 py-1 text-xs border border-gray-300 rounded bg-white" @change="renderStats()">
           <option value="">Todos</option>
-          <template x-for="enc in encuentrosMeta" :key="enc.id">
+          <template x-for="enc in statsEncuentros()" :key="enc.id">
             <option :value="enc.id" x-text="enc.id"></option>
           </template>
         </select>
@@ -433,102 +450,190 @@
       </div>
     </div>
 
-    <!-- VISTA PROMOCION -->
-    <div x-show="view === 'promocion' && !loadingData" x-transition>
-      <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
-        <div>
-          <h2 class="text-base font-bold text-gray-900 mb-0.5">Promoción / Transferencia de alumnos</h2>
-          <p class="text-xs text-gray-500">Marcá los grupos que pasan al siguiente cuatrimestre. Sugerencia automática: promedio ≥ 4 regulariza, ≥ 7 aprueba.</p>
+    <!-- MODAL PROMOVER -->
+    <div x-show="showPromover" class="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/50 p-2 sm:p-4 overflow-y-auto" @click.self="showPromover = false">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl my-4 sm:my-8 flex flex-col max-h-[calc(100vh-2rem)]">
+        <div class="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-200 shrink-0">
+          <div>
+            <h2 class="text-base font-bold text-gray-900">Promover / Transferencia de alumnos</h2>
+            <p class="text-xs text-gray-500">Marcá los grupos que pasan al siguiente cuatrimestre. Sugerencia automática: promedio ≥ 4 regulariza, ≥ 7 aprueba.</p>
+          </div>
+          <button @click="showPromover = false; promoResultado = ''" class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
         </div>
-        <div class="flex gap-1.5">
-          <template x-for="p in promocionPPs" :key="p.id">
-            <button
-              @click="promocionPP = p.id; promoSel = {}; initPromocion()"
-              class="px-3 py-1.5 text-xs font-bold rounded-md transition"
-              :class="promocionPP === p.id ? 'bg-indigo-700 text-white' : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-100'"
-              x-text="p.label"
-            ></button>
+
+        <div class="px-4 sm:px-6 pt-4 shrink-0">
+          <div class="flex gap-1.5 flex-wrap mb-3">
+            <template x-for="p in promocionPPs" :key="p.id">
+              <button
+                @click="promocionPP = p.id; promoSel = {}; promoRindieron = {}; initPromocion()"
+                class="px-3 py-1.5 text-xs font-bold rounded-md transition"
+                :class="promocionPP === p.id ? 'bg-indigo-700 text-white' : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-100'"
+                x-text="p.label"
+              ></button>
+            </template>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 mb-3">
+            <label class="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">
+              <input type="checkbox" x-model="promocionFiltroPromovibles" class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+              Solo promovibles (promedio ≥ 4)
+            </label>
+            <span class="text-xs text-gray-400" x-text="`${gruposPromocion.length} grupos en ${promocionPP}`"></span>
+          </div>
+          <div x-show="promoResultado" class="mb-3 p-3 rounded-xl border text-sm" :class="promoResultadoError ? 'border-red-200 bg-red-50 text-red-700' : 'border-green-200 bg-green-50 text-green-700'" x-text="promoResultado"></div>
+        </div>
+
+        <div class="px-4 sm:px-6 py-4 overflow-y-auto flex-1 min-h-0 space-y-3">
+          <template x-for="g in gruposPromocion" :key="g.id">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm" :class="promoSeleccion[g.id]?.promover ? 'border-indigo-400 ring-1 ring-indigo-200' : ''">
+              <div class="p-3 flex items-center gap-3">
+                <input type="checkbox" x-model="promoSeleccion[g.id].promover" class="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                <div class="flex-1 min-w-0">
+                  <div class="font-bold text-sm text-gray-900">
+                    <span class="text-gray-500 mr-1" x-text="`G${g.id}`"></span>
+                    <span x-text="g.proyecto"></span>
+                  </div>
+                  <div class="text-xs text-gray-500" x-text="`${g.comision || '—'} · ${g.integrantes?.length || 0} integrantes`"></div>
+                </div>
+                <div class="text-center">
+                  <div class="text-[10px] text-gray-500 font-bold uppercase">Promedio</div>
+                  <span class="inline-flex items-center justify-center min-w-[3rem] h-8 rounded-lg text-sm font-bold" :class="notaBadgeClass(calcNota(promedioEncuentros(g.id)))" x-text="calcNota(promedioEncuentros(g.id))"></span>
+                </div>
+                <div class="text-center">
+                  <div class="text-[10px] text-gray-500 font-bold uppercase">Sugerido</div>
+                  <span class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-bold" :class="promoSugeridoBadgeClass(promoSugeridoEstado(g))" x-text="promoSugeridoLabel(promoSugeridoEstado(g))"></span>
+                </div>
+              </div>
+              <div x-show="promoSeleccion[g.id].promover" class="border-t border-gray-100 px-3 py-2 bg-indigo-50/50">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-[10px] font-bold text-gray-600 uppercase tracking-wide">Integrantes (desmarcá quien repite) · ¿Rindió?</span>
+                  <span class="text-[10px] text-gray-500 font-bold" x-text="`${promoPromovidosCount(g.id)} de ${g.integrantes?.length || 0}`"></span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-1">
+                  <template x-for="int in g.integrantes" :key="int.nombre">
+                    <div class="flex items-center justify-between gap-1.5 text-xs text-gray-700 rounded px-1.5 py-0.5 hover:bg-white">
+                      <label class="flex items-center gap-1.5 cursor-pointer flex-1 min-w-0">
+                        <input type="checkbox" x-model="promoSeleccion[g.id].integrantes[int.nombre]" class="w-3.5 h-3.5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                        <span class="truncate" x-text="int.nombre"></span>
+                      </label>
+                      <label class="flex items-center gap-1 cursor-pointer shrink-0" :class="promoSeleccion[g.id].integrantes[int.nombre] ? 'text-gray-700' : 'text-gray-300'">
+                        <input type="checkbox" :disabled="!promoSeleccion[g.id].integrantes[int.nombre]" x-model="promoRindieron[`${g.id}_${int.nombre}`]" class="w-3.5 h-3.5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-600">
+                        <span class="text-[10px] font-bold" x-text="promoRindieron[`${g.id}_${int.nombre}`] ? 'Rindió' : '¿Rindió?'"></span>
+                      </label>
+                    </div>
+                  </template>
+                </div>
+                <div class="mt-2 text-[10px] text-gray-500">Tags a asignar: <span class="font-bold" x-text="destinoPPLabel"></span> · <span class="font-bold">Regularizado</span> (o <span class="font-bold">Rendido</span> si marcás "Rindió")</div>
+              </div>
+            </div>
+          </template>
+          <template x-if="gruposPromocion.length === 0">
+            <div class="bg-white rounded-xl p-8 text-center text-gray-500 text-sm border border-gray-200">No hay grupos en esta práctica.</div>
           </template>
         </div>
-      </div>
 
-      <div class="flex items-center gap-2 mb-3">
-        <label class="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">
-          <input type="checkbox" x-model="promocionFiltroPromovibles" class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
-          Solo promovibles (promedio ≥ 4)
-        </label>
-        <span class="text-xs text-gray-400" x-text="`${gruposPromocion.length} grupos en ${promocionPP}`"></span>
-      </div>
-
-      <div x-show="promoResultado" class="mb-3 p-3 rounded-xl border text-sm" :class="promoResultadoError ? 'border-red-200 bg-red-50 text-red-700' : 'border-green-200 bg-green-50 text-green-700'" x-text="promoResultado"></div>
-
-      <div class="space-y-3">
-        <template x-for="g in gruposPromocion" :key="g.id">
-          <div class="bg-white rounded-xl border border-gray-200 shadow-sm" :class="promoSeleccion[g.id]?.promover ? 'border-indigo-400 ring-1 ring-indigo-200' : ''">
-            <div class="p-3 flex items-center gap-3">
-              <input type="checkbox" x-model="promoSeleccion[g.id].promover" class="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
-              <div class="flex-1 min-w-0">
-                <div class="font-bold text-sm text-gray-900">
-                  <span class="text-gray-500 mr-1" x-text="`G${g.id}`"></span>
-                  <span x-text="g.proyecto"></span>
-                </div>
-                <div class="text-xs text-gray-500" x-text="`${g.comision || '—'} · ${g.integrantes?.length || 0} integrantes`"></div>
-              </div>
-              <div class="text-center">
-                <div class="text-[10px] text-gray-500 font-bold uppercase">Promedio</div>
-                <span class="inline-flex items-center justify-center min-w-[3rem] h-8 rounded-lg text-sm font-bold" :class="notaBadgeClass(calcNota(promedioEncuentros(g.id)))" x-text="calcNota(promedioEncuentros(g.id))"></span>
-              </div>
-              <div class="text-center">
-                <div class="text-[10px] text-gray-500 font-bold uppercase">Sugerido</div>
-                <span class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-bold" :class="promoSugeridoBadgeClass(promoSugeridoEstado(g))" x-text="promoSugeridoLabel(promoSugeridoEstado(g))"></span>
-              </div>
-            </div>
-            <div x-show="promoSeleccion[g.id].promover" class="border-t border-gray-100 px-3 py-2 bg-indigo-50/50">
-              <div class="flex items-center justify-between mb-1.5">
-                <span class="text-[10px] font-bold text-gray-600 uppercase tracking-wide">Override por integrante (desmarcá quien repite)</span>
-                <span class="text-[10px] text-gray-500 font-bold" x-text="`${promoPromovidosCount(g.id)} de ${g.integrantes?.length || 0}`"></span>
-              </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
-                <template x-for="int in g.integrantes" :key="int.nombre">
-                  <label class="flex items-center gap-1.5 text-xs text-gray-700 cursor-pointer rounded px-1.5 py-0.5 hover:bg-white">
-                    <input type="checkbox" x-model="promoSeleccion[g.id].integrantes[int.nombre]" class="w-3.5 h-3.5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
-                    <span class="truncate" x-text="int.nombre"></span>
-                  </label>
-                </template>
-              </div>
-            </div>
+        <div class="flex items-center justify-between px-4 sm:px-6 py-4 border-t border-gray-200 shrink-0">
+          <div class="text-xs text-gray-500" x-text="`${promoSeleccionadas} grupos seleccionados`"></div>
+          <div class="flex gap-2">
+            <button @click="showPromover = false; promoResultado = ''" class="px-4 py-2.5 text-sm font-bold rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-50 transition">Cancelar</button>
+            <button
+              @click="aplicarPromocion()"
+              :disabled="promoSeleccionadas === 0 || promoSaving"
+              class="px-5 py-2.5 bg-indigo-700 text-white text-sm font-bold rounded-xl hover:bg-indigo-800 transition disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <span x-text="promoSaving ? 'Aplicando...' : 'Aplicar promoción'"></span>
+            </button>
           </div>
-        </template>
-        <template x-if="gruposPromocion.length === 0">
-          <div class="bg-white rounded-xl p-8 text-center text-gray-500 text-sm border border-gray-200">No hay grupos en esta práctica.</div>
-        </template>
+        </div>
       </div>
+    </div>
 
-      <div class="flex items-center justify-between mt-4">
-        <div class="text-xs text-gray-500" x-text="`${promoSeleccionadas} grupos seleccionados`"></div>
-        <button
-          @click="aplicarPromocion()"
-          :disabled="promoSeleccionadas === 0 || promoSaving"
-          class="px-5 py-2.5 bg-indigo-700 text-white text-sm font-bold rounded-xl hover:bg-indigo-800 transition disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          <span x-text="promoSaving ? 'Aplicando...' : 'Aplicar promoción'"></span>
-        </button>
+    <!-- MODAL PLANILLA -->
+    <div x-show="showPlanillaEditor" class="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/50 p-2 sm:p-4 overflow-y-auto" @click.self="showPlanillaEditor = false">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl my-4 sm:my-8 flex flex-col max-h-[calc(100vh-2rem)]">
+        <div class="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-200 shrink-0">
+          <div>
+            <h2 class="text-base font-bold text-gray-900">Editor de planilla</h2>
+            <p class="text-xs text-gray-500">Criterios, preguntas y nombres por práctica y encuentro.</p>
+          </div>
+          <button @click="showPlanillaEditor = false; planillaError = ''" class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="px-4 sm:px-6 pt-4 shrink-0">
+          <div class="flex gap-1.5 flex-wrap mb-3">
+            <template x-for="p in planillaEditorPPs" :key="p.id">
+              <button
+                @click="planillaEditorPP = p.id; planillaError = ''"
+                class="px-3 py-1.5 text-xs font-bold rounded-md transition"
+                :class="planillaEditorPP === p.id ? 'bg-indigo-700 text-white' : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-100'"
+                x-text="p.label"
+              ></button>
+            </template>
+          </div>
+          <div x-show="planillaError" class="mb-3 p-3 rounded-xl border border-red-200 bg-red-50 text-red-700 text-sm" x-text="planillaError"></div>
+        </div>
+
+        <div class="px-4 sm:px-6 py-4 overflow-y-auto flex-1 min-h-0 space-y-4">
+          <template x-for="enc in planillaEditorRows" :key="enc.id">
+            <div class="bg-white rounded-xl border border-gray-200 p-3 sm:p-4 shadow-sm">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="flex-shrink-0 px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700 text-xs font-bold" x-text="enc.id"></span>
+                <div class="flex-1">
+                  <label class="block text-[10px] font-bold text-gray-500 uppercase mb-0.5">Nombre</label>
+                  <input type="text" x-model="enc.nombre" class="w-full px-2.5 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white">
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-0.5">Pregunta</label>
+                <textarea x-model="enc.pregunta" rows="2" class="w-full px-2.5 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white resize-y"></textarea>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-500 uppercase mb-0.5">Criterio FN</label>
+                  <textarea x-model="enc.criterios.FN" rows="2" class="w-full px-2.5 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white resize-y"></textarea>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-500 uppercase mb-0.5">Criterio DEV</label>
+                  <textarea x-model="enc.criterios.DEV" rows="2" class="w-full px-2.5 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white resize-y"></textarea>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-500 uppercase mb-0.5">Criterio SM</label>
+                  <textarea x-model="enc.criterios.SM" rows="2" class="w-full px-2.5 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white resize-y"></textarea>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <div class="flex items-center justify-end px-4 sm:px-6 py-4 border-t border-gray-200 shrink-0 gap-2">
+          <button @click="showPlanillaEditor = false; planillaError = ''" class="px-4 py-2.5 text-sm font-bold rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-50 transition">Cancelar</button>
+          <button
+            @click="guardarPlanilla()"
+            :disabled="planillaSaving"
+            class="px-5 py-2.5 bg-indigo-700 text-white text-sm font-bold rounded-xl hover:bg-indigo-800 transition disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <span x-text="planillaSaving ? 'Guardando...' : 'Guardar planilla'"></span>
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- VISTA GRUPO DETALLE -->
     <div x-show="view === 'grupo' && selectedGrupo && !loadingData" x-transition>
-      <div class="flex items-center gap-3 mb-4">
+      <div class="flex flex-wrap items-center gap-3 mb-4">
         <button @click="view = 'resumen'" class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
         </button>
         <div class="flex-1 min-w-0">
-          <h2 class="text-lg font-extrabold text-gray-900" x-text="`G${grupoActual?.id} · ${grupoActual?.proyecto}`"></h2>
-          <p class="text-xs text-gray-600 font-medium" x-text="`Grupo ${grupoActual?.id} ${grupoActual?.comision ? '· ' + grupoActual.comision : ''} ${grupoActual?.practica ? '· ' + grupoActual.practica : ''}`"></p>
+          <h2 class="text-base sm:text-lg font-extrabold text-gray-900 truncate" x-text="`G${grupoActual?.id} · ${grupoActual?.proyecto}`"></h2>
+          <p class="text-xs text-gray-600 font-medium truncate" x-text="`Grupo ${grupoActual?.id} ${grupoActual?.comision ? '· ' + grupoActual.comision : ''} ${grupoActual?.practica ? '· ' + grupoActual.practica : ''}`"></p>
         </div>
         
         <!-- Selector de encuentros -->
-        <div class="flex gap-1 overflow-x-auto">
+        <div class="flex gap-1 overflow-x-auto order-last w-full sm:w-auto sm:order-none">
           <template x-for="enc in encuentrosMeta" :key="enc.id">
             <button 
               @click="activeE = enc.id"
@@ -540,7 +645,7 @@
           </template>
         </div>
         
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 flex-wrap">
           <button 
             x-show="canEdit"
             @click="openEditGrupoModal()"
@@ -550,10 +655,19 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           </button>
           <button 
+            x-show="canEdit && grupoActual?.activo === false"
+            @click="reactivarGrupo(selectedGrupo)"
+            class="px-3 h-9 flex items-center gap-1 rounded-lg border border-green-200 bg-green-50 text-green-700 hover:bg-green-100 transition text-xs font-bold"
+            title="Reactivar grupo"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            Reactivar
+          </button>
+          <button 
             x-show="canEdit"
             @click="confirmDeleteGrupo()"
             class="w-9 h-9 flex items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 transition"
-            title="Eliminar grupo"
+            title="Desactivar grupo"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
           </button>
@@ -588,12 +702,17 @@
           <div class="space-y-2">
             <template x-for="int in grupoActual?.integrantes" :key="int.nombre">
               <div class="flex items-center justify-between gap-2 py-1 border-b border-gray-50">
-                <div>
-                  <span class="text-sm text-gray-900 font-bold" x-text="int.nombre"></span>
-                  <span class="text-xs text-gray-600 ml-1 font-medium" x-text="int.rol"></span>
-                  <span x-show="int.obs" class="text-xs text-amber-600 ml-1 font-bold" x-text="'('+int.obs+')'"></span>
+                <div class="min-w-0">
+                  <div class="flex flex-wrap items-center gap-1">
+                    <span class="text-sm text-gray-900 font-bold" x-text="int.nombre"></span>
+                    <span class="text-xs text-gray-600 font-medium" x-text="int.rol"></span>
+                    <span x-show="int.obs" class="text-xs text-amber-600 font-bold" x-text="'('+int.obs+')'"></span>
+                  </div>
+                  <template x-for="tag in (int.tags || [])" :key="tag">
+                    <span class="inline-flex items-center px-1.5 py-0.5 mt-0.5 mr-1 rounded-md bg-indigo-50 text-indigo-700 text-[10px] font-bold" x-text="tag"></span>
+                  </template>
                 </div>
-                <div class="flex gap-1" x-show="canEdit">
+                <div class="flex gap-1 shrink-0" x-show="canEdit">
                   <template x-for="opt in ['Presente (Presencial)','Presente (Virtual)','Ausente','Justificado']" :key="opt">
                     <button 
                       @click="setAsist(int.nombre, localAsist[activeE]?.[int.nombre] === opt ? '' : opt)"
@@ -619,7 +738,7 @@
               <span class="text-xs text-gray-600 font-medium flex-1" x-text="criterioActual(dim)"></span>
               <input
                 x-show="canEdit"
-                type="number" min="0" :max="((evalMeta[activeE + '_' + selectedGrupo]?.es_modificacion || (data[activeE]?.[selectedGrupo]?.FN || data[activeE]?.[selectedGrupo]?.DEV || data[activeE]?.[selectedGrupo]?.SM)) && !localOverride[activeE]) ? 7 : 10" step="0.5"
+                type="number" min="0" max="10" step="0.5"
                 :value="localData[activeE]?.[dim] ?? ''"
                 @change="setField(activeE, dim, $event.target.value === '' ? null : Number($event.target.value))"
                 class="w-14 px-2 py-1 border border-gray-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-indigo-600 text-gray-900 font-bold flex-shrink-0"
@@ -637,24 +756,12 @@
           </div>
         </template>
 
-        <!-- Fechas y override -->
+        <!-- Fechas -->
         <div class="mt-3 pt-3 border-t border-gray-200 space-y-2" x-data="{ key: activeE + '_' + selectedGrupo, meta: evalMeta[activeE + '_' + selectedGrupo] || {} }">
           <div x-show="meta.fecha_primera_nota" class="flex items-center justify-between text-xs text-gray-500">
             <span>Primera nota: <span x-text="meta.fecha_primera_nota ? new Date(meta.fecha_primera_nota).toLocaleDateString('es-AR') : '—'"></span></span>
             <span x-show="meta.fecha_modificacion">Modificación: <span x-text="new Date(meta.fecha_modificacion).toLocaleDateString('es-AR')"></span></span>
           </div>
-          
-          <label 
-            x-show="canEdit && (meta.es_modificacion || (data[activeE]?.[selectedGrupo]?.FN || data[activeE]?.[selectedGrupo]?.DEV || data[activeE]?.[selectedGrupo]?.SM))" 
-            class="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer"
-          >
-            <input 
-              type="checkbox" 
-              x-model="localOverride[activeE]"
-              class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-            >
-            Override límite de modificación (permite nota >7)
-          </label>
         </div>
 
         <!-- Nota calculada -->
@@ -1184,7 +1291,7 @@
             <label class="text-xs font-bold text-gray-700">Integrantes</label>
             <button 
               type="button"
-              @click="newGrupo.integrantes.push({nombre:'',rol:'',observacion:'', dbId:null})"
+              @click="newGrupo.integrantes.push({nombre:'',rol:'',observacion:'', tagEstado:'cursando', dbId:null})"
               class="px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded font-bold hover:bg-indigo-200"
             >
               + Agregar
@@ -1218,6 +1325,15 @@
                     placeholder="Observación (opcional)"
                     class="w-full px-2 py-1 text-xs border border-gray-300 rounded text-gray-900 focus:outline-none focus:ring-1 focus:ring-indigo-600"
                   >
+                  <select 
+                    x-model="int.tagEstado"
+                    class="w-full px-2 py-1 text-xs border border-gray-300 rounded text-gray-900 focus:outline-none focus:ring-1 focus:ring-indigo-600 bg-white"
+                    :title="`Estado en ${newGrupo.practica} (tag)`"
+                  >
+                    <option value="cursando">Estado: Cursando</option>
+                    <option value="regular">Estado: Regularizado</option>
+                    <option value="rendida">Estado: Rendido</option>
+                  </select>
                 </div>
                 <button 
                   type="button"
@@ -1261,9 +1377,9 @@
     @click.self="showConfirmDelete = false"
   >
     <div class="bg-white rounded-xl p-6 w-full max-w-sm border border-gray-300 shadow-lg">
-      <h2 class="text-lg font-bold text-red-600 mb-2">Eliminar Grupo</h2>
+      <h2 class="text-lg font-bold text-red-600 mb-2">Desactivar Grupo</h2>
       <p class="text-sm text-gray-700 mb-4">
-        ¿Estás seguro de que deseas eliminar <strong x-text="grupoToDelete?.proyecto"></strong>? Esta acción no se puede deshacer.
+        ¿Estás seguro de que deseas desactivar <strong x-text="grupoToDelete?.proyecto"></strong>? El grupo quedará oculto pero sus datos se conservan.
       </p>
       <div class="flex gap-2">
         <button 
@@ -1277,7 +1393,7 @@
           class="flex-1 py-2 bg-red-600 text-white text-sm font-bold rounded-lg hover:bg-red-700"
           :disabled="loadingDelete"
         >
-          <span x-text="loadingDelete ? '...' : 'Eliminar'"></span>
+          <span x-text="loadingDelete ? '...' : 'Desactivar'"></span>
         </button>
       </div>
     </div>
@@ -1388,9 +1504,11 @@
     saved: false,
     saveTimeout: null,
     practicaFilter: 'Todas',
+    mostrarInactivos: false,
     editingGrupoId: null,
     
     // Promoción / Transferencia
+    showPromover: false,
     promocionPP: 'P1',
     promocionPPs: [
       { id: 'P1', label: 'PP1 (3er sem)' },
@@ -1399,6 +1517,7 @@
     ],
     promocionFiltroPromovibles: false,
     promoSel: {},
+    promoRindieron: {},
     promoSaving: false,
     promoResultado: '',
     promoResultadoError: false,
@@ -1410,13 +1529,22 @@
     statsEncuentroFilter: '',
     statsResumen: { evaluados: 0, promocionados: 0, regulares: 0, libres: 0 },
     
-    encuentrosMeta: ENCUENTROS_META,
+    planilla: {},
+    planillaEditorPP: 'P2',
+    planillaEditorPPs: [
+      { id: 'P1', label: 'PP1' },
+      { id: 'P2', label: 'PP2' },
+      { id: 'P3', label: 'PP3' },
+      { id: 'TutoriasPost', label: 'Tutorías Post' },
+    ],
+    showPlanillaEditor: false,
+    planillaSaving: false,
+    planillaError: '',
     grupos: [],
     comisiones: [],
     data: {},
     localData: {},
     localAsist: {},
-    localOverride: {},
     evalMeta: {},
     grupoToDelete: null,
     
@@ -1432,7 +1560,7 @@
       proyecto: '',
       comision: '',
       practica: 'P2',
-      integrantes: [{nombre:'',rol:'',observacion:'', dbId:null}]
+      integrantes: [{nombre:'',rol:'',observacion:'', tagEstado:'cursando', dbId:null}]
     },
     
     newComision: {
@@ -1601,7 +1729,7 @@
         // Integrantes
         const { data: intData, error: intErr } = await supabase
           .from('integrantes')
-          .select('*');
+          .select('id, grupo_id, nombre, rol, observacion, tags');
         if (intErr) throw intErr;
 
         const integrantesByGrupo = {};
@@ -1612,7 +1740,8 @@
             id: i.id,
             nombre: i.nombre,
             rol: i.rol || '',
-            obs: i.observacion || ''
+            obs: i.observacion || '',
+            tags: i.tags || []
           });
         });
 
@@ -1680,6 +1809,31 @@
           .select('id, nombre_completo, pp1_estado, pp1_mes_regularizada, pp2_estado, pp2_mes_regularizada, pp3_estado, pp3_mes_regularizada');
         if (alumErr) throw alumErr;
         this.alumnosSeguimiento = alumData || [];
+
+        // Planilla (criterios por práctica/encuentro)
+        const { data: planData, error: planErr } = await supabase
+          .from('planilla')
+          .select('practica, encuentro, nombre, pregunta, criterio_fn, criterio_dev, criterio_sm')
+          .order('encuentro');
+        if (planErr) throw planErr;
+
+        const planilla = {};
+        (planData || []).forEach(p => {
+          if (!planilla[p.practica]) planilla[p.practica] = [];
+          planilla[p.practica].push({
+            id: p.encuentro,
+            nombre: p.nombre || '',
+            pregunta: p.pregunta || '',
+            criterios: {
+              FN: p.criterio_fn || '',
+              DEV: p.criterio_dev || '',
+              SM: p.criterio_sm || ''
+            }
+          });
+        });
+        if (Object.keys(planilla).length > 0) {
+          this.planilla = planilla;
+        }
       } catch (e) {
         console.warn('Error loading from Supabase:', e);
         this.grupos = GRUPOS_INICIALES;
@@ -1723,7 +1877,7 @@
     },
 
     get gruposFiltrados() {
-      let list = this.grupos.filter(g => g.proyecto);
+      let list = this.grupos.filter(g => g.proyecto && (this.mostrarInactivos || g.activo !== false));
       if (this.practicaFilter !== 'Todas') {
         list = list.filter(g => g.practica === this.practicaFilter);
       }
@@ -1779,11 +1933,26 @@
     },
 
     get gruposConProyecto() {
-      let list = this.grupos.filter(g => g.proyecto);
+      let list = this.grupos.filter(g => g.proyecto && (this.mostrarInactivos || g.activo !== false));
       if (this.practicaFilter !== 'Todas') {
         list = list.filter(g => g.practica === this.practicaFilter);
       }
       return list;
+    },
+
+    get practicaActual() {
+      if (this.view === 'grupo') {
+        return this.grupoActual?.practica || 'P2';
+      }
+      return this.practicaFilter === 'Todas' ? 'P2' : this.practicaFilter;
+    },
+
+    get encuentrosMeta() {
+      return this.planilla[this.practicaActual] || ENCUENTROS_META;
+    },
+
+    planillaPara(practica) {
+      return this.planilla[practica] || ENCUENTROS_META;
     },
 
     get grupoActual() {
@@ -1791,11 +1960,11 @@
     },
 
     get encuentroActual() {
-      return ENCUENTROS_META.find(e => e.id === this.activeE);
+      return this.encuentrosMeta.find(e => e.id === this.activeE) || this.encuentrosMeta[0];
     },
 
     get encuentroSeleccionado() {
-      return ENCUENTROS_META.find(e => e.id === this.selectedEnc);
+      return this.encuentrosMeta.find(e => e.id === this.selectedEnc) || this.encuentrosMeta[0];
     },
 
     get ranking() {
@@ -1827,8 +1996,10 @@
     },
 
     promedioEncuentros(grupoId) {
+      const g = this.grupos.find(x => x.id === grupoId);
+      const meta = this.planillaPara(g?.practica || 'P2');
       let sum = 0, count = 0;
-      ENCUENTROS_META.forEach(e => {
+      meta.forEach(e => {
         const sc = this.data[e.id]?.[grupoId];
         const p = this.calcPct(sc);
         if (p !== null) { sum += p; count++; }
@@ -1838,7 +2009,7 @@
 
     // --- PROMOCIÓN / TRANSFERENCIA ---
     get gruposPromocion() {
-      let list = this.grupos.filter(g => g.proyecto && g.practica === this.promocionPP);
+      let list = this.grupos.filter(g => g.proyecto && g.activo !== false && g.practica === this.promocionPP);
       if (this.promocionFiltroPromovibles) {
         list = list.filter(g => this.promoSugeridoEstado(g) !== 'no_promueve');
       }
@@ -1884,6 +2055,11 @@
       return Object.values(sel.integrantes).filter(Boolean).length;
     },
 
+    get destinoPPLabel() {
+      const destino = { P1: 'P2', P2: 'P3', P3: 'Tutorías Post' }[this.promocionPP] || 'P2';
+      return destino;
+    },
+
     initPromocion() {
       this.grupos.forEach(g => {
         if (!g.proyecto || g.practica !== this.promocionPP) return;
@@ -1924,6 +2100,15 @@
 
           for (const [nombre, promovido] of Object.entries(sel.integrantes)) {
             if (!promovido) continue;
+            const rindio = !!this.promoRindieron[`${g.id}_${nombre}`];
+            const nuevoTag = `${destino}-${rindio ? 'rendida' : 'regular'}`;
+            const integrante = (g.integrantes || []).find(i => i.nombre === nombre);
+            if (integrante && (integrante.id || integrante.dbId)) {
+              const intId = integrante.id || integrante.dbId;
+              const { error: intErr } = await supabase.from('integrantes').update({ tags: [nuevoTag] }).eq('id', intId);
+              if (intErr) throw intErr;
+              integrante.tags = [nuevoTag];
+            }
             const alumno = this.alumnosSeguimiento.find(a => this.normalizarNombre(a.nombre_completo) === this.normalizarNombre(nombre));
             if (!alumno) { resumen.sinMatch++; continue; }
             const payload = {
@@ -1938,6 +2123,7 @@
         const msg = `Promoción aplicada: ${resumen.grupos} grupo(s) pasaron a ${destino}, ${resumen.alumnos} alumno(s) actualizados.`;
         this.promoResultado = resumen.sinMatch ? `${msg} ${resumen.sinMatch} integrante(s) sin match en alumnos_seguimiento.` : msg;
         this.promoSel = {};
+        this.promoRindieron = {};
         this.initPromocion();
       } catch (e) {
         this.promoResultado = 'Error al aplicar: ' + (e.message || e);
@@ -1957,9 +2143,73 @@
         .trim();
     },
 
+    tagEstadoDesdeTags(tags, practica) {
+      const prefijo = `${practica}-`;
+      const t = (tags || []).find(x => x.startsWith(prefijo));
+      if (!t) return 'cursando';
+      const estado = t.slice(prefijo.length);
+      return ['regular', 'rendida'].includes(estado) ? estado : 'cursando';
+    },
+
+    tagsParaIntegrante(practica, tagEstado) {
+      const estado = (tagEstado || 'cursando') === 'regular' ? 'regular' : (tagEstado || 'cursando') === 'rendida' ? 'rendida' : 'cursando';
+      return [`${practica}-${estado}`];
+    },
+
+    // --- PLANILLA (editor por práctica) ---
+    get planillaEditorRows() {
+      return this.planilla[this.planillaEditorPP] || ENCUENTROS_META;
+    },
+
+    openPlanillaEditor() {
+      this.planillaEditorPP = this.practicaActual === 'Todas' ? 'P2' : this.practicaActual;
+      if (!this.planilla[this.planillaEditorPP]) {
+        this.planilla[this.planillaEditorPP] = ENCUENTROS_META.map(e => ({
+          id: e.id,
+          nombre: e.nombre,
+          pregunta: e.pregunta,
+          criterios: { FN: e.criterios.FN, DEV: e.criterios.DEV, SM: e.criterios.SM }
+        }));
+      }
+      this.planillaError = '';
+      this.showPlanillaEditor = true;
+    },
+
+    async guardarPlanilla() {
+      this.planillaSaving = true;
+      this.planillaError = '';
+      const pp = this.planillaEditorPP;
+      const rows = this.planilla[pp] || [];
+      try {
+        for (const r of rows) {
+          const payload = {
+            practica: pp,
+            encuentro: r.id,
+            nombre: r.nombre || '',
+            pregunta: r.pregunta || '',
+            criterio_fn: r.criterios?.FN || '',
+            criterio_dev: r.criterios?.DEV || '',
+            criterio_sm: r.criterios?.SM || ''
+          };
+          const { error } = await supabase
+            .from('planilla')
+            .upsert(payload, { onConflict: 'practica,encuentro' });
+          if (error) throw error;
+        }
+        this.planilla[pp] = rows.map(r => ({ ...r }));
+        this.showPlanillaEditor = false;
+      } catch (e) {
+        this.planillaError = 'Error al guardar: ' + (e.message || e);
+      } finally {
+        this.planillaSaving = false;
+      }
+    },
+
     dimAvgForGrupo(grupoId, dim) {
+      const g = this.grupos.find(x => x.id === grupoId);
+      const meta = this.planillaPara(g?.practica || 'P2');
       let sum = 0, count = 0;
-      ENCUENTROS_META.forEach(e => {
+      meta.forEach(e => {
         const v = this.data[e.id]?.[grupoId]?.[dim];
         if (v !== undefined && v !== null && v !== "") { sum += Number(v); count++; }
       });
@@ -1991,10 +2241,11 @@
     },
 
     initLocalData(grupoId) {
+      const g = this.grupos.find(x => x.id === grupoId);
+      const meta = this.planillaPara(g?.practica || 'P2');
       const d = {};
       const a = {};
-      const o = {};
-      ENCUENTROS_META.forEach(e => {
+      meta.forEach(e => {
         const sc = this.data[e.id]?.[grupoId] || {};
         d[e.id] = {
           FN: sc.FN ?? "",
@@ -2003,12 +2254,9 @@
           feedback: { FN: sc.fb?.FN ?? "", DEV: sc.fb?.DEV ?? "", SM: sc.fb?.SM ?? "" },
         };
         a[e.id] = { ...(sc.asistencia || {}) };
-        const key = `${e.id}_${grupoId}`;
-        o[e.id] = this.evalMeta[key]?.override_limite || false;
       });
       this.localData = d;
       this.localAsist = a;
-      this.localOverride = o;
     },
 
     setField(enc, dim, val) {
@@ -2048,9 +2296,10 @@
     },
 
     dimProm(dim) {
+      const meta = this.encuentrosMeta;
       let sum = 0, count = 0;
       this.gruposConProyecto.forEach(g => {
-        ENCUENTROS_META.forEach(e => {
+        meta.forEach(e => {
           const v = this.data[e.id]?.[g.id]?.[dim];
           if (v !== undefined && v !== null && v !== "") { sum += Number(v); count++; }
         });
@@ -2100,7 +2349,7 @@
 
     // --- STATS HELPERS ---
     gruposStatsFiltrados() {
-      let list = this.grupos.filter(g => g.proyecto);
+      let list = this.grupos.filter(g => g.proyecto && (this.mostrarInactivos || g.activo !== false));
       if (this.statsComisionFilter) {
         list = list.filter(g => g.comision === this.statsComisionFilter);
       }
@@ -2108,6 +2357,11 @@
         list = list.filter(g => g.practica === this.statsPracticaFilter);
       }
       return list;
+    },
+
+    statsEncuentros() {
+      const pp = this.statsPracticaFilter || (this.practicaFilter === 'Todas' ? 'P2' : this.practicaFilter);
+      return this.planillaPara(pp);
     },
 
     calcStatsResumen() {
@@ -2137,8 +2391,8 @@
     getEvolucionData() {
       const grupos = this.gruposStatsFiltrados();
       const encounters = this.statsEncuentroFilter 
-        ? ENCUENTROS_META.filter(e => e.id === this.statsEncuentroFilter)
-        : ENCUENTROS_META;
+        ? this.statsEncuentros().filter(e => e.id === this.statsEncuentroFilter)
+        : this.statsEncuentros();
       
       const traces = ['FN', 'DEV', 'SM'].map((dim, idx) => {
         const colors = ['#4f46e5', '#0284c7', '#d97706'];
@@ -2165,7 +2419,7 @@
       const x = [], y = [], text = [], color = [], size = [];
       
       grupos.forEach(g => {
-        ENCUENTROS_META.forEach(enc => {
+        this.statsEncuentros().forEach(enc => {
           const asist = this.data[enc.id]?.[g.id]?.asistencia || {};
           let presentes = 0, total = 0;
           g.integrantes?.forEach(int => {
@@ -2224,7 +2478,7 @@
         const dims = ['FN','DEV','SM'];
         const notas = [];
         
-        ENCUENTROS_META.forEach(enc => {
+        this.statsEncuentros().forEach(enc => {
           let sum = 0, count = 0;
           dims.forEach(d => {
             const v = this.data[enc.id]?.[g.id]?.[d];
@@ -2236,7 +2490,7 @@
         for (let i = 1; i < notas.length; i++) {
           if (notas[i] !== null && notas[i-1] !== null) {
             const delta = notas[i] - notas[i-1];
-            y.push(`G${g.id}: ${ENCUENTROS_META[i-1].id} → ${ENCUENTROS_META[i].id}`);
+            y.push(`G${g.id}: ${this.statsEncuentros()[i-1].id} → ${this.statsEncuentros()[i].id}`);
             x.push(delta);
             text.push(`${delta >= 0 ? '+' : ''}${delta.toFixed(1)} nota`);
           }
@@ -2264,7 +2518,7 @@
       const traces = dims.map((dim, idx) => {
         const values = [];
         grupos.forEach(g => {
-          ENCUENTROS_META.forEach(enc => {
+          this.statsEncuentros().forEach(enc => {
             if (this.statsEncuentroFilter && enc.id !== this.statsEncuentroFilter) return;
             const v = this.data[enc.id]?.[g.id]?.[dim];
             if (v !== undefined && v !== null && v !== '') values.push(Number(v));
@@ -2291,8 +2545,8 @@
       const grupos = this.gruposStatsFiltrados();
       const comisionesUnicas = [...new Set(grupos.map(g => g.comision || 'Sin comisión'))].sort();
       const encounters = this.statsEncuentroFilter 
-        ? ENCUENTROS_META.filter(e => e.id === this.statsEncuentroFilter)
-        : ENCUENTROS_META;
+        ? this.statsEncuentros().filter(e => e.id === this.statsEncuentroFilter)
+        : this.statsEncuentros();
       
       const z = [];
       comisionesUnicas.forEach(com => {
@@ -2372,7 +2626,7 @@
           const hoverRow = [];
           let tieneDatos = false;
 
-          ENCUENTROS_META.forEach(enc => {
+          this.statsEncuentros().forEach(enc => {
             const asist = this.data[enc.id]?.[g.id]?.asistencia || {};
             const estado = asist[int.nombre];
             let val, label;
@@ -2404,7 +2658,7 @@
       const sortedHover = indices.map(i => hoverText[i]);
 
       const z = sortedRows;
-      const x = ENCUENTROS_META.map(e => e.id);
+      const x = this.statsEncuentros().map(e => e.id);
 
       return {
         data: [{
@@ -2439,12 +2693,12 @@
 
     getAusenciasStackedData() {
       const grupos = this.gruposStatsFiltrados();
-      const x = ENCUENTROS_META.map(e => e.id);
+      const x = this.statsEncuentros().map(e => e.id);
       const ausentes = [];
       const justificados = [];
       const presentes = [];
 
-      ENCUENTROS_META.forEach(enc => {
+      this.statsEncuentros().forEach(enc => {
         let a = 0, j = 0, p = 0;
         grupos.forEach(g => {
           const asist = this.data[enc.id]?.[g.id]?.asistencia || {};
@@ -2588,8 +2842,7 @@
         const key = `${encId}_${grupoId}`;
         const hasExisting = !!this.data[encId]?.[grupoId]?.FN || !!this.data[encId]?.[grupoId]?.DEV || !!this.data[encId]?.[grupoId]?.SM;
         const isModificacion = hasExisting || (this.evalMeta[key]?.es_modificacion);
-        const override = this.localOverride[encId] || false;
-        const maxNota = (isModificacion && !override) ? 7 : 10;
+        const maxNota = 10;
         
         // Validar notas
         const dims = ['FN', 'DEV', 'SM'];
@@ -2598,7 +2851,7 @@
           if (val !== null && val !== '' && val !== undefined) {
             const numVal = Number(val);
             if (numVal < 1 || numVal > maxNota) {
-              alert(`La nota de ${dim} para ${encId} debe estar entre 1 y ${maxNota}. ${isModificacion ? 'Es una modificación.' : ''}`);
+              alert(`La nota de ${dim} para ${encId} debe estar entre 1 y ${maxNota}.`);
               return;
             }
           }
@@ -2619,7 +2872,7 @@
         if (isModificacion) {
           evalPayload.es_modificacion = true;
           evalPayload.fecha_modificacion = new Date().toISOString();
-          evalPayload.override_limite = override;
+          evalPayload.override_limite = false;
           if (this.evalMeta[key]?.fecha_primera_nota) {
             evalPayload.fecha_primera_nota = this.evalMeta[key].fecha_primera_nota;
           }
@@ -2690,7 +2943,7 @@
         proyecto: '',
         comision: '',
         practica: 'P2',
-        integrantes: [{nombre:'',rol:'',observacion:'', dbId:null}]
+        integrantes: [{nombre:'',rol:'',observacion:'', tagEstado:'cursando', dbId:null}]
       };
       this.addGrupoError = '';
       this.showAddGrupo = true;
@@ -2708,6 +2961,7 @@
           nombre: i.nombre,
           rol: i.rol || '',
           observacion: i.obs || '',
+          tagEstado: this.tagEstadoDesdeTags(i.tags || [], g.practica),
           dbId: i.id || null
         }))
       };
@@ -2754,7 +3008,8 @@
               const { error } = await supabase.from('integrantes').update({
                 nombre: int.nombre.trim(),
                 rol: int.rol.trim(),
-                observacion: int.observacion.trim()
+                observacion: int.observacion.trim(),
+                tags: this.tagsParaIntegrante(this.newGrupo.practica, int.tagEstado)
               }).eq('id', int.dbId);
               if (error) throw error;
               handledIds.add(int.dbId);
@@ -2763,7 +3018,8 @@
                 grupo_id: grupoId,
                 nombre: int.nombre.trim(),
                 rol: int.rol.trim(),
-                observacion: int.observacion.trim()
+                observacion: int.observacion.trim(),
+                tags: this.tagsParaIntegrante(this.newGrupo.practica, int.tagEstado)
               }).select('id').single();
               if (error) throw error;
               handledIds.add(newInt.id);
@@ -2788,7 +3044,8 @@
                 id: i.dbId,
                 nombre: i.nombre.trim(),
                 rol: i.rol.trim(),
-                obs: i.observacion.trim()
+                obs: i.observacion.trim(),
+                tags: this.tagsParaIntegrante(this.newGrupo.practica, i.tagEstado)
               }))
             };
           }
@@ -2809,7 +3066,8 @@
             grupo_id: nextId,
             nombre: i.nombre.trim(),
             rol: i.rol.trim(),
-            observacion: i.observacion.trim()
+            observacion: i.observacion.trim(),
+            tags: this.tagsParaIntegrante(this.newGrupo.practica, i.tagEstado)
           }));
           const { error: intErr } = await supabase.from('integrantes').insert(intRows);
           if (intErr) throw intErr;
@@ -2822,7 +3080,8 @@
             integrantes: validIntegrantes.map(i => ({
               nombre: i.nombre.trim(),
               rol: i.rol.trim(),
-              obs: i.observacion.trim()
+              obs: i.observacion.trim(),
+              tags: this.tagsParaIntegrante(this.newGrupo.practica, i.tagEstado)
             }))
           });
         }
@@ -2832,7 +3091,7 @@
           proyecto: '',
           comision: '',
           practica: 'P2',
-          integrantes: [{nombre:'',rol:'',observacion:'', dbId:null}]
+          integrantes: [{nombre:'',rol:'',observacion:'', tagEstado:'cursando', dbId:null}]
         };
         this.editingGrupoId = null;
         this.showAddGrupo = false;
@@ -2855,25 +3114,30 @@
       
       try {
         const grupoId = this.grupoToDelete.id;
-        const { error } = await supabase.from('grupos').delete().eq('id', grupoId);
+        const { error } = await supabase.from('grupos').update({ activo: false }).eq('id', grupoId);
         if (error) throw error;
         
-        this.grupos = this.grupos.filter(g => g.id !== this.grupoToDelete.id);
-        
-        ENCUENTROS_META.forEach(e => {
-          if (this.data[e.id]) {
-            delete this.data[e.id][this.grupoToDelete.id];
-          }
-        });
+        this.grupos = this.grupos.map(g => g.id === this.grupoToDelete.id ? { ...g, activo: false } : g);
         
         this.showConfirmDelete = false;
         this.grupoToDelete = null;
         this.view = 'resumen';
         
       } catch (e) {
-        alert('Error al eliminar: ' + e.message);
+        alert('Error al desactivar: ' + e.message);
       } finally {
         this.loadingDelete = false;
+      }
+    },
+
+    async reactivarGrupo(id) {
+      if (!this.canEdit) return;
+      try {
+        const { error } = await supabase.from('grupos').update({ activo: true }).eq('id', id);
+        if (error) throw error;
+        this.grupos = this.grupos.map(g => g.id === id ? { ...g, activo: true } : g);
+      } catch (e) {
+        alert('Error al reactivar: ' + e.message);
       }
     },
     
@@ -3042,7 +3306,7 @@
         grp.currentPct = this.calcPctStr(this.promedioEncuentros(grp.id));
         
         const projectedData = {};
-        ENCUENTROS_META.forEach(enc => {
+        this.planillaPara(g?.practica || 'P2').forEach(enc => {
           if (!projectedData[enc.id]) projectedData[enc.id] = {};
           const existing = this.data[enc.id]?.[grp.id];
           if (existing) {
