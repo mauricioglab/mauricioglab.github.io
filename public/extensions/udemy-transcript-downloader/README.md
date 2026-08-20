@@ -1,14 +1,25 @@
 # Udemy Transcript Downloader
 
-Extension para Chrome/Edge que descarga transcripciones de cursos de Udemy.
+Extensión para Chrome/Edge/Firefox que descarga transcripciones de cursos de Udemy.
 
 ## Instalación
 
+### Chrome / Edge
+
 1. Clona o descarga este repo
-3. Abre Chrome/Edge y ve a `chrome://extensions/`
-4. Activa "Modo de desarrollador"
-5. Click en "Cargar extensión sin empaquetar"
-6. Selecciona la carpeta del proyecto
+2. Abre Chrome/Edge y ve a `chrome://extensions/`
+3. Activa "Modo de desarrollador"
+4. Click en "Cargar extensión sin empaquetar"
+5. Selecciona la carpeta del proyecto
+
+### Firefox
+
+1. Clona o descarga este repo
+2. Abre Firefox y ve a `about:debugging#/runtime/this-firefox`
+3. Click en "Cargar complemento temporal..."
+4. Selecciona el archivo `manifest.json` de la carpeta del proyecto
+
+> **Nota:**Firefox carga la extensión en modo temporal. Para uso persistente, la extensión debe firmarse en [addons.mozilla.org](https://addons.mozilla.org/).
 
 ## Uso
 
@@ -55,6 +66,9 @@ Puedes personalizar los tiempos de espera, formato de archivo, textos, etc. edit
 **No pasa a la siguiente clase:**
 - Revisa que exista el botón "siguiente" en Udemy
 - Puede que sea la última clase del curso
+
+**Firefox: la extensión desaparece al reiniciar:**
+- Es normal en modo temporal. Reinstala desde `about:debugging` o firma la extensión en AMO.
 
 ## Licencia
 

@@ -407,91 +407,84 @@ export async function applyDiffToSupabase(diff, supabase) {
 
   // --- Apply new grupos + their integrantes ---
   for (const eg of diff.grupos.added) {
-    const { error } = await supabase
-      .from('grupos')
-      .upsert({
+    try {
+      const { error } = await supabase.from('grupos').upsert({
         id: eg.id,
         proyecto: eg.proyecto,
         comision: eg.comision || '',
         practica: eg.practica || 'P2',
       }, { onConflict: 'id' });
-    if (error) {
-      results.errors.push(`Grupo ${eg.id}: ${error.message}`);
-      continue;
-    }
-    results.grupos++;
+      if (error) throw error;
+      results.grupos++;
 
-    for (const ei of eg.integrantes) {
-      if (!ei.nombre || ei.nombre.trim() === '' || ei.nombre.trim() === '—') continue;
-      const { error: intErr } = await supabase
-        .from('integrantes')
-        .insert({
+      const intRows = (eg.integrantes || [])
+        .filter(ei => ei.nombre && ei.nombre.trim() && ei.nombre.trim() !== '—')
+        .map(ei => ({
           grupo_id: eg.id,
           nombre: ei.nombre.trim(),
           rol: ei.rol || '',
           observacion: ei.observacion || '',
-        });
-      if (intErr) {
-        results.errors.push(`Integrante ${ei.nombre} (G${eg.id}): ${intErr.message}`);
-      } else {
-        results.integrantes++;
+        }));
+      if (intRows.length > 0) {
+        const { error: intErr } = await supabase.from('integrantes').insert(intRows);
+        if (intErr) throw intErr;
+        results.integrantes += intRows.length;
       }
+    } catch (e) {
+      results.errors.push(`Grupo ${eg.id}: ${e.message}`);
     }
   }
 
   // --- Apply modified grupos ---
   for (const eg of diff.grupos.modified) {
-    const { error } = await supabase
-      .from('grupos')
-      .update({
+    try {
+      const { error } = await supabase.from('grupos').update({
         proyecto: eg.proyecto,
         comision: eg.comision || '',
-      })
-      .eq('id', eg.id);
-    if (error) {
-      results.errors.push(`Grupo ${eg.id} (mod): ${error.message}`);
-    } else {
+      }).eq('id', eg.id);
+      if (error) throw error;
       results.grupos++;
+    } catch (e) {
+      results.errors.push(`Grupo ${eg.id} (mod): ${e.message}`);
     }
   }
 
   // --- Apply new integrantes ---
   for (const ei of diff.integrantes.added) {
-    const { error } = await supabase
-      .from('integrantes')
-      .insert({
+    try {
+      const { error } = await supabase.from('integrantes').insert({
         grupo_id: ei.grupo_id,
         nombre: ei.nombre,
         rol: ei.rol || '',
         observacion: ei.observacion || '',
       });
-    if (error) {
-      results.errors.push(`Integrante ${ei.nombre} (G${ei.grupo_id}): ${error.message}`);
-    } else {
+      if (error) throw error;
       results.integrantes++;
+    } catch (e) {
+      results.errors.push(`Integrante ${ei.nombre} (G${ei.grupo_id}): ${e.message}`);
     }
   }
 
   // --- Apply modified integrantes ---
   for (const ei of diff.integrantes.modified) {
-    const { data: existing } = await supabase
-      .from('integrantes')
-      .select('id')
-      .eq('grupo_id', ei.grupo_id)
-      .eq('nombre', ei.nombre);
-    if (existing && existing.length > 0) {
-      const { error } = await supabase
+    try {
+      const { data: matches, error: findErr } = await supabase
         .from('integrantes')
-        .update({
+        .select('id')
+        .eq('grupo_id', ei.grupo_id)
+        .eq('nombre', ei.nombre)
+        .limit(1);
+      if (findErr) throw findErr;
+      if (matches && matches.length > 0) {
+        const { error } = await supabase.from('integrantes').update({
           rol: ei.rol || '',
           observacion: ei.observacion || '',
-        })
-        .eq('id', existing[0].id);
-      if (error) {
-        results.errors.push(`Integrante ${ei.nombre} (G${ei.grupo_id}) mod: ${error.message}`);
-      } else {
+        }).eq('id', matches[0].id);
+        if (error) throw error;
         results.integrantes++;
       }
+    } catch (e) {
+      results.errors.push(`Integrante ${ei.nombre} (G${ei.grupo_id}) mod: ${e.message}`);
     }
   }
 
@@ -499,53 +492,48 @@ export async function applyDiffToSupabase(diff, supabase) {
   const allEvals = [...diff.evaluaciones.added, ...diff.evaluaciones.modified];
 
   for (const ev of allEvals) {
-    const dims = ev.dimensions;
-    const { data: existingEval } = await supabase
-      .from('evaluaciones')
-      .select('id, fn, dev, sm, feedback_fn, feedback_dev, feedback_sm, fecha_primera_nota')
-      .eq('grupo_id', ev.grupo_id)
-      .eq('encuentro_meta_id', ev.encuentro_meta_id)
-      .maybeSingle();
+    try {
+      const dims = ev.dimensions;
+      const { data: existing, error: findErr } = await supabase
+        .from('evaluaciones')
+        .select('id, fecha_primera_nota')
+        .eq('grupo_id', ev.grupo_id)
+        .eq('encuentro_meta_id', ev.encuentro_meta_id)
+        .maybeSingle();
+      if (findErr) throw findErr;
 
-    if (existingEval) {
-      const updatePayload = { es_modificacion: true, fecha_modificacion: new Date().toISOString() };
-      if (dims.FN) { updatePayload.fn = dims.FN.puntaje; if (dims.FN.feedback) updatePayload.feedback_fn = dims.FN.feedback; }
-      if (dims.DEV) { updatePayload.dev = dims.DEV.puntaje; if (dims.DEV.feedback) updatePayload.feedback_dev = dims.DEV.feedback; }
-      if (dims.SM) { updatePayload.sm = dims.SM.puntaje; if (dims.SM.feedback) updatePayload.feedback_sm = dims.SM.feedback; }
-      if (!existingEval.fecha_primera_nota) {
-        updatePayload.fecha_primera_nota = new Date().toISOString();
-      }
-      const { error } = await supabase
-        .from('evaluaciones')
-        .update(updatePayload)
-        .eq('id', existingEval.id);
-      if (error) {
-        results.errors.push(`Eval G${ev.grupo_id} ${ev.encuentro_meta_id}: ${error.message}`);
+      const now = new Date().toISOString();
+      if (existing) {
+        const updatePayload = { es_modificacion: true, fecha_modificacion: now };
+        if (dims.FN) { updatePayload.fn = dims.FN.puntaje; if (dims.FN.feedback) updatePayload.feedback_fn = dims.FN.feedback; }
+        if (dims.DEV) { updatePayload.dev = dims.DEV.puntaje; if (dims.DEV.feedback) updatePayload.feedback_dev = dims.DEV.feedback; }
+        if (dims.SM) { updatePayload.sm = dims.SM.puntaje; if (dims.SM.feedback) updatePayload.feedback_sm = dims.SM.feedback; }
+        if (!existing.fecha_primera_nota) {
+          updatePayload.fecha_primera_nota = now;
+        }
+        const { error } = await supabase.from('evaluaciones').update(updatePayload).eq('id', existing.id);
+        if (error) throw error;
+        results.evaluaciones++;
       } else {
+        const payload = {
+          grupo_id: ev.grupo_id,
+          encuentro_meta_id: ev.encuentro_meta_id,
+          fn: dims.FN?.puntaje || null,
+          dev: dims.DEV?.puntaje || null,
+          sm: dims.SM?.puntaje || null,
+          feedback_fn: dims.FN?.feedback || '',
+          feedback_dev: dims.DEV?.feedback || '',
+          feedback_sm: dims.SM?.feedback || '',
+          fecha_primera_nota: now,
+          es_modificacion: false,
+          override_limite: false,
+        };
+        const { error } = await supabase.from('evaluaciones').insert(payload);
+        if (error) throw error;
         results.evaluaciones++;
       }
-    } else {
-      const payload = {
-        grupo_id: ev.grupo_id,
-        encuentro_meta_id: ev.encuentro_meta_id,
-        fn: dims.FN?.puntaje || null,
-        dev: dims.DEV?.puntaje || null,
-        sm: dims.SM?.puntaje || null,
-        feedback_fn: dims.FN?.feedback || '',
-        feedback_dev: dims.DEV?.feedback || '',
-        feedback_sm: dims.SM?.feedback || '',
-        fecha_primera_nota: new Date().toISOString(),
-      };
-      const { data: newEval, error } = await supabase
-        .from('evaluaciones')
-        .insert(payload)
-        .select()
-        .single();
-      if (error) {
-        results.errors.push(`Eval G${ev.grupo_id} ${ev.encuentro_meta_id}: ${error.message}`);
-      } else {
-        results.evaluaciones++;
-      }
+    } catch (e) {
+      results.errors.push(`Eval G${ev.grupo_id} ${ev.encuentro_meta_id}: ${e.message}`);
     }
   }
 
@@ -553,37 +541,25 @@ export async function applyDiffToSupabase(diff, supabase) {
   const allAsist = [...diff.asistencias.added, ...diff.asistencias.modified];
 
   for (const ea of allAsist) {
-    const { data: evalData } = await supabase
-      .from('evaluaciones')
-      .select('id')
-      .eq('grupo_id', ea.grupo_id)
-      .eq('encuentro_meta_id', ea.encuentro_meta_id);
-
-    if (evalData && evalData.length > 0) {
-      const evalId = evalData[0].id;
-
-      const { data: existingAsist } = await supabase
-        .from('asistencias')
+    try {
+      const { data: evalRow, error: findErr } = await supabase
+        .from('evaluaciones')
         .select('id')
-        .eq('evaluacion_id', evalId)
-        .eq('integrante_nombre', ea.integrante_nombre);
-
-      if (existingAsist && existingAsist.length > 0) {
-        const { error } = await supabase
-          .from('asistencias')
-          .update({ estado: ea.estado })
-          .eq('id', existingAsist[0].id);
-        if (!error) results.asistencias++;
-      } else {
-        const { error } = await supabase
-          .from('asistencias')
-          .insert({
-            evaluacion_id: evalId,
-            integrante_nombre: ea.integrante_nombre,
-            estado: ea.estado,
-          });
-        if (!error) results.asistencias++;
+        .eq('grupo_id', ea.grupo_id)
+        .eq('encuentro_meta_id', ea.encuentro_meta_id)
+        .maybeSingle();
+      if (findErr) throw findErr;
+      if (evalRow) {
+        const { error } = await supabase.from('asistencias').upsert({
+          evaluacion_id: evalRow.id,
+          integrante_nombre: ea.integrante_nombre,
+          estado: ea.estado,
+        }, { onConflict: 'evaluacion_id,integrante_nombre' });
+        if (error) throw error;
+        results.asistencias++;
       }
+    } catch (e) {
+      results.errors.push(`Asistencia G${ea.grupo_id} ${ea.encuentro_meta_id} ${ea.integrante_nombre}: ${e.message}`);
     }
   }
 

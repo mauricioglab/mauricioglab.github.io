@@ -7,13 +7,13 @@ export const prerender = true;
 
 console.log('Extensions data:', extensionsData); // Debug
 ---
-<BaseTailwind title="Extensiones Chrome" description="Mis extensiones">
+<BaseTailwind title="Extensiones Chrome y Firefox" description="Mis extensiones">
     <main class="min-h-screen bg-stone-50 py-16 px-6">
         <div class="max-w-4xl mx-auto">
             
             <div class="text-center mb-12">
                 <h1 class="text-3xl font-light text-stone-700 mb-2">
-                    Extensiones Chrome
+                    Extensiones Chrome y Firefox
                 </h1>
                 <p class="text-stone-500 text-sm">
                     {extensionsData.length} extensiones disponibles
@@ -58,24 +58,45 @@ console.log('Extensions data:', extensionsData); // Debug
             </div>
             
             <!-- Link a instrucciones -->
-            <div class="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
-                <p class="text-sm text-blue-800 mb-3">
-                    ¿Primera vez instalando una extensión de Chrome en modo desarrollador?
-                </p>
-                <a 
-                    href="https://support.google.com/chrome/a/answer/2714278?hl=es"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors"
-                >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Ver guía oficial de Google Chrome
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                </a>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+                    <p class="text-sm text-blue-800 mb-3">
+                        ¿Primera vez instalando una extensión de Chrome en modo desarrollador?
+                    </p>
+                    <a 
+                        href="https://support.google.com/chrome/a/answer/2714278?hl=es"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Ver guía oficial de Google Chrome
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="bg-orange-50 border border-orange-200 rounded-lg p-6 text-center">
+                    <p class="text-sm text-orange-800 mb-3">
+                        ¿Instalando en Firefox? La extensión se carga como complemento temporal desde about:debugging.
+                    </p>
+                    <a 
+                        href="https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 text-orange-600 hover:text-orange-800 font-medium text-sm transition-colors"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Ver guía oficial de Firefox
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                    </a>
+                </div>
             </div>
         </div>
     </main>

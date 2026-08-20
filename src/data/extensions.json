@@ -1,10 +1,18 @@
 [
   {
+    "id": "extension-notas",
+    "name": "Notas",
+    "version": "1.4",
+    "description": "Trasladá notas desde Teams a Autogestión en un clic.",
+    "downloadUrl": "/downloads/extension-notas.zip",
+    "size": "16.54 KB"
+  },
+  {
     "id": "udemy-transcript-downloader",
     "name": "Udemy Transcript Downloader",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Download Udemy course transcripts",
     "downloadUrl": "/downloads/udemy-transcript-downloader.zip",
-    "size": "13.74 KB"
+    "size": "14.04 KB"
   }
 ]

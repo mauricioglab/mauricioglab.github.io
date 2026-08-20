@@ -2,7 +2,7 @@ const Model = window.SurveyCore?.Model || window.Survey?.Model;
 const render = window.renderSurvey;
 import { getSurveySchema } from "../../data/survey-schema.js";
 import { calcularElegibilidad } from "../../data/eligibility-rules.js";
-import { supabase } from "../../lib/supabase.js";
+import { supabase } from "../../lib/supabase";
 
 const PP_ESTADO_LABELS = {
   no_cursada: "No la cursé",
@@ -201,7 +201,7 @@ export function initSurvey(containerId) {
 
     const resultEl = document.getElementById("survey-result");
     try {
-      const { error } = await supabase.from("alumnos_seguimiento").insert([payload]);
+      const { error } = await supabase.from("alumnos_seguimiento").insert(payload);
       if (error) throw error;
       if (resultEl) {
         resultEl.innerHTML = `

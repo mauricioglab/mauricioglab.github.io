@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notas</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0d0f1a;
+    --surface:   #151828;
+    --border:    #252a42;
+    --accent:    #6c74f0;
+    --accent2:   #f06c8c;
+    --green:     #4ecca3;
+    --yellow:    #f0c46c;
+    --text:      #e2e4f0;
+    --muted:     #606480;
+    --radius:    10px;
+  }
+
+  body {
+    width: 300px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 16px 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -20px; right: -20px;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(108,116,240,0.25) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .header-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+  }
+  .header-title span { color: var(--accent2); }
+
+  /* ── Status chip ── */
+  .status-bar {
+    padding: 8px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    min-height: 36px;
+  }
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .status-dot.ok     { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .status-dot.warn   { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
+  .status-dot.error  { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
+  .status-text {
+    color: var(--muted);
+    line-height: 1.3;
+    flex: 1;
+  }
+  .status-text.ok    { color: var(--green); }
+  .status-text.warn  { color: var(--yellow); }
+  .status-text.error { color: var(--accent2); }
+
+  /* ── Buttons area ── */
+  .actions {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity 0.18s;
+  }
+  .btn:hover::after { opacity: 0.05; }
+  .btn:active { transform: scale(0.98); }
+
+  .btn-icon {
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .btn-content { flex: 1; }
+  .btn-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    display: block;
+    line-height: 1.2;
+  }
+  .btn-sub {
+    display: block;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+    line-height: 1.3;
+  }
+  .btn-arrow {
+    color: var(--muted);
+    font-size: 14px;
+    transition: transform 0.18s, color 0.18s;
+  }
+  .btn:hover .btn-arrow { transform: translateX(3px); color: var(--text); }
+
+  /* Variantes de color */
+  .btn-teams {
+    border-color: rgba(108,116,240,0.35);
+  }
+  .btn-teams:hover {
+    border-color: var(--accent);
+    background: rgba(108,116,240,0.1);
+  }
+  .btn-teams .btn-icon { filter: drop-shadow(0 0 6px rgba(108,116,240,0.6)); }
+
+  .btn-autog {
+    border-color: rgba(78,204,163,0.35);
+  }
+  .btn-autog:hover {
+    border-color: var(--green);
+    background: rgba(78,204,163,0.1);
+  }
+  .btn-autog .btn-icon { filter: drop-shadow(0 0 6px rgba(78,204,163,0.6)); }
+
+  .btn-install {
+    border-color: rgba(240,108,140,0.35);
+  }
+  .btn-install:hover {
+    border-color: var(--accent2);
+    background: rgba(240,108,140,0.1);
+  }
+  .btn-install .btn-icon { filter: drop-shadow(0 0 6px rgba(240,108,140,0.6)); }
+
+  .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 16px;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    padding: 8px 16px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-brand {
+    font-size: 10px;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+  .footer-brand span { color: var(--accent); }
+  .badge-count {
+    background: rgba(108,116,240,0.2);
+    border: 1px solid rgba(108,116,240,0.4);
+    color: var(--accent);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    display: none;
+  }
+  .badge-count.visible { display: inline-block; }
+
+  /* ── Spinner inline ── */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner {
+    display: inline-block;
+    width: 12px; height: 12px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+
+  /* ── Page context chip ── */
+  .ctx-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    margin: 0 16px 10px;
+  }
+  .ctx-chip.teams  { border-color: rgba(108,116,240,0.4); color: rgba(108,116,240,0.9); background: rgba(108,116,240,0.08); }
+  .ctx-chip.autog  { border-color: rgba(78,204,163,0.4);  color: rgba(78,204,163,0.9);  background: rgba(78,204,163,0.08);  }
+  .ctx-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-label">MgLab · v1.1</div>
+  <div class="header-title">Notas<span>.</span></div>
+</div>
+
+<div class="status-bar">
+  <div class="status-dot" id="statusDot"></div>
+  <div class="status-text" id="statusText">Verificando...</div>
+</div>
+
+<div class="actions">
+
+  <div class="ctx-chip" id="ctxChip">
+    <span class="ctx-dot"></span>
+    <span id="ctxLabel">detectando página...</span>
+  </div>
+
+  <button class="btn btn-teams" id="btnExtraer">
+    <span class="btn-icon">📋</span>
+    <span class="btn-content">
+      <span class="btn-title">Traer notas</span>
+      <span class="btn-sub">Captura desde Teams · pestaña activa</span>
+    </span>
+    <span class="btn-arrow">›</span>
+  </button>
+
+  <button class="btn btn-autog" id="btnCargar">
+    <span class="btn-icon">⚡</span>
+    <span class="btn-content">
+      <span class="btn-title">Pasar notas</span>
+      <span class="btn-sub">Carga en Autogestión · pestaña activa</span>
+    </span>
+    <span class="btn-arrow">›</span>
+  </button>
+
+  <button class="btn btn-install" id="btnInstall">
+    <span class="btn-icon">🔧</span>
+    <span class="btn-content">
+      <span class="btn-title">Ver pestaña activa</span>
+      <span class="btn-sub">Verificar URL detectada · debug</span>
+    </span>
+    <span class="btn-arrow">↗</span>
+  </button>
+
+</div>
+
+<div class="divider"></div>
+
+<div class="footer">
+  <span class="footer-brand">Mg<span>Lab</span> · Chrome &amp; Firefox</span>
+  <span class="badge-count" id="badgeCount"></span>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

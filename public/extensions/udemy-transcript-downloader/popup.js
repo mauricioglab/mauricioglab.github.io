@@ -1,8 +1,9 @@
 (async function() {
   const statusDiv = document.getElementById('status');
+  const browserApi = typeof browser !== 'undefined' ? browser : chrome;
 
   try {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const [tab] = await browserApi.tabs.query({ active: true, currentWindow: true });
     
     if (tab.url && tab.url.includes('udemy.com/course/') && tab.url.includes('/learn/lecture/')) {
       statusDiv.className = 'status active';

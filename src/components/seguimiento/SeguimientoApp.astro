@@ -1,5 +1,5 @@
 ---
-// Componente principal de seguimiento - Alpine.js + Supabase
+// Componente principal de seguimiento - Alpine.js + Firebase
 ---
 
 <div 
@@ -1432,14 +1432,12 @@
       } else {
         alertas.push(alertaId);
       }
-      const { error } = await supabase
-        .from('grupos')
-        .update({ alertas })
-        .eq('id', grupoId);
-      if (!error) {
+      try {
+        const { error } = await supabase.from('grupos').update({ alertas }).eq('id', grupoId);
+        if (error) throw error;
         g.alertas = alertas;
-      } else {
-        console.error('Error toggling alerta:', error);
+      } catch (e) {
+        console.error('Error toggling alerta:', e);
       }
     },
 
@@ -1479,126 +1477,97 @@
 
     async loadFromSupabase() {
       try {
-        // Cargar comisiones
-        const { data: comisionesData, error: comisionesError } = await supabase
+        // Comisiones
+        const { data: comData, error: comErr } = await supabase
           .from('comisiones')
           .select('*')
           .eq('activa', true)
           .order('nombre');
-        
-        if (comisionesError) {
-          console.warn('Supabase comisiones error:', comisionesError.message);
-        }
-        if (comisionesData && comisionesData.length > 0) {
-          this.comisiones = comisionesData;
-        }
+        if (comErr) throw comErr;
+        if (comData && comData.length > 0) this.comisiones = comData;
 
-        const { data: alertasTiposData, error: alertasTiposError } = await supabase
-          .from('alertas_tipos')
-          .select('*');
-        
-        if (alertasTiposError) {
-          console.warn('Supabase alertas_tipos error:', alertasTiposError.message);
-        }
-        if (alertasTiposData && alertasTiposData.length > 0) {
-          this.alertasTipos = alertasTiposData;
-        }
-
-        const { data: gruposData, error: gruposError } = await supabase
+        // Grupos
+        const { data: gruposData, error: gErr } = await supabase
           .from('grupos')
           .select('*')
           .order('id');
-        
-        if (gruposError) {
-          console.warn('Supabase grupos error:', gruposError.message);
-        }
+        if (gErr) throw gErr;
 
-        const { data: integrantesData, error: intError } = await supabase
+        // Integrantes
+        const { data: intData, error: intErr } = await supabase
           .from('integrantes')
-          .select('*')
-          .order('id');
+          .select('*');
+        if (intErr) throw intErr;
 
-        if (intError) {
-          console.warn('Supabase integrantes error:', intError.message);
-        }
+        const integrantesByGrupo = {};
+        (intData || []).forEach(i => {
+          const gid = String(i.grupo_id);
+          if (!integrantesByGrupo[gid]) integrantesByGrupo[gid] = [];
+          integrantesByGrupo[gid].push({
+            id: i.id,
+            nombre: i.nombre,
+            rol: i.rol || '',
+            obs: i.observacion || ''
+          });
+        });
 
         let loadedGrupos = [];
         if (gruposData && gruposData.length > 0) {
           loadedGrupos = gruposData.map(g => ({
             ...g,
-            integrantes: (integrantesData || []).filter(i => i.grupo_id === g.id).map(i => ({
-              id: i.id,
-              nombre: i.nombre,
-              rol: i.rol || '',
-              obs: i.observacion || ''
-            }))
+            integrantes: (integrantesByGrupo[String(g.id)] || []).map(i => ({ ...i }))
           }));
         } else {
           loadedGrupos = GRUPOS_INICIALES;
         }
         this.grupos = loadedGrupos;
 
-        const { data: evals, error: evalError } = await supabase
+        // Evaluaciones
+        const { data: evalData, error: evErr } = await supabase
           .from('evaluaciones')
           .select('*');
-        
-        if (evalError) {
-          console.warn('Supabase evaluaciones error:', evalError.message);
-        }
+        if (evErr) throw evErr;
 
-        if (evals && evals.length > 0) {
-          evals.forEach(ev => {
-            if (!this.data[ev.encuentro_meta_id]) this.data[ev.encuentro_meta_id] = {};
-            if (!this.data[ev.encuentro_meta_id][ev.grupo_id]) this.data[ev.encuentro_meta_id][ev.grupo_id] = {};
-            
-            const entry = this.data[ev.encuentro_meta_id][ev.grupo_id];
-            entry.FN = ev.fn ?? entry.FN;
-            entry.DEV = ev.dev ?? entry.DEV;
-            entry.SM = ev.sm ?? entry.SM;
-            if (!entry.fb) entry.fb = {};
-            entry.fb.FN = ev.feedback_fn || entry.fb.FN || '';
-            entry.fb.DEV = ev.feedback_dev || entry.fb.DEV || '';
-            entry.fb.SM = ev.feedback_sm || entry.fb.SM || '';
-            
-            // Guardar metadatos de evaluación
-            const key = `${ev.encuentro_meta_id}_${ev.grupo_id}`;
-            this.evalMeta[key] = {
-              fecha_primera_nota: ev.fecha_primera_nota,
-              fecha_modificacion: ev.fecha_modificacion,
-              es_modificacion: ev.es_modificacion,
-              override_limite: ev.override_limite
-            };
-          });
-        }
+        (evalData || []).forEach(ev => {
+          const encId = ev.encuentro_meta_id;
+          const gid = ev.grupo_id;
+          if (!this.data[encId]) this.data[encId] = {};
+          if (!this.data[encId][gid]) this.data[encId][gid] = {};
+          const entry = this.data[encId][gid];
+          entry.FN = ev.fn ?? entry.FN;
+          entry.DEV = ev.dev ?? entry.DEV;
+          entry.SM = ev.sm ?? entry.SM;
+          if (!entry.fb) entry.fb = {};
+          entry.fb.FN = ev.feedback_fn || entry.fb.FN || '';
+          entry.fb.DEV = ev.feedback_dev || entry.fb.DEV || '';
+          entry.fb.SM = ev.feedback_sm || entry.fb.SM || '';
+          const key = `${encId}_${gid}`;
+          this.evalMeta[key] = {
+            id: ev.id,
+            fecha_primera_nota: ev.fecha_primera_nota || null,
+            fecha_modificacion: ev.fecha_modificacion || null,
+            es_modificacion: ev.es_modificacion || false,
+            override_limite: ev.override_limite || false
+          };
+        });
 
-        const { data: asist, error: asistError } = await supabase
+        // Asistencias
+        const { data: asistData, error: asErr } = await supabase
           .from('asistencias')
           .select('*');
+        if (asErr) throw asErr;
 
-        if (asistError) {
-          console.warn('Supabase asistencias error:', asistError.message);
-        }
-
-        if (asist && asist.length > 0) {
-          const evalLookup = {};
-          if (evals) {
-            evals.forEach(ev => {
-              evalLookup[ev.id] = { enc: ev.encuentro_meta_id, grp: ev.grupo_id };
-            });
-          }
-          
-          asist.forEach(a => {
-            const lookup = evalLookup[a.evaluacion_id];
-            if (lookup) {
-              const enc = lookup.enc;
-              const grp = lookup.grp;
-              if (!this.data[enc]) this.data[enc] = {};
-              if (!this.data[enc][grp]) this.data[enc][grp] = {};
-              if (!this.data[enc][grp].asistencia) this.data[enc][grp].asistencia = {};
-              this.data[enc][grp].asistencia[a.integrante_nombre] = a.estado;
-            }
-          });
-        }
+        (asistData || []).forEach(a => {
+          const evalId = a.evaluacion_id;
+          const evRow = (evalData || []).find(e => e.id === evalId);
+          if (!evRow) return;
+          const encId = evRow.encuentro_meta_id;
+          const gid = evRow.grupo_id;
+          if (!this.data[encId]) this.data[encId] = {};
+          if (!this.data[encId][gid]) this.data[encId][gid] = {};
+          if (!this.data[encId][gid].asistencia) this.data[encId][gid].asistencia = {};
+          this.data[encId][gid].asistencia[a.integrante_nombre] = a.estado;
+        });
       } catch (e) {
         console.warn('Error loading from Supabase:', e);
         this.grupos = GRUPOS_INICIALES;
@@ -1608,7 +1577,7 @@
     async checkSession() {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
+        if (session?.user) {
           this.user = session.user;
           await this.loadProfile();
         }
@@ -1624,6 +1593,7 @@
           .select('role')
           .eq('id', this.user.id)
           .single();
+        if (error) throw error;
         if (data) this.userRole = data.role;
       } catch (e) {
         console.error('Error loading profile:', e);
@@ -2343,10 +2313,9 @@
       this.loadingAuth = true;
       this.forgotPasswordError = '';
       try {
-        const { error } = await supabase.auth.resetPasswordForEmail(
-          this.forgotPasswordEmail,
-          { redirectTo: 'https://mauricioglab.github.io/seguimiento/reset-password/' }
-        );
+        const { error } = await supabase.auth.resetPasswordForEmail(this.forgotPasswordEmail, {
+          redirectTo: 'https://mauricioglab.github.io/seguimiento/reset-password/'
+        });
         if (error) throw error;
         this.forgotPasswordSent = true;
       } catch (e) {
@@ -2418,32 +2387,28 @@
           evalPayload.override_limite = false;
         }
         
-        const { data: evalData, error: evalError } = await supabase
-          .from('evaluaciones')
-          .upsert(evalPayload, { onConflict: 'grupo_id,encuentro_meta_id' })
-          .select()
-          .single();
-        
-        if (evalError) {
-          console.error('Error saving evaluacion:', evalError);
-          return;
+        const existingEvalId = this.evalMeta[key]?.id;
+        let evalId = existingEvalId;
+        if (evalId) {
+          const { error } = await supabase.from('evaluaciones').update(evalPayload).eq('id', evalId);
+          if (error) throw error;
+        } else {
+          const { data: newEval, error } = await supabase
+            .from('evaluaciones')
+            .insert(evalPayload)
+            .select('id')
+            .single();
+          if (error) throw error;
+          evalId = newEval.id;
         }
         
-        if (asist && evalData) {
+        if (asist) {
           for (const [nombre, estado] of Object.entries(asist)) {
             if (!estado) continue;
-            
-            const { error: asistError } = await supabase
+            const { error: asErr } = await supabase
               .from('asistencias')
-              .upsert({
-                evaluacion_id: evalData.id,
-                integrante_nombre: nombre,
-                estado: estado,
-              }, { onConflict: 'evaluacion_id,integrante_nombre' });
-            
-            if (asistError) {
-              console.error('Error saving asistencia:', asistError);
-            }
+              .upsert({ evaluacion_id: evalId, integrante_nombre: nombre, estado }, { onConflict: 'evaluacion_id,integrante_nombre' });
+            if (asErr) throw asErr;
           }
         }
         
@@ -2524,69 +2489,53 @@
         
         if (this.editingGrupoId) {
           // EDITAR GRUPO EXISTENTE
-          const { error: updError } = await supabase
-            .from('grupos')
-            .update({
-              proyecto: this.newGrupo.proyecto.trim(),
-              comision: this.newGrupo.comision.trim(),
-              practica: this.newGrupo.practica
-            })
-            .eq('id', this.editingGrupoId);
-          
-          if (updError) throw updError;
-          
-          // Obtener integrantes actuales de Supabase para comparación
-          const { data: currentIntegrantes, error: intQError } = await supabase
+          const grupoId = this.editingGrupoId;
+          const { error: gErr } = await supabase.from('grupos').update({
+            proyecto: this.newGrupo.proyecto.trim(),
+            comision: this.newGrupo.comision.trim(),
+            practica: this.newGrupo.practica
+          }).eq('id', grupoId);
+          if (gErr) throw gErr;
+
+          const { data: currentInts, error: intErr } = await supabase
             .from('integrantes')
-            .select('id, nombre, rol, observacion')
-            .eq('grupo_id', this.editingGrupoId);
-          
-          if (intQError) console.warn('Error cargando integrantes actuales:', intQError);
-          
-          const currentMap = new Map((currentIntegrantes || []).map(i => [i.id, i]));
+            .select('*')
+            .eq('grupo_id', grupoId);
+          if (intErr) throw intErr;
+
+          const currentMap = new Map();
+          (currentInts || []).forEach(i => currentMap.set(i.id, i));
           const handledIds = new Set();
-          
-          // Procesar integrantes del formulario
+
           for (const int of validIntegrantes) {
             if (int.dbId && currentMap.has(int.dbId)) {
-              // UPDATE existente
-              const { error: upIntError } = await supabase
-                .from('integrantes')
-                .update({
-                  nombre: int.nombre.trim(),
-                  rol: int.rol.trim(),
-                  observacion: int.observacion.trim()
-                })
-                .eq('id', int.dbId);
-              if (upIntError) console.warn('Error actualizando integrante:', upIntError);
+              const { error } = await supabase.from('integrantes').update({
+                nombre: int.nombre.trim(),
+                rol: int.rol.trim(),
+                observacion: int.observacion.trim()
+              }).eq('id', int.dbId);
+              if (error) throw error;
               handledIds.add(int.dbId);
             } else {
-              // INSERT nuevo
-              const { error: inIntError } = await supabase
-                .from('integrantes')
-                .insert({
-                  grupo_id: this.editingGrupoId,
-                  nombre: int.nombre.trim(),
-                  rol: int.rol.trim(),
-                  observacion: int.observacion.trim()
-                });
-              if (inIntError) console.warn('Error insertando integrante:', inIntError);
+              const { data: newInt, error } = await supabase.from('integrantes').insert({
+                grupo_id: grupoId,
+                nombre: int.nombre.trim(),
+                rol: int.rol.trim(),
+                observacion: int.observacion.trim()
+              }).select('id').single();
+              if (error) throw error;
+              handledIds.add(newInt.id);
             }
           }
-          
-          // DELETE integrantes eliminados
-          for (const [id, intData] of currentMap) {
+
+          for (const [id] of currentMap) {
             if (!handledIds.has(id)) {
-              const { error: delError } = await supabase
-                .from('integrantes')
-                .delete()
-                .eq('id', id);
-              if (delError) console.warn('Error eliminando integrante:', delError);
+              const { error } = await supabase.from('integrantes').delete().eq('id', id);
+              if (error) throw error;
             }
           }
-          
-          // Update local state
-          const gIdx = this.grupos.findIndex(g => g.id === this.editingGrupoId);
+
+          const gIdx = this.grupos.findIndex(g => g.id === grupoId);
           if (gIdx >= 0) {
             this.grupos[gIdx] = {
               ...this.grupos[gIdx],
@@ -2601,36 +2550,28 @@
               }))
             };
           }
-          
+
         } else {
           // CREAR NUEVO GRUPO
           const nextId = Math.max(0, ...this.grupos.map(g => g.id)) + 1;
-          
-          const { data: grupoData, error: grupoError } = await supabase
-            .from('grupos')
-            .insert({
-              id: nextId,
-              proyecto: this.newGrupo.proyecto.trim(),
-              comision: this.newGrupo.comision.trim(),
-              practica: this.newGrupo.practica
-            })
-            .select()
-            .single();
-          
-          if (grupoError) throw grupoError;
-          
-          for (const int of validIntegrantes) {
-            const { error: intError } = await supabase
-              .from('integrantes')
-              .insert({
-                grupo_id: nextId,
-                nombre: int.nombre.trim(),
-                rol: int.rol.trim(),
-                observacion: int.observacion.trim()
-              });
-            if (intError) console.warn('Error insertando integrante:', intError);
-          }
-          
+
+          const { error: gErr } = await supabase.from('grupos').insert({
+            id: nextId,
+            proyecto: this.newGrupo.proyecto.trim(),
+            comision: this.newGrupo.comision.trim(),
+            practica: this.newGrupo.practica
+          });
+          if (gErr) throw gErr;
+
+          const intRows = validIntegrantes.map(i => ({
+            grupo_id: nextId,
+            nombre: i.nombre.trim(),
+            rol: i.rol.trim(),
+            observacion: i.observacion.trim()
+          }));
+          const { error: intErr } = await supabase.from('integrantes').insert(intRows);
+          if (intErr) throw intErr;
+
           this.grupos.push({
             id: nextId,
             proyecto: this.newGrupo.proyecto.trim(),
@@ -2671,11 +2612,8 @@
       this.loadingDelete = true;
       
       try {
-        const { error } = await supabase
-          .from('grupos')
-          .delete()
-          .eq('id', this.grupoToDelete.id);
-        
+        const grupoId = this.grupoToDelete.id;
+        const { error } = await supabase.from('grupos').delete().eq('id', grupoId);
         if (error) throw error;
         
         this.grupos = this.grupos.filter(g => g.id !== this.grupoToDelete.id);
@@ -2706,19 +2644,15 @@
           throw new Error('Código y nombre son obligatorios');
         }
         
-        const { data, error } = await supabase
-          .from('comisiones')
-          .insert({
-            id: this.newComision.id.trim(),
-            nombre: this.newComision.nombre.trim(),
-            activa: true
-          })
-          .select()
-          .single();
-        
+        const comData = {
+          id: this.newComision.id.trim(),
+          nombre: this.newComision.nombre.trim(),
+          activa: true
+        };
+        const { error } = await supabase.from('comisiones').insert(comData);
         if (error) throw error;
-        
-        this.comisiones.push(data);
+
+        this.comisiones.push({ id: this.newComision.id.trim(), ...comData });
         this.comisiones.sort((a, b) => a.nombre.localeCompare(b.nombre));
         
         this.newComision = { id: '', nombre: '' };
@@ -2927,11 +2861,13 @@
         
         this.importLoadingMsg = 'Comparando con datos existentes...';
         
-        const { data: integrantesData } = await supabase
-          .from('integrantes')
-          .select('*');
-        
-        const diff = buildDiff(excelData, this.grupos, this.data, this.evalMeta, integrantesData || []);
+        const { data: intData, error: intErr } = await supabase.from('integrantes').select('*');
+        if (intErr) throw intErr;
+        const integrantesData = (intData || []).map(i => ({
+          id: i.id, grupo_id: i.grupo_id, nombre: i.nombre, rol: i.rol || '', observacion: i.observacion || ''
+        }));
+
+        const diff = buildDiff(excelData, this.grupos, this.data, this.evalMeta, integrantesData);
         this.importDiff = diff;
         this.importGroupSelection = {};
         this.importDiffByGroup.forEach(g => { this.importGroupSelection[g.id] = true; });

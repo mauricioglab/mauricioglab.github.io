@@ -1,5 +1,5 @@
 ---
-// Admin Dashboard for Seguimiento Alumnos - Alpine.js + Supabase
+// Admin Dashboard for Seguimiento Alumnos - Alpine.js + Firebase
 ---
 
 <div
@@ -547,7 +547,7 @@
 
 <script>
   import Alpine from 'alpinejs';
-  import { supabase } from '../../lib/supabase.js';
+  import { supabase } from '../../lib/supabase';
 
   window.Alpine = Alpine;
 
@@ -689,18 +689,13 @@
           .from('alumnos_seguimiento')
           .select('*')
           .order('nombre_completo');
-        if (error) {
-          console.warn('Error loading alumnos:', error.message);
-          return;
-        }
-        if (data) {
-          this.alumnos = data.map(a => ({
-            ...a,
-            materias_a_cursar: a.materias_a_cursar || [],
-            materias_pendientes: a.materias_pendientes || [],
-            grupo_miembros_anteriores: a.grupo_miembros_anteriores || []
-          }));
-        }
+        if (error) throw error;
+        this.alumnos = (data || []).map(a => ({
+          ...a,
+          materias_a_cursar: a.materias_a_cursar || [],
+          materias_pendientes: a.materias_pendientes || [],
+          grupo_miembros_anteriores: a.grupo_miembros_anteriores || []
+        }));
       } catch (e) {
         console.warn('Error:', e);
       }
@@ -709,7 +704,7 @@
     async checkSession() {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
+        if (session?.user) {
           this.user = session.user;
           await this.loadProfile();
         }
@@ -725,6 +720,7 @@
           .select('role')
           .eq('id', this.user.id)
           .single();
+        if (error) throw error;
         if (data) this.userRole = data.role;
       } catch (e) {
         console.error('Error loading profile:', e);
@@ -756,10 +752,9 @@
       this.loadingAuth = true;
       this.forgotPasswordError = '';
       try {
-        const { error } = await supabase.auth.resetPasswordForEmail(
-          this.forgotPasswordEmail,
-          { redirectTo: 'https://mauricioglab.github.io/seguimiento/reset-password/' }
-        );
+        const { error } = await supabase.auth.resetPasswordForEmail(this.forgotPasswordEmail, {
+          redirectTo: 'https://mauricioglab.github.io/seguimiento/reset-password/'
+        });
         if (error) throw error;
         this.forgotPasswordSent = true;
       } catch (e) {
@@ -798,7 +793,6 @@
           .from('alumnos_seguimiento')
           .update(payload)
           .eq('id', this.selectedAlumno.id);
-
         if (error) throw error;
 
         Object.assign(this.selectedAlumno, this.editAlumno);
@@ -831,15 +825,19 @@
           estado: 'pendiente_revision'
         };
 
-        const { data, error } = await supabase
+        const { data: newRow, error } = await supabase
           .from('alumnos_seguimiento')
-          .insert([payload])
-          .select()
+          .insert({
+            ...payload,
+            materias_a_cursar: [],
+            materias_pendientes: [],
+            grupo_miembros_anteriores: []
+          })
+          .select('id')
           .single();
-
         if (error) throw error;
 
-        this.alumnos.push({ ...data, materias_a_cursar: [], materias_pendientes: [], grupo_miembros_anteriores: [] });
+        this.alumnos.push({ id: newRow.id, ...payload, materias_a_cursar: [], materias_pendientes: [], grupo_miembros_anteriores: [] });
         this.newAlumno = { nombre_completo: '', dni: '', comision: '', usuario_teams: '', pp2_estado: 'no_cursada', pp3_estado: 'no_cursada' };
         this.showAddAlumno = false;
       } catch (e) {

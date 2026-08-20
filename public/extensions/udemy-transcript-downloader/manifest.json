@@ -1,15 +1,20 @@
 {
   "manifest_version": 3,
   "name": "Udemy Transcript Downloader",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Download Udemy course transcripts",
   "permissions": [
-    "activeTab",
-    "downloads"
+    "activeTab"
   ],
   "host_permissions": [
     "*://*.udemy.com/*"
   ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "udemy-transcript-downloader@mauglab",
+      "strict_min_version": "109.0"
+    }
+  },
   "content_scripts": [
     {
       "matches": ["*://*.udemy.com/course/*/learn/lecture/*"],

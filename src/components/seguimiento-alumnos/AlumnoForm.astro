@@ -6,7 +6,13 @@
 <script is:inline src="/lib/survey/survey.core.min.js"></script>
 <script is:inline src="/lib/survey/spanish.min.js"></script>
 <script is:inline src="/lib/survey/survey-js-ui.min.js"></script>
-<script is:inline src="/lib/survey/supabase.js"></script>
+<script type="module" define:vars={{
+  supabaseUrl: import.meta.env.PUBLIC_SUPABASE_URL,
+  supabaseAnonKey: import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+}}>
+  import { createClient } from '@supabase/supabase-js';
+  window.supabase = createClient(supabaseUrl, supabaseAnonKey);
+</script>
 <script is:inline src="/scripts/seguimiento/survey-init.js"></script>
 
 <script is:inline>

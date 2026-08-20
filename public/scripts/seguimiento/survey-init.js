@@ -316,15 +316,10 @@ window.initSurvey = function(containerId) {
 
     const resultEl = document.getElementById("survey-result");
     try {
-      const { createClient } = window.supabase || {};
-      if (!createClient) {
+      if (!window.supabase) {
         throw new Error('Supabase client not loaded');
       }
-      const supabase = createClient(
-        'https://rnejgcdfpbkqbdoadeib.supabase.co',
-        'sb_publishable_wQef0RztvyMcq52QckV7Uw_BcXEdBqI'
-      );
-      const { error } = await supabase.from("alumnos_seguimiento").insert([payload]);
+      const { error } = await window.supabase.from("alumnos_seguimiento").insert(payload);
       if (error) throw error;
       if (resultEl) {
         resultEl.innerHTML = `
