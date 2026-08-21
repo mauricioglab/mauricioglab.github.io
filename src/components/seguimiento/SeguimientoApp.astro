@@ -1330,14 +1330,29 @@
               </button>
             </div>
           </form>
-          <button 
-            type="button"
-            @click="loginAdmin()"
-            class="block w-full mt-3 py-2 bg-emerald-600 text-white text-sm font-bold rounded-lg hover:bg-emerald-700 transition"
-            :disabled="loadingAuth"
-          >
-            <span x-text="loadingAuth ? '...' : '⚡ Ingresar como Admin'"></span>
-          </button>
+          <div x-show="profesores.length === 0" class="mb-3">
+            <button 
+              type="button"
+              @click="fetchProfesores()"
+              class="block w-full py-2 bg-indigo-100 text-indigo-700 text-sm font-bold rounded-lg hover:bg-indigo-200 transition"
+            >
+              Ver docentes disponibles
+            </button>
+          </div>
+          <div x-show="profesores.length > 0" class="mb-3 space-y-1">
+            <p class="text-xs font-bold text-gray-600">Seleccioná tu usuario:</p>
+            <template x-for="prof in profesores" :key="prof.email">
+              <button 
+                type="button"
+                @click="loginEmail = prof.email"
+                class="block w-full py-1.5 px-3 text-left text-sm rounded-lg border border-gray-200 hover:bg-indigo-50 hover:border-indigo-300 transition"
+                :class="loginEmail === prof.email ? 'bg-indigo-100 border-indigo-400 font-bold text-indigo-800' : 'text-gray-700'"
+              >
+                <span x-text="prof.nombre"></span>
+                <span class="text-xs text-gray-400 ml-1">(<span x-text="prof.email"></span>)</span>
+              </button>
+            </template>
+          </div>
           <button 
             type="button"
             @click="showForgotPassword = true; loginError = ''"
@@ -1705,6 +1720,7 @@
     addComisionError: '',
     loading: false,
     loadingAuth: false,
+    profesores: [],
     loadingData: true,
     loadingAddGrupo: false,
     loadingDelete: false,
@@ -3137,8 +3153,13 @@
 
     async loginAdmin() {
       this.loginEmail = 'cervantes@mauricioglab.local';
-      this.loginPassword = 'cervantes123';
       await this.login();
+    },
+
+    async fetchProfesores() {
+      if (this.profesores.length > 0) return;
+      const { data, error } = await supabase.rpc('get_profesores');
+      if (!error && data) this.profesores = data;
     },
 
     async login() {
