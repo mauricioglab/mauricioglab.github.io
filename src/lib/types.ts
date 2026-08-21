@@ -5,7 +5,10 @@ export interface Grupo {
   proyecto: string
   comision: string
   practica?: string
+  carrera_id: string
+  practica_origen?: string | null
   alertas?: string[]
+  activo?: boolean
 }
 
 export interface Integrante {
@@ -14,6 +17,34 @@ export interface Integrante {
   nombre: string
   rol: string
   observacion: string
+  tags?: string[]
+}
+
+export interface Carrera {
+  id: string
+  nombre: string
+  activa: boolean
+}
+
+export interface PracticaCatalogo {
+  id: string
+  carrera_id: string
+  codigo: string
+  nombre: string
+  orden: number
+  activa: boolean
+}
+
+export interface PlanillaEncuentro {
+  id: number
+  carrera_id: string
+  practica: string
+  encuentro: string
+  nombre: string
+  pregunta: string
+  criterio_fn: string
+  criterio_dev: string
+  criterio_sm: string
 }
 
 export interface EncuentroMeta {

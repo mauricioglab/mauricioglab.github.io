@@ -12,62 +12,52 @@
   <header class="bg-white border-b border-gray-300 sticky top-0 z-30 shadow-sm">
     <div class="max-w-6xl mx-auto px-3 sm:px-4 py-3">
       <div class="flex flex-wrap items-center justify-between gap-2">
-        <div class="flex items-center gap-3 min-w-0">
-          <div>
-            <h1 class="text-base sm:text-lg font-bold text-gray-900">Práctica Profesionalizante</h1>
-            <p class="text-[11px] sm:text-xs text-gray-600" x-text="`${gruposFiltrados.length} grupos activos`"></p>
-          </div>
-          <nav class="flex gap-1 overflow-x-auto" x-show="view === 'resumen' || view === 'encuentros' || view === 'stats'">
-            <template x-for="p in practicas" :key="p.id">
-              <button 
-                @click="practicaFilter = p.id"
-                class="px-2.5 py-1 text-xs font-bold rounded-md transition whitespace-nowrap"
-                :class="practicaFilter === p.id ? 'bg-indigo-700 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-                x-text="p.label"
-              ></button>
-            </template>
-          </nav>
+        <div class="min-w-0">
+          <h1 class="text-base sm:text-lg font-bold text-gray-900">Práctica Profesionalizante</h1>
+          <p class="text-[11px] sm:text-xs text-gray-600" x-text="`${gruposFiltrados.length} grupos`"></p>
         </div>
-        <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto sm:justify-end">
-          <button 
+        <div class="flex items-center gap-2 shrink-0">
+          <button
             x-show="canEdit && (view === 'resumen' || view === 'encuentros' || view === 'stats')"
             @click="openAddGrupoModal()"
             class="px-3 py-1.5 flex items-center gap-1.5 rounded-lg bg-indigo-600 text-white text-xs sm:text-sm font-bold hover:bg-indigo-700 transition whitespace-nowrap"
             title="Agregar grupo"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-            Grupo
+            <span class="hidden sm:inline">Grupo</span>
           </button>
-          <button 
-            x-show="canEdit && (view === 'resumen' || view === 'encuentros' || view === 'stats')"
-            @click="showPromover = true; initPromocion()"
-            class="px-3 py-1.5 flex items-center gap-1.5 rounded-lg bg-emerald-600 text-white text-xs sm:text-sm font-bold hover:bg-emerald-700 transition whitespace-nowrap"
-            title="Promover grupos al siguiente cuatrimestre"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
-            Promover
-          </button>
-          <button 
-            x-show="canEdit && (view === 'resumen' || view === 'encuentros' || view === 'stats')"
-            @click="openPlanillaEditor()"
-            class="px-3 py-1.5 flex items-center gap-1.5 rounded-lg bg-slate-600 text-white text-xs sm:text-sm font-bold hover:bg-slate-700 transition whitespace-nowrap"
-            title="Editar planilla por práctica"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            Planilla
-          </button>
-          <button 
-            x-show="canEdit && (view === 'resumen' || view === 'encuentros' || view === 'stats')"
-            @click="document.getElementById('excelFileInput').click()"
-            class="px-3 py-1.5 flex items-center gap-1.5 rounded-lg bg-amber-600 text-white text-xs sm:text-sm font-bold hover:bg-amber-700 transition whitespace-nowrap"
-            title="Importar desde Excel"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
-            Excel
-          </button>
+
+          <div class="relative" x-show="canEdit && (view === 'resumen' || view === 'encuentros' || view === 'stats')" @click.outside="mobileMenuOpen = false">
+            <button
+              @click="mobileMenuOpen = !mobileMenuOpen"
+              class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition"
+              title="Más acciones"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+            </button>
+            <div
+              x-show="mobileMenuOpen"
+              x-transition
+              x-cloak
+              class="absolute right-0 mt-2 w-56 bg-white rounded-xl border border-gray-200 shadow-lg py-1.5 z-40"
+            >
+              <button @click="mobileMenuOpen = false; showPromover = true; initPromocion()" class="w-full flex items-center gap-2 px-3 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50 text-left">
+                <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                Promover grupos
+              </button>
+              <button @click="mobileMenuOpen = false; openPlanillaEditor()" class="w-full flex items-center gap-2 px-3 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50 text-left">
+                <svg class="w-4 h-4 text-slate-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Editar planilla
+              </button>
+              <button @click="mobileMenuOpen = false; document.getElementById('excelFileInput').click()" class="w-full flex items-center gap-2 px-3 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50 text-left">
+                <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+                Importar Excel
+              </button>
+            </div>
+          </div>
           <input type="file" id="excelFileInput" accept=".xlsx,.xls" class="hidden" @change="handleExcelImport($event)">
           <template x-if="!user">
-            <button 
+            <button
               @click="showLogin = true"
               class="px-3 py-1.5 bg-indigo-700 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-indigo-800 transition whitespace-nowrap"
             >
@@ -76,8 +66,8 @@
           </template>
           <template x-if="user">
             <div class="flex items-center gap-2 shrink-0">
-              <span class="text-[11px] sm:text-xs text-gray-700 font-medium max-w-[80px] sm:max-w-none truncate" x-text="user.email"></span>
-              <button 
+              <span class="hidden sm:inline text-xs text-gray-700 font-medium max-w-[140px] truncate" x-text="user.email"></span>
+              <button
                 @click="logout()"
                 class="px-3 py-1.5 text-xs text-red-700 hover:bg-red-50 rounded-lg transition font-medium whitespace-nowrap"
               >
@@ -87,17 +77,41 @@
           </template>
         </div>
       </div>
-      
-      <!-- Tabs de navegación -->
+
+      <!-- Nivel 1: Carrera (solo si hay más de una activa) -->
+      <nav class="flex gap-1 mt-2 overflow-x-auto" x-show="carrerasActivas.length > 1 && (view === 'resumen' || view === 'encuentros' || view === 'stats')">
+        <template x-for="c in carrerasActivas" :key="c.id">
+          <button
+            @click="setCarreraFilter(c.id)"
+            class="px-2.5 py-1 text-xs font-bold rounded-md transition whitespace-nowrap"
+            :class="carreraFilter === c.id ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+            x-text="c.nombre"
+          ></button>
+        </template>
+      </nav>
+
+      <!-- Nivel 2: Práctica -->
+      <nav class="flex gap-1 mt-2 overflow-x-auto" x-show="view === 'resumen' || view === 'encuentros' || view === 'stats'">
+        <template x-for="p in practicasNav" :key="p.id">
+          <button
+            @click="practicaFilter = p.id; page = 1"
+            class="px-2.5 py-1 text-xs font-bold rounded-md transition whitespace-nowrap"
+            :class="practicaFilter === p.id ? 'bg-indigo-700 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+            x-text="p.label"
+          ></button>
+        </template>
+      </nav>
+
+      <!-- Nivel 3: Vista -->
       <nav class="flex gap-0 mt-2 -mb-px overflow-x-auto" x-show="view === 'resumen' || view === 'encuentros' || view === 'stats'">
-        <button 
+        <button
           @click="view = 'resumen'"
           class="flex-1 py-2 text-sm font-bold border-b-2 transition"
           :class="view === 'resumen' ? 'border-indigo-700 text-indigo-700' : 'border-transparent text-gray-600 hover:text-gray-800'"
         >
           Resumen
         </button>
-        <button 
+        <button
           x-show="canEdit"
           @click="view = 'encuentros'"
           class="flex-1 py-2 text-sm font-bold border-b-2 transition"
@@ -105,7 +119,7 @@
         >
           Encuentros
         </button>
-        <button 
+        <button
           x-show="canEdit"
           @click="view = 'stats'"
           class="flex-1 py-2 text-sm font-bold border-b-2 transition"
@@ -150,7 +164,8 @@
         </label>
       </div>
 
-      <div class="overflow-x-auto">
+      <!-- Tabla (desktop) -->
+      <div class="overflow-x-auto hidden md:block">
         <table class="w-full text-sm min-w-[640px]">
           <thead>
             <tr class="text-gray-600 text-left">
@@ -172,11 +187,12 @@
               <th class="px-2 py-2 font-bold text-center cursor-pointer select-none hover:text-indigo-700" @click="toggleSort('promedio')">
                 Prom.<span class="text-xs" x-text="sortIcon('promedio')"></span>
               </th>
+              <th class="px-2 py-2 font-bold text-center w-10" x-show="canEdit"></th>
             </tr>
           </thead>
           <tbody>
             <template x-for="grupo in gruposPaginados" :key="grupo.id">
-              <tr 
+              <tr
                 @click="selectGrupo(grupo.id)"
                 class="bg-white cursor-pointer hover:bg-gray-50 transition shadow-sm border-b border-gray-100"
                 :class="(grupo.activo === false ? 'opacity-50 grayscale' : '') + ' ' + (grupoAlertas(grupo.id).length > 0 ? (grupoAlertas(grupo.id).includes('riesgo') ? 'bg-amber-50' : 'bg-blue-50') : '')"
@@ -184,19 +200,20 @@
                 <td class="px-2 py-2.5 rounded-l-lg whitespace-nowrap">
                   <span class="text-gray-500 text-xs mr-1 font-bold" x-text="`G${grupo.id}`"></span>
                   <template x-for="alertaId in grupoAlertas(grupo.id)" :key="alertaId">
-                    <span 
+                    <span
                       class="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs ml-0.5"
                       :class="alertaColor(alertaId)"
                       :title="alertaNombre(alertaId)"
                       x-text="alertaIcon(alertaId)"
                     ></span>
                   </template>
+                  <span x-show="esTrasladado(grupo)" class="inline-flex items-center px-1.5 py-0.5 ml-0.5 rounded-md bg-purple-100 text-purple-700 text-[10px] font-bold" title="En Tutorías (trasladado desde PP3)">↔ Tutorías</span>
                 </td>
                 <td class="px-2 py-2.5 text-gray-900 font-bold" x-text="grupo.proyecto"></td>
                 <td class="px-2 py-2.5 text-gray-700 font-medium" x-text="grupo.comision || '—'"></td>
                 <template x-for="enc in encuentrosMeta" :key="enc.id">
                   <td class="px-1 py-2.5 text-center">
-                    <span 
+                    <span
                       class="inline-flex items-center justify-center min-w-[2.5rem] h-6 rounded-md text-xs font-bold"
                       :class="notaBadgeClass(calcNota(calcPct(data[enc.id]?.[grupo.id])))"
                       x-text="calcNota(calcPct(data[enc.id]?.[grupo.id]))"
@@ -204,18 +221,96 @@
                     <span class="block text-[10px] text-gray-400 mt-0.5" x-text="calcPctStr(calcPct(data[enc.id]?.[grupo.id]))"></span>
                   </td>
                 </template>
-                <td class="px-2 py-2.5 text-center rounded-r-lg">
-                  <span 
+                <td class="px-2 py-2.5 text-center">
+                  <span
                     class="inline-flex items-center justify-center min-w-[3rem] h-8 rounded-lg text-sm font-bold"
                     :class="notaBadgeClass(calcNota(promedioEncuentros(grupo.id)))"
                     x-text="calcNota(promedioEncuentros(grupo.id))"
                   ></span>
                   <span class="block text-[10px] text-gray-400 mt-0.5" x-text="calcPctStr(promedioEncuentros(grupo.id))"></span>
                 </td>
+                <td class="px-1 py-2.5 text-center rounded-r-lg" x-show="canEdit">
+                  <button
+                    @click.stop="selectedGrupo = grupo.id; openEditGrupoModal()"
+                    class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-gray-500 hover:text-indigo-700 hover:bg-indigo-50 transition"
+                    title="Editar grupo"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                </td>
               </tr>
             </template>
           </tbody>
         </table>
+      </div>
+
+      <!-- Cards (mobile) -->
+      <div class="md:hidden space-y-2">
+        <template x-for="grupo in gruposPaginados" :key="grupo.id">
+          <div
+            class="bg-white rounded-xl border border-gray-200 shadow-sm p-3"
+            :class="(grupo.activo === false ? 'opacity-50 grayscale' : '') + ' ' + (grupoAlertas(grupo.id).length > 0 ? (grupoAlertas(grupo.id).includes('riesgo') ? 'bg-amber-50' : 'bg-blue-50') : '')"
+          >
+            <div class="flex items-start gap-2" @click="selectGrupo(grupo.id)">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center flex-wrap gap-1">
+                  <span class="text-gray-500 text-xs font-bold" x-text="`G${grupo.id}`"></span>
+                  <span class="font-bold text-sm text-gray-900 truncate" x-text="grupo.proyecto"></span>
+                </div>
+                <div class="text-xs text-gray-600 font-medium mt-0.5" x-text="grupo.comision || '—'"></div>
+                <div class="flex flex-wrap items-center gap-1 mt-1.5">
+                  <template x-for="alertaId in grupoAlertas(grupo.id)" :key="alertaId">
+                    <span
+                      class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-bold"
+                      :class="alertaColor(alertaId)"
+                      x-text="alertaIcon(alertaId) + ' ' + alertaNombre(alertaId)"
+                    ></span>
+                  </template>
+                  <span x-show="esTrasladado(grupo)" class="inline-flex items-center px-1.5 py-0.5 rounded-md bg-purple-100 text-purple-700 text-[10px] font-bold">↔ En Tutorías (desde PP3)</span>
+                </div>
+              </div>
+              <div class="text-center shrink-0">
+                <span
+                  class="inline-flex items-center justify-center min-w-[3rem] h-9 rounded-lg text-sm font-bold"
+                  :class="notaBadgeClass(calcNota(promedioEncuentros(grupo.id)))"
+                  x-text="calcNota(promedioEncuentros(grupo.id))"
+                ></span>
+                <span class="block text-[10px] text-gray-400 mt-0.5" x-text="calcPctStr(promedioEncuentros(grupo.id))"></span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 mt-2.5 pt-2.5 border-t border-gray-100" x-show="canEdit">
+              <button
+                @click="selectGrupo(grupo.id)"
+                class="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-lg border border-gray-300 text-gray-700 text-xs font-bold hover:bg-gray-50"
+              >
+                Ver detalle
+              </button>
+              <button
+                @click="selectedGrupo = grupo.id; openEditGrupoModal()"
+                class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50"
+                title="Editar grupo"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+              <button
+                x-show="puedeTrasladarATutorias(grupo)"
+                @click="abrirTraslado(grupo)"
+                class="w-10 h-10 flex items-center justify-center rounded-lg border border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100"
+                title="Trasladar a Tutorías"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+              </button>
+              <button
+                x-show="esTrasladado(grupo)"
+                @click="abrirTraslado(grupo)"
+                class="w-10 h-10 flex items-center justify-center rounded-lg border border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100"
+                title="Devolver a PP3"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+              </button>
+            </div>
+          </div>
+        </template>
       </div>
 
       <!-- Paginación -->
@@ -293,10 +388,9 @@
         <label class="text-xs font-bold text-gray-700 ml-2">Práctica:</label>
         <select x-model="statsPracticaFilter" class="px-2 py-1 text-xs border border-gray-300 rounded bg-white" @change="renderStats()">
           <option value="">Todas</option>
-          <option value="P1">P1</option>
-          <option value="P2">P2</option>
-          <option value="P3">P3</option>
-          <option value="TutoriasPost">Tutorías Post</option>
+          <template x-for="p in practicasDeCarrera(carreraFilter)" :key="p.id">
+            <option :value="p.codigo" x-text="p.nombre"></option>
+          </template>
         </select>
         
         <label class="text-xs font-bold text-gray-700 ml-2">Encuentro:</label>
@@ -464,13 +558,23 @@
         </div>
 
         <div class="px-4 sm:px-6 pt-4 shrink-0">
-          <div class="flex gap-1.5 flex-wrap mb-3">
-            <template x-for="p in promocionPPs" :key="p.id">
+          <div class="flex gap-1.5 flex-wrap mb-2" x-show="carrerasActivas.length > 1">
+            <template x-for="c in carrerasActivas" :key="c.id">
               <button
-                @click="promocionPP = p.id; promoSel = {}; promoRindieron = {}; initPromocion()"
+                @click="promocionCarrera = c.id; promocionPP = practicasDeCarrera(c.id)[0]?.codigo || 'P1'; promoSel = {}; promoRindieron = {}; initPromocion()"
+                class="px-3 py-1 text-[11px] font-bold rounded-md transition"
+                :class="promocionCarrera === c.id ? 'bg-gray-900 text-white' : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-100'"
+                x-text="c.nombre"
+              ></button>
+            </template>
+          </div>
+          <div class="flex gap-1.5 flex-wrap mb-3">
+            <template x-for="p in practicasDeCarrera(promocionCarrera)" :key="p.id">
+              <button
+                @click="promocionPP = p.codigo; promoSel = {}; promoRindieron = {}; initPromocion()"
                 class="px-3 py-1.5 text-xs font-bold rounded-md transition"
-                :class="promocionPP === p.id ? 'bg-indigo-700 text-white' : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-100'"
-                x-text="p.label"
+                :class="promocionPP === p.codigo ? 'bg-indigo-700 text-white' : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-100'"
+                x-text="p.nombre"
               ></button>
             </template>
           </div>
@@ -481,14 +585,17 @@
             </label>
             <span class="text-xs text-gray-400" x-text="`${gruposPromocion.length} grupos en ${promocionPP}`"></span>
           </div>
+          <div x-show="!destinoPPCodigo" class="mb-3 p-2.5 rounded-lg border border-amber-200 bg-amber-50 text-amber-800 text-xs font-medium">
+            Esta es la última práctica de la carrera: no hay una etapa siguiente para promover.
+          </div>
           <div x-show="promoResultado" class="mb-3 p-3 rounded-xl border text-sm" :class="promoResultadoError ? 'border-red-200 bg-red-50 text-red-700' : 'border-green-200 bg-green-50 text-green-700'" x-text="promoResultado"></div>
         </div>
 
         <div class="px-4 sm:px-6 py-4 overflow-y-auto flex-1 min-h-0 space-y-3">
           <template x-for="g in gruposPromocion" :key="g.id">
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm" :class="promoSeleccion[g.id]?.promover ? 'border-indigo-400 ring-1 ring-indigo-200' : ''">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm" :class="promoSel[g.id]?.promover ? 'border-indigo-400 ring-1 ring-indigo-200' : ''">
               <div class="p-3 flex items-center gap-3">
-                <input type="checkbox" x-model="promoSeleccion[g.id].promover" class="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                <input type="checkbox" x-model="promoSel[g.id].promover" class="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
                 <div class="flex-1 min-w-0">
                   <div class="font-bold text-sm text-gray-900">
                     <span class="text-gray-500 mr-1" x-text="`G${g.id}`"></span>
@@ -505,7 +612,7 @@
                   <span class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-bold" :class="promoSugeridoBadgeClass(promoSugeridoEstado(g))" x-text="promoSugeridoLabel(promoSugeridoEstado(g))"></span>
                 </div>
               </div>
-              <div x-show="promoSeleccion[g.id].promover" class="border-t border-gray-100 px-3 py-2 bg-indigo-50/50">
+              <div x-show="promoSel[g.id].promover" class="border-t border-gray-100 px-3 py-2 bg-indigo-50/50">
                 <div class="flex items-center justify-between mb-1.5">
                   <span class="text-[10px] font-bold text-gray-600 uppercase tracking-wide">Integrantes (desmarcá quien repite) · ¿Rindió?</span>
                   <span class="text-[10px] text-gray-500 font-bold" x-text="`${promoPromovidosCount(g.id)} de ${g.integrantes?.length || 0}`"></span>
@@ -514,11 +621,11 @@
                   <template x-for="int in g.integrantes" :key="int.nombre">
                     <div class="flex items-center justify-between gap-1.5 text-xs text-gray-700 rounded px-1.5 py-0.5 hover:bg-white">
                       <label class="flex items-center gap-1.5 cursor-pointer flex-1 min-w-0">
-                        <input type="checkbox" x-model="promoSeleccion[g.id].integrantes[int.nombre]" class="w-3.5 h-3.5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                        <input type="checkbox" x-model="promoSel[g.id].integrantes[int.nombre]" class="w-3.5 h-3.5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
                         <span class="truncate" x-text="int.nombre"></span>
                       </label>
-                      <label class="flex items-center gap-1 cursor-pointer shrink-0" :class="promoSeleccion[g.id].integrantes[int.nombre] ? 'text-gray-700' : 'text-gray-300'">
-                        <input type="checkbox" :disabled="!promoSeleccion[g.id].integrantes[int.nombre]" x-model="promoRindieron[`${g.id}_${int.nombre}`]" class="w-3.5 h-3.5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-600">
+                      <label class="flex items-center gap-1 cursor-pointer shrink-0" :class="promoSel[g.id].integrantes[int.nombre] ? 'text-gray-700' : 'text-gray-300'">
+                        <input type="checkbox" :disabled="!promoSel[g.id].integrantes[int.nombre]" x-model="promoRindieron[`${g.id}_${int.nombre}`]" class="w-3.5 h-3.5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-600">
                         <span class="text-[10px] font-bold" x-text="promoRindieron[`${g.id}_${int.nombre}`] ? 'Rindió' : '¿Rindió?'"></span>
                       </label>
                     </div>
@@ -539,7 +646,7 @@
             <button @click="showPromover = false; promoResultado = ''" class="px-4 py-2.5 text-sm font-bold rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-50 transition">Cancelar</button>
             <button
               @click="aplicarPromocion()"
-              :disabled="promoSeleccionadas === 0 || promoSaving"
+              :disabled="promoSeleccionadas === 0 || promoSaving || !destinoPPCodigo"
               class="px-5 py-2.5 bg-indigo-700 text-white text-sm font-bold rounded-xl hover:bg-indigo-800 transition disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <span x-text="promoSaving ? 'Aplicando...' : 'Aplicar promoción'"></span>
@@ -563,13 +670,23 @@
         </div>
 
         <div class="px-4 sm:px-6 pt-4 shrink-0">
-          <div class="flex gap-1.5 flex-wrap mb-3">
-            <template x-for="p in planillaEditorPPs" :key="p.id">
+          <div class="flex gap-1.5 flex-wrap mb-2" x-show="carrerasActivas.length > 1">
+            <template x-for="c in carrerasActivas" :key="c.id">
               <button
-                @click="planillaEditorPP = p.id; planillaError = ''"
+                @click="planillaEditorCarrera = c.id; planillaEditorPP = practicasDeCarrera(c.id)[0]?.codigo || 'P1'; prepararPlanillaEditor(); planillaError = ''"
+                class="px-3 py-1 text-[11px] font-bold rounded-md transition"
+                :class="planillaEditorCarrera === c.id ? 'bg-gray-900 text-white' : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-100'"
+                x-text="c.nombre"
+              ></button>
+            </template>
+          </div>
+          <div class="flex gap-1.5 flex-wrap mb-3">
+            <template x-for="p in practicasDeCarrera(planillaEditorCarrera)" :key="p.id">
+              <button
+                @click="planillaEditorPP = p.codigo; prepararPlanillaEditor(); planillaError = ''"
                 class="px-3 py-1.5 text-xs font-bold rounded-md transition"
-                :class="planillaEditorPP === p.id ? 'bg-indigo-700 text-white' : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-100'"
-                x-text="p.label"
+                :class="planillaEditorPP === p.codigo ? 'bg-indigo-700 text-white' : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-100'"
+                x-text="p.nombre"
               ></button>
             </template>
           </div>
@@ -585,6 +702,14 @@
                   <label class="block text-[10px] font-bold text-gray-500 uppercase mb-0.5">Nombre</label>
                   <input type="text" x-model="enc.nombre" class="w-full px-2.5 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white">
                 </div>
+                <button
+                  type="button"
+                  @click="eliminarEncuentro(enc.id)"
+                  class="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-red-600 hover:bg-red-50"
+                  title="Eliminar encuentro"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                </button>
               </div>
               <div class="mb-3">
                 <label class="block text-[10px] font-bold text-gray-500 uppercase mb-0.5">Pregunta</label>
@@ -606,6 +731,18 @@
               </div>
             </div>
           </template>
+
+          <button
+            type="button"
+            @click="agregarEncuentro()"
+            class="w-full py-3 rounded-xl border-2 border-dashed border-gray-300 text-gray-500 text-sm font-bold hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/50 transition"
+          >
+            + Agregar encuentro
+          </button>
+
+          <div x-show="planillaEditorRows.length === 0" class="text-center py-6 text-sm text-gray-400">
+            Esta práctica todavía no tiene encuentros configurados. Usá "+ Agregar encuentro" para empezar.
+          </div>
         </div>
 
         <div class="flex items-center justify-end px-4 sm:px-6 py-4 border-t border-gray-200 shrink-0 gap-2">
@@ -630,6 +767,7 @@
         <div class="flex-1 min-w-0">
           <h2 class="text-base sm:text-lg font-extrabold text-gray-900 truncate" x-text="`G${grupoActual?.id} · ${grupoActual?.proyecto}`"></h2>
           <p class="text-xs text-gray-600 font-medium truncate" x-text="`Grupo ${grupoActual?.id} ${grupoActual?.comision ? '· ' + grupoActual.comision : ''} ${grupoActual?.practica ? '· ' + grupoActual.practica : ''}`"></p>
+          <span x-show="esTrasladado(grupoActual)" class="inline-flex items-center px-1.5 py-0.5 mt-1 rounded-md bg-purple-100 text-purple-700 text-[10px] font-bold">↔ En Tutorías (trasladado desde PP3)</span>
         </div>
         
         <!-- Selector de encuentros -->
@@ -654,7 +792,7 @@
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           </button>
-          <button 
+          <button
             x-show="canEdit && grupoActual?.activo === false"
             @click="reactivarGrupo(selectedGrupo)"
             class="px-3 h-9 flex items-center gap-1 rounded-lg border border-green-200 bg-green-50 text-green-700 hover:bg-green-100 transition text-xs font-bold"
@@ -663,7 +801,25 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
             Reactivar
           </button>
-          <button 
+          <button
+            x-show="canEdit && puedeTrasladarATutorias(grupoActual)"
+            @click="abrirTraslado(grupoActual)"
+            class="px-3 h-9 flex items-center gap-1 rounded-lg border border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100 transition text-xs font-bold"
+            title="Trasladar a Tutorías"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+            Trasladar a Tutorías
+          </button>
+          <button
+            x-show="canEdit && esTrasladado(grupoActual)"
+            @click="abrirTraslado(grupoActual)"
+            class="px-3 h-9 flex items-center gap-1 rounded-lg border border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100 transition text-xs font-bold"
+            title="Devolver a PP3"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+            Devolver a PP3
+          </button>
+          <button
             x-show="canEdit"
             @click="confirmDeleteGrupo()"
             class="w-9 h-9 flex items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 transition"
@@ -836,10 +992,10 @@
   <div 
     x-show="showImportModal"
     x-transition
-    class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+    class="fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center z-50 sm:p-4"
     @click.self="showImportModal = false"
   >
-    <div class="bg-white rounded-xl p-6 w-full max-w-5xl border border-gray-300 shadow-lg max-h-[90vh] flex flex-col">
+    <div class="bg-white rounded-t-2xl sm:rounded-xl p-6 w-full max-w-5xl border border-gray-300 shadow-lg max-h-[90vh] flex flex-col">
       <h2 class="text-lg font-bold text-gray-900 mb-1">Importar desde Excel</h2>
       <p class="text-xs text-gray-500 mb-3">Revisá los cambios antes de confirmar.</p>
 
@@ -1128,10 +1284,10 @@
   <div 
     x-show="showLogin" 
     x-transition
-    class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+    class="fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center z-50 sm:p-4"
     @click.self="showLogin = false"
   >
-    <div class="bg-white rounded-xl p-6 w-full max-w-sm border border-gray-300 shadow-lg">
+    <div class="bg-white rounded-t-2xl sm:rounded-xl p-6 w-full max-w-sm border border-gray-300 shadow-lg max-h-[90vh] overflow-y-auto">
       <!-- Login view -->
       <template x-if="!showForgotPassword">
         <div>
@@ -1246,10 +1402,10 @@
   <div 
     x-show="showAddGrupo" 
     x-transition
-    class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+    class="fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center z-50 sm:p-4"
     @click.self="showAddGrupo = false"
   >
-    <div class="bg-white rounded-xl p-6 w-full max-w-md border border-gray-300 shadow-lg max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-t-2xl sm:rounded-xl p-6 w-full max-w-md border border-gray-300 shadow-lg max-h-[90vh] overflow-y-auto">
       <h2 class="text-lg font-bold text-gray-900 mb-4" x-text="editingGrupoId ? 'Editar Grupo' : 'Agregar Grupo'"></h2>
       <form @submit.prevent="guardarGrupoModal()">
         <div class="mb-3">
@@ -1260,10 +1416,22 @@
             required
           >
         </div>
+        <div class="mb-3" x-show="carrerasActivas.length > 1">
+          <label class="block text-xs font-bold text-gray-700 mb-1">Carrera</label>
+          <select
+            x-model="newGrupo.carrera_id"
+            @change="onNewGrupoCarreraChange()"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white"
+          >
+            <template x-for="c in carrerasActivas" :key="c.id">
+              <option :value="c.id" x-text="c.nombre"></option>
+            </template>
+          </select>
+        </div>
         <div class="mb-3">
           <label class="block text-xs font-bold text-gray-700 mb-1">Comisión</label>
           <div class="flex gap-2">
-            <select 
+            <select
               x-model="newGrupo.comision"
               class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white"
             >
@@ -1272,7 +1440,7 @@
                 <option :value="c.id" x-text="c.nombre"></option>
               </template>
             </select>
-            <button 
+            <button
               type="button"
               x-show="canEdit"
               @click="showAddComision = true"
@@ -1283,14 +1451,13 @@
         </div>
         <div class="mb-3">
           <label class="block text-xs font-bold text-gray-700 mb-1">Práctica</label>
-          <select 
+          <select
             x-model="newGrupo.practica"
             class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white"
           >
-            <option value="P1">P1</option>
-            <option value="P2">P2</option>
-            <option value="P3">P3</option>
-            <option value="TutoriasPost">Tutorías Post</option>
+            <template x-for="p in practicasDeCarrera(newGrupo.carrera_id)" :key="p.id">
+              <option :value="p.codigo" x-text="p.nombre"></option>
+            </template>
           </select>
         </div>
         
@@ -1381,10 +1548,10 @@
   <div 
     x-show="showConfirmDelete" 
     x-transition
-    class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+    class="fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center z-50 sm:p-4"
     @click.self="showConfirmDelete = false"
   >
-    <div class="bg-white rounded-xl p-6 w-full max-w-sm border border-gray-300 shadow-lg">
+    <div class="bg-white rounded-t-2xl sm:rounded-xl p-6 w-full max-w-sm border border-gray-300 shadow-lg max-h-[90vh] overflow-y-auto">
       <h2 class="text-lg font-bold text-red-600 mb-2">Desactivar Grupo</h2>
       <p class="text-sm text-gray-700 mb-4">
         ¿Estás seguro de que deseas desactivar <strong x-text="grupoToDelete?.proyecto"></strong>? El grupo quedará oculto pero sus datos se conservan.
@@ -1407,14 +1574,48 @@
     </div>
   </div>
 
+  <!-- Modal Traslado a Tutorías -->
+  <div
+    x-show="showTraslado"
+    x-transition
+    class="fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center z-50 sm:p-4"
+    @click.self="showTraslado = false"
+  >
+    <div class="bg-white rounded-t-2xl sm:rounded-xl p-6 w-full max-w-sm border border-gray-300 shadow-lg max-h-[90vh] overflow-y-auto">
+      <h2 class="text-lg font-bold text-purple-700 mb-2" x-text="esTrasladado(trasladoGrupo) ? 'Devolver a PP3' : 'Trasladar a Tutorías'"></h2>
+      <p class="text-sm text-gray-700 mb-4" x-show="!esTrasladado(trasladoGrupo)">
+        <strong x-text="trasladoGrupo?.proyecto"></strong> pasa de PP3 a Tutorías para trabajo intensivo. Podés devolverlo a PP3 en cualquier momento desde el mismo botón.
+      </p>
+      <p class="text-sm text-gray-700 mb-4" x-show="esTrasladado(trasladoGrupo)">
+        <strong x-text="trasladoGrupo?.proyecto"></strong> vuelve a PP3, la práctica desde la que fue trasladado.
+      </p>
+      <p x-show="trasladoError" class="text-xs text-red-600 mb-3 font-bold" x-text="trasladoError"></p>
+      <div class="flex gap-2">
+        <button
+          @click="showTraslado = false"
+          class="flex-1 py-2 border border-gray-300 text-gray-700 text-sm font-bold rounded-lg hover:bg-gray-50"
+        >
+          Cancelar
+        </button>
+        <button
+          @click="confirmarTraslado()"
+          class="flex-1 py-2 bg-purple-700 text-white text-sm font-bold rounded-lg hover:bg-purple-800"
+          :disabled="trasladoSaving"
+        >
+          <span x-text="trasladoSaving ? '...' : (esTrasladado(trasladoGrupo) ? 'Devolver a PP3' : 'Confirmar traslado')"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Add Comision Modal -->
   <div 
     x-show="showAddComision" 
     x-transition
-    class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+    class="fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center z-50 sm:p-4"
     @click.self="showAddComision = false"
   >
-    <div class="bg-white rounded-xl p-6 w-full max-w-sm border border-gray-300 shadow-lg">
+    <div class="bg-white rounded-t-2xl sm:rounded-xl p-6 w-full max-w-sm border border-gray-300 shadow-lg max-h-[90vh] overflow-y-auto">
       <h2 class="text-lg font-bold text-gray-900 mb-4">Agregar Comisión</h2>
       <form @submit.prevent="guardarComision()">
         <div class="mb-3">
@@ -1512,17 +1713,21 @@
     saved: false,
     saveTimeout: null,
     practicaFilter: 'Todas',
+    carreraFilter: 'analista-sistemas',
     mostrarInactivos: false,
     editingGrupoId: null,
-    
+    mobileMenuOpen: false,
+
+    // Traslado a Tutorías (transferencia puntual y reversible P3 <-> TutoriasPost)
+    showTraslado: false,
+    trasladoGrupo: null,
+    trasladoSaving: false,
+    trasladoError: '',
+
     // Promoción / Transferencia
     showPromover: false,
+    promocionCarrera: 'analista-sistemas',
     promocionPP: 'P1',
-    promocionPPs: [
-      { id: 'P1', label: 'PP1 (3er sem)' },
-      { id: 'P2', label: 'PP2 (5to sem)' },
-      { id: 'P3', label: 'PP3 (6to sem)' },
-    ],
     promocionFiltroPromovibles: false,
     promoSel: {},
     promoRindieron: {},
@@ -1530,47 +1735,37 @@
     promoResultado: '',
     promoResultadoError: false,
     alumnosSeguimiento: [],
-    
+
     // Stats filters
     statsComisionFilter: '',
     statsPracticaFilter: '',
     statsEncuentroFilter: '',
     statsResumen: { evaluados: 0, promocionados: 0, regulares: 0, libres: 0 },
-    
+
     planilla: {},
-    planillaEditorPP: 'P2',
-    planillaEditorPPs: [
-      { id: 'P1', label: 'PP1' },
-      { id: 'P2', label: 'PP2' },
-      { id: 'P3', label: 'PP3' },
-      { id: 'TutoriasPost', label: 'Tutorías Post' },
-    ],
+    planillaEditorCarrera: 'analista-sistemas',
+    planillaEditorPP: 'P1',
     showPlanillaEditor: false,
     planillaSaving: false,
     planillaError: '',
     grupos: [],
     comisiones: [],
+    carreras: [],
+    practicasCatalogo: [],
     data: {},
     localData: {},
     localAsist: {},
     evalMeta: {},
     grupoToDelete: null,
-    
-    practicas: [
-      { id: 'Todas', label: 'Todas' },
-      { id: 'P1', label: 'P1' },
-      { id: 'P2', label: 'P2' },
-      { id: 'P3', label: 'P3' },
-      { id: 'TutoriasPost', label: 'Tutorías Post' },
-    ],
-    
+
     newGrupo: {
       proyecto: '',
       comision: '',
       practica: 'P2',
+      carrera_id: 'analista-sistemas',
       integrantes: [{nombre:'',rol:'',observacion:'', tagEstado:'cursando', dbId:null}]
     },
-    
+
     newComision: {
       id: '',
       nombre: ''
@@ -1727,6 +1922,27 @@
         if (comErr) throw comErr;
         if (comData && comData.length > 0) this.comisiones = comData;
 
+        // Carreras
+        const { data: carrerasData, error: carrErr } = await supabase
+          .from('carreras')
+          .select('*')
+          .eq('activa', true)
+          .order('nombre');
+        if (carrErr) throw carrErr;
+        this.carreras = carrerasData || [];
+        if (this.carreras.length && !this.carreras.find(c => c.id === this.carreraFilter)) {
+          this.carreraFilter = this.carreras[0].id;
+        }
+
+        // Catálogo de prácticas por carrera
+        const { data: practicasData, error: pracErr } = await supabase
+          .from('practicas')
+          .select('*')
+          .eq('activa', true)
+          .order('orden');
+        if (pracErr) throw pracErr;
+        this.practicasCatalogo = practicasData || [];
+
         // Grupos
         const { data: gruposData, error: gErr } = await supabase
           .from('grupos')
@@ -1823,17 +2039,17 @@
         if (alumErr) throw alumErr;
         this.alumnosSeguimiento = alumData || [];
 
-        // Planilla (criterios por práctica/encuentro)
+        // Planilla (criterios por carrera/práctica/encuentro)
         const { data: planData, error: planErr } = await supabase
           .from('planilla')
-          .select('practica, encuentro, nombre, pregunta, criterio_fn, criterio_dev, criterio_sm')
-          .order('encuentro');
+          .select('carrera_id, practica, encuentro, nombre, pregunta, criterio_fn, criterio_dev, criterio_sm');
         if (planErr) throw planErr;
 
         const planilla = {};
         (planData || []).forEach(p => {
-          if (!planilla[p.practica]) planilla[p.practica] = [];
-          planilla[p.practica].push({
+          const key = this.planillaKey(p.carrera_id, p.practica);
+          if (!planilla[key]) planilla[key] = [];
+          planilla[key].push({
             id: p.encuentro,
             nombre: p.nombre || '',
             pregunta: p.pregunta || '',
@@ -1843,6 +2059,9 @@
               SM: p.criterio_sm || ''
             }
           });
+        });
+        Object.values(planilla).forEach(rows => {
+          rows.sort((a, b) => (parseInt(String(a.id).replace(/^E/i, ''), 10) || 0) - (parseInt(String(b.id).replace(/^E/i, ''), 10) || 0));
         });
         if (Object.keys(planilla).length > 0) {
           this.planilla = planilla;
@@ -1891,6 +2110,9 @@
 
     get gruposFiltrados() {
       let list = this.grupos.filter(g => g.proyecto && (this.mostrarInactivos || g.activo !== false));
+      if (this.carreraFilter && this.carreraFilter !== 'Todas') {
+        list = list.filter(g => (g.carrera_id || 'analista-sistemas') === this.carreraFilter);
+      }
       if (this.practicaFilter !== 'Todas') {
         list = list.filter(g => g.practica === this.practicaFilter);
       }
@@ -1947,6 +2169,9 @@
 
     get gruposConProyecto() {
       let list = this.grupos.filter(g => g.proyecto && (this.mostrarInactivos || g.activo !== false));
+      if (this.carreraFilter && this.carreraFilter !== 'Todas') {
+        list = list.filter(g => (g.carrera_id || 'analista-sistemas') === this.carreraFilter);
+      }
       if (this.practicaFilter !== 'Todas') {
         list = list.filter(g => g.practica === this.practicaFilter);
       }
@@ -1960,12 +2185,46 @@
       return this.practicaFilter === 'Todas' ? 'P2' : this.practicaFilter;
     },
 
-    get encuentrosMeta() {
-      return this.planilla[this.practicaActual] || ENCUENTROS_META;
+    get carreraActualParaVista() {
+      if (this.view === 'grupo') {
+        return this.grupoActual?.carrera_id || 'analista-sistemas';
+      }
+      return this.carreraFilter || 'analista-sistemas';
     },
 
-    planillaPara(practica) {
-      return this.planilla[practica] || ENCUENTROS_META;
+    get carrerasActivas() {
+      return (this.carreras || []).filter(c => c.activa !== false);
+    },
+
+    practicasDeCarrera(carreraId) {
+      return (this.practicasCatalogo || [])
+        .filter(p => p.carrera_id === carreraId && p.activa !== false)
+        .sort((a, b) => a.orden - b.orden);
+    },
+
+    get practicasNav() {
+      const list = this.practicasDeCarrera(this.carreraFilter);
+      return [{ id: 'Todas', label: 'Todas' }, ...list.map(p => ({ id: p.codigo, label: p.nombre }))];
+    },
+
+    setCarreraFilter(id) {
+      this.carreraFilter = id;
+      this.practicaFilter = 'Todas';
+      this.page = 1;
+    },
+
+    get encuentrosMeta() {
+      return this.planillaPara(this.carreraActualParaVista, this.practicaActual);
+    },
+
+    planillaKey(carreraId, practica) {
+      return `${carreraId || 'analista-sistemas'}::${practica}`;
+    },
+
+    planillaPara(carreraId, practica) {
+      const key = this.planillaKey(carreraId, practica);
+      if (this.planilla[key]) return this.planilla[key];
+      return (carreraId || 'analista-sistemas') === 'analista-sistemas' ? ENCUENTROS_META : [];
     },
 
     get grupoActual() {
@@ -2010,7 +2269,7 @@
 
     promedioEncuentros(grupoId) {
       const g = this.grupos.find(x => x.id === grupoId);
-      const meta = this.planillaPara(g?.practica || 'P2');
+      const meta = this.planillaPara(g?.carrera_id, g?.practica || 'P2');
       let sum = 0, count = 0;
       meta.forEach(e => {
         const sc = this.data[e.id]?.[grupoId];
@@ -2022,7 +2281,7 @@
 
     // --- PROMOCIÓN / TRANSFERENCIA ---
     get gruposPromocion() {
-      let list = this.grupos.filter(g => g.proyecto && g.activo !== false && g.practica === this.promocionPP);
+      let list = this.grupos.filter(g => g.proyecto && g.activo !== false && g.practica === this.promocionPP && (g.carrera_id || 'analista-sistemas') === this.promocionCarrera);
       if (this.promocionFiltroPromovibles) {
         list = list.filter(g => this.promoSugeridoEstado(g) !== 'no_promueve');
       }
@@ -2068,14 +2327,23 @@
       return Object.values(sel.integrantes).filter(Boolean).length;
     },
 
+    get destinoPPCodigo() {
+      const lista = this.practicasDeCarrera(this.promocionCarrera);
+      const idx = lista.findIndex(p => p.codigo === this.promocionPP);
+      if (idx < 0 || idx === lista.length - 1) return null;
+      return lista[idx + 1].codigo;
+    },
+
     get destinoPPLabel() {
-      const destino = { P1: 'P2', P2: 'P3', P3: 'Tutorías Post' }[this.promocionPP] || 'P2';
-      return destino;
+      const codigo = this.destinoPPCodigo;
+      if (!codigo) return '—';
+      const p = this.practicasDeCarrera(this.promocionCarrera).find(p => p.codigo === codigo);
+      return p ? p.nombre : codigo;
     },
 
     initPromocion() {
       this.grupos.forEach(g => {
-        if (!g.proyecto || g.practica !== this.promocionPP) return;
+        if (!g.proyecto || g.practica !== this.promocionPP || (g.carrera_id || 'analista-sistemas') !== this.promocionCarrera) return;
         if (this.promoSel[g.id]) return;
         const integrantes = {};
         (g.integrantes || []).forEach(i => { integrantes[i.nombre] = true; });
@@ -2089,13 +2357,18 @@
 
     async aplicarPromocion() {
       if (this.promoSeleccionadas === 0) return;
+      const destino = this.destinoPPCodigo;
+      if (!destino) {
+        this.promoResultado = 'No hay una práctica siguiente a la que promover en esta carrera.';
+        this.promoResultadoError = true;
+        return;
+      }
       this.promoSaving = true;
       this.promoResultado = '';
       this.promoResultadoError = false;
+      const esAnalistaSistemas = this.promocionCarrera === 'analista-sistemas';
       const ppMap = { P1: 'pp1', P2: 'pp2', P3: 'pp3' };
-      const nextPP = { P1: 'P2', P2: 'P3', P3: 'TutoriasPost' };
       const ppKey = ppMap[this.promocionPP];
-      const destino = nextPP[this.promocionPP];
       const mesActual = new Date().toISOString().slice(0, 7); // YYYY-MM
 
       const resumen = { grupos: 0, alumnos: 0, sinMatch: 0 };
@@ -2106,9 +2379,10 @@
           if (!g) continue;
           const estado = this.promoSugeridoEstado(g);
 
-          const { error: gErr } = await supabase.from('grupos').update({ practica: destino }).eq('id', g.id);
+          const { error: gErr } = await supabase.from('grupos').update({ practica: destino, practica_origen: null }).eq('id', g.id);
           if (gErr) throw gErr;
           g.practica = destino;
+          g.practica_origen = null;
           resumen.grupos++;
 
           for (const encId of Object.keys(this.data)) {
@@ -2130,6 +2404,7 @@
               if (intErr) throw intErr;
               integrante.tags = [nuevoTag];
             }
+            if (!esAnalistaSistemas || !ppKey) continue;
             const alumno = this.alumnosSeguimiento.find(a => this.normalizarNombre(a.nombre_completo) === this.normalizarNombre(nombre));
             if (!alumno) { resumen.sinMatch++; continue; }
             const payload = {
@@ -2177,33 +2452,87 @@
       return [`${practica}-${estado}`];
     },
 
-    // --- PLANILLA (editor por práctica) ---
+    // --- PLANILLA (editor por carrera y práctica) ---
     get planillaEditorRows() {
-      return this.planilla[this.planillaEditorPP] || ENCUENTROS_META;
+      return this.planilla[this.planillaKey(this.planillaEditorCarrera, this.planillaEditorPP)] || [];
+    },
+
+    prepararPlanillaEditor() {
+      const key = this.planillaKey(this.planillaEditorCarrera, this.planillaEditorPP);
+      if (!this.planilla[key]) {
+        this.planilla[key] = this.planillaEditorCarrera === 'analista-sistemas'
+          ? ENCUENTROS_META.map(e => ({
+              id: e.id,
+              nombre: e.nombre,
+              pregunta: e.pregunta,
+              criterios: { FN: e.criterios.FN, DEV: e.criterios.DEV, SM: e.criterios.SM }
+            }))
+          : [];
+      }
     },
 
     openPlanillaEditor() {
-      this.planillaEditorPP = this.practicaActual === 'Todas' ? 'P2' : this.practicaActual;
-      if (!this.planilla[this.planillaEditorPP]) {
-        this.planilla[this.planillaEditorPP] = ENCUENTROS_META.map(e => ({
-          id: e.id,
-          nombre: e.nombre,
-          pregunta: e.pregunta,
-          criterios: { FN: e.criterios.FN, DEV: e.criterios.DEV, SM: e.criterios.SM }
-        }));
-      }
+      this.planillaEditorCarrera = this.carreraFilter && this.carreraFilter !== 'Todas' ? this.carreraFilter : 'analista-sistemas';
+      const pps = this.practicasDeCarrera(this.planillaEditorCarrera);
+      const preferido = this.practicaActual !== 'Todas' ? this.practicaActual : null;
+      this.planillaEditorPP = pps.find(p => p.codigo === preferido)?.codigo || pps[0]?.codigo || 'P1';
+      this.prepararPlanillaEditor();
       this.planillaError = '';
       this.showPlanillaEditor = true;
+    },
+
+    nextEncuentroId() {
+      const rows = this.planillaEditorRows;
+      const nums = rows.map(r => parseInt(String(r.id).replace(/^E/i, ''), 10)).filter(n => !isNaN(n));
+      const next = (nums.length ? Math.max(...nums) : 0) + 1;
+      return `E${next}`;
+    },
+
+    agregarEncuentro() {
+      const key = this.planillaKey(this.planillaEditorCarrera, this.planillaEditorPP);
+      if (!this.planilla[key]) this.planilla[key] = [];
+      this.planilla[key].push({
+        id: this.nextEncuentroId(),
+        nombre: '',
+        pregunta: '',
+        criterios: { FN: '', DEV: '', SM: '' }
+      });
+    },
+
+    async eliminarEncuentro(encId) {
+      const carreraId = this.planillaEditorCarrera;
+      const pp = this.planillaEditorPP;
+      const tieneEvaluaciones = this.grupos.some(g =>
+        (g.carrera_id || 'analista-sistemas') === carreraId &&
+        g.practica === pp &&
+        this.data[encId]?.[g.id] &&
+        Object.keys(this.data[encId][g.id]).length > 0
+      );
+      if (tieneEvaluaciones && !confirm(`El encuentro ${encId} tiene evaluaciones cargadas. ¿Eliminarlo igual? Se perderán esas notas.`)) {
+        return;
+      }
+      const key = this.planillaKey(carreraId, pp);
+      this.planilla[key] = (this.planilla[key] || []).filter(r => r.id !== encId);
+      try {
+        await supabase.from('planilla').delete()
+          .eq('carrera_id', carreraId)
+          .eq('practica', pp)
+          .eq('encuentro', encId);
+      } catch (e) {
+        console.error('Error eliminando encuentro:', e);
+      }
     },
 
     async guardarPlanilla() {
       this.planillaSaving = true;
       this.planillaError = '';
+      const carreraId = this.planillaEditorCarrera;
       const pp = this.planillaEditorPP;
-      const rows = this.planilla[pp] || [];
+      const rows = this.planillaEditorRows;
       try {
         for (const r of rows) {
           const payload = {
+            carrera_id: carreraId,
             practica: pp,
             encuentro: r.id,
             nombre: r.nombre || '',
@@ -2214,10 +2543,11 @@
           };
           const { error } = await supabase
             .from('planilla')
-            .upsert(payload, { onConflict: 'practica,encuentro' });
+            .upsert(payload, { onConflict: 'carrera_id,practica,encuentro' });
           if (error) throw error;
         }
-        this.planilla[pp] = rows.map(r => ({ ...r }));
+        const key = this.planillaKey(carreraId, pp);
+        this.planilla[key] = rows.map(r => ({ ...r }));
         this.showPlanillaEditor = false;
       } catch (e) {
         this.planillaError = 'Error al guardar: ' + (e.message || e);
@@ -2228,7 +2558,7 @@
 
     dimAvgForGrupo(grupoId, dim) {
       const g = this.grupos.find(x => x.id === grupoId);
-      const meta = this.planillaPara(g?.practica || 'P2');
+      const meta = this.planillaPara(g?.carrera_id, g?.practica || 'P2');
       let sum = 0, count = 0;
       meta.forEach(e => {
         const v = this.data[e.id]?.[grupoId]?.[dim];
@@ -2263,7 +2593,7 @@
 
     initLocalData(grupoId) {
       const g = this.grupos.find(x => x.id === grupoId);
-      const meta = this.planillaPara(g?.practica || 'P2');
+      const meta = this.planillaPara(g?.carrera_id, g?.practica || 'P2');
       const d = {};
       const a = {};
       meta.forEach(e => {
@@ -2371,6 +2701,9 @@
     // --- STATS HELPERS ---
     gruposStatsFiltrados() {
       let list = this.grupos.filter(g => g.proyecto && (this.mostrarInactivos || g.activo !== false));
+      if (this.carreraFilter && this.carreraFilter !== 'Todas') {
+        list = list.filter(g => (g.carrera_id || 'analista-sistemas') === this.carreraFilter);
+      }
       if (this.statsComisionFilter) {
         list = list.filter(g => g.comision === this.statsComisionFilter);
       }
@@ -2382,7 +2715,7 @@
 
     statsEncuentros() {
       const pp = this.statsPracticaFilter || (this.practicaFilter === 'Todas' ? 'P2' : this.practicaFilter);
-      return this.planillaPara(pp);
+      return this.planillaPara(this.carreraFilter, pp);
     },
 
     calcStatsResumen() {
@@ -2967,16 +3300,25 @@
     // --- GRUPO CRUD ---
     openAddGrupoModal() {
       this.editingGrupoId = null;
+      const carreraId = this.carreraFilter && this.carreraFilter !== 'Todas' ? this.carreraFilter : 'analista-sistemas';
       this.newGrupo = {
         proyecto: '',
         comision: '',
-        practica: 'P2',
+        practica: this.practicasDeCarrera(carreraId)[0]?.codigo || 'P1',
+        carrera_id: carreraId,
         integrantes: [{nombre:'',rol:'',observacion:'', tagEstado:'cursando', dbId:null}]
       };
       this.addGrupoError = '';
       this.showAddGrupo = true;
     },
-    
+
+    onNewGrupoCarreraChange() {
+      const lista = this.practicasDeCarrera(this.newGrupo.carrera_id);
+      if (!lista.find(p => p.codigo === this.newGrupo.practica)) {
+        this.newGrupo.practica = lista[0]?.codigo || 'P1';
+      }
+    },
+
     openEditGrupoModal() {
       const g = this.grupoActual;
       if (!g) return;
@@ -2985,6 +3327,7 @@
         proyecto: g.proyecto,
         comision: g.comision || '',
         practica: g.practica || 'P2',
+        carrera_id: g.carrera_id || 'analista-sistemas',
         integrantes: g.integrantes.map(i => ({
           nombre: i.nombre,
           rol: i.rol || '',
@@ -2995,6 +3338,57 @@
       };
       this.addGrupoError = '';
       this.showAddGrupo = true;
+    },
+
+    // --- TRASLADO A TUTORÍAS (transferencia puntual y reversible P3 <-> TutoriasPost) ---
+    puedeTrasladarATutorias(g) {
+      if (!g) return false;
+      const cat = this.practicasCatalogo.find(p => p.carrera_id === (g.carrera_id || 'analista-sistemas') && p.codigo === 'TutoriasPost');
+      return !!cat && g.practica === 'P3';
+    },
+
+    esTrasladado(g) {
+      return !!g && g.practica === 'TutoriasPost' && !!g.practica_origen;
+    },
+
+    abrirTraslado(g) {
+      if (!this.canEdit || !g) return;
+      this.trasladoGrupo = g;
+      this.trasladoError = '';
+      this.showTraslado = true;
+    },
+
+    async confirmarTraslado() {
+      if (!this.trasladoGrupo || !this.canEdit) return;
+      this.trasladoSaving = true;
+      this.trasladoError = '';
+      try {
+        const g = this.trasladoGrupo;
+        const esDevolucion = this.esTrasladado(g);
+        const nuevaPractica = esDevolucion ? g.practica_origen : 'TutoriasPost';
+        const nuevoOrigen = esDevolucion ? null : g.practica;
+        const { error } = await supabase.from('grupos')
+          .update({ practica: nuevaPractica, practica_origen: nuevoOrigen })
+          .eq('id', g.id);
+        if (error) throw error;
+        const idx = this.grupos.findIndex(x => x.id === g.id);
+        if (idx >= 0) {
+          this.grupos[idx] = { ...this.grupos[idx], practica: nuevaPractica, practica_origen: nuevoOrigen };
+        }
+        for (const encId of Object.keys(this.data)) {
+          if (this.data[encId] && this.data[encId][g.id]) delete this.data[encId][g.id];
+        }
+        const gidSufix = `_${g.id}`;
+        for (const k of Object.keys(this.evalMeta)) {
+          if (k.endsWith(gidSufix)) delete this.evalMeta[k];
+        }
+        this.showTraslado = false;
+        this.trasladoGrupo = null;
+      } catch (e) {
+        this.trasladoError = 'Error: ' + (e.message || e);
+      } finally {
+        this.trasladoSaving = false;
+      }
     },
     
     async guardarGrupoModal() {
@@ -3017,7 +3411,8 @@
           const { error: gErr } = await supabase.from('grupos').update({
             proyecto: this.newGrupo.proyecto.trim(),
             comision: this.newGrupo.comision.trim(),
-            practica: this.newGrupo.practica
+            practica: this.newGrupo.practica,
+            carrera_id: this.newGrupo.carrera_id
           }).eq('id', grupoId);
           if (gErr) throw gErr;
 
@@ -3069,6 +3464,7 @@
               proyecto: this.newGrupo.proyecto.trim(),
               comision: this.newGrupo.comision.trim(),
               practica: this.newGrupo.practica,
+              carrera_id: this.newGrupo.carrera_id,
               integrantes: validIntegrantes.map(i => ({
                 id: i.dbId,
                 nombre: i.nombre.trim(),
@@ -3096,7 +3492,8 @@
             id: nextId,
             proyecto: this.newGrupo.proyecto.trim(),
             comision: this.newGrupo.comision.trim(),
-            practica: this.newGrupo.practica
+            practica: this.newGrupo.practica,
+            carrera_id: this.newGrupo.carrera_id
           });
           if (gErr) throw gErr;
 
@@ -3115,6 +3512,9 @@
             proyecto: this.newGrupo.proyecto.trim(),
             comision: this.newGrupo.comision.trim(),
             practica: this.newGrupo.practica,
+            carrera_id: this.newGrupo.carrera_id,
+            activo: true,
+            alertas: [],
             integrantes: validIntegrantes.map(i => ({
               nombre: i.nombre.trim(),
               rol: i.rol.trim(),
@@ -3123,12 +3523,14 @@
             }))
           });
         }
-        
+
         // Reset
+        const carreraReset = this.carreraFilter && this.carreraFilter !== 'Todas' ? this.carreraFilter : 'analista-sistemas';
         this.newGrupo = {
           proyecto: '',
           comision: '',
-          practica: 'P2',
+          practica: this.practicasDeCarrera(carreraReset)[0]?.codigo || 'P1',
+          carrera_id: carreraReset,
           integrantes: [{nombre:'',rol:'',observacion:'', tagEstado:'cursando', dbId:null}]
         };
         this.editingGrupoId = null;
@@ -3344,7 +3746,7 @@
         grp.currentPct = this.calcPctStr(this.promedioEncuentros(grp.id));
         
         const projectedData = {};
-        this.planillaPara(g?.practica || 'P2').forEach(enc => {
+        this.planillaPara(g?.carrera_id, g?.practica || 'P2').forEach(enc => {
           if (!projectedData[enc.id]) projectedData[enc.id] = {};
           const existing = this.data[enc.id]?.[grp.id];
           if (existing) {
