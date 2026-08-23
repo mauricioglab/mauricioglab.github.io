@@ -1,0 +1,17 @@
+{
+  "seo": {
+    "title": "Portfolio | Projects by profile",
+    "description": "Mauricio Gonzalez technical portfolio: data science, development, architecture, AI, teaching and more, grouped by profile."
+  },
+  "title": "Portfolio",
+  "subtitle": "Projects of each profile",
+  "intro": "All projects in a single page, grouped by profile. Each CV takes its cases from here: when you add a new project, the matching section updates automatically.",
+  "projectsLabel": "Projects",
+  "downloadCV": "Download CV",
+  "viewProfile": "View full profile",
+  "emptyProjects": "No projects yet — pending to complete",
+  "contact": "Contact",
+  "nav": {
+    "portfolio": "Portfolio"
+  }
+}

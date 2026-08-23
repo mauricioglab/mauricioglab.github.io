@@ -154,7 +154,7 @@ export const projects: Project[] = [
 ];
 
 // Helper to filter projects by profile
-export function getProjectsByProfile(profileId: 'developer' | 'analista' | 'ia-engineer', featuredOnly = false) {
+export function getProjectsByProfile(profileId: ProfileId, featuredOnly = false) {
   return projects.filter(project => {
     const hasProfile = project.profiles[profileId] !== undefined;
     const isFeatured = featuredOnly ? project.featured : true;

@@ -41,6 +41,7 @@ export const pagesRegistry: PageEntry[] = [
   // =====================
   // LANDINGS (solo en admin, solo español)
   // =====================
+  { id: 'portfolio', name: 'Portfolio', url: '/es/portfolio/', category: 'landing', icon: '📁', active: true },
   { id: 'landing-developer', name: 'Landing Developer', url: '/es/landing/developer/', category: 'landing', icon: '💻' },
   { id: 'landing-analista', name: 'Landing Analista', url: '/es/landing/analista/', category: 'landing', icon: '📊', active: true },
   { id: 'landing-ia', name: 'Landing IA Engineer', url: '/es/landing/ia-engineer/', category: 'landing', icon: '🤖', active: false },

@@ -1,5 +1,6 @@
 ---
 import type { Project } from '../../data/projects';
+import type { ProfileId } from '../../data/profiles';
 import { 
   type Lang, 
   useTranslations, 
@@ -8,7 +9,7 @@ import {
 
 interface Props {
   project: Project;
-  profileId: 'developer' | 'analista' | 'ia-engineer';
+  profileId: ProfileId;
   lang?: Lang;
 }
 

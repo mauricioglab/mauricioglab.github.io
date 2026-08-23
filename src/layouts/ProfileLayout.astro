@@ -38,6 +38,9 @@ const altPath = getAlternateUrl(Astro.url, lang);
       </div>
       
       <div class="hidden md:flex items-center space-x-6">
+        <a href={`/${lang}/portfolio`} class="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
+          {t.nav.portfolio}
+        </a>
         <a href="#proyectos" class="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
           {t.nav.projects}
         </a>

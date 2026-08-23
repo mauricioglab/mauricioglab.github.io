@@ -66,6 +66,7 @@ export interface CommonTranslations {
     experience: string;
     blog: string;
     contact: string;
+    portfolio: string;
   };
   hero: {
     yearsExp: string;
