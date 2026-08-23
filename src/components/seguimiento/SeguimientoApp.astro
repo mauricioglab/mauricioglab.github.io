@@ -102,6 +102,15 @@
         </template>
       </nav>
 
+      <!-- Filtro Histórico -->
+      <div class="flex items-center gap-2 mt-2" x-show="view === 'encuentros' && gruposConHistorico.length > 0">
+        <label class="flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer">
+          <input type="checkbox" x-model="verHistorico" class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+          <span class="font-medium">Ver histórico</span>
+        </label>
+        <span class="text-xs text-gray-400" x-text="`(${gruposConHistorico.length} grupo(s) con evaluaciones anteriores)`"></span>
+      </div>
+
       <!-- Nivel 3: Vista -->
       <nav class="flex gap-0 mt-2 -mb-px overflow-x-auto" x-show="view === 'resumen' || view === 'encuentros' || view === 'stats'">
         <button
@@ -208,6 +217,7 @@
                     ></span>
                   </template>
                   <span x-show="esTrasladado(grupo)" class="inline-flex items-center px-1.5 py-0.5 ml-0.5 rounded-md bg-purple-100 text-purple-700 text-[10px] font-bold" title="En Tutorías (trasladado desde PP3)">↔ Tutorías</span>
+                  <span x-show="tieneHistorico(grupo)" class="inline-flex items-center px-1.5 py-0.5 ml-0.5 rounded-md bg-amber-100 text-amber-700 text-[10px] font-bold" title="Tiene evaluaciones históricas">⏱ Histórico</span>
                 </td>
                 <td class="px-2 py-2.5 text-gray-900 font-bold" x-text="grupo.proyecto"></td>
                 <td class="px-2 py-2.5 text-gray-700 font-medium" x-text="grupo.comision || '—'"></td>
@@ -1771,6 +1781,7 @@
     localData: {},
     localAsist: {},
     evalMeta: {},
+    verHistorico: false,
     grupoToDelete: null,
 
     newGrupo: {
@@ -2008,10 +2019,27 @@
           const encId = ev.encuentro_meta_id;
           const gid = ev.grupo_id;
           const gp = practicaMap[gid];
-          if (ev.practica && gp && ev.practica !== gp) return;
+          const esHistorico = ev.practica_origen && ev.practica_origen !== gp;
+          if (gp && ev.practica !== gp && !esHistorico) return;
           if (!this.data[encId]) this.data[encId] = {};
           if (!this.data[encId][gid]) this.data[encId][gid] = {};
           const entry = this.data[encId][gid];
+          if (esHistorico) {
+            if (!entry._historico) entry._historico = {};
+            entry._historico[ev.practica_origen] = {
+              FN: ev.fn,
+              DEV: ev.dev,
+              SM: ev.sm,
+              fb: {
+                FN: ev.feedback_fn || '',
+                DEV: ev.feedback_dev || '',
+                SM: ev.feedback_sm || ''
+              }
+            };
+            entry._historicoKey = entry._historicoKey || {};
+            entry._historicoKey[ev.practica_origen] = `${encId}_${gid}_${ev.practica_origen}`;
+            return;
+          }
           entry.FN = ev.fn ?? entry.FN;
           entry.DEV = ev.dev ?? entry.DEV;
           entry.SM = ev.sm ?? entry.SM;
@@ -2025,7 +2053,8 @@
             fecha_primera_nota: ev.fecha_primera_nota || null,
             fecha_modificacion: ev.fecha_modificacion || null,
             es_modificacion: ev.es_modificacion || false,
-            override_limite: ev.override_limite || false
+            override_limite: ev.override_limite || false,
+            practica_origen: ev.practica_origen || null
           };
         });
 
@@ -2222,6 +2251,10 @@
       return [{ id: 'Todas', label: 'Todas' }, ...list.map(p => ({ id: p.codigo, label: p.nombre }))];
     },
 
+    get gruposConHistorico() {
+      return (this.grupos || []).filter(g => this.tieneHistorico(g));
+    },
+
     setCarreraFilter(id) {
       this.carreraFilter = id;
       this.practicaFilter = 'Todas';
@@ -2393,19 +2426,42 @@
           const g = this.grupos.find(x => String(x.id) === String(gid));
           if (!g) continue;
           const estado = this.promoSugeridoEstado(g);
+          const practicaAnterior = g.practica;
 
-          const { error: gErr } = await supabase.from('grupos').update({ practica: destino, practica_origen: null }).eq('id', g.id);
+          const { error: gErr } = await supabase.from('grupos').update({ practica: destino, practica_origen: practicaAnterior }).eq('id', g.id);
           if (gErr) throw gErr;
           g.practica = destino;
-          g.practica_origen = null;
+          g.practica_origen = practicaAnterior;
           resumen.grupos++;
 
-          for (const encId of Object.keys(this.data)) {
-            if (this.data[encId] && this.data[encId][g.id]) delete this.data[encId][g.id];
-          }
+          const { error: histErr } = await supabase
+            .from('evaluaciones')
+            .update({ practica_origen: practicaAnterior })
+            .eq('grupo_id', g.id)
+            .is('practica_origen', null);
+          if (histErr) throw histErr;
+
           const gidSufix = `_${g.id}`;
           for (const k of Object.keys(this.evalMeta)) {
             if (k.endsWith(gidSufix)) delete this.evalMeta[k];
+          }
+          for (const encId of Object.keys(this.data)) {
+            if (this.data[encId] && this.data[encId][g.id]) {
+              this.data[encId][g.id]._historico = practicaAnterior;
+            }
+          }
+
+          const encuentrosDestino = this.planillaPara(g.carrera_id || 'analista-sistemas', destino) || [];
+          for (const enc of encuentrosDestino) {
+            const { error: newEvErr } = await supabase.from('evaluaciones').insert({
+              grupo_id: g.id,
+              practica: destino,
+              practica_origen: null,
+              encuentro_meta_id: enc.id,
+              fn: null, dev: null, sm: null,
+              feedback_fn: null, feedback_dev: null, feedback_sm: null
+            });
+            if (newEvErr) throw newEvErr;
           }
 
           for (const [nombre, promovido] of Object.entries(sel.integrantes)) {
@@ -3369,6 +3425,14 @@
 
     esTrasladado(g) {
       return !!g && g.practica === 'TutoriasPost' && !!g.practica_origen;
+    },
+
+    tieneHistorico(g) {
+      if (!g || !g.practica_origen) return false;
+      const gid = g.id;
+      return Object.values(this.data).some(enc =>
+        enc[gid]?._historico && Object.keys(enc[gid]._historico).length > 0
+      );
     },
 
     abrirTraslado(g) {
