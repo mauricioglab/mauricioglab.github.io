@@ -116,5 +116,33 @@
         ]
       }
     }
+  },
+  "mundial-2026": {
+    "title": "Modelo predictivo del Mundial 2026",
+    "shortDescription": "Rating Elo, Poisson y simulación Monte Carlo para estimar la probabilidad de cada selección, validado contra el torneo real",
+    "profiles": {
+      "analista": {
+        "description": "Modelo de fuerza relativa (Elo), goles esperados (Poisson) y simulación Monte Carlo del cuadro completo. Frontera temporal estricta: ninguna predicción usa información posterior al inicio del torneo.",
+        "highlights": [
+          "Acertó las 2 semifinales y ubicó a España 2ª favorita (16%); España fue campeona",
+          "Calibración del Elo validada sobre miles de partidos históricos",
+          "Comparación honesta contra baseline logístico y líneas ingenuas (log-loss)"
+        ]
+      }
+    }
+  },
+  "abandono-estudiantil": {
+    "title": "Predicción de abandono estudiantil",
+    "shortDescription": "Modelo de riesgo para priorizar tutorías: a quién intervenir primero con un recurso limitado",
+    "profiles": {
+      "analista": {
+        "description": "Piloto (POC) sobre el dataset UCI (4.424 alumnos). Regresión logística vs. Random Forest, umbral de decisión como dial de negocio y lista priorizada de alumnos.",
+        "highlights": [
+          "Detecta el 65.8% de los abandonos con solo el 1er semestre, a tiempo para intervenir",
+          "Umbral operativo 0.53 optimizado por F1 (precisión 0.88, recall 0.72)",
+          "Recorrido completo CRISP-DM con artefactos de gestión (Sprint 0, ficha DRL, backlog)"
+        ]
+      }
+    }
   }
 }

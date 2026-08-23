@@ -116,5 +116,33 @@
         ]
       }
     }
+  },
+  "mundial-2026": {
+    "title": "2026 World Cup prediction model",
+    "shortDescription": "Elo rating, Poisson and Monte Carlo simulation to estimate each team's probability, validated against the real tournament",
+    "profiles": {
+      "analista": {
+        "description": "Relative strength model (Elo), expected goals (Poisson) and full bracket Monte Carlo simulation. Strict time cutoff: no prediction uses information after the tournament started.",
+        "highlights": [
+          "Predicted both semifinals correctly and ranked Spain 2nd favorite (16%); Spain won",
+          "Elo calibration validated on thousands of historical matches",
+          "Honest comparison against logistic baseline and naive lines (log-loss)"
+        ]
+      }
+    }
+  },
+  "abandono-estudiantil": {
+    "title": "Student dropout prediction",
+    "shortDescription": "Risk model to prioritize tutoring: who to intervene with first when resources are limited",
+    "profiles": {
+      "analista": {
+        "description": "Pilot (POC) on the UCI dataset (4,424 students). Logistic regression vs. Random Forest, decision threshold as a business dial and a prioritized student list.",
+        "highlights": [
+          "Detects 65.8% of dropouts with only the 1st semester, in time to intervene",
+          "Operational threshold 0.53 optimized by F1 (precision 0.88, recall 0.72)",
+          "Full CRISP-DM journey with management artifacts (Sprint 0, DRL sheet, backlog)"
+        ]
+      }
+    }
   }
 }

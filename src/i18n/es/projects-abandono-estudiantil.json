@@ -1,0 +1,128 @@
+{
+  "back": "← Volver a proyectos",
+  "badge": "Ciencia de datos",
+  "title": "Predicción de abandono estudiantil",
+  "description": "Modelo de riesgo que estima la probabilidad de abandono de cada alumno y ordena la lista de tutorías: a quién intervenir primero cuando el recurso es limitado. Piloto (POC) sobre el dataset UCI, con umbral de decisión como dial de negocio.",
+  "stats": {
+    "alumnos": { "value": "4.424", "label": "Alumnos del dataset" },
+    "recall": { "value": "65.8%", "label": "Recall con 1er semestre" },
+    "auc": { "value": "0.88", "label": "ROC-AUC (versión temprana)" }
+  },
+  "links": {
+    "demo": "🌐 Ver App en Vivo",
+    "github": "💻 Ver en GitHub"
+  },
+  "problem": {
+    "title": "El Problema",
+    "intro": "El recurso de tutorías es limitado: no se puede intervenir con todos los alumnos a la vez. La pregunta no es solo quién tiene riesgo, sino a quién intervenir primero y con qué anticipación.",
+    "items": [
+      "Clase minoritaria y desbalanceada (32% abandono): la exactitud sola engaña",
+      "Ventana de intervención acotada: el modelo temprano tiene menos datos pero llega a tiempo",
+      "Cada falso positivo es una tutoría desperdiciada en un alumno que no iba a abandonar",
+      "Piloto con dataset público UCI; el dato real del instituto se solicita aparte"
+    ]
+  },
+  "process": {
+    "title": "Mi Proceso",
+    "phases": [
+      {
+        "title": "1. Entender (EDA)",
+        "description": "Hipótesis de negocio confrontadas contra los datos antes de modelar.",
+        "items": [
+          "Cuota impaga: 86.6% de abandono vs. 24.7% del que está al día",
+          "0 materias aprobadas en el 1er semestre: 79.4% de abandono",
+          "Contexto macroeconómico descartado (correlaciones ≈ 0)"
+        ]
+      },
+      {
+        "title": "2. Preparar",
+        "description": "Auditoría de calidad e ingeniería de variables.",
+        "items": [
+          "Dataset sin nulos ni duplicados (viene preprocesado)",
+          "Ratio de aprobación del 1er semestre como feature",
+          "Receta de limpieza documentada para aplicar al dato real del instituto"
+        ]
+      },
+      {
+        "title": "3. Modelar",
+        "description": "Escalera honesta de modelos, de la línea base ingenua al modelo de riesgo.",
+        "items": [
+          "Métrica elegida antes de entrenar: recall de la clase abandono (decisión de negocio)",
+          "Logística (1er semestre y completa) vs. Random Forest",
+          "Umbral operativo 0.53 optimizado por F1"
+        ]
+      },
+      {
+        "title": "4. Decisión y lista priorizada",
+        "description": "El entregable operativo: la lista de alumnos ordenada por riesgo para el equipo de tutorías.",
+        "items": [
+          "Bandas de riesgo: 87.8% de abandono real en 'Alto' vs. 10% en 'Bajo'",
+          "Se elige la versión temprana pese a menor recall: llega a tiempo para intervenir",
+          "Cada tutoría invertida se justifica con la señal visible por fila (cuota, beca, aprobadas)"
+        ]
+      }
+    ]
+  },
+  "solution": {
+    "title": "La Solución",
+    "subsections": [
+      {
+        "title": "Por qué logística y no Random Forest",
+        "description": "Random Forest detecta algo más de abandonos pero con menor precisión.",
+        "items": [
+          "RF: recall 0.778, precisión 0.786 vs. logística 0.722 / 0.869",
+          "F1 casi idéntico (0.782 vs. 0.788)",
+          "La logística es interpretable: coeficientes legibles para el equipo de tutorías"
+        ]
+      },
+      {
+        "title": "El umbral como dial de negocio",
+        "description": "El umbral por defecto (0.5) no siempre es el mejor para la decisión.",
+        "items": [
+          "Subirlo prioriza precisión: menos tutorías desperdiciadas, más abandonos no detectados",
+          "Bajarlo prioriza recall: más cobertura, más falsos positivos",
+          "Optimizando F1: umbral 0.53 → precisión 0.88, recall 0.72"
+        ]
+      },
+      {
+        "title": "Versión temprana vs. completa",
+        "description": "La versión completa gana en todas las métricas, pero hay que esperar un año.",
+        "items": [
+          "Completa: recall 0.722 y AUC 0.908",
+          "Temprana: 65.8% de abandonos detectados a tiempo para intervenir",
+          "Elegir cuál usar es una decisión de negocio, no una decisión técnica"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "title": "Resultados & Impacto",
+    "metrics": {
+      "recallFull": { "value": "72.2%", "label": "Recall (versión completa)" },
+      "recall1s": { "value": "65.8%", "label": "Recall (versión temprana)" },
+      "aucFull": { "value": "0.908", "label": "ROC-AUC (versión completa)" },
+      "umbral": { "value": "0.53", "label": "Umbral operativo (por F1)" }
+    },
+    "learnings": {
+      "title": "Aprendizajes Clave",
+      "items": [
+        { "label": "Métrica primero:", "text": "la exactitud sola engaña: la línea base ingenua ya tiene 68% sin detectar ni un solo abandono." },
+        { "label": "Señal convergente:", "text": "logística y Random Forest coinciden en las variables que importan (cuota, beca, aprobadas del 1er semestre)." },
+        { "label": "Trade-off de negocio:", "text": "elegir la versión temprana con menos recall, porque llega a tiempo para actuar, no es una decisión técnica." }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Stack Tecnológico",
+    "columns": [
+      { "title": "Lenguaje y datos", "items": ["Python 3", "Pandas", "NumPy", "Dataset UCI"] },
+      { "title": "Modelado", "items": ["scikit-learn", "Regresión logística", "Random Forest", "Validación cruzada 5-fold"] },
+      { "title": "Visualización y app", "items": ["Plotly", "Streamlit multipágina", "Jupyter notebooks"] }
+    ]
+  },
+  "cta": {
+    "title": "¿Te interesa este tipo de trabajo?",
+    "subtitle": "Tengo más casos de análisis de datos con modelos y validación honesta. Conectemos.",
+    "button": "Contactar"
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "back": "← Volver a proyectos",
+  "badge": "Ciencia de datos",
+  "title": "Modelo predictivo del Mundial 2026",
+  "description": "Rating Elo de fuerza relativa, modelo de goles de Poisson y simulación Monte Carlo del cuadro completo. Asigna a cada selección la probabilidad de llegar a cada instancia y se contrasta contra el torneo real, con una frontera temporal estricta.",
+  "stats": {
+    "matches": { "value": "49.520", "label": "Partidos históricos" },
+    "sims": { "value": "3.000", "label": "Simulaciones del torneo" },
+    "semis": { "value": "2/2", "label": "Semifinales acertadas" }
+  },
+  "links": {
+    "demo": "🌐 Ver App en Vivo",
+    "github": "💻 Ver en GitHub"
+  },
+  "problem": {
+    "title": "El Problema",
+    "intro": "Predecir un torneo entero antes de que empiece no es elegir un favorito: es asignar una probabilidad a cada partido y, encadenando partidos, una probabilidad de que cada selección llegue a cada instancia y salga campeona.",
+    "items": [
+      "Estimar la fuerza relativa de las selecciones a partir de su historial (rating Elo)",
+      "Convertir esa fuerza en la probabilidad de cada marcador (modelo de goles de Poisson)",
+      "Simular el cuadro completo con desempates por diferencia de gol y tandas de penales",
+      "Validar contra el torneo real sin usar información posterior al inicio (frontera temporal estricta)"
+    ]
+  },
+  "process": {
+    "title": "Mi Proceso",
+    "phases": [
+      {
+        "title": "1. Datos e integración",
+        "description": "Integración del histórico de partidos y de las tandas de penales.",
+        "items": [
+          "49.520 partidos de selecciones desde 1872, completitud 100% en variables clave",
+          "Rating Elo calculado walk-forward, partido a partido, nunca con información del futuro",
+          "Verificación de la dispersión de goles (ajuste Poisson) y del target H/D/A"
+        ]
+      },
+      {
+        "title": "2. Modelado del partido",
+        "description": "De la diferencia de fuerza a la probabilidad de cada marcador.",
+        "items": [
+          "Regresión de Poisson sobre elo_diff y localía",
+          "Calibración del Elo validada sobre miles de partidos (grupos de probabilidad vs. tasas reales)",
+          "Comparación contra un baseline logístico: log-loss casi empatado (0.8412 vs. 0.8363)"
+        ]
+      },
+      {
+        "title": "3. Simulación del torneo",
+        "description": "Monte Carlo para pasar de la predicción de partido a la predicción de torneo.",
+        "items": [
+          "3.000 torneos completos simulados, muestreando cada cruce del modelo de goles",
+          "Probabilidad por instancia: grupo, octavos, cuartos, semifinal, final y campeón",
+          "Intervalos de confianza (95%) por selección"
+        ]
+      },
+      {
+        "title": "4. Validación post-Mundial",
+        "description": "Contraste contra el resultado real, separado deliberadamente del entrenamiento.",
+        "items": [
+          "22/32 aciertos en el cuadro de eliminación (68.8%)",
+          "5/12 grupos con los dos clasificados exactos",
+          "España campeón (1-0 a Argentina): el modelo la ubicaba 2ª favorita con 16%"
+        ]
+      }
+    ]
+  },
+  "solution": {
+    "title": "La Solución",
+    "subsections": [
+      {
+        "title": "Modelo de partido",
+        "description": "El Elo aporta señal real: la diferencia de fuerza predice el resultado H/D/A por encima de no usar nada.",
+        "items": [
+          "La diferencia de Elo y la localía son las features principales",
+          "Poisson produce una distribución de marcadores, no solo quién gana"
+        ]
+      },
+      {
+        "title": "Por qué conservar el Poisson",
+        "description": "El modelo completo casi empata con el baseline en log-loss, pero se conserva por una razón concreta.",
+        "items": [
+          "El baseline solo clasifica el resultado; no genera marcadores",
+          "Sin distribución de marcadores no se pueden simular penales ni diferencia de gol en fase de grupos",
+          "La decisión se justifica por lo que habilita la siguiente etapa, no por ganar la métrica"
+        ]
+      },
+      {
+        "title": "Validación honesta",
+        "description": "Un solo torneo observado es una muestra mínima; por eso la calibración con peso estadístico real se apoya en miles de partidos históricos.",
+        "items": [
+          "Frontera temporal estricta: nada usa información posterior al 11 de junio de 2026",
+          "El resultado real se revela solo en la sección de validación"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "title": "Resultados & Impacto",
+    "metrics": {
+      "logloss": { "value": "0.8412", "label": "Log-loss modelo completo" },
+      "baseline": { "value": "0.8363", "label": "Log-loss baseline (empate honesto)" },
+      "aciertos": { "value": "22/32", "label": "Aciertos en eliminación" },
+      "espana": { "value": "16%", "label": "Prob. pre-torneo de España (campeón real)" }
+    },
+    "learnings": {
+      "title": "Aprendizajes Clave",
+      "items": [
+        { "label": "Frontera temporal:", "text": "ninguna predicción usa información posterior al inicio del torneo; sin esa regla la validación no tendría sentido." },
+        { "label": "Complejidad justificada:", "text": "el modelo casi empata con un baseline mucho más simple; la complejidad se paga por lo que permite simular, no por ganar la métrica." },
+        { "label": "Muestra mínima:", "text": "un solo torneo observado (n=1) limita las conclusiones de la validación retrospectiva; la calibración real se apoya en miles de partidos." }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Stack Tecnológico",
+    "columns": [
+      { "title": "Lenguaje y datos", "items": ["Python 3", "Pandas", "NumPy", "requests"] },
+      { "title": "Modelado", "items": ["statsmodels (GLM Poisson)", "scipy", "Rating Elo walk-forward", "Monte Carlo (3.000 reps)"] },
+      { "title": "Visualización y app", "items": ["Plotly", "Streamlit multipágina", "Jupyter notebooks"] }
+    ]
+  },
+  "cta": {
+    "title": "¿Te interesa este tipo de trabajo?",
+    "subtitle": "Tengo más casos de análisis de datos con modelos y validación honesta. Conectemos.",
+    "button": "Contactar"
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "back": "← Back to projects",
+  "badge": "Data science",
+  "title": "Student dropout prediction",
+  "description": "Risk model that estimates each student's dropout probability and ranks the tutoring list: who to intervene with first when resources are limited. Pilot (POC) on the UCI dataset, with the decision threshold as a business dial.",
+  "stats": {
+    "alumnos": { "value": "4,424", "label": "Students in dataset" },
+    "recall": { "value": "65.8%", "label": "Recall with 1st semester" },
+    "auc": { "value": "0.88", "label": "ROC-AUC (early version)" }
+  },
+  "links": {
+    "demo": "🌐 View Live App",
+    "github": "💻 View on GitHub"
+  },
+  "problem": {
+    "title": "The Problem",
+    "intro": "Tutoring resources are limited: you cannot intervene with every student at once. The question is not just who is at risk, but who to intervene with first and how early.",
+    "items": [
+      "Minority and imbalanced class (32% dropout): accuracy alone is misleading",
+      "Bounded intervention window: the early model has less data but arrives in time",
+      "Every false positive is a wasted tutoring session on a student who was not going to drop out",
+      "Pilot on the public UCI dataset; real institution data is requested separately"
+    ]
+  },
+  "process": {
+    "title": "My Process",
+    "phases": [
+      {
+        "title": "1. Understand (EDA)",
+        "description": "Business hypotheses confronted against data before modeling.",
+        "items": [
+          "Unpaid tuition: 86.6% dropout vs. 24.7% for those up to date",
+          "0 courses passed in 1st semester: 79.4% dropout",
+          "Macroeconomic context discarded (correlations ≈ 0)"
+        ]
+      },
+      {
+        "title": "2. Prepare",
+        "description": "Data quality audit and feature engineering.",
+        "items": [
+          "Dataset with no nulls or duplicates (comes preprocessed)",
+          "1st semester pass ratio as a feature",
+          "Cleaning recipe documented to apply to the institution's real data"
+        ]
+      },
+      {
+        "title": "3. Model",
+        "description": "An honest ladder of models, from the naive baseline to the risk model.",
+        "items": [
+          "Metric chosen before training: dropout-class recall (business decision)",
+          "Logistic regression (1st semester and full) vs. Random Forest",
+          "Operational threshold 0.53 optimized by F1"
+        ]
+      },
+      {
+        "title": "4. Decision and prioritized list",
+        "description": "The operational deliverable: the student list ranked by risk for the tutoring team.",
+        "items": [
+          "Risk bands: 87.8% real dropout in 'High' vs. 10% in 'Low'",
+          "The early version is chosen despite lower recall: it arrives in time to intervene",
+          "Each tutoring investment is justified by visible per-row signals (tuition, scholarship, passed courses)"
+        ]
+      }
+    ]
+  },
+  "solution": {
+    "title": "The Solution",
+    "subsections": [
+      {
+        "title": "Why logistic regression and not Random Forest",
+        "description": "Random Forest detects slightly more dropouts but with lower precision.",
+        "items": [
+          "RF: recall 0.778, precision 0.786 vs. logistic 0.722 / 0.869",
+          "Nearly identical F1 (0.782 vs. 0.788)",
+          "Logistic regression is interpretable: readable coefficients for the tutoring team"
+        ]
+      },
+      {
+        "title": "The threshold as a business dial",
+        "description": "The default threshold (0.5) is not always the best for the decision.",
+        "items": [
+          "Raising it favors precision: fewer wasted tutoring sessions, more undetected dropouts",
+          "Lowering it favors recall: more coverage, more false positives",
+          "Optimizing F1: threshold 0.53 → precision 0.88, recall 0.72"
+        ]
+      },
+      {
+        "title": "Early vs. full version",
+        "description": "The full version wins on every metric, but you have to wait a year.",
+        "items": [
+          "Full: recall 0.722 and AUC 0.908",
+          "Early: 65.8% of dropouts detected in time to intervene",
+          "Choosing which to use is a business decision, not a technical one"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "title": "Results & Impact",
+    "metrics": {
+      "recallFull": { "value": "72.2%", "label": "Recall (full version)" },
+      "recall1s": { "value": "65.8%", "label": "Recall (early version)" },
+      "aucFull": { "value": "0.908", "label": "ROC-AUC (full version)" },
+      "umbral": { "value": "0.53", "label": "Operational threshold (F1)" }
+    },
+    "learnings": {
+      "title": "Key Learnings",
+      "items": [
+        { "label": "Metric first:", "text": "accuracy alone is misleading: the naive baseline already has 68% without detecting a single dropout." },
+        { "label": "Converging signal:", "text": "logistic regression and Random Forest agree on the variables that matter (tuition, scholarship, 1st semester passes)." },
+        { "label": "Business trade-off:", "text": "choosing the early version with lower recall, because it arrives in time to act, is not a technical decision." }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Tech Stack",
+    "columns": [
+      { "title": "Language and data", "items": ["Python 3", "Pandas", "NumPy", "UCI dataset"] },
+      { "title": "Modeling", "items": ["scikit-learn", "Logistic regression", "Random Forest", "5-fold cross-validation"] },
+      { "title": "Visualization and app", "items": ["Plotly", "Multi-page Streamlit", "Jupyter notebooks"] }
+    ]
+  },
+  "cta": {
+    "title": "Interested in this kind of work?",
+    "subtitle": "I have more data analysis cases with models and honest validation. Let's connect.",
+    "button": "Contact"
+  }
+}

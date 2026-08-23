@@ -1,0 +1,97 @@
+---
+import { type Lang, useTranslations } from '@i18n/index';
+import { getLanguagePaths } from '@utils/i18n-paths';
+import { projects } from '@data/projects';
+import CaseStudyLayout from '@layouts/CaseStudyLayout.astro';
+import CaseStudyHeader from '@components/case-study/CaseStudyHeader.astro';
+import ProblemSection from '@components/case-study/ProblemSection.astro';
+import ProcessTimeline from '@components/case-study/ProcessTimeline.astro';
+import SolutionSection from '@components/case-study/SolutionSection.astro';
+import MetricsGrid from '@components/case-study/MetricsGrid.astro';
+import TechStack from '@components/case-study/TechStack.astro';
+import CaseStudyCTA from '@components/case-study/CaseStudyCTA.astro';
+
+export const getStaticPaths = getLanguagePaths;
+
+const { lang } = Astro.params as { lang: Lang };
+const content = await useTranslations<any>(lang, 'projects-mundial-2026');
+const project = projects.find((p) => p.id === 'mundial-2026')!;
+
+const accentColor = 'blue';
+
+const headerStats = [
+  { value: content.stats.matches.value, label: content.stats.matches.label },
+  { value: content.stats.sims.value, label: content.stats.sims.label },
+  { value: content.stats.semis.value, label: content.stats.semis.label },
+];
+
+const headerLinks = [
+  { text: content.links.demo, url: project.links.demo!, primary: true },
+  { text: content.links.github, url: project.links.github!, primary: false },
+];
+
+const resultMetrics = [
+  { value: content.results.metrics.logloss.value, label: content.results.metrics.logloss.label },
+  { value: content.results.metrics.baseline.value, label: content.results.metrics.baseline.label },
+  { value: content.results.metrics.aciertos.value, label: content.results.metrics.aciertos.label },
+  { value: content.results.metrics.espana.value, label: content.results.metrics.espana.label },
+];
+---
+
+<CaseStudyLayout
+  title={`${content.title} - Case Study`}
+  description={content.description}
+  lang={lang}
+  backUrl={`/${lang}/landing/analista`}
+  backText={content.back}
+  accentColor={accentColor}
+>
+  <CaseStudyHeader
+    badge={content.badge}
+    title={content.title}
+    description={content.description}
+    stats={headerStats}
+    links={headerLinks}
+    accentColor={accentColor}
+  />
+
+  <hr class="my-16 border-slate-200 dark:border-slate-700" />
+
+  <ProblemSection
+    title={content.problem.title}
+    intro={content.problem.intro}
+    items={content.problem.items}
+    accentColor={accentColor}
+  />
+
+  <ProcessTimeline
+    title={content.process.title}
+    phases={content.process.phases}
+    accentColor={accentColor}
+  />
+
+  <SolutionSection
+    title={content.solution.title}
+    subsections={content.solution.subsections}
+  />
+
+  <MetricsGrid
+    title={content.results.title}
+    metrics={resultMetrics}
+    learnings={content.results.learnings}
+    accentColor={accentColor}
+  />
+
+  <TechStack
+    title={content.stack.title}
+    columns={content.stack.columns}
+  />
+
+  <CaseStudyCTA
+    title={content.cta.title}
+    subtitle={content.cta.subtitle}
+    buttonText={content.cta.button}
+    accentColor={accentColor}
+    secondaryColor="purple"
+  />
+</CaseStudyLayout>

@@ -1,0 +1,126 @@
+{
+  "back": "← Back to projects",
+  "badge": "Data science",
+  "title": "2026 World Cup prediction model",
+  "description": "Elo rating for relative strength, Poisson goal model and full bracket Monte Carlo simulation. Assigns each team its probability of reaching each stage and is compared against the real tournament, with a strict time cutoff.",
+  "stats": {
+    "matches": { "value": "49,520", "label": "Historical matches" },
+    "sims": { "value": "3,000", "label": "Tournament simulations" },
+    "semis": { "value": "2/2", "label": "Correct semifinals" }
+  },
+  "links": {
+    "demo": "🌐 View Live App",
+    "github": "💻 View on GitHub"
+  },
+  "problem": {
+    "title": "The Problem",
+    "intro": "Predicting a whole tournament before it starts is not about picking a favorite: it is about assigning a probability to each match and, chaining matches, a probability that each team reaches each stage and wins the title.",
+    "items": [
+      "Estimate each team's relative strength from its history (Elo rating)",
+      "Turn that strength into the probability of each scoreline (Poisson goal model)",
+      "Simulate the full bracket with goal-difference tiebreaks and penalty shootouts",
+      "Validate against the real tournament without using information after the start (strict time cutoff)"
+    ]
+  },
+  "process": {
+    "title": "My Process",
+    "phases": [
+      {
+        "title": "1. Data and integration",
+        "description": "Integrating the international match history and penalty shootouts.",
+        "items": [
+          "49,520 international matches since 1872, 100% completeness on key variables",
+          "Elo rating computed walk-forward, match by match, never using future information",
+          "Verification of goal dispersion (Poisson fit) and the H/D/A target"
+        ]
+      },
+      {
+        "title": "2. Match modeling",
+        "description": "From strength difference to the probability of each scoreline.",
+        "items": [
+          "Poisson regression on elo_diff and home advantage",
+          "Elo calibration validated on thousands of matches (probability groups vs. observed rates)",
+          "Comparison against a logistic baseline: nearly tied log-loss (0.8412 vs. 0.8363)"
+        ]
+      },
+      {
+        "title": "3. Tournament simulation",
+        "description": "Monte Carlo to go from match prediction to tournament prediction.",
+        "items": [
+          "3,000 complete tournaments simulated, sampling each fixture from the goal model",
+          "Probability per stage: group, round of 16, quarterfinal, semifinal, final and champion",
+          "95% confidence intervals per team"
+        ]
+      },
+      {
+        "title": "4. Post-World Cup validation",
+        "description": "Comparison against the real result, deliberately separated from training.",
+        "items": [
+          "22/32 correct picks in the knockout bracket (68.8%)",
+          "5/12 groups with the exact two qualifiers",
+          "Spain champion (1-0 vs. Argentina): the model ranked it 2nd favorite with 16%"
+        ]
+      }
+    ]
+  },
+  "solution": {
+    "title": "The Solution",
+    "subsections": [
+      {
+        "title": "Match model",
+        "description": "Elo provides real signal: the strength difference predicts the H/D/A result above using nothing.",
+        "items": [
+          "Elo difference and home advantage are the main features",
+          "Poisson produces a full scoreline distribution, not just who wins"
+        ]
+      },
+      {
+        "title": "Why keep the Poisson model",
+        "description": "The full model nearly ties the baseline in log-loss, but it is kept for a concrete reason.",
+        "items": [
+          "The baseline only classifies the result; it cannot generate scorelines",
+          "Without a scoreline distribution you cannot simulate shootouts or group goal difference",
+          "The decision is justified by what it enables next, not by winning the metric"
+        ]
+      },
+      {
+        "title": "Honest validation",
+        "description": "A single observed tournament is a minimal sample; that is why the statistically meaningful calibration relies on thousands of historical matches.",
+        "items": [
+          "Strict time cutoff: nothing uses information after June 11, 2026",
+          "The real result is only revealed in the validation section"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "title": "Results & Impact",
+    "metrics": {
+      "logloss": { "value": "0.8412", "label": "Full model log-loss" },
+      "baseline": { "value": "0.8363", "label": "Baseline log-loss (honest tie)" },
+      "aciertos": { "value": "22/32", "label": "Correct knockout picks" },
+      "espana": { "value": "16%", "label": "Pre-tournament prob. for Spain (real champion)" }
+    },
+    "learnings": {
+      "title": "Key Learnings",
+      "items": [
+        { "label": "Time cutoff:", "text": "no prediction uses information after the tournament started; without that rule validation would be meaningless." },
+        { "label": "Justified complexity:", "text": "the model nearly ties a much simpler baseline; the complexity is paid for by what it allows to simulate, not by winning the metric." },
+        { "label": "Minimal sample:", "text": "a single observed tournament (n=1) limits retrospective conclusions; the real calibration relies on thousands of matches." }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Tech Stack",
+    "columns": [
+      { "title": "Language and data", "items": ["Python 3", "Pandas", "NumPy", "requests"] },
+      { "title": "Modeling", "items": ["statsmodels (GLM Poisson)", "scipy", "Walk-forward Elo rating", "Monte Carlo (3,000 reps)"] },
+      { "title": "Visualization and app", "items": ["Plotly", "Multi-page Streamlit", "Jupyter notebooks"] }
+    ]
+  },
+  "cta": {
+    "title": "Interested in this kind of work?",
+    "subtitle": "I have more data analysis cases with models and honest validation. Let's connect.",
+    "button": "Contact"
+  }
+}

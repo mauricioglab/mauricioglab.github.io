@@ -120,6 +120,36 @@ export const projects: Project[] = [
       github: 'https://github.com/tu-usuario/data-extraction-llm'
     },
     image: '/projects/extraction.jpg'
+  },
+  {
+    id: 'mundial-2026',
+    featured: true,
+    profiles: {
+      analista: {
+        tags: ['Python', 'Pandas', 'Statsmodels', 'Plotly', 'Streamlit', 'Monte Carlo'],
+        icon: 'fa-futbol'
+      }
+    },
+    links: {
+      demo: 'https://casosstudio-fkeqyq3uwpxvhtxvkthhsc.streamlit.app/',
+      github: 'https://github.com/mauricioglab/casos_studio',
+      caseStudy: '/proyectos/mundial-2026'
+    }
+  },
+  {
+    id: 'abandono-estudiantil',
+    featured: true,
+    profiles: {
+      analista: {
+        tags: ['Python', 'Pandas', 'Scikit-learn', 'Plotly', 'Streamlit', 'Clasificación'],
+        icon: 'fa-graduation-cap'
+      }
+    },
+    links: {
+      demo: 'https://casosstudio-hktsnxogexobqypet55po6.streamlit.app/',
+      github: 'https://github.com/mauricioglab/casos_studio',
+      caseStudy: '/proyectos/abandono-estudiantil'
+    }
   }
 ];
 
