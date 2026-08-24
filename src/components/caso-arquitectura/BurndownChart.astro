@@ -1,0 +1,52 @@
+---
+interface Props {
+  rows: string[][];
+}
+const { rows } = Astro.props;
+const [, ...body] = rows;
+
+const fechas = body.map(r => r[0]);
+const esperado = body.map(r => parseFloat(r[1]) || 0);
+const real = body.map(r => parseFloat(r[2]) || 0);
+
+const W = 560;
+const H = 220;
+const PAD = { top: 16, right: 16, bottom: 30, left: 40 };
+const plotW = W - PAD.left - PAD.right;
+const plotH = H - PAD.top - PAD.bottom;
+
+const maxVal = Math.max(1, ...esperado, ...real);
+const n = fechas.length;
+const x = (i: number) => n <= 1 ? PAD.left : PAD.left + (i / (n - 1)) * plotW;
+const y = (v: number) => PAD.top + plotH - (v / maxVal) * plotH;
+
+const pathFor = (vals: number[]) => vals.map((v, i) => `${i === 0 ? 'M' : 'L'} ${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ');
+
+const yTicks = [0, 0.5, 1].map(f => Math.round(maxVal * f));
+---
+<div class="bg-white border border-line rounded-xl px-4.5 pt-4 pb-2.5 my-4.5">
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Burndown chart: esperado vs. real" class="w-full h-auto overflow-visible">
+    {yTicks.map(t => (
+      <g>
+        <line x1={PAD.left} x2={W - PAD.right} y1={y(t)} y2={y(t)} stroke="var(--color-line)" stroke-width="1" />
+        <text x={PAD.left - 8} y={y(t) + 4} text-anchor="end" font-size="9" fill="var(--color-ink-faint)" font-family="var(--font-body)">{t}</text>
+      </g>
+    ))}
+
+    <path d={pathFor(esperado)} fill="none" stroke="var(--color-sand-deep)" stroke-width="2" stroke-dasharray="5 4" />
+    <path d={pathFor(real)} fill="none" stroke="var(--color-teal)" stroke-width="2.5" />
+
+    {esperado.map((v, i) => <circle cx={x(i)} cy={y(v)} r="2.5" fill="var(--color-sand-deep)" />)}
+    {real.map((v, i) => <circle cx={x(i)} cy={y(v)} r="2.5" fill="var(--color-teal)" />)}
+
+    {fechas.map((f, i) => (
+      (n <= 8 || i % Math.ceil(n / 8) === 0) && (
+        <text x={x(i)} y={H - 8} text-anchor="middle" font-size="9" fill="var(--color-ink-faint)" font-family="var(--font-body)">{f}</text>
+      )
+    ))}
+  </svg>
+  <div class="flex gap-4.5 justify-center mt-1.5 text-[0.8rem] text-ink-soft">
+    <span class="inline-flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-full bg-sand-deep"></i>Esperado</span>
+    <span class="inline-flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-full bg-teal"></i>Real</span>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+---
+interface Props {
+  id: string;
+  regla: string;
+  implementacion: string;
+  violacion: string;
+  origen: string;
+  validado_por: string;
+}
+const { id, regla, implementacion, violacion, origen, validado_por } = Astro.props;
+---
+<div class="detail-card">
+  <div class="detail-card-head">
+    <span class="detail-card-id">{id}</span>
+    <span class="detail-card-title">{regla}</span>
+  </div>
+  <p class="text-ink-faint text-[0.82rem] mb-1">{origen}</p>
+  <p class="text-ink-faint text-[0.82rem] mb-3.5">{validado_por}</p>
+  <p class="detail-card-lead">{implementacion}</p>
+  <div class="kv-block">
+    <h4>Qué pasa si se viola</h4>
+    <p>{violacion}</p>
+  </div>
+</div>

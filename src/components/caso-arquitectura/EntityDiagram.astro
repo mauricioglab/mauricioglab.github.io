@@ -1,0 +1,103 @@
+---
+interface Entidad {
+  nombre: string;
+  transaccional?: boolean;
+}
+interface Grupo {
+  titulo: string;
+  entidades: Entidad[];
+}
+interface Vinculo {
+  desdeGrupo: number;
+  desdeEntidad: string;
+  hastaGrupo: number;
+  hastaEntidad: string;
+  label: string;
+}
+interface Props {
+  grupos: Grupo[];
+  vinculos: Vinculo[];
+  caption?: string;
+}
+const { grupos, vinculos, caption } = Astro.props;
+
+const COL_W = 210;
+const GAP_X = 64;
+const BOX_H = 34;
+const ROW_GAP = 8;
+const TOP_PAD = 38;
+const FONT_SIZE = 11.5;
+
+const cols = grupos.map((g, gi) => {
+  const x = 10 + gi * (COL_W + GAP_X);
+  const rows = g.entidades.map((e, ri) => ({
+    ...e,
+    y: TOP_PAD + ri * (BOX_H + ROW_GAP),
+  }));
+  return { titulo: g.titulo, x, rows };
+});
+
+const W = grupos.length * COL_W + (grupos.length - 1) * GAP_X + 20;
+const maxRows = Math.max(...grupos.map(g => g.entidades.length));
+const H = TOP_PAD + maxRows * (BOX_H + ROW_GAP) + 16;
+
+function findBox(grupoIdx: number, nombre: string) {
+  const col = cols[grupoIdx];
+  const row = col.rows.find(r => r.nombre === nombre);
+  return { col, row };
+}
+---
+<figure class="diagram-figure">
+  <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-label={caption ?? 'Diagrama entidad-relación'} class="max-w-full h-auto">
+    <defs>
+      <marker id="er-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--color-diagram-indigo)" />
+      </marker>
+    </defs>
+
+    {cols.map(col => (
+      <text x={col.x} y={20} font-family="var(--font-body)" font-size="11" font-weight="700" letter-spacing="0.04em" fill="var(--color-diagram-gold-text)">{col.titulo.toUpperCase()}</text>
+    ))}
+
+    {vinculos.map(v => {
+      const from = findBox(v.desdeGrupo, v.desdeEntidad);
+      const to = findBox(v.hastaGrupo, v.hastaEntidad);
+      if (!from.row || !to.row) return null;
+      const x1 = from.col.x + COL_W;
+      const y1 = from.row.y + BOX_H / 2;
+      const x2 = to.col.x;
+      const y2 = to.row.y + BOX_H / 2;
+      const midX = (x1 + x2) / 2;
+      return (
+        <g>
+          <path d={`M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`} fill="none" stroke="var(--color-diagram-indigo)" stroke-width="1.4" marker-end="url(#er-arrow)" />
+          <rect x={midX - (v.label.length * 4.4 + 10) / 2} y={(y1 + y2) / 2 - 9} width={v.label.length * 4.4 + 10} height="16" rx="8" fill="var(--color-diagram-indigo-tint)" stroke="var(--color-diagram-indigo)" stroke-width="0.8" />
+          <text x={midX} y={(y1 + y2) / 2 + 3} text-anchor="middle" font-family="var(--font-body)" font-size="9.5" font-weight="600" fill="var(--color-diagram-indigo-text)">{v.label}</text>
+        </g>
+      );
+    })}
+
+    {cols.map(col => (
+      <g>
+        {col.rows.map(r => {
+          const cx = col.x + COL_W / 2;
+          const cy = r.y + BOX_H / 2;
+          return (
+            <g>
+              <rect
+                x={col.x} y={r.y} width={COL_W} height={BOX_H} rx="7"
+                fill={r.transaccional ? 'var(--color-teal-tint)' : 'var(--color-paper)'}
+                stroke={r.transaccional ? 'var(--color-teal)' : 'var(--color-diagram-gold-dashed)'}
+                stroke-width={r.transaccional ? '1.7' : '1.1'}
+              />
+              <text x={cx} y={cy + 4} text-anchor="middle" font-family="var(--font-body)" font-size={FONT_SIZE} font-weight={r.transaccional ? '600' : '400'} fill="var(--color-ink)">
+                {r.transaccional ? `★ ${r.nombre}` : r.nombre}
+              </text>
+            </g>
+          );
+        })}
+      </g>
+    ))}
+  </svg>
+  {caption && <figcaption>{caption} Verde = entidad transaccional (★), tostado = entidad maestra.</figcaption>}
+</figure>

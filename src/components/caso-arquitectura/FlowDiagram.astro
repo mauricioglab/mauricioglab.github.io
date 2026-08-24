@@ -1,0 +1,223 @@
+---
+import type { FlowNode, FlowStep } from '../../data/caso-arquitectura/types';
+
+interface Props {
+  steps: FlowStep[];
+  caption?: string;
+}
+const { steps, caption } = Astro.props;
+
+const FONT_SIZE = 13.5;
+const CHAR_W = 7.1;
+const PAD_X = 22;
+const LINE_H = 17;
+const MIN_W = 160;
+const MAX_W = 300;
+const MAX_CHARS_PER_LINE = 24;
+const GAP = 34;
+const BRANCH_GAP_X = 26;
+const LABEL_H = 20;
+
+const maxBranchCount = Math.max(
+  1,
+  ...steps.filter(s => s.kind === 'decision').map(s => (s as Extract<FlowStep, { kind: 'decision' }>).decision.branches.length)
+);
+const W = maxBranchCount > 1 ? Math.max(420, maxBranchCount * 190 + (maxBranchCount - 1) * BRANCH_GAP_X) : 420;
+const trunkMaxW = maxBranchCount > 1 ? Math.min(MAX_W, W - PAD_X * 2) : MAX_W;
+
+function wrap(label: string, maxCharsPerLine = MAX_CHARS_PER_LINE) {
+  const words = label.split(' ');
+  const lines: string[] = [];
+  let cur = '';
+  for (const w of words) {
+    const next = cur ? `${cur} ${w}` : w;
+    if (next.length > maxCharsPerLine && cur) {
+      lines.push(cur);
+      cur = w;
+    } else {
+      cur = next;
+    }
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+
+const styleMap: Record<FlowNode['shape'], { fill: string; stroke: string }> = {
+  stadium: { fill: 'var(--color-teal-tint)', stroke: 'var(--color-teal)' },
+  rect: { fill: 'var(--color-paper-alt)', stroke: 'var(--color-diagram-gold)' },
+  parallelogram: { fill: 'var(--color-diagram-indigo-tint)', stroke: 'var(--color-diagram-indigo)' },
+  hex: { fill: 'var(--color-diagram-rose-tint)', stroke: 'var(--color-diagram-rose)' },
+  doc: { fill: 'var(--color-card)', stroke: 'var(--color-diagram-gold)' },
+  diamond: { fill: 'var(--color-diagram-rose-tint)', stroke: 'var(--color-diagram-rose)' },
+};
+
+type Positioned = FlowNode & { lines: string[]; boxW: number; boxH: number; x: number; y: number };
+type Edge = { x1: number; y1: number; x2: number; y2: number };
+type LabeledEdge = Edge & { label: string };
+
+function layout(n: FlowNode, centerX: number, y: number, maxW: number): Positioned {
+  const charsPerLine = Math.max(12, Math.floor((maxW - PAD_X * 2) / CHAR_W));
+  const lines = wrap(n.label, Math.min(MAX_CHARS_PER_LINE, charsPerLine));
+  const longest = Math.max(...lines.map(l => l.length));
+  const boxW = Math.min(maxW, Math.max(MIN_W, longest * CHAR_W + PAD_X * 2));
+  const boxH = Math.max(46, lines.length * LINE_H + 24);
+  return { ...n, lines, boxW, boxH, x: centerX - boxW / 2, y };
+}
+
+function edgeBetween(a: Positioned, b: Positioned): Edge {
+  return { x1: a.x + a.boxW / 2, y1: a.y + a.boxH, x2: b.x + b.boxW / 2, y2: b.y - 4 };
+}
+
+const positioned: Positioned[] = [];
+const trunkEdges: Edge[] = [];
+const branchEdges: LabeledEdge[] = [];
+const branchInnerEdges: Edge[] = [];
+
+let cursorY = 14;
+let lastTrunk: Positioned | null = null;
+
+for (const step of steps) {
+  if (step.kind === 'node') {
+    const n = layout(step.node, W / 2, cursorY, trunkMaxW);
+    if (lastTrunk) trunkEdges.push(edgeBetween(lastTrunk, n));
+    positioned.push(n);
+    lastTrunk = n;
+    cursorY = n.y + n.boxH + GAP;
+  } else {
+    const { decision } = step;
+    const dNode = layout({ shape: 'diamond', label: decision.question }, W / 2, cursorY, trunkMaxW);
+    if (lastTrunk) trunkEdges.push(edgeBetween(lastTrunk, dNode));
+    positioned.push(dNode);
+    const decisionBottom = dNode.y + dNode.boxH;
+
+    const branches = decision.branches;
+    const colW = (W - (branches.length - 1) * BRANCH_GAP_X) / branches.length;
+    const branchMaxW = Math.min(MAX_W, colW - 16);
+    let maxBottom = decisionBottom;
+    const branchLastNodes: Positioned[] = [];
+
+    branches.forEach((branch, i) => {
+      const centerX = colW / 2 + i * (colW + BRANCH_GAP_X);
+      let by = decisionBottom + GAP + LABEL_H;
+      let prev: Positioned | null = null;
+      branch.nodes.forEach(n => {
+        const pn = layout(n, centerX, by, branchMaxW);
+        if (prev) {
+          branchInnerEdges.push(edgeBetween(prev, pn));
+        } else {
+          branchEdges.push({ x1: dNode.x + dNode.boxW / 2, y1: decisionBottom, x2: pn.x + pn.boxW / 2, y2: pn.y - 4, label: branch.label });
+        }
+        positioned.push(pn);
+        by = pn.y + pn.boxH + GAP;
+        prev = pn;
+      });
+      if (prev) {
+        maxBottom = Math.max(maxBottom, (prev as Positioned).y + (prev as Positioned).boxH);
+        branchLastNodes.push(prev);
+      }
+    });
+
+    cursorY = maxBottom;
+
+    if (decision.merge) {
+      const mergeNode = layout(decision.merge, W / 2, cursorY + GAP, trunkMaxW);
+      branchLastNodes.forEach(n => trunkEdges.push(edgeBetween(n, mergeNode)));
+      positioned.push(mergeNode);
+      lastTrunk = mergeNode;
+      cursorY = mergeNode.y + mergeNode.boxH + GAP;
+    } else {
+      lastTrunk = null;
+      cursorY = cursorY + 14;
+    }
+  }
+}
+
+const totalH = cursorY + 4;
+
+function shapePath(n: Positioned) {
+  const { x, y: ny, boxW: w, boxH: h } = n;
+  switch (n.shape) {
+    case 'stadium':
+      return { tag: 'rect', attrs: { x, y: ny, width: w, height: h, rx: h / 2, ry: h / 2 } };
+    case 'hex': {
+      const cut = Math.min(24, w / 4);
+      const pts = [
+        [x + cut, ny], [x + w - cut, ny], [x + w, ny + h / 2],
+        [x + w - cut, ny + h], [x + cut, ny + h], [x, ny + h / 2],
+      ].map(p => p.join(',')).join(' ');
+      return { tag: 'polygon', attrs: { points: pts } };
+    }
+    case 'parallelogram': {
+      const skew = 16;
+      const pts = [
+        [x + skew, ny], [x + w, ny], [x + w - skew, ny + h], [x, ny + h],
+      ].map(p => p.join(',')).join(' ');
+      return { tag: 'polygon', attrs: { points: pts } };
+    }
+    case 'diamond': {
+      const cx = x + w / 2;
+      const cy = ny + h / 2;
+      const halfW = w * 0.72;
+      const halfH = h * 0.82;
+      const pts = [
+        [cx, cy - halfH], [cx + halfW, cy], [cx, cy + halfH], [cx - halfW, cy],
+      ].map(p => p.join(',')).join(' ');
+      return { tag: 'polygon', attrs: { points: pts } };
+    }
+    default:
+      return { tag: 'rect', attrs: { x, y: ny, width: w, height: h, rx: 8, ry: 8 } };
+  }
+}
+
+const allTrunkEdges = [...trunkEdges, ...branchInnerEdges];
+---
+<figure class="diagram-figure">
+  <svg viewBox={`0 0 ${W} ${totalH}`} width={W} height={totalH} role="img" aria-label={caption ?? 'Diagrama de flujo'} class="max-w-full h-auto">
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--color-diagram-gold)" />
+      </marker>
+      <marker id="arrow-decision" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--color-diagram-rose)" />
+      </marker>
+    </defs>
+
+    {allTrunkEdges.map(e => (
+      <line x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} stroke="var(--color-diagram-gold)" stroke-width="1.6" marker-end="url(#arrow)" />
+    ))}
+
+    {branchEdges.map(e => (
+      <>
+        <line x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} stroke="var(--color-diagram-rose)" stroke-width="1.6" marker-end="url(#arrow-decision)" />
+        <g>
+          <rect x={(e.x1 + e.x2) / 2 - (e.label.length * 4.6 + 12) / 2} y={(e.y1 + e.y2) / 2 - 10} width={e.label.length * 4.6 + 12} height="18" rx="9" fill="var(--color-diagram-rose-tint)" stroke="var(--color-diagram-rose)" stroke-width="1" />
+          <text x={(e.x1 + e.x2) / 2} y={(e.y1 + e.y2) / 2 + 3.5} text-anchor="middle" font-family="var(--font-body)" font-size="11" font-weight="700" fill="var(--color-diagram-rose-text)">{e.label}</text>
+        </g>
+      </>
+    ))}
+
+    {positioned.map(n => {
+      const shape = shapePath(n);
+      const style = styleMap[n.shape];
+      const cx = n.x + n.boxW / 2;
+      const cy = n.y + n.boxH / 2;
+      const startDy = -(n.lines.length - 1) * LINE_H / 2;
+      return (
+        <g>
+          {shape.tag === 'rect' ? (
+            <rect {...shape.attrs} fill={style.fill} stroke={style.stroke} stroke-width="1.4" />
+          ) : (
+            <polygon {...shape.attrs} fill={style.fill} stroke={style.stroke} stroke-width="1.4" />
+          )}
+          {n.shape === 'doc' && <rect x={n.x} y={n.y} width="4" height={n.boxH} fill={style.stroke} />}
+          <text x={cx} y={cy} text-anchor="middle" font-family="var(--font-body)" font-size={FONT_SIZE} fill="var(--color-ink)">
+            {n.lines.map((l, i) => (
+              <tspan x={cx} dy={i === 0 ? startDy : LINE_H}>{l}</tspan>
+            ))}
+          </text>
+        </g>
+      );
+    })}
+  </svg>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

@@ -1,0 +1,28 @@
+---
+interface Props {
+  id: string;
+  titulo: string;
+  historia: string;
+  criterios: string;
+  puntos: number;
+  prioridad: string;
+  sprint: string;
+}
+const { id, titulo, historia, criterios, puntos, prioridad, sprint } = Astro.props;
+---
+<div class="detail-card">
+  <div class="detail-card-head">
+    <span class="detail-card-id">{id}</span>
+    <span class="detail-card-title">{titulo}</span>
+  </div>
+  <div class="detail-card-badges">
+    <span class="pill-neutral">{puntos} pts</span>
+    <span class:list={[prioridad === 'Alta' ? 'pill' : 'pill-neutral']}>{prioridad}</span>
+    <span class="pill-neutral">{sprint}</span>
+  </div>
+  <p class="detail-card-lead">{historia}</p>
+  <div class="kv-block">
+    <h4>Criterios de aceptación</h4>
+    <p>{criterios}</p>
+  </div>
+</div>

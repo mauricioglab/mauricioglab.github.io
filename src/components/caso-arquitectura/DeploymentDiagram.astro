@@ -1,0 +1,109 @@
+---
+interface Node {
+  label: string;
+  sub?: string;
+}
+interface Props {
+  externos: Node[];
+  hosting: { titulo: string; nodos: Node[] };
+  caption?: string;
+}
+const { externos, hosting, caption } = Astro.props;
+
+const FONT_SIZE = 12.5;
+const NODE_W = 128;
+const NODE_H = 52;
+const GAP_X = 46;
+const PAD = 26;
+const HOST_PAD = 22;
+const HOST_NODE_GAP = 16;
+
+const extY = PAD + 20;
+const extRowH = NODE_H;
+
+const hostX = PAD + externos.length * (NODE_W + GAP_X) + GAP_X * 0.4;
+const hostW = NODE_W + HOST_PAD * 2;
+const hostH = HOST_PAD * 2 + 30 + hosting.nodos.length * (NODE_H + HOST_NODE_GAP) - HOST_NODE_GAP;
+
+const W = hostX + hostW + PAD;
+const H = Math.max(extY + extRowH + PAD, PAD + hostH + PAD + 14);
+
+function wrap(label: string, maxChars = 16) {
+  const words = label.split(' ');
+  const lines: string[] = [];
+  let cur = '';
+  for (const w of words) {
+    const next = cur ? `${cur} ${w}` : w;
+    if (next.length > maxChars && cur) {
+      lines.push(cur);
+      cur = w;
+    } else {
+      cur = next;
+    }
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+---
+<figure class="diagram-figure">
+  <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-label={caption ?? 'Diagrama de despliegue'} class="max-w-full h-auto">
+    <defs>
+      <marker id="dep-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--color-diagram-gold)" />
+      </marker>
+    </defs>
+
+    {externos.map((n, i) => {
+      const x = PAD + i * (NODE_W + GAP_X);
+      const y = extY;
+      const cx = x + NODE_W / 2;
+      const cy = y + NODE_H / 2;
+      const lines = wrap(n.label);
+      const startDy = -(lines.length - 1 + (n.sub ? 0.9 : 0)) * 13 / 2;
+      const next = externos[i + 1];
+      return (
+        <g>
+          <rect x={x} y={y} width={NODE_W} height={NODE_H} rx="8" fill="var(--color-diagram-indigo-tint)" stroke="var(--color-diagram-indigo)" stroke-width="1.5" />
+          <text x={cx} y={cy} text-anchor="middle" font-family="var(--font-body)" font-size={FONT_SIZE} fill="var(--color-ink)">
+            {lines.map((l, li) => <tspan x={cx} dy={li === 0 ? startDy : 15}>{l}</tspan>)}
+            {n.sub && <tspan x={cx} dy={15} font-size="10.5" fill="var(--color-diagram-text-muted)">{n.sub}</tspan>}
+          </text>
+          {next && (
+            <line x1={x + NODE_W} y1={cy} x2={x + NODE_W + GAP_X} y2={cy} stroke="var(--color-diagram-gold)" stroke-width="1.6" marker-end="url(#dep-arrow)" />
+          )}
+        </g>
+      );
+    })}
+
+    <line
+      x1={PAD + externos.length * (NODE_W + GAP_X) - GAP_X + NODE_W}
+      y1={extY + NODE_H / 2}
+      x2={hostX}
+      y2={extY + NODE_H / 2}
+      stroke="var(--color-diagram-gold)" stroke-width="1.6" marker-end="url(#dep-arrow)"
+    />
+
+    <g>
+      <rect x={hostX} y={PAD} width={hostW} height={hostH} rx="10" fill="var(--color-paper)" stroke="var(--color-diagram-gold-dashed)" stroke-width="1.3" stroke-dasharray="5 4" />
+      <text x={hostX + hostW / 2} y={PAD + 20} text-anchor="middle" font-family="var(--font-body)" font-size="11.5" font-weight="700" letter-spacing="0.04em" fill="var(--color-diagram-gold-text)">{hosting.titulo.toUpperCase()}</text>
+      {hosting.nodos.map((n, i) => {
+        const nx = hostX + HOST_PAD;
+        const ny = PAD + 34 + i * (NODE_H + HOST_NODE_GAP);
+        const cx = nx + NODE_W / 2;
+        const cy = ny + NODE_H / 2;
+        const lines = wrap(n.label);
+        const startDy = -(lines.length - 1 + (n.sub ? 0.9 : 0)) * 13 / 2;
+        return (
+          <g>
+            <rect x={nx} y={ny} width={NODE_W} height={NODE_H} rx="8" fill="var(--color-teal-tint)" stroke="var(--color-teal)" stroke-width="1.5" />
+            <text x={cx} y={cy} text-anchor="middle" font-family="var(--font-body)" font-size={FONT_SIZE} fill="var(--color-ink)">
+              {lines.map((l, li) => <tspan x={cx} dy={li === 0 ? startDy : 15}>{l}</tspan>)}
+              {n.sub && <tspan x={cx} dy={15} font-size="10.5" fill="var(--color-diagram-text-muted)">{n.sub}</tspan>}
+            </text>
+          </g>
+        );
+      })}
+    </g>
+  </svg>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

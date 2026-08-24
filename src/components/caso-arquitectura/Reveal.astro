@@ -1,0 +1,20 @@
+---
+interface Props {
+  summary: string;
+  meta?: string;
+  open?: boolean;
+  id?: string;
+  nested?: boolean;
+}
+const { summary, meta, open = false, id, nested = false } = Astro.props;
+---
+<details class:list={['reveal', { 'reveal-nested': nested }]} id={id} open={open}>
+  <summary class="reveal-summary">
+    <span class="reveal-title">{summary}</span>
+    {meta && <span class="reveal-meta">{meta}</span>}
+    <span class="reveal-chevron" aria-hidden="true">＋</span>
+  </summary>
+  <div class="reveal-body">
+    <slot />
+  </div>
+</details>

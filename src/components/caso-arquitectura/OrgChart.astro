@@ -1,0 +1,118 @@
+---
+interface Props {
+  root: string;
+  asesorias: string[];
+  areas: string[];
+  caption?: string;
+}
+const { root, asesorias, areas, caption } = Astro.props;
+
+const FONT_SIZE = 12;
+const ROOT_W = 130;
+const ROOT_H = 40;
+const ADV_W = 190;
+const ADV_H = 52;
+const AREA_W = 108;
+const AREA_H = 44;
+const ROW_GAP = 34;
+const COL_GAP = 14;
+
+const W = Math.max(
+  ROOT_W + 40,
+  asesorias.length * ADV_W + (asesorias.length - 1) * COL_GAP + 40,
+  areas.length * AREA_W + (areas.length - 1) * COL_GAP + 40,
+);
+
+const rootX = W / 2 - ROOT_W / 2;
+const rootY = 14;
+const rootCX = W / 2;
+const rootBottom = rootY + ROOT_H;
+
+const advY = rootBottom + ROW_GAP;
+const advTotalW = asesorias.length * ADV_W + (asesorias.length - 1) * COL_GAP;
+const advStartX = W / 2 - advTotalW / 2;
+const advBottom = advY + ADV_H;
+
+const areaY = advBottom + ROW_GAP;
+const areaTotalW = areas.length * AREA_W + (areas.length - 1) * COL_GAP;
+const areaStartX = W / 2 - areaTotalW / 2;
+
+const H = areaY + AREA_H + 14;
+
+function wrap(label: string, maxChars: number) {
+  const words = label.split(' ');
+  const lines: string[] = [];
+  let cur = '';
+  for (const w of words) {
+    const next = cur ? `${cur} ${w}` : w;
+    if (next.length > maxChars && cur) {
+      lines.push(cur);
+      cur = w;
+    } else {
+      cur = next;
+    }
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+
+const advBoxes = asesorias.map((label, i) => {
+  const x = advStartX + i * (ADV_W + COL_GAP);
+  return { label, x, lines: wrap(label, 24) };
+});
+
+const areaBoxes = areas.map((label, i) => {
+  const x = areaStartX + i * (AREA_W + COL_GAP);
+  return { label, x, lines: wrap(label, 14) };
+});
+
+const advMidY = advY - ROW_GAP / 2;
+const areaMidY = areaY - ROW_GAP / 2;
+---
+<figure class="diagram-figure">
+  <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-label={caption ?? 'Organigrama'} class="max-w-full h-auto">
+    <line x1={rootCX} y1={rootBottom} x2={rootCX} y2={advMidY} stroke="var(--color-diagram-gold)" stroke-width="1.4" />
+    <line x1={advStartX + ADV_W / 2} y1={advMidY} x2={advStartX + advTotalW - ADV_W / 2} y2={advMidY} stroke="var(--color-diagram-gold)" stroke-width="1.4" />
+    {advBoxes.map(b => (
+      <line x1={b.x + ADV_W / 2} y1={advMidY} x2={b.x + ADV_W / 2} y2={advY} stroke="var(--color-diagram-gold)" stroke-width="1.4" />
+    ))}
+
+    <line x1={rootCX} y1={advMidY} x2={rootCX} y2={areaMidY} stroke="var(--color-diagram-gold)" stroke-width="1.4" />
+    <line x1={areaStartX + AREA_W / 2} y1={areaMidY} x2={areaStartX + areaTotalW - AREA_W / 2} y2={areaMidY} stroke="var(--color-diagram-gold)" stroke-width="1.4" />
+    {areaBoxes.map(b => (
+      <line x1={b.x + AREA_W / 2} y1={areaMidY} x2={b.x + AREA_W / 2} y2={areaY} stroke="var(--color-diagram-gold)" stroke-width="1.4" />
+    ))}
+
+    <rect x={rootX} y={rootY} width={ROOT_W} height={ROOT_H} rx="8" fill="var(--color-navy)" />
+    <text x={rootCX} y={rootY + ROOT_H / 2 + 4.5} text-anchor="middle" font-family="var(--font-body)" font-size="13.5" font-weight="700" fill="var(--color-sand)">{root}</text>
+
+    {advBoxes.map(b => {
+      const cx = b.x + ADV_W / 2;
+      const cy = advY + ADV_H / 2;
+      const startDy = -(b.lines.length - 1) * 13 / 2;
+      return (
+        <g>
+          <rect x={b.x} y={advY} width={ADV_W} height={ADV_H} rx="8" fill="var(--color-diagram-indigo-tint)" stroke="var(--color-diagram-indigo)" stroke-width="1.5" />
+          <text x={cx} y={cy} text-anchor="middle" font-family="var(--font-body)" font-size={FONT_SIZE} fill="var(--color-ink)">
+            {b.lines.map((l, li) => <tspan x={cx} dy={li === 0 ? startDy : 14}>{l}</tspan>)}
+          </text>
+        </g>
+      );
+    })}
+
+    {areaBoxes.map(b => {
+      const cx = b.x + AREA_W / 2;
+      const cy = areaY + AREA_H / 2;
+      const startDy = -(b.lines.length - 1) * 13 / 2;
+      return (
+        <g>
+          <rect x={b.x} y={areaY} width={AREA_W} height={AREA_H} rx="8" fill="var(--color-teal-tint)" stroke="var(--color-teal)" stroke-width="1.5" />
+          <text x={cx} y={cy} text-anchor="middle" font-family="var(--font-body)" font-size={FONT_SIZE} fill="var(--color-ink)">
+            {b.lines.map((l, li) => <tspan x={cx} dy={li === 0 ? startDy : 14}>{l}</tspan>)}
+          </text>
+        </g>
+      );
+    })}
+  </svg>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

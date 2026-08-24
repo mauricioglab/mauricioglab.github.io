@@ -1,0 +1,94 @@
+---
+import Logo from './Logo.astro';
+import { STUDIO_NAME, PRODUCT_NAME } from '../../data/caso-arquitectura/brand';
+
+const links = [
+  { href: '#cliente', label: 'El estudio' },
+  { href: '#indice', label: 'El proyecto' },
+];
+---
+<header class="navbar" id="navbar">
+  <div class="wrap flex items-center gap-6 h-[72px]">
+    <a href="#top" class="nav-brand">
+      <span class="nav-brand-mark">
+        <Logo size={26} />
+      </span>
+      <span class="nav-brand-text">
+        <strong class="nav-brand-name">{PRODUCT_NAME}</strong>
+        <em class="nav-brand-sub">{STUDIO_NAME}</em>
+      </span>
+    </a>
+
+    <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav-links" id="nav-links">
+      {links.map(l => (
+        <a href={l.href}>{l.label}</a>
+      ))}
+    </nav>
+
+    <a href="#indice" class="btn btn-primary nav-cta">Ver el proyecto</a>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const links = document.getElementById('nav-links');
+  const mq = window.matchMedia('(max-width: 900px)');
+
+  function syncInert() {
+    if (!links) return;
+    if (mq.matches) {
+      links.toggleAttribute('inert', !links.classList.contains('open'));
+    } else {
+      links.removeAttribute('inert');
+    }
+  }
+
+  function closeMenu() {
+    links?.classList.remove('open');
+    toggle?.setAttribute('aria-expanded', 'false');
+    syncInert();
+  }
+
+  toggle?.addEventListener('click', () => {
+    const open = links?.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(!!open));
+    syncInert();
+  });
+
+  links?.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeMenu();
+      toggle?.focus();
+    }
+  });
+
+  links?.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', closeMenu);
+  });
+
+  mq.addEventListener('change', syncInert);
+  syncInert();
+
+  const sections = Array.from(document.querySelectorAll('main section[id]'));
+  const navAnchors = Array.from(document.querySelectorAll('#nav-links a'));
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          navAnchors.forEach(a => {
+            a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
+          });
+        }
+      });
+    },
+    { rootMargin: '-45% 0px -50% 0px' }
+  );
+
+  sections.forEach(s => observer.observe(s));
+</script>

@@ -1,0 +1,182 @@
+---
+interface StateNode {
+  label: string;
+  final?: boolean;
+}
+interface Transition {
+  from: number;
+  to: number;
+  label: string;
+  dashed?: boolean;
+}
+interface Rama {
+  desde: number;
+  estado: StateNode;
+  label: string;
+}
+interface Machine {
+  titulo: string;
+  estados: StateNode[];
+  transiciones: Transition[];
+  ramas?: Rama[];
+  sinAutoLinea?: number[];
+  nota?: string;
+}
+interface Props {
+  maquinas: Machine[];
+  caption?: string;
+}
+const { maquinas, caption } = Astro.props;
+
+const FONT_SIZE = 12;
+const BOX_W = 118;
+const BOX_H = 40;
+const GAP_X = 74;
+const START_R = 7;
+const PAD_L = 40;
+const PAD_TOP = 34;
+const ROW_H = 96;
+const RAMA_H = 74;
+const NOTA_H = 30;
+
+function wrap(label: string, maxChars = 15) {
+  const words = label.split(' ');
+  const lines: string[] = [];
+  let cur = '';
+  for (const w of words) {
+    const next = cur ? `${cur} ${w}` : w;
+    if (next.length > maxChars && cur) {
+      lines.push(cur);
+      cur = w;
+    } else {
+      cur = next;
+    }
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+
+let cursorY = PAD_TOP;
+const rows = maquinas.map(m => {
+  const y = cursorY;
+  const boxes = m.estados.map((s, i) => ({
+    ...s,
+    x: PAD_L + START_R * 2 + 20 + i * (BOX_W + GAP_X),
+    y,
+    lines: wrap(s.label),
+  }));
+  const ramaY = y + BOX_H + 40;
+  const desdeCount: Record<number, number> = {};
+  const ramas = (m.ramas ?? []).map(r => {
+    const origin = boxes[r.desde];
+    const seen = desdeCount[r.desde] ?? 0;
+    desdeCount[r.desde] = seen + 1;
+    const offset = seen * (BOX_W * 0.62);
+    return { ...r, x: origin.x + offset, y: ramaY, lines: wrap(r.estado.label) };
+  });
+  const notaY = y + BOX_H + (ramas.length > 0 ? RAMA_H : 26);
+  const rowHeight = ROW_H + (ramas.length > 0 ? RAMA_H : 0) + (m.nota ? NOTA_H : 0);
+  cursorY += rowHeight;
+  return { ...m, y, boxes, ramas, notaY };
+});
+
+const maxStates = Math.max(...maquinas.map(m => m.estados.length));
+const W = PAD_L + START_R * 2 + 20 + maxStates * (BOX_W + GAP_X) - GAP_X + 30;
+const H = cursorY + 20;
+---
+<figure class="diagram-figure">
+  <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-label={caption ?? 'Diagrama de transición de estados'} class="max-w-full h-auto">
+    <defs>
+      <marker id="st-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--color-diagram-gold)" />
+      </marker>
+    </defs>
+
+    {rows.map(m => (
+      <g>
+        <text x={4} y={m.y + BOX_H / 2 + 4} font-family="var(--font-body)" font-size="11" font-weight="700" fill="var(--color-diagram-gold-text)" letter-spacing="0.03em">{m.titulo.toUpperCase()}</text>
+
+        <circle cx={PAD_L + START_R + 30} cy={m.y + BOX_H / 2} r={START_R} fill="var(--color-navy)" />
+        <line
+          x1={PAD_L + START_R * 2 + 30} y1={m.y + BOX_H / 2}
+          x2={m.boxes[0].x} y2={m.y + BOX_H / 2}
+          stroke="var(--color-diagram-gold)" stroke-width="1.5" marker-end="url(#st-arrow)"
+        />
+
+        {m.boxes.map((b, i) => {
+          const cx = b.x + BOX_W / 2;
+          const cy = b.y + BOX_H / 2;
+          const startDy = -(b.lines.length - 1) * 13 / 2;
+          const next = m.sinAutoLinea?.includes(i) ? undefined : m.boxes[i + 1];
+          const t = m.transiciones.find(t => t.from === i && t.to === i + 1);
+          return (
+            <g>
+              <rect x={b.x} y={b.y} width={BOX_W} height={BOX_H} rx="8" fill={b.final ? 'var(--color-teal-tint)' : 'var(--color-paper-alt)'} stroke={b.final ? 'var(--color-teal)' : 'var(--color-diagram-gold)'} stroke-width={b.final ? '2.2' : '1.5'} />
+              <text x={cx} y={cy} text-anchor="middle" font-family="var(--font-body)" font-size={FONT_SIZE} fill="var(--color-ink)">
+                {b.lines.map((l, li) => <tspan x={cx} dy={li === 0 ? startDy : 14}>{l}</tspan>)}
+              </text>
+              {next && (
+                <g>
+                  <line
+                    x1={b.x + BOX_W} y1={cy} x2={next.x} y2={cy}
+                    stroke="var(--color-diagram-gold)" stroke-width="1.5" stroke-dasharray={t?.dashed ? '4 3' : undefined}
+                    marker-end="url(#st-arrow)"
+                  />
+                  {t && (
+                    <text x={(b.x + BOX_W + next.x) / 2} y={cy - 8} text-anchor="middle" font-family="var(--font-body)" font-size="10" fill="var(--color-diagram-text-muted)">
+                      {t.label}
+                    </text>
+                  )}
+                </g>
+              )}
+            </g>
+          );
+        })}
+
+        {m.transiciones.filter(t => t.to < t.from || t.to > t.from + 1).map(t => {
+          const from = m.boxes[t.from];
+          const to = m.boxes[t.to];
+          const midY = m.y + BOX_H + 30;
+          const x1 = from.x + BOX_W / 2;
+          const x2 = to.x + BOX_W / 2;
+          return (
+            <g>
+              <path
+                d={`M ${x1} ${from.y + BOX_H} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${to.y + BOX_H}`}
+                fill="none" stroke="var(--color-diagram-rose)" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#st-arrow)"
+              />
+              <text x={(x1 + x2) / 2} y={midY + 12} text-anchor="middle" font-family="var(--font-body)" font-size="10" fill="var(--color-diagram-rose-text)">{t.label}</text>
+            </g>
+          );
+        })}
+
+        {m.ramas.map(r => {
+          const origin = m.boxes[r.desde];
+          const cx = r.x + BOX_W / 2;
+          const cy = r.y + BOX_H / 2;
+          const startDy = -(r.lines.length - 1) * 13 / 2;
+          const ox = origin.x + BOX_W / 2;
+          const midY = origin.y + BOX_H + (r.y - (origin.y + BOX_H)) / 2;
+          return (
+            <g>
+              <path
+                d={`M ${ox} ${origin.y + BOX_H} C ${ox} ${midY}, ${cx} ${midY}, ${cx} ${r.y}`}
+                fill="none" stroke="var(--color-diagram-rose)" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#st-arrow)"
+              />
+              <rect x={r.x} y={r.y} width={BOX_W} height={BOX_H} rx="8" fill={r.estado.final ? 'var(--color-teal-tint)' : 'var(--color-paper-alt)'} stroke={r.estado.final ? 'var(--color-teal)' : 'var(--color-diagram-gold)'} stroke-width={r.estado.final ? '2.2' : '1.5'} />
+              <text x={cx} y={cy} text-anchor="middle" font-family="var(--font-body)" font-size={FONT_SIZE} fill="var(--color-ink)">
+                {r.lines.map((l, li) => <tspan x={cx} dy={li === 0 ? startDy : 14}>{l}</tspan>)}
+              </text>
+              <text x={cx} y={r.y - 6} text-anchor="middle" font-family="var(--font-body)" font-size="10" fill="var(--color-diagram-rose-text)">{r.label}</text>
+            </g>
+          );
+        })}
+
+        {m.nota && wrap(m.nota, 108).map((l, li) => (
+          <text x={PAD_L} y={m.notaY + li * 13} font-family="var(--font-body)" font-size="10" font-style="italic" fill="var(--color-diagram-gold-text)">{l}</text>
+        ))}
+      </g>
+    ))}
+  </svg>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

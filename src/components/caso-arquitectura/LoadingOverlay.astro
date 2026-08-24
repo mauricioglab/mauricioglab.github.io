@@ -1,0 +1,30 @@
+---
+---
+<div id="loading-overlay" class="loading-overlay" role="status" aria-live="polite" aria-hidden="true">
+  <div class="loading-spinner"></div>
+  <span class="sr-only">Cargando…</span>
+</div>
+
+<script>
+  let showTimer: ReturnType<typeof setTimeout> | undefined;
+  let safetyTimer: ReturnType<typeof setTimeout> | undefined;
+
+  function hide() {
+    clearTimeout(showTimer);
+    clearTimeout(safetyTimer);
+    const el = document.getElementById('loading-overlay');
+    el?.classList.remove('visible');
+    el?.setAttribute('aria-hidden', 'true');
+  }
+
+  document.addEventListener('astro:before-preparation', () => {
+    showTimer = setTimeout(() => {
+      const el = document.getElementById('loading-overlay');
+      el?.classList.add('visible');
+      el?.setAttribute('aria-hidden', 'false');
+    }, 150);
+    safetyTimer = setTimeout(hide, 8000);
+  });
+
+  document.addEventListener('astro:page-load', hide);
+</script>
