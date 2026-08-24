@@ -1,0 +1,94 @@
+---
+import Layout from '../../layouts/caso-arquitectura/Layout.astro';
+import Navbar from '../../components/caso-arquitectura/Navbar.astro';
+import Footer from '../../components/caso-arquitectura/Footer.astro';
+import OrgChart from '../../components/caso-arquitectura/OrgChart.astro';
+import { chapters, chapterGroups } from '../../data/caso-arquitectura/chapters';
+import { STUDIO_NAME, PRODUCT_NAME } from '../../data/caso-arquitectura/brand';
+---
+<Layout title={`${PRODUCT_NAME} — Caso de estudio | ${STUDIO_NAME}`}>
+  <a id="top"></a>
+  <Navbar />
+
+  <main id="main-content">
+    <!-- HERO -->
+    <section id="inicio" class="relative overflow-hidden bg-navy text-[#f4f1e8] py-[150px] pb-[100px] md:py-[150px] md:pb-[100px] max-md:pt-[120px] max-md:pb-[70px]">
+      <div class="absolute inset-0 bg-[url('/images/caso-arquitectura/oficina-blueprint.webp')] bg-cover bg-center opacity-28" aria-hidden="true"></div>
+      <div class="hero-bg-after absolute inset-0" aria-hidden="true"></div>
+      <div class="wrap relative z-1">
+        <span class="eyebrow eyebrow-light text-sand">Caso de estudio</span>
+        <h1 class="text-[clamp(3rem,8vw,5.5rem)] mt-4.5 text-white">{PRODUCT_NAME}</h1>
+        <p class="max-w-[580px] mt-5.5 text-[1.15rem] text-[#d6dae2]">
+          Sistema de planificación, gestión y seguimiento de obra, diseñado y construido a medida
+          para <strong>{STUDIO_NAME}</strong>, estudio de arquitectura de Córdoba.
+        </p>
+        <div class="flex gap-4 mt-9 flex-wrap">
+          <a href="#indice" class="btn btn-primary">Ver el proyecto</a>
+          <a href="/caso-arquitectura/sprints" class="inline-flex items-center px-6.5 py-3.25 rounded-full font-head font-semibold text-[0.95rem] no-underline border border-white/40 text-white hover:bg-white/10">Ver un sprint de ejemplo →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLIENTE breve -->
+    <section id="cliente" class="py-18 max-md:py-16">
+      <div class="wrap">
+        <div class="grid-2 items-center">
+          <div>
+            <span class="eyebrow">El estudio</span>
+            <h2 class="text-2xl mt-3">{STUDIO_NAME}</h2>
+            <p class="lead text-[1.1rem] text-ink-soft mt-4">
+              Estudio de arquitectura de Córdoba especializado en interiorismo y arquitectura comercial, que
+              planifica, diseña y ejecuta proyectos bajo un modelo de administración compartida entre sus
+              tres socios.
+            </p>
+            <div class="tag-row mt-5.5">
+              <span class="tag">Interiorismo</span>
+              <span class="tag">Arquitectura comercial</span>
+              <span class="tag">Administración compartida</span>
+              <span class="tag">Córdoba, Argentina</span>
+            </div>
+          </div>
+          <OrgChart
+            root="Socios"
+            asesorias={['Asesoría Legal (Aravena y Asoc.)', 'Asesoría Informática (Ing. en Sistemas)']}
+            areas={['Diseño', 'Contabilidad', 'Marketing digital', 'Administración', 'Clientes', 'Obra']}
+            caption="Organigrama del estudio: socios, asesorías externas y áreas de trabajo."
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- INDICE -->
+    <section id="indice" class="alt-bg py-24 max-md:py-16">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Cómo está organizado</span>
+          <h2>Un recorrido de punta a punta por el proyecto</h2>
+          <p>
+            {chapters.length} secciones que cubren cada etapa, desde el relevamiento inicial hasta
+            la puesta en producción. Si es tu primera vez acá, arrancá por {STUDIO_NAME}.
+          </p>
+        </div>
+        <div class="grid-2 items-start">
+          {chapterGroups.filter(group => chapters.some(c => c.group === group)).map(group => (
+            <div class="chapter-group-card">
+              <h3 class="chapter-group-label">{group}</h3>
+              <div class="chapter-list">
+                {chapters.filter(c => c.group === group).map(c => (
+                  <a href={c.href} class="chapter-row">
+                    <span class="chapter-row-num">{c.n}</span>
+                    <span class="chapter-row-title">{c.title}</span>
+                    <span class="chapter-row-desc">{c.desc}</span>
+                    <span class="chapter-row-arrow" aria-hidden="true">→</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

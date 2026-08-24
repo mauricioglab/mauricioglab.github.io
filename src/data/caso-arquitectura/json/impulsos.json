@@ -1,0 +1,22 @@
+{
+ "items": [
+  {
+   "tema": "Seguimiento disperso de los proyectos",
+   "problema": "El estado de cada proyecto se arma coordinando, compilando y validando datos sueltos en múltiples hojas de cálculo, lo que consume horas que podrían destinarse a tareas de diseño u obra.",
+   "necesidad": "Poder conocer el estado de cada proyecto sin cruzar planillas a mano cada vez que alguien pregunta.",
+   "oportunidad": "Ya existen ERPs de referencia como ContaSimple, que resuelven un problema análogo: facturas, gastos, conciliaciones y presupuestos desde una sola plataforma."
+  },
+  {
+   "tema": "Plazos, tareas y cambios imprevistos",
+   "problema": "El seguimiento de tareas y servicios por tipo de proyecto, la gestión de plazos de entrega y los cambios imprevistos no cuentan con una herramienta que facilite la colaboración entre los colaboradores asignados a cada obra.",
+   "necesidad": "Saber a tiempo cuándo un plazo está por vencer o una tarea se está desviando, sin depender de que alguien lo note a mano.",
+   "oportunidad": "Existen normas ISO que ya regulan y estandarizan la gestión de procesos de proyectos, y sirven de marco de referencia para estructurar este control."
+  },
+  {
+   "tema": "Historial y credibilidad ante el cliente",
+   "problema": "La falta de una solución integrada hace que se pierda la contextualización de cada proyecto y no exista un historial confiable, lo que erosiona la credibilidad del estudio ante sus clientes.",
+   "necesidad": "Que el cliente pueda saber en qué está su proyecto sin tener que llamar o esperar a que el estudio le avise.",
+   "oportunidad": "El estudio ya releva y conserva datos fundamentales de clientes, proyectos, agenda de reuniones, presupuestos, índice de construcción y cómputos; la base de información ya existe, falta estructurarla."
+  }
+ ]
+}

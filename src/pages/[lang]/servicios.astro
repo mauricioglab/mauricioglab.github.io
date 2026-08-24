@@ -1,0 +1,120 @@
+---
+import BaseTailwind from '@layouts/BaseTailwind.astro';
+import ContactModal from '@components/landing/ContactModal.astro';
+import FeatureCards from '@components/landing/FeatureCards.astro';
+import { SITE_CONFIG } from '@data/config';
+import { getLanguagePaths } from '@utils/i18n-paths';
+import { type Lang, useTranslations, getAlternateUrl } from '@i18n/index';
+
+export const getStaticPaths = getLanguagePaths;
+
+const { lang } = Astro.params as { lang: Lang };
+const content = await useTranslations<any>(lang, 'services');
+const altPath = getAlternateUrl(Astro.url, lang);
+const altLang = lang === 'es' ? 'en' : 'es';
+
+const cards = content.services.map((s: any) => ({
+  icon: s.icon,
+  title: s.title,
+  description: s.description,
+  color: s.color,
+}));
+---
+
+<BaseTailwind title={content.seo.title} description={content.seo.description} lang={lang} layoutType="landing">
+  <!-- Header -->
+  <header class="bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-50 border-b border-slate-200 dark:border-slate-700 transition-colors">
+    <nav class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="text-2xl font-bold text-slate-900 dark:text-white">
+        MG<span class="text-blue-600">.</span>
+        <span class="text-sm font-normal text-slate-600 dark:text-slate-400 ml-2">| {content.subtitle}</span>
+      </div>
+
+      <div class="hidden lg:flex items-center space-x-1">
+        <a href={`/${lang}/portfolio`} class="px-3 py-1.5 rounded-lg text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Portfolio</a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a
+          href={altPath}
+          class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition text-sm font-medium"
+        >
+          {altLang.toUpperCase()}
+        </a>
+        <button
+          data-contact-trigger
+          class="bg-blue-600 dark:bg-blue-500 text-white px-4 md:px-6 py-2 rounded-lg hover:opacity-90 transition font-bold text-sm md:text-base"
+        >
+          {content.hero.ctaPrimary}
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors">
+    <!-- Hero -->
+    <section class="py-20 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 transition-colors">
+      <div class="max-w-4xl mx-auto px-4 text-center">
+        <span class="inline-block bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-4 py-1 rounded-full text-sm font-bold mb-6">
+          {content.hero.badge}
+        </span>
+        <h1 class="text-5xl font-extrabold mb-6 text-slate-900 dark:text-white" set:html={content.hero.headline}></h1>
+        <p class="text-xl text-slate-600 dark:text-slate-400 leading-relaxed mb-8">{content.hero.subheadline}</p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <button
+            data-contact-trigger
+            class="bg-blue-600 dark:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold hover:opacity-90 transition inline-flex items-center cursor-pointer"
+          >
+            <i class="fas fa-calendar mr-2"></i>{content.hero.ctaPrimary}
+          </button>
+          <a href={`/${lang}/portfolio`} class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-8 py-4 rounded-xl font-bold border border-blue-600 dark:border-blue-500 hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition">
+            {content.hero.ctaSecondary}
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Servicios -->
+    <FeatureCards
+      title=""
+      cards={cards}
+      columns={3}
+      variant="icon-box"
+      bgColor="bg-white dark:bg-slate-900"
+    />
+
+    <!-- CTA Final -->
+    <section id="contacto" class="py-20 bg-blue-600 dark:bg-blue-700 text-white">
+      <div class="max-w-4xl mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold mb-6">{content.ctaTitle}</h2>
+        <p class="text-xl mb-8 opacity-90">{content.ctaDescription}</p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <button
+            data-contact-trigger
+            class="px-8 py-4 rounded-xl font-bold transition inline-flex items-center cursor-pointer bg-white hover:bg-slate-100 text-blue-600"
+          >
+            <i class="fas fa-envelope mr-2"></i>{content.hero.ctaPrimary}
+          </button>
+          <a
+            href={SITE_CONFIG.calendly}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-8 py-4 rounded-xl font-bold transition inline-flex items-center border-2 border-white text-white hover:bg-white hover:text-blue-600"
+          >
+            <i class="fas fa-calendar mr-2"></i>Agendar Reunión
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-white py-8">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <p class="text-slate-400 text-sm">© 2026 Mauricio Gonzalez · MG Lab</p>
+    </div>
+  </footer>
+
+  <!-- Contact Modal -->
+  <ContactModal lang={lang} />
+</BaseTailwind>

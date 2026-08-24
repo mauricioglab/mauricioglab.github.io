@@ -1,0 +1,204 @@
+---
+import Layout from './Layout.astro';
+import Logo from '../../components/caso-arquitectura/Logo.astro';
+import { chapters, chapterGroups } from '../../data/caso-arquitectura/chapters';
+import { PRODUCT_NAME } from '../../data/caso-arquitectura/brand';
+
+interface Props {
+  title: string;
+  chapterHref?: string;
+  eyebrow?: string;
+  noTransition?: boolean;
+}
+
+const { title, chapterHref, eyebrow, noTransition = false } = Astro.props;
+const current = chapters.findIndex(c => c.href === chapterHref);
+const chapter = current >= 0 ? chapters[current] : null;
+const prev = current > 0 ? chapters[current - 1] : null;
+const next = current >= 0 && current < chapters.length - 1 ? chapters[current + 1] : null;
+---
+<Layout title={`${title}: ${PRODUCT_NAME}`} noTransition={noTransition}>
+  <div class="min-h-screen">
+    <header class="doc-header">
+      <a href="/caso-arquitectura/" class="doc-logo">
+        <Logo size={22} />
+        <span>{PRODUCT_NAME}</span>
+      </a>
+      <a href="/caso-arquitectura/" class="doc-index-link">El proyecto</a>
+      <button class="doc-nav-toggle" id="doc-nav-toggle" aria-label="Abrir índice" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </header>
+
+    <div class="doc-grid">
+      <aside class="doc-sidebar" id="doc-sidebar">
+        <p class="doc-sidebar-label">Caso de estudio</p>
+        <nav>
+          {chapterGroups.filter(group => chapters.some(c => c.group === group)).map(group => (
+            <div class="doc-nav-group">
+              <p class="doc-sidebar-group-label">{group}</p>
+              <ol class="doc-nav-list">
+                {chapters.filter(c => c.group === group).map(c => (
+                  <li class={c.href === chapterHref ? 'active' : ''}>
+                    <a href={c.href} class="doc-nav-link">
+                      <span class="doc-sidebar-n">{c.n}</span>
+                      <span>{c.title}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
+        </nav>
+      </aside>
+
+      <main class="doc-main" id="main-content">
+        {chapter && (
+          <div class="doc-chapter-header">
+            <span class="doc-chapter-eyebrow">
+              {eyebrow ?? `Capítulo ${chapter.n}`}
+            </span>
+            <h1 class="doc-chapter-title">{chapter.title}</h1>
+            <p class="doc-chapter-desc">{chapter.desc}</p>
+          </div>
+        )}
+        <slot />
+
+        {(prev || next) && (
+          <nav class="doc-pager">
+            {prev ? (
+              <a href={prev.href} class="doc-pager-card">
+                <span class="doc-pager-label">← Anterior</span>
+                <strong class="doc-pager-title">{prev.title}</strong>
+              </a>
+            ) : <span />}
+            {next ? (
+              <a href={next.href} class="doc-pager-card doc-pager-next">
+                <span class="doc-pager-label">Siguiente →</span>
+                <strong class="doc-pager-title">{next.title}</strong>
+              </a>
+            ) : <span />}
+          </nav>
+        )}
+      </main>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  // El sitio usa la View Transitions API de Astro en la mayoría de las páginas
+  // (ver Layout.astro / prop noTransition). Con navegación por transición,
+  // Astro no vuelve a ejecutar este script en cada página porque el módulo ya
+  // se ejecutó una vez, así que la inicialización se envuelve en una función
+  // que se reengancha en el evento astro:page-load. Ese evento se dispara
+  // tanto en la carga inicial como en cada navegación por transición; el
+  // guard con dataset evita atar los listeners dos veces cuando ambos
+  // disparos (llamada inicial + astro:page-load) caen sobre el mismo DOM.
+  function initSidebarToggle() {
+    const toggle = document.getElementById('doc-nav-toggle');
+    const sidebar = document.getElementById('doc-sidebar');
+    if (!toggle || !sidebar || toggle.dataset.bound === 'true') return;
+    toggle.dataset.bound = 'true';
+
+    const mq = window.matchMedia('(max-width: 980px)');
+
+    function syncInert() {
+      if (mq.matches) {
+        sidebar!.toggleAttribute('inert', !sidebar!.classList.contains('open'));
+      } else {
+        sidebar!.removeAttribute('inert');
+      }
+    }
+
+    function closeSidebar() {
+      sidebar!.classList.remove('open');
+      toggle!.setAttribute('aria-expanded', 'false');
+      syncInert();
+    }
+
+    toggle.addEventListener('click', () => {
+      const open = sidebar.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(!!open));
+      syncInert();
+    });
+    sidebar.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeSidebar();
+        toggle.focus();
+      }
+    });
+    sidebar.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', closeSidebar);
+    });
+
+    mq.addEventListener('change', syncInert);
+    syncInert();
+  }
+
+  initSidebarToggle();
+  document.addEventListener('astro:page-load', initSidebarToggle);
+</script>
+
+<script>
+  // Arma, en el sidebar, el árbol de subsecciones numeradas (h2 con
+  // span.doc-block-n) de la página actual, dentro del <li class="active">
+  // del capítulo en curso. Páginas sin subsecciones numeradas (ej. Historial)
+  // no agregan nada. Igual que el toggle mobile, se reengancha en
+  // astro:page-load para reconstruirse en cada navegación por transición.
+  function buildChapterSubnav() {
+    const activeItem = document.querySelector('.doc-nav-list li.active');
+    if (!activeItem) return;
+
+    // Idempotente: si ya había una sublista (de una navegación anterior
+    // sobre el mismo nodo, o de un doble disparo inicial), se descarta y
+    // se reconstruye desde el contenido actual de la página.
+    activeItem.querySelector('.doc-nav-sublist')?.remove();
+
+    const main = document.querySelector('main.doc-main');
+    if (!main) return;
+
+    const headings = Array.from(main.querySelectorAll('h2')).filter(h2 =>
+      h2.querySelector('.doc-block-n')
+    );
+    if (headings.length === 0) return;
+
+    const sublist = document.createElement('ol');
+    sublist.className = 'doc-nav-sublist';
+
+    headings.forEach(h2 => {
+      const numEl = h2.querySelector('.doc-block-n');
+      if (!numEl) return;
+      const num = (numEl.textContent ?? '').trim();
+
+      if (!h2.id) {
+        h2.id = `sec-${num.replace(/\./g, '-')}`;
+      }
+
+      const clone = h2.cloneNode(true) as HTMLElement;
+      clone.querySelector('.doc-block-n')?.remove();
+      const titleText = (clone.textContent ?? '').trim();
+
+      const a = document.createElement('a');
+      a.className = 'doc-nav-sublink';
+      a.href = `#${h2.id}`;
+
+      const numSpan = document.createElement('span');
+      numSpan.className = 'doc-nav-sublink-n';
+      numSpan.textContent = num;
+
+      const titleSpan = document.createElement('span');
+      titleSpan.textContent = titleText;
+
+      a.append(numSpan, titleSpan);
+
+      const li = document.createElement('li');
+      li.appendChild(a);
+      sublist.appendChild(li);
+    });
+
+    activeItem.appendChild(sublist);
+  }
+
+  buildChapterSubnav();
+  document.addEventListener('astro:page-load', buildChapterSubnav);
+</script>

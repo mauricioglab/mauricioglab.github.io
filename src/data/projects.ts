@@ -8,9 +8,7 @@ export interface ProjectProfile {
 export interface Project {
   id: string;
   profiles: {
-    developer?: ProjectProfile;
-    analista?: ProjectProfile;
-    'ia-engineer'?: ProjectProfile;
+    engineer?: ProjectProfile;
   };
   links: {
     demo?: string;
@@ -26,17 +24,9 @@ export const projects: Project[] = [
     id: 'ecommerce',
     featured: true,
     profiles: {
-      developer: {
-        tags: ['.NET Core 8', 'Angular 17', 'SQL Server', 'Redis', 'Docker'],
+      engineer: {
+        tags: ['.NET Core 8', 'Angular 17', 'SQL Server', 'Redis', 'Docker', 'DDD', 'Event Storming'],
         icon: 'fa-shopping-cart'
-      },
-      analista: {
-        tags: ['DDD', 'UML', 'Event Storming', 'Microservices', 'BPMN'],
-        icon: 'fa-project-diagram'
-      },
-      'ia-engineer': {
-        tags: ['Python', 'LangChain', 'Pinecone', 'OpenAI', 'FastAPI'],
-        icon: 'fa-robot'
       }
     },
     links: {
@@ -50,13 +40,9 @@ export const projects: Project[] = [
     id: 'task-manager-ddd',
     featured: true,
     profiles: {
-      developer: {
-        tags: ['.NET 8', 'Angular', 'CQRS', 'Event Sourcing', 'Azure'],
+      engineer: {
+        tags: ['.NET 8', 'Angular', 'CQRS', 'Event Sourcing', 'Azure', 'DDD', 'Clean Architecture'],
         icon: 'fa-tasks'
-      },
-      analista: {
-        tags: ['DDD', 'Clean Architecture', 'UML', 'C4 Model', 'Domain Modeling'],
-        icon: 'fa-sitemap'
       }
     },
     links: {
@@ -69,13 +55,9 @@ export const projects: Project[] = [
     id: 'microservicios-api',
     featured: true,
     profiles: {
-      developer: {
-        tags: ['.NET Core', 'RabbitMQ', 'gRPC', 'Docker', 'Kubernetes'],
+      engineer: {
+        tags: ['.NET Core', 'RabbitMQ', 'gRPC', 'Docker', 'Kubernetes', 'Event-Driven', 'Saga Pattern'],
         icon: 'fa-network-wired'
-      },
-      analista: {
-        tags: ['Microservices', 'Event-Driven', 'Saga Pattern', 'API Design'],
-        icon: 'fa-cubes'
       }
     },
     links: {
@@ -85,47 +67,10 @@ export const projects: Project[] = [
     image: '/projects/microservices.jpg'
   },
   {
-    id: 'chatbot-rag',
-    featured: true,
-    profiles: {
-      'ia-engineer': {
-        tags: ['Python', 'LangChain', 'OpenAI', 'Pinecone', 'FastAPI', 'RAG'],
-        icon: 'fa-comments'
-      },
-      developer: {
-        tags: ['Python', 'FastAPI', 'React', 'WebSockets', 'OAuth2'],
-        icon: 'fa-robot'
-      }
-    },
-    links: {
-      github: 'https://github.com/tu-usuario/chatbot-rag'
-      // caseStudy: No existe página todavía
-    },
-    image: '/projects/chatbot.jpg'
-  },
-  {
-    id: 'data-extraction-llm',
-    featured: false,
-    profiles: {
-      'ia-engineer': {
-        tags: ['Python', 'Pydantic', 'GPT-4', 'PDF Processing', 'Automation'],
-        icon: 'fa-file-invoice'
-      },
-      developer: {
-        tags: ['Azure Functions', 'SQL Server', 'Python', '.NET Integration'],
-        icon: 'fa-cogs'
-      }
-    },
-    links: {
-      github: 'https://github.com/tu-usuario/data-extraction-llm'
-    },
-    image: '/projects/extraction.jpg'
-  },
-  {
     id: 'mundial-2026',
     featured: true,
     profiles: {
-      analista: {
+      engineer: {
         tags: ['Python', 'Pandas', 'Statsmodels', 'Plotly', 'Streamlit', 'Monte Carlo'],
         icon: 'fa-futbol'
       }
@@ -137,10 +82,24 @@ export const projects: Project[] = [
     }
   },
   {
+    id: 'caso-arquitectura',
+    featured: true,
+    profiles: {
+      engineer: {
+        tags: ['UML', 'DER', 'DFD', 'Event Storming', 'Feasibility Study', 'Scrum'],
+        icon: 'fa-drafting-compass'
+      }
+    },
+    links: {
+      demo: '/caso-arquitectura',
+      github: 'https://github.com/mauricioglab/caso-estudio-arquitectura'
+    }
+  },
+  {
     id: 'abandono-estudiantil',
     featured: true,
     profiles: {
-      analista: {
+      engineer: {
         tags: ['Python', 'Pandas', 'Scikit-learn', 'Plotly', 'Streamlit', 'Clasificación'],
         icon: 'fa-graduation-cap'
       }

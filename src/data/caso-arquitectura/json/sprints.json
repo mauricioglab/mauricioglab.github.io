@@ -1,0 +1,2408 @@
+[
+ {
+  "numero": "0",
+  "objetivo": "Definir herramientas para el desarrollo del proyecto, definir diseño, arquitectura y los entornos de desarrollo.",
+  "backlog": [
+   "Se detalla el Backlog armado en Jira:",
+   "Generación de Perfil Cliente (como Usuario):",
+   "Registrar nombre y apellido.",
+   "Modificar nombre y apellido.",
+   "Asignar número de cliente.",
+   "Generar contraseña de cliente.",
+   "Registrar domicilio.",
+   "Modificar domicilio.",
+   "Registrar DNI.",
+   "Modificar DNI.",
+   "Registrar correo electrónico.",
+   "Modificar correo electrónico.",
+   "Registrar teléfono.",
+   "Modificar teléfono.",
+   "Modificar contraseña de cliente.",
+   "Configuración de Perfil Usuario (como Usuario)",
+   "Registrar nombre y apellido.",
+   "Modificar nombre y apellido.",
+   "Generar número de usuario.",
+   "Generar contraseña de usuario.",
+   "Modificar contraseña de usuario.",
+   "Registrar domicilio.",
+   "Modificar domicilio.",
+   "Registrar DNI.",
+   "Modificar DNI.",
+   "Registrar correo electrónico.",
+   "Modificar correo electrónico.",
+   "Registrar teléfono.",
+   "Modificar teléfono.",
+   "Generar roles de usuario.",
+   "Modificar roles de usuario.",
+   "Asignación de roles.",
+   "Logueo de usuario (como usuario):",
+   "Permitir cambiar contraseña de usuario.",
+   "Permitir colocar usuario válido.",
+   "Permitir colocar contraseña válida.",
+   "Permitir visualizar o no contraseña.",
+   "Logueo de cliente (como cliente):",
+   "Cambiar contraseña de cliente.",
+   "Colocar usuario válido.",
+   "Modificar contraseña.",
+   "Colocar contraseña válida.",
+   "Visualizar o no contraseña.",
+   "Proyecto:",
+   "Registrar nombre del proyecto.",
+   "Asignar cliente.",
+   "Modificar nombre del proyecto.",
+   "Modificar cliente.",
+   "Tipología de proyecto:",
+   "Asignar tipología de proyecto.",
+   "Modificar tipología del proyecto.",
+   "Estadísticas como cliente (usuario):",
+   "Listar cantidad total de usuarios.",
+   "Listar cantidad de usuarios activos e inactivos.",
+   "Listar cantidad total de clientes.",
+   "Listar cantidad de clientes activos e inactivos.",
+   "Listar cantidad total de proyectos.",
+   "Listar cantidad de proyectos activos e inactivos.",
+   "Servicios:",
+   "Crear nuevo Servicio.",
+   "Listar servicios de proyecto.",
+   "Modificar Nombre de servicios.",
+   "Eliminar servicios.",
+   "Visualizar Tareas de servicios.",
+   "Tareas de servicios:",
+   "Crear Tareas de servicios.",
+   "Listar tareas de proyectos.",
+   "Modificar tareas de servicios.",
+   "Eliminar tareas de servicios.",
+   "Tareas:",
+   "Registrar tareas.",
+   "Registrar fecha de inicio de tareas.",
+   "Registrar fecha de compromiso de tareas.",
+   "Registrar descripción de tarea.",
+   "Adjuntar archivos.",
+   "Registrar estados de tareas.",
+   "Registrar compromiso.",
+   "Enviar mensaje de compromiso.",
+   "Agregar nuevo ítem.",
+   "Generar Gráfico de Avance de Tareas:",
+   "Crear módulo de generación de gráficos de avance de tareas.",
+   "Implementar la funcionalidad de visualización del avance de tareas en la interfaz de usuario.",
+   "Diseñar algoritmos para calcular el progreso de las tareas y asignar colores correspondientes.",
+   "Integrar porcentajes de avance en los gráficos de barras.",
+   "Permitir la visualización de tareas en diferentes estados: iniciadas, en espera, completadas, etc.",
+   "Asegurar que los gráficos puedan manejar valores negativos para indicar tareas retrasadas.",
+   "Generar Cobros:",
+   "Crear botón de cobros en la interfaz proyectos.",
+   "Diseñar página de gestión de cobros para proyectos.",
+   "Implementar formulario para agregar nuevos cobros, incluyendo campos para la fecha de cobro y el monto cobrado.",
+   "Calcular el saldo del proyecto teniendo en cuenta el monto presupuestado y los cobros realizados.",
+   "Incluir funcionalidades para modificar y eliminar cobros existentes.",
+   "Integrar validaciones de datos para garantizar la integridad de la información ingresada.",
+   "Realizar pruebas de funcionalidad y usabilidad para asegurar una experiencia fluida para los usuarios.",
+   "Generar Gráfico de Pert y Gantt:",
+   "Identificación de las tareas necesarias para desarrollar los gráficos.",
+   "Establecimiento de las relaciones de dependencia entre las tareas.",
+   "Estimación de los tiempos requeridos para la realización de cada ta-rea.",
+   "Diseño de la estructura básica de los gráficos.",
+   "Implementación de funcionalidades básicas de los gráficos.",
+   "Desarrollo de la lógica para establecer relaciones de dependencia entre tareas.",
+   "Refinamiento del diseño y la interfaz de los gráficos.",
+   "Diseño de interfaz de usuario para visualizaciones gráficas interactivas.",
+   "Implementación de función de filtrado de datos por periodos de tiempo.",
+   "Desarrollo de gráficos para categorizar proyectos según su estado.",
+   "Creación de gráficos detallados sobre cobros realizados según el medio de pago.",
+   "Integración de porcentaje de participación en el total cobrado en los gráficos de medio de pago.",
+   "Ajustes de diseño y optimización de rendimiento de las visualizaciones.",
+   "Interfaz Clientes:",
+   "Visualizar lista de proyectos asociados a clientes.",
+   "Visualizar información detallada de cada proyecto.",
+   "Visualizar arquitecto asignado a cada proyecto.",
+   "Visualizar la tipología de cada proyecto.",
+   "Visualizar el estado actual de cada proyecto para conocer su progresó.",
+   "Visualizar el avance de cada proyecto.",
+   "Visualizar los compromisos relacionados con cada proyecto.",
+   "Ordenar la lista de proyectos por nombre, estado o avance para tener flexibilidad en la visualización.",
+   "Filtrar la lista de proyectos por estado."
+  ],
+  "estimacion": [],
+  "ceremonias": {
+   "PLANIFICACION": "Definimos la cadencia de reuniones del equipo: viernes 19 hs y, cada 15 días, lunes 20 hs para la revisión de sprint, de 2 hs de duración, por Discord (Meet si hacía falta).",
+   "REVISION": "Luego del feedback por parte del product owner, se hace revisión del sprint 0, identificamos la falta de prioridades a definir en la organización, redacción del informe y las métricas a utilizar para lograr una mayor productividad en la ejecución del proyecto y el cumplimiento de los plazos de entrega de este.",
+   "RETROSPECTIVA": "Entre todos los integrantes del grupo acordamos aportar ideas, investigar sobre las nuevas tecnologías que vamos a implementar en el desarrollo y ejecución de la aplicación web y así mismo acordamos el cumplimento de las reuniones pactadas para avanzar con todo lo propuesto.",
+   "REFINAMIENTO": "El equipo se reunió para discutir los elementos del Product Backlog que estaban en un estado de incertidumbre y para investigar nuevas tecnologías a incorporar en el desarrollo del proyecto."
+  },
+  "reuniones": [
+   [
+    "",
+    "Duración ideal",
+    "Duración real",
+    "Asistencia completa"
+   ],
+   [
+    "10/03",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "13/03",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "17/03",
+    "2 hs",
+    "4 hs",
+    "Si"
+   ],
+   [
+    "24/03",
+    "3 hs",
+    "Cumple",
+    "No"
+   ],
+   [
+    "31/03",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ]
+  ],
+  "metricas_texto": [
+   "Gráfico Burn Down Chart: Con esta herramienta realizaremos la medición del avance y el cumplimiento de lo programado en los diferentes Sprint."
+  ],
+  "metricas_tabla": [],
+  "historia_usuario": []
+ },
+ {
+  "numero": "1",
+  "objetivo": "Implementar la generación de perfiles de cliente y la configuración de perfiles de usuario, permitiendo registrar y modificar información personal.",
+  "backlog": [
+   "Generar Perfil Cliente (como Usuario)",
+   "Registrar nombre y apellido",
+   "Modificar nombre y apellido",
+   "Asignar número de cliente",
+   "Generar contraseña de cliente",
+   "Registrar domicilio",
+   "Modificar domicilio",
+   "Registrar DNI",
+   "Modificar DNI",
+   "Registrar correo electrónico",
+   "Modificar correo electrónico",
+   "Registrar teléfono",
+   "Modificar teléfono",
+   "Modificar contraseña de cliente",
+   "El Product Backlog se mantiene dinámico y sujeto a cambios a medida que se obtiene un mayor entendimiento de los requerimientos y se recibe feedback de los usuarios y el equipo de desarrollo."
+  ],
+  "estimacion": [
+   [
+    "Tarea",
+    "Tiempo",
+    "Total"
+   ],
+   [
+    "Generar Perfil Cliente (como Usuario)",
+    "Generar Perfil Cliente (como Usuario)",
+    "Generar Perfil Cliente (como Usuario)"
+   ],
+   [
+    "Registrar nombre y apellido",
+    "2 horas",
+    "19 horas"
+   ],
+   [
+    "Modificar nombre y apellido",
+    "2 horas",
+    "19 horas"
+   ],
+   [
+    "Asignar número de cliente",
+    "1 hora",
+    "19 horas"
+   ],
+   [
+    "Generar contraseña de cliente",
+    "2 horas",
+    "19 horas"
+   ],
+   [
+    "Registrar domicilio",
+    "2 horas",
+    "19 horas"
+   ],
+   [
+    "Modificar domicilio",
+    "2 horas",
+    "19 horas"
+   ],
+   [
+    "Registrar DNI",
+    "1 hora",
+    "19 horas"
+   ],
+   [
+    "Modificar DNI",
+    "1 hora",
+    "19 horas"
+   ],
+   [
+    "Registrar correo electrónico",
+    "1 hora",
+    "19 horas"
+   ],
+   [
+    "Modificar correo electrónico",
+    "1 hora",
+    "19 horas"
+   ],
+   [
+    "Registrar teléfono",
+    "1 hora",
+    "19 horas"
+   ],
+   [
+    "Modificar teléfono",
+    "1 hora",
+    "19 horas"
+   ],
+   [
+    "Modificar contraseña de cliente",
+    "2 horas",
+    "19 horas"
+   ]
+  ],
+  "ceremonias": {
+   "PLANIFICACION": "Definimos el alcance y las prioridades del Sprint 1: implementar la generación y configuración de perfiles de cliente y usuario. Estimamos cada tarea, identificamos dependencias y distribuimos el trabajo entre el equipo.",
+   "REVISION": "Al finalizar el sprint 1, realizamos una reunión de revisión para presentar los resultados obtenidos. Se demostraron las funcionalidades implementadas relacionadas con la generación y configuración de perfiles de cliente y usuario.",
+   "RETROSPECTIVA": "El equipo reflexionó sobre los aspectos positivos y negativos del sprint e identificó acciones concretas de mejora para el próximo, buscando fortalecer el trabajo en equipo.",
+   "REFINAMIENTO": "Se revisaron y priorizaron las tareas de generación y configuración de perfiles, incluyendo los issues señalados por la docente (habilitar campos recién validado el cliente, controlar que los datos ingresados fueran correctos), y se desglosaron en tareas más chicas con sus estimaciones ajustadas."
+  },
+  "reuniones": [
+   [
+    "",
+    "Duración ideal",
+    "Duración real",
+    "Asistencia completa"
+   ],
+   [
+    "03/04",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "07/04",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "14/04",
+    "2 hs",
+    "3 hs",
+    "Si"
+   ],
+   [
+    "17/04",
+    "2 hs",
+    "Cumple",
+    "Si"
+   ],
+   [
+    "28/04",
+    "2 hs",
+    "2.5 hs",
+    "No"
+   ]
+  ],
+  "metricas_texto": [],
+  "metricas_tabla": [
+   [
+    "FECHA",
+    "ESPERADO",
+    "REAL",
+    ""
+   ],
+   [
+    "3/4/2023",
+    "19",
+    "19",
+    ""
+   ],
+   [
+    "7/4/2023",
+    "15",
+    "14",
+    ""
+   ],
+   [
+    "14/4/2023",
+    "11",
+    "14",
+    ""
+   ],
+   [
+    "17/4/2023",
+    "8",
+    "14",
+    ""
+   ],
+   [
+    "28/4/2023",
+    "4",
+    "11",
+    ""
+   ]
+  ],
+  "historia_usuario": []
+ },
+ {
+  "numero": "2",
+  "objetivo": "Implementar la funcionalidad de configuración de perfiles para usuarios y clientes, permitiendo a los usuarios gestionar y personalizar su información y configuraciones según sus roles correspondientes.",
+  "backlog": [
+   "Configuración de Perfil Usuario (como Usuario)",
+   "•\tRegistrar nombre y apellido",
+   "•\tModificar nombre y apellido",
+   "•\tGenerar número de usuario",
+   "•\tGenerar contraseña de usuario",
+   "•\tModificar contraseña de usuario",
+   "•\tRegistrar domicilio",
+   "•\tModificar domicilio",
+   "•\tRegistrar DNI",
+   "•\tModificar DNI",
+   "•\tRegistrar correo electrónico",
+   "•\tModificar correo electrónico",
+   "•\tRegistrar teléfono",
+   "•\tModificar teléfono",
+   "•\tGenerar roles de usuario",
+   "•\tModificar roles de usuario",
+   "•\tAsignación de roles"
+  ],
+  "estimacion": [
+   [
+    "Tarea",
+    "Tiempo",
+    "Total"
+   ],
+   [
+    "Configuración de Perfil Usuario (como Usuario)",
+    "Configuración de Perfil Usuario (como Usuario)",
+    "Configuración de Perfil Usuario (como Usuario)"
+   ],
+   [
+    "Registrar nombre y apellido",
+    "2 horas",
+    "23 horas"
+   ],
+   [
+    "Modificar nombre y apellido",
+    "2 horas",
+    "23 horas"
+   ],
+   [
+    "Generar número de usuario",
+    "1 hora",
+    "23 horas"
+   ],
+   [
+    "Generar contraseña de usuario",
+    "2 horas",
+    "23 horas"
+   ],
+   [
+    "Modificar contraseña de usuario",
+    "2 horas",
+    "23 horas"
+   ],
+   [
+    "Registrar domicilio",
+    "1 hora",
+    "23 horas"
+   ],
+   [
+    "Modificar domicilio",
+    "2 horas",
+    "23 horas"
+   ],
+   [
+    "Registrar DNI",
+    "1 hora",
+    "23 horas"
+   ],
+   [
+    "Modificar DNI",
+    "1 hora",
+    "23 horas"
+   ],
+   [
+    "Registrar correo electrónico",
+    "1 hora",
+    "23 horas"
+   ],
+   [
+    "Modificar correo electrónico",
+    "1 hora",
+    "23 horas"
+   ],
+   [
+    "Registrar teléfono",
+    "1 hora",
+    "23 horas"
+   ],
+   [
+    "Modificar teléfono",
+    "1 hora",
+    "23 horas"
+   ],
+   [
+    "Generar roles de usuario",
+    "2 horas",
+    "23 horas"
+   ],
+   [
+    "Modificar roles de usuario",
+    "2 horas",
+    "23 horas"
+   ],
+   [
+    "Asignación de roles",
+    "1 hora",
+    "23 horas"
+   ]
+  ],
+  "ceremonias": {
+   "PLANIFICACION": "Definimos las tareas para implementar la configuración de perfiles de usuarios y clientes, estimamos el tiempo de cada una y las asignamos al equipo; dedicamos parte del sprint a refinar el backlog para los sprints siguientes.",
+   "REVISION": "Al finalizar el Sprint 2, se hizo una revisión para evaluar y demostrar las funcionalidades y tareas completadas durante el sprint. La revisión permitió al equipo observar el trabajo realizado y proporcionar comentarios.",
+   "RETROSPECTIVA": "El equipo revisó y demostró las funcionalidades de configuración de perfiles implementadas, recopiló el feedback del Product Owner y evaluó si se cumplieron los objetivos del sprint.",
+   "REFINAMIENTO": "Se analizó cada tarea en detalle, se definieron requisitos y funcionalidades específicas, se asignaron prioridades y se estimaron los esfuerzos, dejando el Sprint 2 listo para implementación."
+  },
+  "reuniones": [
+   [
+    "",
+    "Duración ideal",
+    "Duración real",
+    "Asistencia completa"
+   ],
+   [
+    "01/05",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "05/05",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "12/05",
+    "2 hs",
+    "cumple",
+    "Si"
+   ],
+   [
+    "15/05",
+    "2 hs",
+    "Cumple",
+    "Si"
+   ]
+  ],
+  "metricas_texto": [],
+  "metricas_tabla": [
+   [
+    "FECHA",
+    "ESPERADO",
+    "REAL",
+    ""
+   ],
+   [
+    "1/5/2023",
+    "23",
+    "17",
+    ""
+   ],
+   [
+    "5/5/2023",
+    "17",
+    "14",
+    ""
+   ],
+   [
+    "12/5/2023",
+    "12",
+    "12",
+    ""
+   ],
+   [
+    "15/5/2023",
+    "6",
+    "12",
+    ""
+   ]
+  ],
+  "historia_usuario": []
+ },
+ {
+  "numero": "3",
+  "objetivo": "Implementar la funcionalidad de logueo de usuario y generar informes de producto/servicio para usuarios, permitiendo a los usuarios iniciar sesión de manera segura y generar informes relacionados con productos o servicios.",
+  "backlog": [
+   "Logueo de usuario (como usuario)",
+   "permitir cambiar contraseña de usuario.",
+   "permitir colocar usuario valido",
+   "permitir colocar contraseña valida",
+   "permitir visualizar o no contraseña.",
+   "Logueo de cliente (como cliente)",
+   "cambiar contraseña de cliente.",
+   "colocar usuario valido",
+   "modificar contraseña",
+   "colocar contraseña valida",
+   "visualizar o no contraseña."
+  ],
+  "estimacion": [
+   [
+    "Tarea",
+    "Tiempo",
+    "Total"
+   ],
+   [
+    "Logueo de usuario",
+    "Logueo de usuario",
+    "Logueo de usuario"
+   ],
+   [
+    "Permitir cambiar contraseña de usuario",
+    "2 horas",
+    "7 horas"
+   ],
+   [
+    "Permitir colocar usuario válido",
+    "2 horas",
+    "7 horas"
+   ],
+   [
+    "Permitir colocar contraseña válida",
+    "2 horas",
+    "7 horas"
+   ],
+   [
+    "Permitir visualizar o no la contraseña",
+    "1 hora",
+    "7 horas"
+   ],
+   [
+    "Logueo de cliente",
+    "Logueo de cliente",
+    "Logueo de cliente"
+   ],
+   [
+    "Permitir cambiar contraseña de cliente",
+    "2 horas",
+    "7 horas"
+   ],
+   [
+    "Permitir colocar usuario de cliente válido",
+    "2 horas",
+    "7 horas"
+   ],
+   [
+    "Permitir colocar contraseña válida",
+    "2 horas",
+    "7 horas"
+   ],
+   [
+    "Permitir visualizar o no la contraseña",
+    "1 hora",
+    "7 horas"
+   ]
+  ],
+  "ceremonias": {
+   "PLANIFICACION": "El equipo de desarrollo se enfocó en el logueo de usuario y cliente, con reuniones diarias de seguimiento; al cierre del sprint se preveía una revisión y una retrospectiva para evaluar resultados y áreas de mejora.",
+   "REVISION": "Se revisaron y priorizaron las historias de usuario pendientes de 'logueo de usuario', definiendo las tareas restantes: validación de usuario y contraseña para cliente y usuario, cambio de contraseña, visualización de contraseña y registro de fecha y hora del último ingreso. Se estimó el esfuerzo de cada tarea y su prioridad en el backlog.",
+   "RETROSPECTIVA": "El equipo reconoció los logros alcanzados y los desafíos enfrentados, acordó acciones de mejora para los próximos sprints y remarcó su compromiso con la calidad y la colaboración.",
+   "REFINAMIENTO": "El equipo revisó las tareas pendientes, su complejidad y su prioridad, y actualizó el backlog para asegurar que los requisitos más importantes queden listos para el próximo sprint."
+  },
+  "reuniones": [
+   [
+    "",
+    "Duración ideal",
+    "Duración real",
+    "Asistencia completa"
+   ],
+   [
+    "21/05",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "28/05",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "08/05",
+    "2 hs",
+    "cumple",
+    "Si"
+   ],
+   [
+    "12/05",
+    "2 hs",
+    "Cumple",
+    "Si"
+   ],
+   [
+    "19/05",
+    "2 hs",
+    "Cumple",
+    "Si"
+   ],
+   [
+    "22/05",
+    "2 hs",
+    "Cumple",
+    "Si"
+   ],
+   [
+    "26/05",
+    "2 hs",
+    "5 hs",
+    "Si"
+   ]
+  ],
+  "metricas_texto": [],
+  "metricas_tabla": [
+   [
+    "FECHA",
+    "ESPERADO",
+    "REAL",
+    "",
+    ""
+   ],
+   [
+    "21/5/2023",
+    "14",
+    "10",
+    ""
+   ],
+   [
+    "28/5/2023",
+    "12",
+    "8",
+    ""
+   ],
+   [
+    "8/5/2023",
+    "10",
+    "7",
+    ""
+   ],
+   [
+    "12/5/2023",
+    "8",
+    "7",
+    ""
+   ],
+   [
+    "19/5/2023",
+    "6",
+    "6",
+    ""
+   ],
+   [
+    "22/5/2023",
+    "4",
+    "6",
+    ""
+   ],
+   [
+    "26/5/2023",
+    "2",
+    "6",
+    ""
+   ]
+  ],
+  "historia_usuario": []
+ },
+ {
+  "numero": "4",
+  "objetivo": "Implementar el registro, la modificación y el cambio de tipología de los proyectos.",
+  "backlog": [
+   "Proyecto",
+   "Registrar nombre del proyecto",
+   "Asignar cliente",
+   "Modificar nombre del proyecto",
+   "modificar cliente",
+   "Tipología de proyecto",
+   "Asignar tipología de proyecto",
+   "Modificar de tipología del proyecto"
+  ],
+  "estimacion": [
+   [
+    "Tarea",
+    "Estimación",
+    "Total"
+   ],
+   [
+    "Proyecto",
+    "Proyecto",
+    "Proyecto"
+   ],
+   [
+    "Registrar nombre del proyecto",
+    "2 horas",
+    "6 horas"
+   ],
+   [
+    "asignar cliente",
+    "2 horas",
+    "6 horas"
+   ],
+   [
+    "asignar tipología de proyecto",
+    "2 horas",
+    "6 horas"
+   ],
+   [
+    "Tipología de Proyecto",
+    "Tipología de Proyecto",
+    "Tipología de Proyecto"
+   ],
+   [
+    "Modificar nombre del proyecto",
+    "3 horas",
+    "8 horas"
+   ],
+   [
+    "modificar cliente",
+    "3 horas",
+    "8 horas"
+   ],
+   [
+    "modificar tipología de proyecto",
+    "2 horas",
+    "8 horas"
+   ]
+  ],
+  "ceremonias": {
+   "PLANIFICACION": "El equipo y el Product Owner revisaron los requisitos de gestión de proyectos y tipologías, priorizaron las funcionalidades clave, estimaron el esfuerzo de cada una y definieron el orden de implementación según sus dependencias.",
+   "REVISION": "Se demostró el registro y la modificación del nombre del proyecto, la asignación de clientes, el cambio de tipología y la modificación del cliente, mostrando las mejoras logradas en la gestión de la información de proyectos.",
+   "RETROSPECTIVA": "El equipo revisó los logros del sprint y definió medidas correctivas para mejorar continuamente la gestión de proyectos y tipologías, y la experiencia del cliente.",
+   "REFINAMIENTO": "Se revisaron las funcionalidades pendientes, se precisaron sus criterios de aceptación priorizando las de mayor valor de negocio, y se ajustó el backlog en consecuencia."
+  },
+  "reuniones": [
+   [
+    "",
+    "Duración ideal",
+    "Duración real",
+    "Asistencia completa"
+   ],
+   [
+    "29/05",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "02/06",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "05/06",
+    "2 hs",
+    "Cumple",
+    "Si"
+   ],
+   [
+    "09/06",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "12/06",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ]
+  ],
+  "metricas_texto": [],
+  "metricas_tabla": [
+   [
+    "FECHA",
+    "ESPERADO",
+    "REAL",
+    ""
+   ],
+   [
+    "29/5/2023",
+    "14",
+    "10",
+    ""
+   ],
+   [
+    "2/6/2023",
+    "11",
+    "8",
+    ""
+   ],
+   [
+    "5/6/2023",
+    "8",
+    "7",
+    ""
+   ],
+   [
+    "9/6/2023",
+    "6",
+    "7",
+    ""
+   ],
+   [
+    "12/6/2023",
+    "3",
+    "6",
+    ""
+   ]
+  ],
+  "historia_usuario": []
+ },
+ {
+  "numero": "5",
+  "objetivo": "Implementar las estadísticas de usuarios, clientes y proyectos, con una visión general de la actividad del sistema.",
+  "backlog": [
+   "Estadísticas como cliente(usuario)",
+   "Listar cantidad total de usuario",
+   "Listar cantidad de usuario activos e inactivos",
+   "Listar cantidad total de clientes",
+   "Listar cantidad de clientes activos e inactivos",
+   "Listar cantidad total de proyectos",
+   "Listar cantidad de proyectos activos e inactivos"
+  ],
+  "estimacion": [
+   [
+    "Tarea",
+    "Estimación",
+    "Total"
+   ],
+   [
+    "Estadísticas como cliente(usuario)",
+    "Estadísticas como cliente(usuario)",
+    "Estadísticas como cliente(usuario)"
+   ],
+   [
+    "Implementar listado de usuarios",
+    "8 horas",
+    "42 horas"
+   ],
+   [
+    "Implementar listado de usuarios activos e inactivos",
+    "6 horas",
+    "42 horas"
+   ],
+   [
+    "Implementar listado de clientes",
+    "8 horas",
+    "42 horas"
+   ],
+   [
+    "Implementar listado de clientes activos e inactivos",
+    "6 horas",
+    "42 horas"
+   ],
+   [
+    "Implementar listado de proyectos",
+    "8 horas",
+    "42 horas"
+   ],
+   [
+    "Implementar listado de proyectos activos e inactivos",
+    "6 horas",
+    "42 horas"
+   ]
+  ],
+  "ceremonias": {
+   "PLANIFICACION": "Se planificó implementar los listados de usuarios, clientes y proyectos (totales, activos e inactivos), más pruebas, correcciones, documentación y preparación del lanzamiento.",
+   "REVISION": "Se completaron los listados de usuarios, clientes y proyectos totales, activos e inactivos, con pruebas exhaustivas, correcciones, documentación y preparación para el lanzamiento.",
+   "RETROSPECTIVA": "Se valoró la comunicación y colaboración del equipo, y la calidad lograda a fuerza de pruebas exhaustivas; como mejora, se propuso optimizar la estimación de tareas y reforzar la documentación.",
+   "REFINAMIENTO": "El equipo revisó y clarificó los detalles de cada historia de usuario de estadísticas de clientes, estimó el esfuerzo y identificó dependencias y riesgos."
+  },
+  "reuniones": [
+   [
+    "",
+    "Duración ideal",
+    "Duración real",
+    "Asistencia completa"
+   ],
+   [
+    "16/06",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "19/06",
+    "4 hs",
+    "No",
+    "SI"
+   ],
+   [
+    "20/06",
+    "5 hs",
+    "No",
+    "Si"
+   ],
+   [
+    "23/06",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ]
+  ],
+  "metricas_texto": [],
+  "metricas_tabla": [
+   [
+    "FECHA",
+    "ESPERADO",
+    "REAL",
+    ""
+   ],
+   [
+    "16/6/2023",
+    "42",
+    "31",
+    ""
+   ],
+   [
+    "19/6/2023",
+    "32",
+    "25",
+    ""
+   ],
+   [
+    "20/6/2023",
+    "21",
+    "22",
+    ""
+   ],
+   [
+    "23/6/2023",
+    "11",
+    "22",
+    ""
+   ]
+  ],
+  "historia_usuario": []
+ },
+ {
+  "numero": "6",
+  "objetivo": "Implementar la gestión de servicios: alta, edición y baja, con tareas predeterminadas editables para cada servicio.",
+  "backlog": [
+   "Servicios",
+   "Crear nuevo Servicio",
+   "Listar servicios de proyecto",
+   "Modificar Nombre de servicios",
+   "Eliminar servicios",
+   "Visualizar Tareas de servicios",
+   "Tareas de servicios",
+   "Crear Tareas de servicios",
+   "Listar tareas de proyectos",
+   "Modificar tareas de servicios",
+   "Eliminar tareas de servicios",
+   "El Product Backlog se mantiene dinámico y sujeto a cambios a medida que se obtiene un mayor entendimiento de los requerimientos y se recibe feedback de los usuarios y el equipo de desarrollo."
+  ],
+  "estimacion": [
+   [
+    "Tarea",
+    "Estimación",
+    "Total"
+   ],
+   [
+    "Servicios",
+    "Servicios",
+    "Servicios"
+   ],
+   [
+    "Crear nuevos servicios",
+    "2 horas",
+    "9 horas"
+   ],
+   [
+    "Listar servicios de proyecto",
+    "2 horas",
+    "9 horas"
+   ],
+   [
+    "Modificar Nombre de servicios",
+    "3 horas",
+    "9 horas"
+   ],
+   [
+    "Eliminar servicios",
+    "2 horas",
+    "9 horas"
+   ],
+   [
+    "Visualizar Tareas de servicios",
+    "",
+    "9 horas"
+   ],
+   [
+    "Tareas de Servicios",
+    "Tareas de Servicios",
+    "Tareas de Servicios"
+   ],
+   [
+    "Crear tareas de servicios",
+    "2 horas",
+    "10 horas"
+   ],
+   [
+    "Listar tareas de proyectos",
+    "3 horas",
+    "10 horas"
+   ],
+   [
+    "modificar tareas de servicios",
+    "3 horas",
+    "10 horas"
+   ],
+   [
+    "Eliminar tareas de servicios",
+    "2 horas",
+    "10 horas"
+   ]
+  ],
+  "ceremonias": {
+   "PLANIFICACION": "Se asignaron las historias de usuario de gestión de servicios (crear tareas de servicio, listar servicios del proyecto, etc.) y se estimó el esfuerzo de cada una.",
+   "REVISION": "Se mostró el alta, edición, baja y listado de servicios, con la gestión de sus tareas asociadas, y se recogieron sugerencias para las próximas iteraciones.",
+   "RETROSPECTIVA": "El equipo discutió los obstáculos encontrados durante la gestión de servicios y propuso soluciones concretas para el sprint siguiente.",
+   "REFINAMIENTO": "Se revisaron y priorizaron las tareas de listado de servicios y tareas de proyecto, desglosándolas en elementos más chicos con estimaciones ajustadas."
+  },
+  "reuniones": [
+   [
+    "",
+    "Duración ideal",
+    "Duración real",
+    "Asistencia completa"
+   ],
+   [
+    "30-ago",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "1-sep",
+    "2 hs",
+    "4 hs",
+    "No"
+   ],
+   [
+    "6-sep",
+    "2 hs",
+    "cumple",
+    "Si"
+   ],
+   [
+    "8-sep",
+    "2 hs",
+    "Cumple",
+    "Si"
+   ],
+   [
+    "13-sep",
+    "2 hs",
+    "3 hs",
+    "No"
+   ]
+  ],
+  "metricas_texto": [],
+  "metricas_tabla": [
+   [
+    "FECHA",
+    "ESPERADO",
+    "REAL",
+    ""
+   ],
+   [
+    "30-ago",
+    "19",
+    "19",
+    ""
+   ],
+   [
+    "1-sep",
+    "15",
+    "14",
+    ""
+   ],
+   [
+    "6-sep",
+    "11",
+    "8",
+    ""
+   ],
+   [
+    "8-sep",
+    "8",
+    "8",
+    ""
+   ],
+   [
+    "13-sep",
+    "4",
+    "8",
+    ""
+   ]
+  ],
+  "historia_usuario": [
+   [
+    "Número de Usuario",
+    "Historia de Usuario",
+    "Criterios de Aceptación"
+   ],
+   [
+    "HU-013",
+    "Como usuario quiero poder crear un nuevo servicio en el proyecto para que podamos ofrecer nuevas funcionalidades a nuestros usuarios",
+    "El sistema debe validar que el nombre del servicio no exista, y confirmar la creación al usuario."
+   ],
+   [
+    "HU-014",
+    "Como usuario quiero ver una lista de todos los servicios asociados a un proyecto para que pueda tener una visión general de los servicios existentes",
+    "Se deben listar los servicios con su nombre y breve descripción, la lista debe actualizarse en tiempo real con las últimas adiciones o modificaciones."
+   ],
+   [
+    "HU-015",
+    "Como usuario quiero poder modificar el nombre de un servicio existente para que el nombre refleje mejor las funcionalidades del servicio",
+    "El sistema debe validar que el nuevo nombre no esté en uso y confirmar la modificación al usuario."
+   ],
+   [
+    "HU-016",
+    "Como usuario quiero poder eliminar un servicio que ya no se necesite para que el proyecto se mantenga actualizado y relevante",
+    "El sistema debe pedir confirmación antes de eliminar el servicio y notificar al usuario una vez eliminado."
+   ],
+   [
+    "HU-017",
+    "Como usuario quiero poder visualizar las tareas asociadas a un servicio para que pueda comprender mejor el trabajo pendiente o completado en ese servicio",
+    "Al seleccionar un servicio, se deben mostrar todas las tareas relacionadas, las tareas deben incluir información sobre su estado (pendiente, en progreso, completado)."
+   ],
+   [
+    "HU-018",
+    "Como usuario quiero poder añadir nuevas tareas a un servicio para que podamos organizar el trabajo necesario para desarrollar el servicio",
+    "El usuario debe poder definir el título, descripción, y estado inicial de la tarea, debe existir una confirmación o notificación una vez que la tarea ha sido creada."
+   ],
+   [
+    "HU-019",
+    "Como usuario quiero ver todas las tareas de un proyecto, sin importar el servicio, para tener una visión completa del trabajo pendiente.",
+    "Debe poder listarse las tareas con detalles como título, descripción, estado y servicio asociado, la misma debe actualizarse automáticamente con cualquier cambio."
+   ],
+   [
+    "HU-020",
+    "Como usuario quiero poder modificar los detalles de una tarea existente para que la información esté actualizada y sea relevante",
+    "El usuario debe poder cambiar el título, descripción, y estado de una tarea, se debe confirmar una vez que la tarea haya sido modificada exitosamente."
+   ],
+   [
+    "HU-021",
+    "Como usuario quiero poder eliminar tareas que ya no sean necesarias o estén completadas para que el proyecto se mantenga limpio y organizado",
+    "El sistema debe pedir confirmación antes de eliminar la tarea y notificar al usuario una vez eliminada."
+   ]
+  ]
+ },
+ {
+  "numero": "7",
+  "objetivo": "Implementar un apartado de tareas por proyecto, con fechas de inicio y fin y la opción de marcar el inicio de cada tarea, para monitorear el avance del proyecto.",
+  "backlog": [
+   "Tareas",
+   "Registrar tareas",
+   "Registrar fecha de inicio de tareas",
+   "Registrar fecha de compromiso de tareas",
+   "Registrar descripción de tarea",
+   "Adjuntar archivos",
+   "Registrar estados de tareas",
+   "Registrar compromiso",
+   "Enviar mensaje de compromiso",
+   "Agregar nuevo ítem"
+  ],
+  "estimacion": [
+   [
+    "Tarea",
+    "Estimación",
+    "Total"
+   ],
+   [
+    "Tareas",
+    "Tareas",
+    "Tareas"
+   ],
+   [
+    "Registrar tareas",
+    "2 horas",
+    "25 horas"
+   ],
+   [
+    "Registrar fecha de inicio de tareas",
+    "2 horas",
+    "25 horas"
+   ],
+   [
+    "Registrar fecha de compromiso de tareas",
+    "3 horas",
+    "25 horas"
+   ],
+   [
+    "Registrar descripción de tarea",
+    "2 horas",
+    "25 horas"
+   ],
+   [
+    "Adjuntar archivos",
+    "5 horas",
+    "25 horas"
+   ],
+   [
+    "Registrar estados de tareas",
+    "2 horas",
+    "25 horas"
+   ],
+   [
+    "Registrar compromiso",
+    "3 horas",
+    "25 horas"
+   ],
+   [
+    "Enviar mensaje de compromiso",
+    "4 horas",
+    "25 horas"
+   ],
+   [
+    "Agregar nuevo ítem",
+    "2 horas",
+    "25 horas"
+   ]
+  ],
+  "ceremonias": {
+   "PLANIFICACION": "El equipo revisó el Product Backlog enfocado en el apartado de tareas por proyecto, priorizó las tareas, asignó responsabilidades según disponibilidad y definió fechas límite y criterios de aceptación.",
+   "REVISION": "Se demostró el apartado de tareas por proyecto, con fechas de inicio y compromiso y la opción de marcar el inicio de una tarea; se recopilaron comentarios de los interesados para futuras mejoras.",
+   "RETROSPECTIVA": "El equipo destacó la colaboración efectiva y el avance en la visualización del progreso, y señaló como mejora una comunicación más clara sobre plazos y asignación de recursos.",
+   "REFINAMIENTO": "Se revisó el Product Backlog a partir de los aprendizajes del sprint, se agregaron tareas de mejora de interfaz y nuevas funcionalidades solicitadas, y se priorizaron según su impacto en el proyecto."
+  },
+  "reuniones": [
+   [
+    "",
+    "Duración ideal",
+    "Duración real",
+    "Asistencia completa"
+   ],
+   [
+    "15-sep",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "20-sep",
+    "2 hs",
+    "4 hs",
+    "No"
+   ],
+   [
+    "22-sep",
+    "2 hs",
+    "cumple",
+    "Si"
+   ],
+   [
+    "27-sep",
+    "2 hs",
+    "Cumple",
+    "Si"
+   ],
+   [
+    "29-sep",
+    "2 hs",
+    "5 hs",
+    "No"
+   ],
+   [
+    "4-oct",
+    "2 hs",
+    "Cumple",
+    "Si"
+   ],
+   [
+    "6-oct",
+    "2 hs",
+    "3 hs",
+    "No"
+   ]
+  ],
+  "metricas_texto": [],
+  "metricas_tabla": [
+   [
+    "FECHA",
+    "ESPERADO",
+    "REAL",
+    ""
+   ],
+   [
+    "15-sep",
+    "25",
+    "25",
+    ""
+   ],
+   [
+    "20-sep",
+    "21",
+    "18",
+    ""
+   ],
+   [
+    "22-sep",
+    "18",
+    "14",
+    ""
+   ],
+   [
+    "27-sep",
+    "14",
+    "14",
+    ""
+   ],
+   [
+    "29-sep",
+    "11",
+    "10",
+    ""
+   ],
+   [
+    "4-oct",
+    "7",
+    "7",
+    ""
+   ],
+   [
+    "6-oct",
+    "4",
+    "7",
+    ""
+   ]
+  ],
+  "historia_usuario": [
+   [
+    "Número de Usuario",
+    "Historia de Usuario",
+    "Criterios de Aceptación"
+   ],
+   [
+    "HU-022",
+    "Como usuario quiero poder registrar nuevas tareas en el sistema, para organizar y planificar el trabajo que necesita ser realizado.",
+    "El formulario debe incluir título, fecha de inicio, fecha de compromiso, descripción y la opción de adjuntar archivos, con un estado inicial seleccionable (pendiente, en progreso, completado); al guardar, el sistema muestra un mensaje de confirmación."
+   ],
+   [
+    "HU-023",
+    "Como usuario quiero registrar las fechas de inicio y de compromiso de las tareas, para que todos los miembros del equipo tengan claridad sobre los plazos.",
+    "El registro y la edición deben ofrecer selección de fecha por calendario para ambas fechas; el sistema debe validar que la fecha de compromiso no sea anterior a la de inicio y notificar si la combinación no es válida."
+   ],
+   [
+    "HU-024",
+    "Como usuario quiero adjuntar archivos a las tareas, para proporcionar o consultar material de referencia relevante.",
+    "El usuario debe poder adjuntar uno o varios archivos durante el registro o edición de una tarea, y el sistema debe soportar distintos tipos de archivo (doc, pdf, imágenes, etc.)."
+   ],
+   [
+    "HU-025",
+    "Como usuario quiero registrar un compromiso y enviar un mensaje relacionado con él, para comunicar de manera efectiva las expectativas y responsabilidades asociadas a la tarea.",
+    "Al registrar o actualizar una tarea debe poder agregarse un compromiso con un campo de texto para el mensaje; debe existir la opción de enviarlo a los miembros del equipo relacionados y el sistema debe confirmar el envío."
+   ],
+   [
+    "HU-026",
+    "Como usuario quiero agregar nuevos ítems a una tarea existente, para reflejar cambios o adiciones a los requerimientos o al alcance de la tarea.",
+    "Debe poder agregarse nuevos ítems o subtareas a una tarea principal, cada uno con su propia descripción, fechas y archivos adjuntos; el sistema debe confirmar cuando el ítem se agregó exitosamente."
+   ]
+  ]
+ },
+ {
+  "numero": "8",
+  "objetivo": "Implementar gráficos de avance de tareas, con barras coloreadas y porcentaje, incluyendo valores negativos para tareas retrasadas o no iniciadas.",
+  "backlog": [
+   "Gráficos de avance de tareas",
+   "Crear módulo de generación de gráficos de avance de tareas.",
+   "Implementar la funcionalidad de visualización del avance de tareas en la interfaz de usuario.",
+   "Diseñar algoritmos para calcular el progreso de las tareas y asignar colores correspondientes.",
+   "Integrar porcentajes de avance en los gráficos de barras.",
+   "Permitir la visualización de tareas en diferentes estados: iniciadas, en espera, completadas, etc.",
+   "Asegurar que los gráficos puedan manejar valores negativos para indicar tareas retrasadas."
+  ],
+  "estimacion": [
+   [
+    "Tarea",
+    "Estimación",
+    "Total"
+   ],
+   [
+    "Gráficos de avance de tareas",
+    "Gráficos de avance de tareas",
+    "Gráficos de avance de tareas"
+   ],
+   [
+    "Crear módulo de generación de gráficos de avance de tareas.",
+    "4 horas",
+    "27 horas"
+   ],
+   [
+    "Implementar la funcionalidad de visualización del avance de tareas en la interfaz de usuario.",
+    "3 horas",
+    "27 horas"
+   ],
+   [
+    "Diseñar algoritmos para calcular el progreso de las tareas y asignar colores correspondientes.",
+    "6 horas",
+    "27 horas"
+   ],
+   [
+    "Integrar porcentajes de avance en los gráficos de barras.",
+    "5 horas",
+    "27 horas"
+   ],
+   [
+    "Permitir la visualización de tareas en diferentes estados: iniciadas, en espera, completadas, etc.",
+    "5 horas",
+    "27 horas"
+   ],
+   [
+    "Hay que asegurar que los gráficos puedan manejar valores negativos para indicar tareas retrasadas.",
+    "4 horas",
+    "27 horas"
+   ]
+  ],
+  "ceremonias": {
+   "PLANIFICACION": "El equipo revisó el Product Backlog y seleccionó las tareas más relevantes para la funcionalidad de gráficos de avance, asignando responsabilidades y fechas límite.",
+   "REVISION": {
+    "intro": "El equipo presentó los gráficos de avance de tareas, que muestran el progreso con barras coloreadas y porcentajes.",
+    "items": [
+     "Interfaz visual intuitiva: los gráficos se integran en la interfaz existente, facilitando su acceso y comprensión.",
+     "Representación clara del progreso: colores y porcentajes permiten identificar rápido el estado de cada tarea (en curso, en espera, completada, retrasada o no iniciada)."
+    ]
+   },
+   "RETROSPECTIVA": {
+    "intro": "El equipo reflexionó sobre la implementación de los gráficos de avance de tareas.",
+    "items": [
+     "Aspecto positivo, entrega de funcionalidad clave: se implementó con éxito la funcionalidad de gráficos, un hito importante del producto.",
+     "Aspecto positivo, colaboración efectiva: el equipo abordó los desafíos de forma eficiente y mantuvo un progreso constante.",
+     "Área de mejora, rendimiento: se detectaron oportunidades de optimización en el rendimiento de los gráficos.",
+     "Área de mejora, usabilidad: se propuso sumar filtrado y optimizar la navegación de la interfaz."
+    ]
+   },
+   "REFINAMIENTO": "Se establecerán prácticas para mejorar la comunicación dentro del equipo, como reuniones regulares de seguimiento y actualización sobre el progreso de las tareas."
+  },
+  "reuniones": [
+   [
+    "",
+    "Duración ideal",
+    "Duración real",
+    "Asistencia completa"
+   ],
+   [
+    "11-oct",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "13-oct",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "18-oct",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "20-oct",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "25-oct",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "27-oct",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ]
+  ],
+  "metricas_texto": [],
+  "metricas_tabla": [
+   [
+    "FECHA",
+    "ESPERADO",
+    "REAL",
+    ""
+   ],
+   [
+    "11-oct",
+    "27",
+    "22",
+    ""
+   ],
+   [
+    "13-oct",
+    "22",
+    "22",
+    ""
+   ],
+   [
+    "18-oct",
+    "18",
+    "14",
+    ""
+   ],
+   [
+    "20-oct",
+    "14",
+    "9",
+    ""
+   ],
+   [
+    "25-oct",
+    "9",
+    "9",
+    ""
+   ],
+   [
+    "27-oct",
+    "5",
+    "5",
+    ""
+   ]
+  ],
+  "historia_usuario": [
+   [
+    "Número de Usuario",
+    "Historia de Usuario",
+    "Criterios de Aceptación"
+   ],
+   [
+    "HU-027",
+    "Como usuario, quiero que exista un módulo de gráficos de avance de tareas, para tener una representación visual del progreso del proyecto.",
+    "El módulo debe estar disponible en la ficha de cada proyecto y generar el gráfico automáticamente a partir del estado de las tareas cargadas."
+   ],
+   [
+    "HU-028",
+    "Como usuario, quiero ver el avance de las tareas directamente en la interfaz del proyecto, para entender su estado sin navegar a otra pantalla.",
+    "El gráfico de avance debe visualizarse en la misma pantalla de detalle del proyecto, sin recargar ni redirigir a una vista aparte."
+   ],
+   [
+    "HU-029",
+    "Como usuario, quiero que el sistema calcule el progreso de las tareas y le asigne un color automáticamente, para leer el estado de un vistazo.",
+    "El porcentaje de avance y el color asociado deben recalcularse solos cada vez que cambia el estado de una tarea, sin intervención manual."
+   ],
+   [
+    "HU-030",
+    "Como usuario, quiero que el gráfico muestre el porcentaje de avance con barras de progreso, para una lectura rápida y precisa.",
+    "Cada barra debe reflejar el porcentaje de avance vigente al momento de la consulta, actualizándose en tiempo real."
+   ],
+   [
+    "HU-031",
+    "Como usuario, quiero distinguir visualmente tareas iniciadas, en espera y completadas, para gestionar mejor el trabajo pendiente.",
+    "Cada estado de tarea debe tener un color o ícono distinto en el gráfico, identificable sin abrir el detalle de la tarea."
+   ],
+   [
+    "HU-032",
+    "Como usuario, quiero que el gráfico muestre valores negativos, para identificar tareas retrasadas de un vistazo.",
+    "Una tarea cuya fecha de compromiso venció sin completarse debe mostrarse con un indicador negativo, diferenciado visualmente del avance normal."
+   ]
+  ]
+ },
+ {
+  "numero": "9",
+  "objetivo": "Implementar la gestión de cobros por proyecto: agregar, modificar y eliminar cobros, y calcular el saldo entre lo presupuestado y lo cobrado.",
+  "backlog": [
+   "Generar Cobros",
+   "Crear botón de cobros en la interfaz proyectos.",
+   "Diseñar página de gestión de cobros para proyectos.",
+   "Implementar formulario para agregar nuevos cobros, incluyendo campos para la fecha de cobro y el monto cobrado.",
+   "Calcular el saldo del proyecto teniendo en cuenta el monto presupuestado y los cobros realizados.",
+   "Incluir funcionalidades para modificar y eliminar cobros existentes.",
+   "Integrar validaciones de datos para garantizar la integridad de la información ingresada.",
+   "Realizar pruebas de funcionalidad y usabilidad para asegurar una experiencia fluida para los usuarios."
+  ],
+  "estimacion": [
+   [
+    "Tarea",
+    "Estimación",
+    "Total"
+   ],
+   [
+    "Generar Cobros",
+    "Generar Cobros",
+    "Generar Cobros"
+   ],
+   [
+    "Crear botón de cobros en la interfaz proyectos.",
+    "2 horas",
+    "28 horas"
+   ],
+   [
+    "Diseñar página de gestión de cobros para proyectos.",
+    "6 horas",
+    "28 horas"
+   ],
+   [
+    "Implementar formulario para agregar nuevos cobros, incluyendo campos para la fecha de cobro y el monto cobrado.",
+    "6 horas",
+    "28 horas"
+   ],
+   [
+    "Calcular el saldo del proyecto teniendo en cuenta el monto presupuestado y los cobros realizados.",
+    "5 horas",
+    "28 horas"
+   ],
+   [
+    "Incluir funcionalidades para anular/eliminar cobros existentes o mal cargados.",
+    "3 horas",
+    "28 horas"
+   ],
+   [
+    "Integrar validaciones de datos para garantizar la integridad de la información ingresada.",
+    "4 horas",
+    "28 horas"
+   ],
+   [
+    "Realizar pruebas de funcionalidad y usabilidad para asegurar una experiencia fluida para los usuarios.",
+    "2 horas",
+    "28 horas"
+   ]
+  ],
+  "ceremonias": {
+   "PLANIFICACION": "El equipo revisó el Product Backlog y priorizó las tareas para implementar el botón de cobros y su gestión en los proyectos, asignando responsabilidades y fechas límite.",
+   "REVISION": {
+    "intro": "El equipo presentó las funcionalidades de gestión de cobros implementadas en el sprint.",
+    "items": [
+     "Botón de cobros: redirige a la página de gestión de cobros del proyecto seleccionado.",
+     "Interfaz de gestión de cobros: muestra todos los cobros asociados a un proyecto.",
+     "Formulario de agregar cobro: permite ingresar fecha, monto y otros detalles.",
+     "Cálculo de saldo del proyecto: muestra la diferencia entre lo presupuestado y lo cobrado.",
+     "Modificación y eliminación de cobros: permite editar o borrar cobros existentes."
+    ]
+   },
+   "RETROSPECTIVA": "Se acordó monitorear en producción el rendimiento de lo entregado, recolectar feedback adicional de los usuarios y comenzar a trabajar en las próximas funcionalidades del backlog.",
+   "REFINAMIENTO": {
+    "intro": "El equipo se enfocó en dejar el backlog completo y priorizado para la implementación del botón de cobros.",
+    "items": [
+     "Revisión de requisitos: se repasaron los requisitos del botón de cobros para asegurar una comprensión clara de los objetivos del sprint.",
+     "Tareas adicionales: se discutió sumar integración con sistemas de pago externos y notificaciones de cobros pendientes.",
+     "Priorización: se priorizaron las tareas críticas para la funcionalidad básica del botón de cobros.",
+     "Estimación de esfuerzo: se estimó cada tarea según complejidad técnica, dependencias y recursos disponibles."
+    ]
+   }
+  },
+  "reuniones": [
+   [
+    "",
+    "Duración ideal",
+    "Duración real",
+    "Asistencia completa"
+   ],
+   [
+    "1-nov",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "3-nov",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "8-nov",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "10-nov",
+    "2 hs",
+    "6 hs",
+    "No"
+   ],
+   [
+    "15-nov",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "17-nov",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "22-nov",
+    "2 hs",
+    "4 hs",
+    "No"
+   ],
+   [
+    "24-nov",
+    "2 hs",
+    "3 hs",
+    "No"
+   ]
+  ],
+  "metricas_texto": [],
+  "metricas_tabla": [
+   [
+    "FECHA",
+    "ESPERADO",
+    "REAL",
+    ""
+   ],
+   [
+    "1-nov",
+    "28",
+    "28",
+    ""
+   ],
+   [
+    "3-nov",
+    "25",
+    "28",
+    ""
+   ],
+   [
+    "8-nov",
+    "21",
+    "21",
+    ""
+   ],
+   [
+    "10-nov",
+    "17",
+    "17",
+    ""
+   ],
+   [
+    "15-nov",
+    "14",
+    "14",
+    ""
+   ],
+   [
+    "17-nov",
+    "11",
+    "11",
+    ""
+   ],
+   [
+    "22-nov",
+    "7",
+    "11",
+    ""
+   ],
+   [
+    "24-nov",
+    "3",
+    "7",
+    ""
+   ]
+  ],
+  "historia_usuario": [
+   [
+    "Número de Usuario",
+    "Historia de Usuario",
+    "Criterios de Aceptación"
+   ],
+   [
+    "HU-033",
+    "Como usuario quiero ver un botón \"Cobros\" claramente visible en la interfaz de proyectos para acceder fácilmente a la gestión de cobros.",
+    "Debe agregarse un botón etiquetado como \"Cobros\" en la interfaz de proyectos. - El botón debe ser visible y de fácil acceso para el usuario."
+   ],
+   [
+    "HU-034",
+    "Como usuario quiero tener una página dedicada a la gestión de cobros para poder gestionar eficientemente los cobros asociados a los proyectos.",
+    "Se debe diseñar una página exclusiva para la gestión de cobros. - La página debe incluir todas las funciones necesarias para gestionar los cobros de manera efectiva."
+   ],
+   [
+    "HU-035",
+    "Como usuario quiero un formulario que me permita ingresar la fecha y el monto cobrado para registrar nuevos cobros de manera precisa.",
+    "El formulario debe incluir campos para ingresar la fecha y el monto cobrado. - Deben ser campos obligatorios para garantizar la precisión de los registros."
+   ],
+   [
+    "HU-036",
+    "Como usuario quiero que el sistema calcule automáticamente el saldo del proyecto considerando el presupuesto y los cobros realizados.",
+    "El sistema debe calcular el saldo del proyecto teniendo en cuenta el monto presupuestado y los cobros realizados. - El saldo debe actualizarse automáticamente al registrar un nuevo cobro."
+   ],
+   [
+    "HU-037",
+    "Como usuario quiero poder editar y eliminar cobros existentes para corregir errores o eliminar registros innecesarios.",
+    "Se debe proporcionar la funcionalidad para editar y eliminar cobros desde la página de gestión de cobros. - Los cambios y eliminaciones deben reflejarse correctamente en el saldo del proyecto."
+   ],
+   [
+    "HU-038",
+    "Como usuario quiero que el sistema realice validaciones en el formulario de ingreso de cobros para asegurar la precisión de los datos.",
+    "El sistema debe realizar validaciones en los campos de fecha y monto cobrado para asegurar la integridad de la información ingresada."
+   ],
+   [
+    "HU-039",
+    "Como usuario quiero que se realicen pruebas exhaustivas para garantizar que la gestión de cobros sea correcta y fácil de usar en el sistema.",
+    "Se deben realizar pruebas de funcionalidad y usabilidad para garantizar que todas las funciones relacionadas con la gestión de cobros funcionen correctamente y sean fáciles de usar."
+   ]
+  ]
+ },
+ {
+  "numero": "10",
+  "objetivo": "Desarrollar los diagramas de Gantt y de PERT para la planificación visual del proyecto.",
+  "backlog": [
+   "Creación de Diagramas de Gantt y PERT",
+   "Investigación y selección de herramientas adecuadas para la creación de Diagramas de Gantt y PERT.",
+   "Diseño de la interfaz del Diagrama de Gantt, incluyendo la definición de las actividades, fechas de inicio y duración.",
+   "Desarrollo de la funcionalidad para agregar, modificar y eliminar actividades en el Diagrama de Gantt.",
+   "Implementación de la capacidad para establecer dependencias entre las actividades en el Diagrama de Gantt.",
+   "Creación del algoritmo para calcular automáticamente las fechas de finalización previstas en el Diagrama de Gantt, teniendo en cuenta las dependencias y la duración de las actividades.",
+   "Diseño de la representación visual del Diagrama de PERT, definiendo los nodos y las flechas que representan las actividades y sus dependencias.",
+   "Desarrollo de la lógica para construir el Diagrama de PERT, incluyendo la identificación de las rutas críticas.",
+   "Implementación de la funcionalidad para ajustar las actividades y sus dependencias en el Diagrama de PERT.",
+   "Pruebas de usabilidad y corrección de errores en ambos diagramas."
+  ],
+  "estimacion": [
+   [
+    "Tarea",
+    "Estimación",
+    "Total"
+   ],
+   [
+    "Creación de Diagramas de Gantt y PERT",
+    "Creación de Diagramas de Gantt y PERT",
+    "Creación de Diagramas de Gantt y PERT"
+   ],
+   [
+    "Investigación y selección de herramientas adecuadas para la creación de Diagramas de Gantt y PERT.",
+    "3 horas",
+    "26 horas"
+   ],
+   [
+    "Diseño de la interfaz del Diagrama de Gantt, incluyendo la definición de las actividades, fechas de inicio y duración.",
+    "2 horas",
+    "26 horas"
+   ],
+   [
+    "Desarrollo de la funcionalidad para agregar, modificar y eliminar actividades en el Diagrama de Gantt.",
+    "2 horas",
+    "26 horas"
+   ],
+   [
+    "Implementación de la capacidad para establecer dependencias entre las actividades en el Diagrama de Gantt.",
+    "4 horas",
+    "26 horas"
+   ],
+   [
+    "Creación del algoritmo para calcular automáticamente las fechas de finalización previstas en el Diagrama de Gantt, teniendo en cuenta las dependencias y la duración de las actividades.",
+    "3 horas",
+    "26 horas"
+   ],
+   [
+    "Diseño de la representación visual del Diagrama de PERT, definiendo los nodos y las flechas que representan las actividades y sus dependencias.",
+    "2 horas",
+    "26 horas"
+   ],
+   [
+    "Desarrollo de la lógica para construir el Diagrama de PERT, incluyendo la identificación de las rutas críticas.",
+    "3 horas",
+    "26 horas"
+   ],
+   [
+    "Implementación de la funcionalidad para ajustar las actividades y sus dependencias en el Diagrama de PERT.",
+    "4 horas",
+    "26 horas"
+   ],
+   [
+    "Pruebas de usabilidad y corrección de errores en ambos diagramas.",
+    "3 horas",
+    "26 horas"
+   ]
+  ],
+  "ceremonias": {
+   "PLANIFICACION": "El equipo investigó y seleccionó las herramientas para crear los diagramas de Gantt y PERT, diseñó primero la interfaz del Gantt y luego la del PERT, y cerró con pruebas y documentación.",
+   "REVISION": "Se evaluó el progreso del desarrollo del gráfico de PERT frente a los objetivos del sprint, mostrando su integración con las herramientas de gestión de proyectos.",
+   "RETROSPECTIVA": "El equipo reflexionó sobre el proceso de desarrollo del sprint, identificó oportunidades de mejora y acordó acciones concretas para el siguiente.",
+   "REFINAMIENTO": "Se revisaron y priorizaron las tareas para equilibrar la carga de trabajo, se ajustaron fechas de inicio y fin, y se revisaron las estimaciones para reflejar mejor la complejidad de las tareas."
+  },
+  "reuniones": [
+   [
+    "",
+    "Duración ideal",
+    "Duración real",
+    "Asistencia completa"
+   ],
+   [
+    "12-ene",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "17-ene",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "19-ene",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "24-ene",
+    "2 hs",
+    "6 hs",
+    "SI"
+   ],
+   [
+    "26-ene",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "31-ene",
+    "2 hs",
+    "5 hs",
+    "SI"
+   ],
+   [
+    "2-feb",
+    "2 hs",
+    "4 hs",
+    "SI"
+   ],
+   [
+    "7-feb",
+    "2 hs",
+    "3 hs",
+    "SI"
+   ],
+   [
+    "9-feb",
+    "2 hs",
+    "6 hs",
+    "SI"
+   ],
+   [
+    "14-feb",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ]
+  ],
+  "metricas_texto": [],
+  "metricas_tabla": [
+   [
+    "FECHA",
+    "ESPERADO",
+    "REAL",
+    ""
+   ],
+   [
+    "12-ene",
+    "26",
+    "26",
+    ""
+   ],
+   [
+    "17-ene",
+    "23",
+    "23",
+    ""
+   ],
+   [
+    "19-ene",
+    "21",
+    "20",
+    ""
+   ],
+   [
+    "24-ene",
+    "18",
+    "18",
+    ""
+   ],
+   [
+    "26-ene",
+    "16",
+    "16",
+    ""
+   ],
+   [
+    "31-ene",
+    "13",
+    "13",
+    ""
+   ],
+   [
+    "2-feb",
+    "10",
+    "10",
+    ""
+   ],
+   [
+    "7-feb",
+    "8",
+    "8",
+    ""
+   ],
+   [
+    "9-feb",
+    "5",
+    "7",
+    ""
+   ],
+   [
+    "14-feb",
+    "3",
+    "3",
+    ""
+   ]
+  ],
+  "historia_usuario": [
+   [
+    "Número de Usuario",
+    "Historia de Usuario",
+    "Criterios de Aceptación"
+   ],
+   [
+    "HU-041",
+    "Como usuario, quiero que se diseñe la interfaz del Diagrama de Gantt, incluyendo la definición de actividades, fechas de inicio y duración.",
+    "La interfaz del Diagrama de Gantt debe incluir elementos para definir actividades, fechas de inicio y duración de manera clara y precisa."
+   ],
+   [
+    "HU-042",
+    "Como usuario, necesito la funcionalidad para agregar, modificar y eliminar actividades en el Diagrama de Gantt.",
+    "Debe ser posible agregar, modificar y eliminar actividades de manera intuitiva desde la interfaz del Diagrama de Gantt."
+   ],
+   [
+    "HU-043",
+    "Como usuario, deseo poder establecer dependencias entre las actividades en el Diagrama de Gantt.",
+    "Se debe implementar la capacidad para establecer dependencias entre actividades de manera flexible y sencilla en el Diagrama de Gantt."
+   ],
+   [
+    "HU-044",
+    "Como usuario, necesito que el sistema calcule automáticamente las fechas de finalización previstas en el Diagrama de Gantt, considerando las dependencias y la duración de las actividades.",
+    "El sistema debe calcular automáticamente las fechas de finalización previstas de todas las actividades, teniendo en cuenta las dependencias y la duración de cada actividad en el Diagrama de Gantt."
+   ],
+   [
+    "HU-045",
+    "Como usuario, quiero ver el Diagrama de PERT con nodos y flechas que representen las actividades y sus dependencias, identificando la ruta crítica.",
+    "El diagrama debe construirse automáticamente a partir de las actividades cargadas, mostrar la ruta crítica claramente diferenciada del resto, y representar cada dependencia con una flecha entre los nodos correspondientes."
+   ],
+   [
+    "HU-046",
+    "Como usuario, deseo la funcionalidad para ajustar las actividades y sus dependencias en el Diagrama de PERT.",
+    "Debe ser posible ajustar actividades y dependencias de manera interactiva desde la interfaz del Diagrama de PERT, recalculando la ruta crítica al confirmar el cambio."
+   ]
+  ]
+ },
+ {
+  "numero": "11",
+  "objetivo": "Diseñar y desarrollar la interfaz del cliente para visualizar sus proyectos: nombre, arquitecto asignado, tipología, estado, avance y compromisos.",
+  "backlog": [
+   "Interfaz Clientes",
+   "Visualizar lista de proyectos asociados a clientes",
+   "Visualizar información detallada de cada proyecto",
+   "Visualizar arquitecto asignado a cada proyecto",
+   "Visualiza la tipología de cada proyecto",
+   "Visualiza el estado actual de cada proyecto para conocer su progreso.",
+   "Visualiza el avance de cada proyecto",
+   "Visualiza los compromisos relacionados con cada proyecto.",
+   "Ordenar la lista de proyectos por nombre, estado o avance para tener flexibilidad en la visualización.",
+   "Filtrar la lista de proyectos por estado."
+  ],
+  "estimacion": [],
+  "ceremonias": {
+   "PLANIFICACION": "El equipo revisó el Product Backlog, priorizó las tareas de la interfaz de cliente, asignó historias de usuario según habilidades y disponibilidad, y definió criterios de aceptación para cada una.",
+   "REVISION": "Se completó la interfaz de visualización de proyectos para clientes, se realizaron pruebas de usabilidad y se identificaron áreas de mejora para las próximas iteraciones.",
+   "RETROSPECTIVA": "Se destacó la buena planificación y asignación de tareas, aunque con desafíos en la gestión del tiempo de funcionalidades adicionales; se acordó dedicar más tiempo al refinamiento del backlog y a la estimación.",
+   "REFINAMIENTO": "Se revisaron y priorizaron las historias de usuario restantes según las necesidades del producto y del cliente, y se sumaron nuevas funcionalidades al backlog con sus criterios de aceptación."
+  },
+  "reuniones": [
+   [
+    "",
+    "Duración ideal",
+    "Duración real",
+    "Asistencia completa"
+   ],
+   [
+    "16-feb",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "21-feb",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "23-feb",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "28-feb",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "1-mar",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "6-mar",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "8-mar",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ]
+  ],
+  "metricas_texto": [],
+  "metricas_tabla": [
+   [
+    "FECHA",
+    "ESPERADO",
+    "REAL",
+    ""
+   ],
+   [
+    "16-feb",
+    "250",
+    "250",
+    "31"
+   ],
+   [
+    "21-feb",
+    "219",
+    "219",
+    ""
+   ],
+   [
+    "23-feb",
+    "188",
+    "188",
+    ""
+   ],
+   [
+    "28-feb",
+    "156",
+    "156",
+    ""
+   ],
+   [
+    "1-mar",
+    "125",
+    "125",
+    ""
+   ],
+   [
+    "6-mar",
+    "94",
+    "94",
+    ""
+   ],
+   [
+    "8-mar",
+    "63",
+    "63",
+    ""
+   ]
+  ],
+  "historia_usuario": [
+   [
+    "Número de Usuario",
+    "Historia de Usuario",
+    "Criterios de Aceptación"
+   ],
+   [
+    "HU-047",
+    "Como Usuario\nQuiero poder visualizar una lista de todos los proyectos asociados a los clientes, para tener una vista general y rápida de todos los proyectos en curso",
+    "La interfaz debe listar todos los proyectos asociados a cada cliente. Debe ser fácilmente accesible desde la página principal de la interfaz de clientes."
+   ],
+   [
+    "HU-048",
+    "Como usuario quiero poder visualizar información detallada de cada proyecto al seleccionarlo para entender mejor las especificaciones y necesidades del proyecto.",
+    "La página del proyecto debe mostrar objetivos, alcance, presupuesto y cronograma, entre otros datos."
+   ],
+   [
+    "HU-049",
+    "Como cliente quiero ver el arquitecto asignado a cada uno de mis proyectos, para saber quién está a cargo y poder contactarlo si es necesario.",
+    "Cada proyecto en la lista debe incluir el nombre del arquitecto asignado, debe haber un medio directo (como un enlace a un correo electrónico) para contactar al arquitecto desde la interfaz."
+   ],
+   [
+    "HU-050",
+    "Como cliente quiero visualizar la tipología de cada uno de mis proyectos\npara entender el enfoque y la metodología de trabajo aplicada.",
+    "La tipología de proyecto debe ser visible en la información general de cada proyecto en la lista, debe incluirse una breve descripción de la tipología si se selecciona."
+   ],
+   [
+    "HU-051",
+    "Como cliente quiero visualizar el estado actual y el avance de cada uno de mis proyectos para conocer su progreso y si se están cumpliendo los plazos establecidos",
+    "El estado y avance del proyecto se actualizan regularmente, con una vista gráfica (barra de progreso) para verlo rápido."
+   ],
+   [
+    "HU-052",
+    "Como cliente quiero visualizar los compromisos relacionados con cada proyecto, para estar al tanto de las entregas, pagos y otros hitos importantes.",
+    "Los compromisos deben ser listados de manera clara y accesible dentro de los detalles de cada proyecto, se debe incluir fechas, descripciones y estados (completado, pendiente) de cada compromiso."
+   ],
+   [
+    "HU-053",
+    "Como cliente quiero ordenar y filtrar la lista de proyectos por nombre, estado o avance para personalizar la visualización según mis necesidades o preferencias.",
+    "Debe existir una funcionalidad intuitiva para ordenar la lista según el criterio seleccionado, y un filtro que muestre solo los proyectos que coincidan con el estado elegido."
+   ]
+  ]
+ },
+ {
+  "numero": "12",
+  "objetivo": "Desarrollar visualizaciones gráficas interactivas de los cobros de los proyectos, filtrables por período y por estado del proyecto.",
+  "backlog": [
+   "Desarrollo de Visualizaciones Gráficas:",
+   "Diseño de interfaz de usuario para visualizaciones gráficas interactivas.",
+   "Implementación de función de filtrado de datos por periodos de tiempo.",
+   "Desarrollo de gráficos para categorizar proyectos según su estado.",
+   "Creación de gráficos detallados sobre cobros realizados según el medio de pago.",
+   "Integración de porcentaje de participación en el total cobrado en los gráficos de medio de pago.",
+   "Ajustes de diseño y optimización de rendimiento de las visualizaciones."
+  ],
+  "estimacion": [],
+  "ceremonias": {
+   "PLANIFICACION": "Se planificó el diseño de la interfaz interactiva de visualizaciones, el filtrado por período, la categorización de proyectos por estado y la creación de gráficos detallados de cobros.",
+   "REVISION": "Se revisaron las visualizaciones gráficas desarrolladas contra los criterios de diseño y funcionalidad del Product Backlog, y se discutieron desviaciones y lecciones aprendidas.",
+   "RETROSPECTIVA": "El equipo reflexiono sobre su desempeño y colaboración durante el sprint. Se discutieron los aspectos positivos, como los logros alcanzados y las fortalezas del equipo, así como también se abordarán los desafíos y obstáculos encontrados.",
+   "REFINAMIENTO": "Se revisaron y priorizaron las historias de usuario restantes según las necesidades del producto y del cliente, y se sumaron nuevas funcionalidades al backlog con sus criterios de aceptación."
+  },
+  "reuniones": [
+   [
+    "",
+    "Duración ideal",
+    "Duración real",
+    "Asistencia completa"
+   ],
+   [
+    "13-mar",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "15-mar",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "20-mar",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ],
+   [
+    "22-mar",
+    "2 hs",
+    "Cumple",
+    "SI"
+   ]
+  ],
+  "metricas_texto": [],
+  "metricas_tabla": [
+   [
+    "FECHA",
+    "ESPERADO",
+    "REAL",
+    ""
+   ],
+   [
+    "13-mar",
+    "250",
+    "250",
+    ""
+   ],
+   [
+    "15-mar",
+    "188",
+    "188",
+    ""
+   ],
+   [
+    "20-mar",
+    "125",
+    "125",
+    ""
+   ],
+   [
+    "22-mar",
+    "63",
+    "63",
+    ""
+   ]
+  ],
+  "historia_usuario": [
+   [
+    "Número de Usuario",
+    "Historia de Usuario",
+    "Criterios de Aceptación"
+   ],
+   [
+    "HU-054",
+    "Como usuario, necesito un diseño de interfaz de usuario que sea intuitivo y facilite la interacción con las visualizaciones gráficas interactivas.",
+    "La interfaz debe ser visualmente atractiva, intuitiva y con controles claros para explorar los datos."
+   ],
+   [
+    "HU-055",
+    "Como usuario, quiero la capacidad de filtrar datos por periodos de tiempo para analizar la evolución de los proyectos y los cobros realizados.",
+    "El filtrado por período debe ser fácil de usar y permitir examinar la información en distintos intervalos."
+   ],
+   [
+    "HU-056",
+    "Como usuario, necesito gráficos que categoricen proyectos según su estado para una mejor comprensión de su progreso y rendimiento.",
+    "Los gráficos de distribución por estado deben ser fáciles de interpretar y útiles para ver la situación actual."
+   ],
+   [
+    "HU-057",
+    "Como usuario, deseo gráficos detallados sobre los cobros realizados según el medio de pago para comprender mejor los patrones de pago.",
+    "Los gráficos de cobros por medio de pago deben ser claros y mostrar cómo se distribuyen entre transferencia, tarjeta, etc."
+   ],
+   [
+    "HU-058",
+    "Como usuario, quiero ver el porcentaje de participación en el total cobrado en los gráficos de medio de pago para evaluar su importancia relativa.",
+    "Los gráficos de medio de pago deben incluir el porcentaje de participación de cada medio en el total cobrado. - Este porcentaje debe ser fácilmente visible y comprensible en los gráficos."
+   ],
+   [
+    "HU-059",
+    "Como usuario, necesito ajustes de diseño y optimización de rendimiento en las visualizaciones para una experiencia fluida y eficiente.",
+    "Los ajustes deben mejorar estética y legibilidad, y optimizar el rendimiento incluso con grandes volúmenes de datos."
+   ]
+  ]
+ }
+]

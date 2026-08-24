@@ -3,28 +3,12 @@
     "title": "Plataforma E-commerce Enterprise",
     "shortDescription": "Sistema de comercio electrónico escalable con arquitectura de microservicios",
     "profiles": {
-      "developer": {
-        "description": "Arquitectura de microservicios con .NET Core 8 y Angular 17. Sistema de pagos integrado con Stripe y gestión de inventario en tiempo real.",
+      "engineer": {
+        "description": "Arquitectura de microservicios con .NET Core 8 y Angular 17, diseñada con Domain-Driven Design y Event Storming. Sistema de pagos integrado con Stripe y gestión de inventario en tiempo real.",
         "highlights": [
           "API Gateway con Ocelot + Redis Cache para 50k req/min",
-          "SQL Server optimizado con índices clustered y particionamiento",
+          "5 Bounded Contexts identificados (Catálogo, Pedidos, Pagos, Inventario, Usuarios)",
           "Reducción del 60% en tiempos de respuesta vs. monolito anterior"
-        ]
-      },
-      "analista": {
-        "description": "Rediseño arquitectónico completo basado en Domain-Driven Design y Event Storming. Migración de monolito a microservicios.",
-        "highlights": [
-          "Identificación de 5 Bounded Contexts (Catálogo, Pedidos, Pagos, Inventario, Usuarios)",
-          "Modelado UML completo y definición de contratos de API (OpenAPI)",
-          "Reducción del 40% en deuda técnica y mejora en mantenibilidad"
-        ]
-      },
-      "ia-engineer": {
-        "description": "Sistema de recomendaciones inteligente usando embeddings y búsqueda semántica. Chatbot de atención al cliente con RAG.",
-        "highlights": [
-          "Integración de OpenAI Embeddings para recomendaciones personalizadas",
-          "Pinecone como vector database para búsqueda semántica",
-          "Aumento del 35% en tasa de conversión gracias a recomendaciones"
         ]
       }
     }
@@ -33,20 +17,12 @@
     "title": "Task Manager con DDD",
     "shortDescription": "Gestor de tareas empresarial con arquitectura limpia y DDD",
     "profiles": {
-      "developer": {
-        "description": "Aplicación full-stack con Clean Architecture, CQRS y Event Sourcing. Backend en .NET 8 y frontend en Angular con NgRx.",
+      "engineer": {
+        "description": "Aplicación full-stack con Clean Architecture, CQRS y Event Sourcing. Backend en .NET 8 y frontend en Angular con NgRx. Diseño de dominio con múltiples agregados y máquinas de estado.",
         "highlights": [
           "Implementación de CQRS con MediatR y Event Sourcing",
-          "Testing automatizado con 85% de cobertura (xUnit + Cypress)",
-          "Deploy automatizado en Azure con CI/CD (GitHub Actions)"
-        ]
-      },
-      "analista": {
-        "description": "Diseño de dominio complejo con múltiples agregados y políticas de negocio. Modelado de flujos de trabajo con estados y transiciones.",
-        "highlights": [
-          "Definición de 3 Agregados principales (Task, Project, Team)",
-          "Modelado de máquinas de estado para ciclo de vida de tareas",
-          "Documentación técnica completa con diagramas UML y C4"
+          "3 Agregados principales (Task, Project, Team) con documentación UML y C4",
+          "Testing automatizado con 85% de cobertura (xUnit + Cypress)"
         ]
       }
     }
@@ -55,64 +31,26 @@
     "title": "API Gateway con Microservicios",
     "shortDescription": "Arquitectura de microservicios con mensajería asíncrona",
     "profiles": {
-      "developer": {
-        "description": "Sistema distribuido con 8 microservicios independientes. Comunicación asíncrona con RabbitMQ y sincronización con gRPC.",
+      "engineer": {
+        "description": "Sistema distribuido con 8 microservicios independientes. Comunicación asíncrona con RabbitMQ y sincronización con gRPC, a partir de una estrategia de descomposición de monolito sin downtime.",
         "highlights": [
           "API Gateway con autenticación JWT y rate limiting",
-          "RabbitMQ para eventos de dominio y comunicación asíncrona",
+          "Estrategia de migración gradual: patrones Saga, API Composition, CQRS",
           "Observabilidad con Prometheus, Grafana y Seq para logs"
         ]
-      },
-      "analista": {
-        "description": "Estrategia de descomposición de monolito en microservicios. Definición de contratos y políticas de comunicación entre servicios.",
-        "highlights": [
-          "Análisis de dependencias y definición de bounded contexts",
-          "Estrategia de migración gradual sin downtime",
-          "Documentación de patrones: Saga, API Composition, CQRS"
-        ]
       }
     }
   },
-  "chatbot-rag": {
-    "title": "Chatbot RAG Enterprise",
-    "shortDescription": "Sistema de respuesta automática con IA y búsqueda semántica",
+  "caso-arquitectura": {
+    "title": "Caso de Estudio: Analista de Sistemas",
+    "shortDescription": "Ciclo completo de análisis de sistemas para un estudio de arquitectura: relevamiento, UML, DFD y 13 sprints Scrum",
     "profiles": {
-      "ia-engineer": {
-        "description": "Chatbot inteligente que responde preguntas basándose en documentación técnica interna. Usa embeddings y búsqueda vectorial para contexto relevante.",
+      "engineer": {
+        "description": "Caso de estudio interactivo del ciclo completo de análisis de sistemas: relevamiento, estudio de factibilidad, objetivos y alcance, requerimientos, modelado (UML, DER, DFD, diagrama de estados), diseño de arquitectura y metodología Scrum con 13 sprints documentados.",
         "highlights": [
-          "LangChain + OpenAI GPT-4 para generación de respuestas",
-          "Pinecone como vector database con 10k+ documentos indexados",
-          "Reducción del 70% en consultas manuales al equipo de soporte"
-        ]
-      },
-      "developer": {
-        "description": "Backend en FastAPI con integración a sistemas legacy .NET. Frontend en React con streaming de respuestas en tiempo real.",
-        "highlights": [
-          "API REST con FastAPI y autenticación OAuth2",
-          "Integración con Active Directory para SSO",
-          "WebSockets para streaming de respuestas del LLM"
-        ]
-      }
-    }
-  },
-  "data-extraction-llm": {
-    "title": "Extracción de Datos con LLMs",
-    "shortDescription": "Pipeline automatizado para convertir PDFs en datos estructurados",
-    "profiles": {
-      "ia-engineer": {
-        "description": "Sistema que procesa documentos no estructurados (facturas, contratos) y extrae datos validados para sistemas legacy.",
-        "highlights": [
-          "Python + Pydantic para validación de esquemas",
-          "GPT-4o para extracción con function calling",
-          "Precisión del 95% en extracción de campos críticos"
-        ]
-      },
-      "developer": {
-        "description": "Integración con SQL Server y sistemas .NET existentes. Pipeline de procesamiento batch con Azure Functions.",
-        "highlights": [
-          "Azure Functions para procesamiento serverless",
-          "Integración con SQL Server via Entity Framework",
-          "Procesamiento de 1000+ documentos/día"
+          "14 capítulos navegables: desde el relevamiento inicial hasta la puesta en producción",
+          "Diagramas propios (clases, casos de uso, DER, DFD, estados, despliegue) en vez de capturas estáticas",
+          "Backlog, burndown y trazabilidad completa entre requerimientos y funcionalidades entregadas"
         ]
       }
     }
@@ -121,7 +59,7 @@
     "title": "Modelo predictivo del Mundial 2026",
     "shortDescription": "Rating Elo, Poisson y simulación Monte Carlo para estimar la probabilidad de cada selección, validado contra el torneo real",
     "profiles": {
-      "analista": {
+      "engineer": {
         "description": "Modelo de fuerza relativa (Elo), goles esperados (Poisson) y simulación Monte Carlo del cuadro completo. Frontera temporal estricta: ninguna predicción usa información posterior al inicio del torneo.",
         "highlights": [
           "Acertó las 2 semifinales y ubicó a España 2ª favorita (16%); España fue campeona",
@@ -135,7 +73,7 @@
     "title": "Predicción de abandono estudiantil",
     "shortDescription": "Modelo de riesgo para priorizar tutorías: a quién intervenir primero con un recurso limitado",
     "profiles": {
-      "analista": {
+      "engineer": {
         "description": "Piloto (POC) sobre el dataset UCI (4.424 alumnos). Regresión logística vs. Random Forest, umbral de decisión como dial de negocio y lista priorizada de alumnos.",
         "highlights": [
           "Detecta el 65.8% de los abandonos con solo el 1er semestre, a tiempo para intervenir",

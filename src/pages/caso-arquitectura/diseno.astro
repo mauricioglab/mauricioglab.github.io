@@ -1,0 +1,200 @@
+---
+import DocLayout from '../../layouts/caso-arquitectura/DocLayout.astro';
+import TreeDiagram from '../../components/caso-arquitectura/TreeDiagram.astro';
+import DeploymentDiagram from '../../components/caso-arquitectura/DeploymentDiagram.astro';
+import ClassDiagram from '../../components/caso-arquitectura/ClassDiagram.astro';
+import DataTable from '../../components/caso-arquitectura/DataTable.astro';
+import diseno from '../../data/caso-arquitectura/diseno';
+import { PRODUCT_NAME } from '../../data/caso-arquitectura/brand';
+
+const [stackHeader, ...stackRows] = diseno.tabla_tecnologias;
+const clean = (s: string) => s.replace(/\s*\n\s*/g, ' ');
+const isDivider = (row: string[]) => row.every(c => c === row[0]);
+
+interface StackSegment {
+  titulo: string;
+  rows: string[][];
+}
+const stackSegments: StackSegment[] = [];
+for (const row of stackRows) {
+  if (isDivider(row)) {
+    stackSegments.push({ titulo: row[0], rows: [] });
+  } else {
+    stackSegments[stackSegments.length - 1].rows.push(row.map((c, i) => (i >= 2 ? clean(c) : c)));
+  }
+}
+
+function parseLinked(t: string) {
+  const m = t.match(/^(.+?)\s*\((https?:\/\/[^)]+)\)\s*:\s*(.+)$/);
+  if (m) return { name: m[1], url: m[2], desc: m[3] };
+  const [name, ...rest] = t.split(':');
+  return { name, url: null as string | null, desc: rest.join(':').trim() };
+}
+
+const paqueteBranches = [
+  { label: '1. Cuentas', children: ['1.1 Usuario', '1.2 Cliente', '1.3 Roles y permisos', '1.4 Direcciones'] },
+  { label: '2. Operación de proyectos', children: ['2.1 Proyecto', '2.2 Tipología', '2.3 Servicio', '2.4 Tarea', '2.5 Hub (compromisos y adjuntos)'] },
+  { label: '3. Administración', children: ['3.1 Presupuesto', '3.2 Cobro', '3.3 Estadísticas'] },
+];
+---
+<DocLayout title="Diseño" chapterHref="/caso-arquitectura/diseno">
+  <div class="doc-block">
+    <h2><span class="doc-block-n">9.1</span>Stack tecnológico</h2>
+    {stackSegments.map(seg => (
+      <>
+        <h3 class="font-head text-[0.78rem] tracking-[0.1em] uppercase text-sand-deep mt-6 mb-2 first:mt-0">{seg.titulo}</h3>
+        <DataTable rows={[stackHeader, ...seg.rows]} />
+      </>
+    ))}
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">9.2</span>Librerías de frontend</h2>
+    <p class="text-ink-soft text-[0.94rem] max-w-[720px] mb-5">
+      Estas sí son parte del producto entregado; las herramientas que el equipo usó para construirlo (IDE,
+      gestión de proyecto, testing) están en el capítulo de Gestión.
+    </p>
+    <div class="grid-3">
+      {diseno.librerias_frontend.map(r => {
+        const { name, url, desc } = parseLinked(r);
+        return (
+          <div class="card">
+            <h3>{url ? <a href={url} target="_blank" rel="noopener" class="text-teal-deep no-underline hover:underline">{name}</a> : name}</h3>
+            <p>{desc}</p>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">9.3</span>Arquitectura</h2>
+    <div class="doc-prose text-ink-soft mb-6">
+      {diseno.arquitectura.intro.map(p => <p>{p}</p>)}
+    </div>
+
+    <h3 class="font-head text-[0.95rem] mb-3 text-ink">Las cuatro capas</h3>
+    <div class="step-flow">
+      {diseno.arquitectura.capas.map((c, i) => (
+        <div class="step-flow-item">
+          <div class="step-flow-num">{i + 1}</div>
+          <div class="step-flow-body">
+            <h4>{c.title}</h4>
+            {c.paragraphs.map(p => <p>{p}</p>)}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <h3 class="font-head text-[0.95rem] mt-7 mb-3 text-ink">Principios SOLID aplicados</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+      {diseno.arquitectura.solid.map(s => (
+        <div class="kv-block">
+          <h4>{s.principio}</h4>
+          <p>{s.aplicacion}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">9.4</span>Decisiones de arquitectura (ADR)</h2>
+    <p class="text-ink-soft text-[0.94rem] max-w-[720px] mb-5">
+      Las decisiones concretas que se desprenden de la arquitectura de arriba, antes de bajar a las clases
+      que las ponen en práctica.
+    </p>
+    {diseno.adr.map(a => (
+      <div class="card mb-4">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="tag">{a.id}</span>
+          <h3 class="font-head text-[0.95rem] text-ink m-0">{a.titulo}</h3>
+          <span class="tag trace-tag-muted ml-auto">{a.estado}</span>
+        </div>
+        <div class="flex flex-col">
+          <div class="kv-block">
+            <h4>Contexto</h4>
+            {a.contexto.map(p => <p>{p}</p>)}
+          </div>
+          <div class="kv-block">
+            <h4>Decisión</h4>
+            {a.decision.map(p => <p>{p}</p>)}
+          </div>
+          <div class="kv-block">
+            <h4>Consecuencias</h4>
+            <ul class="m-0 pl-4.5 flex flex-col gap-1.5 text-ink-soft text-sm">
+              {a.consecuencias.map(c => <li>{c}</li>)}
+            </ul>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">9.5</span>Diagrama de clases</h2>
+    {diseno.clases.map(p => <p class="doc-prose text-ink-soft mb-3">{p}</p>)}
+    <ClassDiagram
+      caption="Clases principales del dominio, con sus atributos y las asociaciones documentadas en el Modelado."
+      clases={[
+        {
+          nombre: 'Usuario',
+          atributos: ['nombre', 'apellido', 'número de usuario', 'DNI', 'correo y teléfono', 'rol'],
+        },
+        {
+          nombre: 'Cliente',
+          atributos: ['nombre', 'apellido', 'número de cliente', 'DNI', 'dirección'],
+        },
+        {
+          nombre: 'Proyecto',
+          atributos: ['nombre', 'cliente', 'tipología', 'estado', 'presupuesto', 'usuario responsable'],
+        },
+        {
+          nombre: 'Estadísticas',
+          atributos: [],
+          nota: 'No persiste datos propios: calcula agregados sobre Usuario, Cliente y Proyecto.',
+        },
+      ]}
+      asociaciones={[
+        { desde: 'Cliente', hasta: 'Proyecto', multiplicidadDesde: '1', multiplicidadHasta: '0..*', label: 'tiene' },
+        { desde: 'Usuario', hasta: 'Proyecto', multiplicidadDesde: '1', multiplicidadHasta: '0..*', label: 'responsable de' },
+      ]}
+    />
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">9.6</span>Paquetes del sistema</h2>
+    <p class="doc-prose text-ink-soft mb-3">
+      Esas mismas clases, agrupadas por el área del estudio a la que sirven en vez de por capa técnica:
+    </p>
+    {diseno.paquetes.map(p => <p class="doc-prose text-ink-soft mb-4">{p}</p>)}
+    <TreeDiagram root={PRODUCT_NAME} branches={paqueteBranches} caption="Paquetes de ArqStudio, agrupados por área del estudio a la que sirven." />
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">9.7</span>Diagrama de despliegue</h2>
+    <DeploymentDiagram
+      externos={[
+        { label: 'Estaciones de desarrollo' },
+        { label: 'Router' },
+        { label: 'Switch' },
+      ]}
+      hosting={{
+        titulo: 'Hosting',
+        nodos: [
+          { label: 'Servidor de aplicación', sub: 'Windows Server + IIS' },
+          { label: 'Servidor de base de datos', sub: 'SQL Server' },
+          { label: 'Backup' },
+        ],
+      }}
+      caption="Infraestructura de despliegue: hosting, router, switch, servidores de BD/app y backup."
+    />
+    <div class="cross-links">
+      <a href="/caso-arquitectura/implementacion#sec-13-1" class="text-teal-deep font-semibold">Ver ambiente de implementación →</a>
+    </div>
+    <p class="doc-prose text-ink-soft mt-6">
+      Con la arquitectura y el diseño ya definidos, el próximo capítulo cuenta cómo el equipo organizó el
+      trabajo para construirlo:
+      <a href="/caso-arquitectura/metodologia" class="text-teal-deep font-semibold">Metodología</a>.
+    </p>
+  </div>
+</DocLayout>

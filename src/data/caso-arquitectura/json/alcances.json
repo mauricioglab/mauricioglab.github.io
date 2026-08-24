@@ -1,0 +1,74 @@
+[
+ {
+  "modulo": "Cuentas de usuario y cliente",
+  "incluye": [
+   "Alta, edición y asignación de roles de usuarios internos.",
+   "Alta y edición de los datos de contacto del cliente.",
+   "Login independiente para usuario interno y para cliente, con cambio de contraseña."
+  ]
+ },
+ {
+  "modulo": "Proyectos y tipología",
+  "incluye": [
+   "Alta y edición de proyectos, vinculados a un cliente existente.",
+   "Clasificación por tipología: anteproyecto, proyecto con detalle o gestión y conducción de obra.",
+   "Informe imprimible del proyecto y exportación del listado de proyectos a Excel."
+  ]
+ },
+ {
+  "modulo": "Estadísticas generales",
+  "incluye": [
+   "Conteo de usuarios, clientes y proyectos, activos e inactivos."
+  ]
+ },
+ {
+  "modulo": "Servicios y tareas de servicio",
+  "incluye": [
+   "Alta, edición y baja de servicios por proyecto.",
+   "Tareas predeterminadas por servicio, editables."
+  ]
+ },
+ {
+  "modulo": "Tareas del proyecto",
+  "incluye": [
+   "Registro de tareas con fecha de inicio, fecha de compromiso, descripción y adjuntos.",
+   "Compromisos con mensaje asociado a una tarea."
+  ]
+ },
+ {
+  "modulo": "Gráfico de avance de tareas",
+  "incluye": [
+   "Cálculo automático del porcentaje de avance, con color y barra de progreso.",
+   "Distinción visual de tareas retrasadas."
+  ]
+ },
+ {
+  "modulo": "Cobros",
+  "incluye": [
+   "Registro de cobros por fecha y monto, con cálculo automático de saldo.",
+   "Edición y anulación de cobros ya registrados.",
+   "Plazo de vencimiento por cobro pendiente, con alerta al acercarse la fecha."
+  ]
+ },
+ {
+  "modulo": "Gráficos de Gantt y PERT",
+  "incluye": [
+   "Diagrama de Gantt con actividades, fechas y dependencias.",
+   "Diagrama de PERT con identificación de rutas críticas."
+  ]
+ },
+ {
+  "modulo": "Portal del cliente",
+  "incluye": [
+   "Listado y detalle de los proyectos propios del cliente, sin acceso a los de otros clientes.",
+   "Visualización de estado, avance y compromisos, sin edición."
+  ]
+ },
+ {
+  "modulo": "Estadísticas y reportes gráficos",
+  "incluye": [
+   "Filtro de datos por período.",
+   "Distribución de proyectos por estado y de cobros por medio de pago."
+  ]
+ }
+]

@@ -1,0 +1,28 @@
+{
+ "ambiente": [
+  "El ambiente de implementación es ejecutado por los desarrolladores en un hosting que permite la ejecución de Windows Server, IIS y SQL Server.",
+  "Windows Server: Sistema operativo que proporciona un entorno servidor estable y seguro para alojar la aplicación.",
+  "IIS: Servidor web de Windows Server sobre el que corre la aplicación en producción.",
+  "SQL Server: Sistema de gestión de bases de datos relacional, que se utiliza para almacenar los datos de la aplicación."
+ ],
+ "texto": [
+  "Determinación de los Requisitos de Aceptación: Se analizaron las necesidades de los usuarios y los procesos clave del estudio, identificando requisitos como gestionar proyectos eficientemente, facilitar la colaboración del equipo y dar herramientas de análisis y seguimiento.",
+  "Pruebas y Validación: Se hicieron pruebas de usuario con los 3 arquitectos del estudio (creación de proyectos, gestión de tareas, registro de usuario), lo que permitió identificar problemas de usabilidad y áreas de mejora.",
+  "Pruebas de Integración y Base de Datos: Se probó la importación y exportación de datos con las herramientas de diseño y cálculo del estudio, el rendimiento de consultas complejas y la integridad de los registros. También se sumó una prueba de compatibilidad entre navegadores.",
+  "Preparación de la Instalación: Se evaluaron opciones de hosting (planes de Azure y Don Web en VPS) para elegir la alternativa más segura, escalable y rentable, descartando servidores poco confiables o riesgosos.",
+  "Realización de la Instalación: Se instaló con el sistema de paquetes .NET sobre IIS de Windows Server, dejando una copia de la versión anterior en la carpeta de versiones para control de cambios.",
+  "Ajustes y Mejoras: Basándose en la retroalimentación de los usuarios, se implementarán mejoras en la gestión de tipología de proyectos, la definición de honorarios y la organización de tareas dentro de los servicios.",
+  "Mantenimiento y Soporte Continuo: Plan de mantenimiento con mejoras de seguridad, actualizaciones y monitoreo de rendimiento, con revisiones mensuales y soporte remoto activo."
+ ],
+ "capacitacion": {
+  "objetivo": "Se preparó un manual de usuario en formato PDF con instrucciones concisas y apoyado por imágenes ilustrativas, que cubre los principales flujos de trabajo y funcionalidades del sistema, pensado para que los usuarios se familiaricen con el software de manera autónoma.",
+  "modalidad": [
+   "Durante las sesiones de formación se aplicarán estrategias de aprendizaje activo: los usuarios practicarán los casos de uso más comunes bajo la guía de un desarrollador.",
+   "Se fomentará además la participación y la resolución de problemas en equipo, para favorecer la adopción del sistema por parte de todo el estudio."
+  ],
+  "evaluacion": [
+   "Se definirán criterios para medir la satisfacción de los usuarios, como el nivel de facilidad de uso percibido (mediante encuesta), la eficiencia en la gestión de proyectos (reducción de tiempos en tareas clave) y la mejora en la colaboración del equipo.",
+   "Los comentarios recopilados en encuestas y reuniones de retroalimentación orientarán los ajustes y mejoras posteriores del sistema."
+  ]
+ }
+}

@@ -1,0 +1,81 @@
+---
+import DocLayout from '../../layouts/caso-arquitectura/DocLayout.astro';
+import FlowDiagram from '../../components/caso-arquitectura/FlowDiagram.astro';
+import Reveal from '../../components/caso-arquitectura/Reveal.astro';
+import DataTable from '../../components/caso-arquitectura/DataTable.astro';
+import procesos from '../../data/caso-arquitectura/procesos';
+import relevamiento from '../../data/caso-arquitectura/relevamiento';
+---
+<DocLayout title="Procesos involucrados" chapterHref="/caso-arquitectura/procesos">
+  <div class="doc-block">
+    <h2><span class="doc-block-n">2.1</span>Técnicas de relevamiento</h2>
+    <p class="text-ink-soft text-[0.94rem] max-w-[720px] mb-5">{relevamiento.intro}</p>
+    <DataTable rows={[
+      ['Técnica', 'Cómo se aplicó', 'Qué aportó'],
+      ...relevamiento.tecnicas.map(t => [t.tecnica, t.descripcion, t.aporte]),
+    ]} />
+    <p class="doc-prose text-ink-soft text-[0.86rem] mt-3">
+      Quiénes participan de cada proceso, hoy sin sistema y con él, ya se relevaron en el catálogo de
+      <a href="/caso-arquitectura/organizacion#sec-1-4" class="text-teal-deep font-semibold">Actores del negocio</a>; lo que
+      sigue acá es el proceso en sí, con sus bifurcaciones reales.
+    </p>
+  </div>
+
+  {procesos.map((p, idx) => {
+    const num = `2.${idx + 2}`;
+    return (
+      <div class="doc-block">
+        <h2><span class="doc-block-n">{num}</span>{p.nombre}</h2>
+        <Reveal summary="Ver detalle completo">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5.5">
+            <div>
+              <span class="font-head text-[0.72rem] tracking-[0.08em] uppercase text-teal-deep block mb-1">Evento de inicio</span>
+              <p class="text-ink-soft text-[0.94rem]">{p.evento_inicio}</p>
+            </div>
+            <div>
+              <span class="font-head text-[0.72rem] tracking-[0.08em] uppercase text-teal-deep block mb-1">Objetivo</span>
+              <p class="text-ink-soft text-[0.94rem]">{p.objetivo}</p>
+            </div>
+          </div>
+
+          <h3>Actividades</h3>
+          <ul>
+            {p.actividades.map(a => <li>{a}</li>)}
+          </ul>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4.5 mt-5 pt-4.5 border-t border-line">
+            {p.participantes && (
+              <div>
+                <span class="font-head text-[0.72rem] tracking-[0.08em] uppercase text-teal-deep block mb-1">Participantes</span>
+                <p class="text-ink-soft text-[0.9rem]">{p.participantes}</p>
+              </div>
+            )}
+            {p.recursos && (
+              <div>
+                <span class="font-head text-[0.72rem] tracking-[0.08em] uppercase text-teal-deep block mb-1">Recursos</span>
+                <p class="text-ink-soft text-[0.9rem]">{p.recursos}</p>
+              </div>
+            )}
+            {p.documentos && (
+              <div>
+                <span class="font-head text-[0.72rem] tracking-[0.08em] uppercase text-teal-deep block mb-1">Documentos generados</span>
+                <p class="text-ink-soft text-[0.9rem]">{p.documentos}</p>
+              </div>
+            )}
+          </div>
+
+          <h3>Diagrama de flujo</h3>
+          <FlowDiagram steps={p.flow} />
+        </Reveal>
+      </div>
+    );
+  })}
+
+  <div class="doc-block doc-prose">
+    <p class="text-ink-soft">
+      Con el circuito de trabajo del estudio ya mapeado, lo que lo motivó a buscar un sistema propio se
+      desarrolla en el próximo capítulo:
+      <a href="/caso-arquitectura/impulsos" class="text-teal-deep font-semibold">Impulsos del proyecto</a>.
+    </p>
+  </div>
+</DocLayout>

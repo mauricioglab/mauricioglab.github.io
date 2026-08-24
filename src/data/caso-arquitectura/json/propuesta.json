@@ -1,0 +1,11 @@
+{
+ "propuesta": [
+  "La propuesta es un sistema que centraliza en un mismo lugar los datos del cliente, el estado de sus proyectos, las tareas en curso y los cobros pendientes. Vincula cada cliente con sus proyectos, genera informes de avance imprimibles, permite pactar compromisos con archivos adjuntos para revisión, y expone al cliente el estado de sus tareas y cobros sin que el estudio tenga que reportarlo manualmente por teléfono o mail."
+ ],
+ "objetivo_proyecto": [
+  "Entregar el sistema dentro del cronograma fijado por la cursada de Práctica Profesionalizante III, cubriendo el alcance relevado con MGD Arquitectura, validado en cada Sprint Review, y sin exceder la disponibilidad part-time del equipo de desarrollo."
+ ],
+ "objetivo_producto": [
+  "Un sistema que centraliza la planificación, ejecución y seguimiento de los proyectos del estudio: concentra los recursos y las tareas de cada proyecto, deja un registro trazable de la comunicación entre el equipo y los clientes, y deja explícitos los plazos y condiciones acordados para cada entrega."
+ ]
+}

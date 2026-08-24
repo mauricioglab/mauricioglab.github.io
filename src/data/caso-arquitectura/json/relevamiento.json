@@ -1,0 +1,25 @@
+{
+ "intro": "El levantamiento de información combinó cuatro técnicas, cruzadas entre sí para llegar a los cinco procesos formales que siguen y a los impulsos del capítulo próximo.",
+ "tecnicas": [
+  {
+   "tecnica": "Entrevistas",
+   "descripcion": "Conversaciones con los tres socios del estudio, en su doble rol de dueños del negocio y usuarios finales del sistema, para relevar cómo se toma cada decisión hoy y qué información se pierde o se demora en el camino.",
+   "aporte": "Base directa de los cinco procesos de este capítulo (participantes, eventos de inicio, documentos generados) y de los impulsos, problema, necesidad y oportunidad del próximo."
+  },
+  {
+   "tecnica": "Revisión de documentos digitales",
+   "descripcion": "Lectura de los documentos que ya circulaban en el estudio antes del sistema: fichas de cliente, propuestas de diseño, cotizaciones y legajos técnicos armados manualmente proyecto a proyecto.",
+   "aporte": "Confirma los documentos de entrada y salida de cada proceso, y sirvió de referencia directa para el Diccionario de datos y el DER del capítulo de Modelado."
+  },
+  {
+   "tecnica": "Excel de seguimiento",
+   "descripcion": "La planilla que el estudio usaba para llevar el estado de cada proyecto y de sus cobros antes de tener un sistema propio: una hoja por proyecto, actualizada a mano por el socio a cargo.",
+   "aporte": "Es la evidencia directa del problema de \"seguimiento disperso de los proyectos\" (ver Impulsos) y el antecedente funcional más cercano a los módulos de Cobros y Estadísticas."
+  },
+  {
+   "tecnica": "Planillas",
+   "descripcion": "Otros registros en papel y en planillas sueltas del día a día del estudio: control de tareas por obra, compromisos con proveedores y cuadrillas, agenda de reuniones con el cliente.",
+   "aporte": "Insumo para el proceso de Inicio y condiciones de obra y para las historias de usuario de Tareas del proyecto y Gráfico de avance de tareas."
+  }
+ ]
+}

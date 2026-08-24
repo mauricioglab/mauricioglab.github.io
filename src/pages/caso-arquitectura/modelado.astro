@@ -1,0 +1,214 @@
+---
+import DocLayout from '../../layouts/caso-arquitectura/DocLayout.astro';
+import EntityDiagram from '../../components/caso-arquitectura/EntityDiagram.astro';
+import StateDiagram from '../../components/caso-arquitectura/StateDiagram.astro';
+import DFDDiagram from '../../components/caso-arquitectura/DFDDiagram.astro';
+import DataTable from '../../components/caso-arquitectura/DataTable.astro';
+import modelado from '../../data/caso-arquitectura/modelado';
+---
+<DocLayout title="Modelado" chapterHref="/caso-arquitectura/modelado">
+  <div class="doc-block">
+    <h2><span class="doc-block-n">8.1</span>Diagrama de flujo de datos (DFD)</h2>
+    <p class="text-ink-soft text-[0.94rem] max-w-[720px] mb-5">
+      El legajo original no relevó un DFD como artefacto propio: lo que sigue se reconstruye a partir de los
+      cinco procesos ya documentados en el capítulo de Relevamiento (participantes, evento de inicio y
+      documentos generados de cada uno), leídos en notación de flujo de datos en vez de BPMN.
+    </p>
+    <DFDDiagram
+      caption="DFD de nivel 1: entidades externas, los cinco procesos del estudio y los almacenes de datos que dejan a su paso."
+      columnas={[
+        {
+          tipo: 'externa',
+          titulo: 'Entidades externas',
+          nodos: [{ nombre: 'Cliente' }, { nombre: 'Diseñador, proveedor y cuadrilla' }],
+        },
+        {
+          tipo: 'proceso',
+          titulo: 'Procesos',
+          nodos: [
+            { nombre: 'Contacto del cliente' },
+            { nombre: 'Propuesta y cotización' },
+            { nombre: 'Inicio y condiciones de obra' },
+            { nombre: 'Cobro' },
+            { nombre: 'Entrega de legajo técnico' },
+          ],
+        },
+        {
+          tipo: 'almacen',
+          titulo: 'Almacenes de datos',
+          nodos: [
+            { nombre: 'Clientes' },
+            { nombre: 'Proyectos' },
+            { nombre: 'Cobros' },
+            { nombre: 'Legajo técnico' },
+          ],
+        },
+      ]}
+      flujos={[
+        { desdeCol: 0, desdeNodo: 'Cliente', hastaCol: 1, hastaNodo: 'Contacto del cliente', label: 'solicitud' },
+        { desdeCol: 1, desdeNodo: 'Contacto del cliente', hastaCol: 2, hastaNodo: 'Clientes', label: 'ficha de cliente' },
+        { desdeCol: 2, desdeNodo: 'Clientes', hastaCol: 1, hastaNodo: 'Propuesta y cotización', label: 'ficha completa' },
+        { desdeCol: 0, desdeNodo: 'Cliente', hastaCol: 1, hastaNodo: 'Propuesta y cotización', label: 'condiciones y necesidades' },
+        { desdeCol: 1, desdeNodo: 'Propuesta y cotización', hastaCol: 2, hastaNodo: 'Proyectos', label: 'propuesta y cotización' },
+        { desdeCol: 2, desdeNodo: 'Proyectos', hastaCol: 1, hastaNodo: 'Inicio y condiciones de obra', label: 'proyecto aceptado' },
+        { desdeCol: 1, desdeNodo: 'Inicio y condiciones de obra', hastaCol: 0, hastaNodo: 'Diseñador, proveedor y cuadrilla', label: 'coordinación de obra' },
+        { desdeCol: 2, desdeNodo: 'Proyectos', hastaCol: 1, hastaNodo: 'Cobro', label: 'condiciones de pago acordadas' },
+        { desdeCol: 1, desdeNodo: 'Cobro', hastaCol: 2, hastaNodo: 'Cobros', label: 'recibo de pago' },
+        { desdeCol: 2, desdeNodo: 'Cobros', hastaCol: 0, hastaNodo: 'Cliente', label: 'recibo' },
+        { desdeCol: 2, desdeNodo: 'Proyectos', hastaCol: 1, hastaNodo: 'Entrega de legajo técnico', label: 'proyecto finalizado' },
+        { desdeCol: 1, desdeNodo: 'Entrega de legajo técnico', hastaCol: 2, hastaNodo: 'Legajo técnico', label: 'legajo y planos' },
+        { desdeCol: 2, desdeNodo: 'Legajo técnico', hastaCol: 0, hastaNodo: 'Cliente', label: 'entrega' },
+      ]}
+    />
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">8.2</span>Modelo de datos (DER)</h2>
+    <p class="doc-prose text-ink-soft mb-3">{modelado.der.intro}</p>
+    <ul class="m-0 pl-4.5 mb-3 flex flex-col gap-1 text-ink-soft text-[0.94rem]">
+      {modelado.der.relaciones.map(r => <li>{r}</li>)}
+    </ul>
+    <EntityDiagram
+      caption="DER (diagrama entidad-relación), agrupado en las mismas tres áreas del estudio que el diagrama de paquetes."
+      grupos={[
+        {
+          titulo: 'Cuentas',
+          entidades: [
+            { nombre: 'Usuario' },
+            { nombre: 'Rol de usuario' },
+            { nombre: 'Cliente' },
+            { nombre: 'Dirección / Localidad / Provincia' },
+          ],
+        },
+        {
+          titulo: 'Operación de proyectos',
+          entidades: [
+            { nombre: 'Proyecto', transaccional: true },
+            { nombre: 'Estado de proyecto' },
+            { nombre: 'Tipología de proyecto' },
+            { nombre: 'Tipo de servicio' },
+            { nombre: 'Tipo de tarea' },
+            { nombre: 'Tarea (Assignment)', transaccional: true },
+            { nombre: 'Hub', transaccional: true },
+            { nombre: 'Historial de proyecto', transaccional: true },
+          ],
+        },
+        {
+          titulo: 'Administración',
+          entidades: [
+            { nombre: 'Presupuesto', transaccional: true },
+            { nombre: 'Estado de presupuesto' },
+            { nombre: 'Cobro (Payment)', transaccional: true },
+            { nombre: 'Método de pago' },
+          ],
+        },
+      ]}
+      vinculos={[
+        { desdeGrupo: 0, desdeEntidad: 'Cliente', hastaGrupo: 1, hastaEntidad: 'Proyecto', label: 'tiene varios' },
+        { desdeGrupo: 1, desdeEntidad: 'Proyecto', hastaGrupo: 2, hastaEntidad: 'Presupuesto', label: 'genera' },
+      ]}
+    />
+    <DataTable rows={modelado.der.tabla} compact />
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">8.3</span>Transición de estados (DTE)</h2>
+    <p class="doc-prose text-ink-soft mb-3">
+      Cómo cambian de estado a lo largo del tiempo cinco de las entidades transaccionales del modelo: la
+      sesión de quien usa el sistema, el proyecto, la tarea, el presupuesto y el cobro.
+    </p>
+    {modelado.estados.map(p => <p class="doc-prose text-ink-soft mb-3">{p}</p>)}
+    <p class="doc-prose text-ink-soft mb-3">
+      Presupuesto y Cobro también tienen estado propio (ver DER, entidades marcadas ★): el presupuesto pasa
+      por revisión, finalización, aprobación y pago, y un cobro registrado puede anularse con motivo (ver
+      RN-07 en el Catálogo de reglas de negocio de Organización). El legajo original no detalla el disparador
+      exacto de cada paso del presupuesto, así que ese tramo queda marcado como tal en el diagrama, en vez de
+      completarlo con una regla inventada.
+    </p>
+    <StateDiagram
+      caption="Ciclo de vida de la sesión, el proyecto, la tarea, el presupuesto y el cobro: estados finales en verde, transiciones documentadas con su condición."
+      maquinas={[
+        {
+          titulo: 'Sesión',
+          estados: [{ label: 'No autenticada' }, { label: 'Autenticada' }],
+          transiciones: [
+            { from: 0, to: 1, label: 'login válido' },
+            { from: 1, to: 0, label: 'cerrar sesión / expira' },
+          ],
+        },
+        {
+          titulo: 'Proyecto',
+          estados: [
+            { label: 'Pendiente' },
+            { label: 'Activo' },
+            { label: 'En progreso' },
+            { label: 'Completado', final: true },
+          ],
+          transiciones: [
+            { from: 2, to: 3, label: '≥1 tarea completada u omitida' },
+          ],
+          ramas: [
+            { desde: 1, estado: { label: 'Inactivo', final: true }, label: 'condición no detallada en el legajo' },
+          ],
+        },
+        {
+          titulo: 'Tarea',
+          estados: [
+            { label: 'Pendiente' },
+            { label: 'Iniciada' },
+            { label: 'Completada', final: true },
+          ],
+          transiciones: [],
+          ramas: [
+            { desde: 1, estado: { label: 'Omitida', final: true }, label: 'se omite' },
+            { desde: 1, estado: { label: 'Oculta', final: true }, label: 'se retira del listado activo' },
+          ],
+        },
+        {
+          titulo: 'Presupuesto',
+          estados: [
+            { label: 'En revisión' },
+            { label: 'Finalizado' },
+            { label: 'Aprobado' },
+            { label: 'Pagado', final: true },
+          ],
+          transiciones: [],
+          nota: 'Orden documentado en el DER (Estado de presupuesto); el legajo original no detalla quién dispara cada paso ni sus condiciones.',
+        },
+        {
+          titulo: 'Cobro',
+          estados: [
+            { label: 'Registrado' },
+            { label: 'Anulado', final: true },
+          ],
+          transiciones: [
+            { from: 0, to: 1, label: 'motivo de anulación (RN-07)' },
+          ],
+        },
+      ]}
+    />
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">8.4</span>Diccionario de datos</h2>
+    <p class="doc-prose text-ink-soft mb-6">
+      La traducción entre lo que dice la base de datos y lo que dice el estudio: las cuatro entidades más
+      centrales del sistema, campo por campo, en lenguaje de negocio. Las entidades de catálogo (roles,
+      estados, tipologías) no se repiten acá porque ya están descriptas en la tabla del DER.
+    </p>
+    {modelado.diccionario_datos.map((e, i) => (
+      <>
+        <h3 class:list={["font-head text-[0.95rem] mb-3 text-ink", { "mt-7": i > 0 }]}>{e.entidad}</h3>
+        <DataTable rows={[
+          ['Campo', 'Tipo de dato', 'Obligatorio', 'Único', 'Ejemplo', 'Descripción en lenguaje del negocio'],
+          ...e.campos.map(c => [c.campo, c.tipo, c.obligatorio, c.unico, c.ejemplo, c.descripcion]),
+        ]} compact />
+      </>
+    ))}
+    <p class="doc-prose text-ink-soft mt-6">
+      Con los datos y sus transiciones ya modelados, cómo se traducen en clases, capas de código y despliegue
+      es el tema del capítulo siguiente:
+      <a href="/caso-arquitectura/diseno" class="text-teal-deep font-semibold">Diseño</a>.
+    </p>
+  </div>
+</DocLayout>

@@ -1,40 +1,10 @@
 {
   "categories": {
-    "developer": {
+    "engineer": {
       "backend": "Backend",
       "frontend": "Frontend",
-      "devops": "DevOps & Cloud",
-      "testing": "Testing"
-    },
-    "analista": {
-      "modeling": "Modeling & Design",
-      "architecture": "Architecture",
-      "tools": "Tools",
-      "technical": "Technical Validation"
-    },
-    "ia-engineer": {
-      "ai": "AI & LLMs",
-      "python": "Python Stack",
-      "vectordb": "Vector Databases",
-      "integration": "Integration"
-    },
-    "freelance": {
-      "frontend": "Frontend",
-      "backend": "Backend",
-      "cloud": "Cloud & DevOps",
-      "leadership": "Leadership"
-    },
-    "speaker": {
-      "ai": "AI Topics",
-      "programming": "Programming",
-      "soft": "Soft Skills",
-      "formats": "Formats"
-    },
-    "docente": {
-      "programming": "Programming",
-      "ai": "AI & Tools",
-      "pedagogy": "Pedagogy",
-      "tools": "Tools"
+      "ai-data": "AI & Data",
+      "cloud-architecture": "Cloud & Architecture"
     }
   }
 }

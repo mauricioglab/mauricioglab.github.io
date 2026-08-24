@@ -95,14 +95,7 @@ const baseUrl = import.meta.env.BASE_URL;
       if (!referrer) return;
       
       // Known landing paths
-      const landingPatterns = [
-        '/landing/developer',
-        '/landing/analista',
-        '/landing/ia-engineer',
-        '/landing/freelance',
-        '/landing/speaker',
-        '/landing/docente'
-      ];
+      const landingPatterns = ['/portfolio'];
       
       // Check if referrer matches a known landing
       for (const pattern of landingPatterns) {

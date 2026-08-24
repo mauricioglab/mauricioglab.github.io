@@ -7,14 +7,6 @@
     "contact": "Contacto",
     "portfolio": "Portfolio"
   },
-  "hero": {
-    "yearsExp": "+5 Años de Experiencia",
-    "yearsExpSub": "Proyectos enterprise y startups",
-    "location": "Remoto / Híbrido",
-    "locationSub": "Argentina (GMT-3)",
-    "availability": "Disponibilidad Inmediata",
-    "availabilitySub": "Full-time o proyectos"
-  },
   "sections": {
     "featuredProjects": "Proyectos Destacados",
     "techStack": "Stack Técnico",

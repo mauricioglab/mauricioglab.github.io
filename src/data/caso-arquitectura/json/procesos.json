@@ -1,0 +1,151 @@
+[
+ {
+  "nombre": "Contacto del cliente",
+  "evento_inicio": "Solicitud o pedido de un posible cliente.",
+  "objetivo": "Obtener información fundamental del cliente, iniciar la comunicación y acordar la primera entrevista.",
+  "actividades": [
+   "El asesor recibe o realiza una entrevista telefónica.",
+   "El asesor registra los datos de contacto en la agenda telefónica e indica la fecha para la entrevista personal.",
+   "El asesor recibe al cliente para una entrevista personal, para la cual previamente necesita una ficha impresa.",
+   "El asesor anota sus datos de forma manual en la ficha."
+  ],
+  "participantes": "Cliente · Asesor",
+  "recursos": "Teléfono · Redes sociales · WhatsApp",
+  "documentos": "Ficha de cliente",
+  "flow": [
+   { "kind": "node", "node": { "shape": "stadium", "label": "Solicitud o pedido de un posible cliente" } },
+   { "kind": "decision", "decision": {
+      "question": "¿Quién inicia el contacto?",
+      "branches": [
+       { "label": "Cliente", "nodes": [{ "shape": "rect", "label": "El cliente se comunica con el estudio" }] },
+       { "label": "Estudio", "nodes": [{ "shape": "rect", "label": "El asesor contacta al posible cliente" }] }
+      ],
+      "merge": { "shape": "rect", "label": "Entrevista telefónica" }
+   }},
+   { "kind": "node", "node": { "shape": "parallelogram", "label": "Datos de contacto y fecha de reunión" } },
+   { "kind": "node", "node": { "shape": "rect", "label": "Entrevista personal" } },
+   { "kind": "node", "node": { "shape": "doc", "label": "Ficha de cliente" } },
+   { "kind": "decision", "decision": {
+      "question": "¿El cliente confirma interés tras la entrevista?",
+      "branches": [
+       { "label": "Sí", "nodes": [{ "shape": "stadium", "label": "Pasa a Propuesta y cotización" }] },
+       { "label": "No", "nodes": [{ "shape": "stadium", "label": "Contacto archivado" }] }
+      ]
+   }}
+  ]
+ },
+ {
+  "nombre": "Propuesta y cotización",
+  "evento_inicio": "Ficha de cliente completa, con las condiciones y necesidades del proyecto relevadas.",
+  "objetivo": "Elaborar una propuesta de diseño, cotizarla y obtener la aceptación del cliente antes de iniciar la obra.",
+  "actividades": [
+   "El arquitecto elabora una propuesta de diseño a partir de la ficha de cliente.",
+   "El asesor presenta la propuesta junto con la cotización correspondiente.",
+   "El cliente evalúa la propuesta y decide si la acepta.",
+   "De aceptarla, se coordina el pago de la seña que da inicio formal al proyecto."
+  ],
+  "participantes": "Cliente · Arquitecto · Asesor",
+  "recursos": "Índice de construcción",
+  "documentos": "Propuesta de diseño · Cotización",
+  "flow": [
+   { "kind": "node", "node": { "shape": "stadium", "label": "Ficha de cliente" } },
+   { "kind": "node", "node": { "shape": "rect", "label": "Elaboración de la propuesta de diseño" } },
+   { "kind": "node", "node": { "shape": "parallelogram", "label": "Cotización" } },
+   { "kind": "node", "node": { "shape": "rect", "label": "Presentación al cliente" } },
+   { "kind": "decision", "decision": {
+      "question": "¿El cliente acepta la propuesta?",
+      "branches": [
+       { "label": "Sí", "nodes": [{ "shape": "doc", "label": "Pago de la seña" }, { "shape": "stadium", "label": "Pasa a Inicio y condiciones de obra" }] },
+       { "label": "No", "nodes": [{ "shape": "rect", "label": "Se ajusta la propuesta o se archiva" }] }
+      ]
+   }}
+  ]
+ },
+ {
+  "nombre": "Inicio y condiciones de obra",
+  "evento_inicio": "Seña pagada y proyecto aceptado por el cliente.",
+  "objetivo": "Planificación, coordinación, supervisión y control del proyecto en construcción.",
+  "actividades": [
+   "El arquitecto recibe el diseño a llevar a cabo y realiza las consultas pertinentes al diseñador.",
+   "El asesor acuerda con el cliente lugar y hora para asesorarlo en la compra de los materiales.",
+   "El arquitecto verifica la disposición de la cuadrilla de trabajo para iniciar la obra."
+  ],
+  "participantes": "Arquitecto · Diseñador · Asesor · Proveedor · Cuadrilla de trabajo",
+  "recursos": "",
+  "documentos": "",
+  "flow": [
+   { "kind": "node", "node": { "shape": "stadium", "label": "Diseño preliminar listo" } },
+   { "kind": "node", "node": { "shape": "rect", "label": "Arquitecto consulta al diseñador" } },
+   { "kind": "decision", "decision": {
+      "question": "¿El diseño necesita ajustes tras la consulta?",
+      "branches": [
+       { "label": "Sí", "nodes": [{ "shape": "rect", "label": "Se ajusta el diseño con el diseñador" }] },
+       { "label": "No", "nodes": [{ "shape": "rect", "label": "Se continúa con el diseño aprobado" }] }
+      ],
+      "merge": { "shape": "rect", "label": "Asesor acuerda con el cliente visitas al proveedor" }
+   }},
+   { "kind": "node", "node": { "shape": "hex", "label": "Control de plazos" } },
+   { "kind": "decision", "decision": {
+      "question": "¿Hay cuadrilla disponible en la fecha acordada?",
+      "branches": [
+       { "label": "Sí", "nodes": [{ "shape": "stadium", "label": "Comienza la obra en la fecha pactada" }] },
+       { "label": "No", "nodes": [{ "shape": "rect", "label": "Se reprograma la fecha con el cliente" }] }
+      ]
+   }}
+  ]
+ },
+ {
+  "nombre": "Cobro",
+  "evento_inicio": "Acuerdo de las partes.",
+  "objetivo": "Remuneración por el servicio prestado.",
+  "actividades": [
+   "El administrativo evalúa si corresponde actualizar el monto según la variación del índice de construcción.",
+   "Se realiza la firma del porcentaje de pago y los plazos, de acuerdo con el cliente.",
+   "El personal administrativo emite el recibo de pago según la modalidad acordada, entrega una copia y archiva el original."
+  ],
+  "participantes": "Cliente · Administrativo",
+  "recursos": "",
+  "documentos": "Recibo de pago · Presupuesto final con plazos y formas de pago",
+  "flow": [
+   { "kind": "node", "node": { "shape": "stadium", "label": "Acuerdo de las partes" } },
+   { "kind": "decision", "decision": {
+      "question": "¿Corresponde actualizar el monto por índice de construcción?",
+      "branches": [
+       { "label": "Sí", "nodes": [{ "shape": "rect", "label": "Actualización según índice de construcción" }] },
+       { "label": "No", "nodes": [{ "shape": "rect", "label": "Se mantiene el monto presupuestado" }] }
+      ],
+      "merge": { "shape": "doc", "label": "Firma del porcentaje de pago y plazos" }
+   }},
+   { "kind": "decision", "decision": {
+      "question": "¿Cuál es la modalidad de pago pactada?",
+      "branches": [
+       { "label": "Cuota única", "nodes": [{ "shape": "doc", "label": "Emisión de recibo por el monto total" }, { "shape": "stadium", "label": "Entrega de copia y archivado" }] },
+       { "label": "Plan de cuotas", "nodes": [{ "shape": "doc", "label": "Emisión de recibo por cada cuota" }, { "shape": "stadium", "label": "Seguimiento hasta cancelar el saldo" }] }
+      ]
+   }}
+  ]
+ },
+ {
+  "nombre": "Entrega de legajo técnico",
+  "evento_inicio": "Agrupar toda la documentación del proyecto.",
+  "objetivo": "Legajo técnico completo.",
+  "actividades": [
+   "El personal administrativo realiza la búsqueda y recopilación de planos generales, municipales y/o de instalaciones.",
+   "Se procede a realizar la entrega del legajo técnico y se da por finalizado el proyecto."
+  ],
+  "participantes": "Cliente · Administrativo",
+  "recursos": "",
+  "documentos": "Legajo técnico · Planos municipales · Proyecto finalizado con planos y firmado",
+  "flow": [
+   { "kind": "node", "node": { "shape": "stadium", "label": "Agrupar documentación de proyecto" } },
+   { "kind": "node", "node": { "shape": "rect", "label": "Recopilación de documentos" } },
+   { "kind": "decision", "decision": {
+      "question": "¿La documentación recopilada está completa?",
+      "branches": [
+       { "label": "Sí", "nodes": [{ "shape": "doc", "label": "Emisión de legajo técnico" }, { "shape": "rect", "label": "Entrega del legajo técnico" }, { "shape": "stadium", "label": "Finalización del proyecto" }] },
+       { "label": "No", "nodes": [{ "shape": "rect", "label": "Se solicita la documentación faltante" }] }
+      ]
+   }}
+  ]
+ }
+]

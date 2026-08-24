@@ -1,0 +1,238 @@
+---
+import DocLayout from '../../layouts/caso-arquitectura/DocLayout.astro';
+import Reveal from '../../components/caso-arquitectura/Reveal.astro';
+import RequirementCard from '../../components/caso-arquitectura/RequirementCard.astro';
+import UseCaseDiagram from '../../components/caso-arquitectura/UseCaseDiagram.astro';
+import requerimientos from '../../data/caso-arquitectura/requerimientos';
+import { slug, FUNC_BY_CANONICAL } from '../../data/caso-arquitectura/moduleMap';
+import { PRODUCT_NAME } from '../../data/caso-arquitectura/brand';
+
+const { dor, dod, modulos, story_map } = requerimientos;
+
+function tituloDe(historia: string) {
+  const m = historia.match(/quiero\s+(?:que\s+)?(.+?),?\s+para\s/i);
+  if (!m) return historia.slice(0, 60);
+  const t = m[1].replace(/^el sistema\s+/i, '').trim();
+  return t.charAt(0).toUpperCase() + t.slice(1);
+}
+
+// Casos de uso reconstruidos por el equipo de documentación a partir de las historias de
+// usuario ya relevadas (no existían como artefacto UML independiente en el legajo original):
+// se deriva el actor y el objetivo del mismo patrón "Como/quiero/para" de cada historia.
+function actorDe(historia: string) {
+  const m = historia.match(/^Como\s+(.+?),?\s+(?:quiero|deseo|necesito)/i);
+  return m ? m[1].trim() : 'Actor no identificado';
+}
+const casosDeUso = modulos.flatMap(m => m.requerimientos.map(r => ({
+  actor: actorDe(r.historia),
+  objetivo: tituloDe(r.historia),
+  id: r.id,
+  modulo: m.modulo,
+})));
+const casosPorActor = Object.entries(
+  casosDeUso.reduce((out, c) => {
+    (out[c.actor] ??= []).push(c);
+    return out;
+  }, {} as Record<string, typeof casosDeUso>)
+);
+const casosPorActorYModulo = casosPorActor.map(([actor, casos]) => {
+  const porModulo = Object.entries(
+    casos.reduce((out, c) => {
+      (out[c.modulo] ??= []).push(c);
+      return out;
+    }, {} as Record<string, typeof casos>)
+  );
+  return { actor, unGrupo: porModulo.length <= 1, grupos: porModulo };
+});
+
+function sprintDe(origen: string) {
+  const m = origen.match(/^Sprints?\s[\d-]+/i);
+  return m ? m[0] : origen.split(' (')[0];
+}
+
+// Prioridad reconstruida por el equipo de documentación, no relevada del legajo original: se deriva del
+// orden de sprints y de qué módulos son prerequisito de otros (ver capítulo, nota junto a la tabla).
+const PRIORIDAD_POR_MODULO: Record<string, 'Alta' | 'Media' | 'Baja'> = {
+  'Cuentas de usuario y cliente': 'Alta',
+  'Proyectos y tipología': 'Alta',
+  'Estadísticas generales': 'Baja',
+  'Servicios y tareas de servicio': 'Alta',
+  'Tareas del proyecto': 'Media',
+  'Gráfico de avance de tareas': 'Media',
+  'Cobros': 'Alta',
+  'Gráficos de Gantt y PERT': 'Media',
+  'Portal del cliente': 'Media',
+  'Estadísticas y reportes gráficos': 'Baja',
+};
+const PRIORIDAD_EXCEPCIONES: Record<string, 'Alta' | 'Media' | 'Baja'> = {
+  'HU-037': 'Baja',
+  'HU-038': 'Baja',
+  'HU-039': 'Baja',
+};
+function prioridadDe(modulo: string, id: string) {
+  return PRIORIDAD_EXCEPCIONES[id] ?? PRIORIDAD_POR_MODULO[modulo] ?? 'Media';
+}
+---
+<!-- noTransition: esta página renderiza un trace-map y varios <Reveal>
+     (<details>) con tablas grandes; las View Transitions de Astro producían
+     jank al morfear ese volumen de nodos -->
+<DocLayout title="Requerimientos" chapterHref="/caso-arquitectura/requerimientos" noTransition>
+  <div class="doc-block">
+    <h2><span class="doc-block-n">6.0</span>Trazabilidad</h2>
+    <div class="trace-map">
+      <div class="trace-map-head">
+        <span>Necesidad</span>
+        <span></span>
+        <span>Requerimientos</span>
+        <span></span>
+        <span>Alcances</span>
+        <span></span>
+        <span>Funcionalidades</span>
+      </div>
+      {modulos.map(m => {
+        const funcs = FUNC_BY_CANONICAL[m.modulo] ?? [];
+        return (
+          <div class="trace-map-row">
+            <a href={`/impulsos#${slug(m.necesidad_origen)}`} class="tag trace-tag-muted">{m.necesidad_origen}</a>
+            <span class="trace-arrow" aria-hidden="true">→</span>
+            <a href={`/requerimientos#${slug(m.modulo)}`} class="tag">{m.modulo}</a>
+            <span class="trace-arrow" aria-hidden="true">→</span>
+            <a href={`/objetivos-alcance#${slug(m.modulo)}`} class="tag">{m.modulo}</a>
+            <span class="trace-arrow" aria-hidden="true">→</span>
+            <span class="trace-map-func">
+              {funcs.length > 0
+                ? funcs.map(f => <a href={`/funcionalidades#${slug(f)}`} class="tag">{f}</a>)
+                : <span class="trace-tag-muted">sin tarjeta propia en Funcionalidades</span>}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">6.1</span>Definición de Listo y de Terminado</h2>
+    <div class="grid-2">
+      <div class="kv-block">
+        <h4>Definición de Listo</h4>
+        <ul class="m-0 pl-4.5 flex flex-col gap-1.5 text-[0.9rem] text-ink-soft">
+          {dor.map(c => <li>{c}</li>)}
+        </ul>
+      </div>
+      <div class="kv-block">
+        <h4>Definición de Terminado</h4>
+        <ul class="m-0 pl-4.5 flex flex-col gap-1.5 text-[0.9rem] text-ink-soft">
+          {dod.map(c => <li>{c}</li>)}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">6.2</span>Requerimientos por módulo</h2>
+    <p class="text-ink-soft text-[0.94rem] max-w-[720px] mb-5">
+      Los puntos miden complejidad relativa, no horas (ver capítulo Sprints para el desglose real). El
+      sprint asignado surge del origen ya documentado de cada módulo.
+    </p>
+    <div class="callout max-w-[720px]">
+      <p>
+        La prioridad no viene relevada del legajo original (no hay una priorización individual por historia
+        más allá del orden del Story Map), así que acá se reconstruye con un criterio explícito: Alta para lo
+        que es prerequisito de todo lo demás (cuentas, proyectos, servicios, el registro y cálculo de
+        cobros), Media para lo que enriquece ese núcleo (seguimiento de tareas, gráficos de avance,
+        Gantt/PERT, portal del cliente) y Baja para conteos informativos, validaciones secundarias y
+        analítica/optimización.
+      </p>
+    </div>
+    <div class="flex flex-col gap-3.5">
+      {modulos.map(m => {
+        const funcs = FUNC_BY_CANONICAL[m.modulo] ?? [];
+        const sprint = sprintDe(m.origen);
+        const totalPuntos = m.requerimientos.reduce((sum, r) => sum + r.puntos, 0);
+        return (
+          <Reveal id={slug(m.modulo)} summary={m.modulo} meta={`${m.requerimientos.length} HU · ${totalPuntos} pts`}>
+            <p class="text-ink-soft mb-1">{m.descripcion}</p>
+            <p class="text-ink-faint text-[0.82rem] mb-1">{m.origen}</p>
+            <p class="text-ink-faint text-[0.82rem] mb-4">Cobertura de pruebas: {m.cobertura_pruebas}</p>
+            <div class="detail-card-list">
+              {m.requerimientos.map(r => (
+                <RequirementCard
+                  id={r.id}
+                  titulo={tituloDe(r.historia)}
+                  historia={r.historia}
+                  criterios={r.criterios}
+                  puntos={r.puntos}
+                  prioridad={prioridadDe(m.modulo, r.id)}
+                  sprint={sprint}
+                />
+              ))}
+            </div>
+            <div class="cross-links">
+              <a href={`/objetivos-alcance#${slug(m.modulo)}`} class="text-teal-deep font-semibold">Ver alcance →</a>
+              {funcs.map(f => (
+                <a href={`/funcionalidades#${slug(f)}`} class="text-teal-deep font-semibold">Ver funcionalidades: {f} →</a>
+              ))}
+            </div>
+          </Reveal>
+        );
+      })}
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">6.3</span>Story Map</h2>
+    <p class="text-ink-soft text-[0.94rem] max-w-[720px] mb-5">
+      Organizado por actividad de alto nivel: izquierda a derecha, el recorrido del usuario; arriba a
+      abajo, prioridad. Las cinco columnas de abajo son el MVP construido y entregado. "Fuera de esta
+      versión" es backlog para una futura iteración.
+    </p>
+    <div class="grid-3">
+      {story_map.actividades.map(a => (
+        <div class="card">
+          <span class="pill-neutral">{a.rango}</span>
+          <h3 class="font-head text-[0.95rem] mt-3.5 mb-2.5">{a.actividad}</h3>
+          <ul class="m-0 pl-4.5 flex flex-col gap-1 text-ink-soft text-sm">
+            {a.tareas.map(t => <li>{t}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <h3 class="font-head text-[0.95rem] mt-8 mb-3 text-ink">Fuera de esta versión</h3>
+    <p class="text-ink-soft text-[0.94rem] max-w-[720px] mb-4">
+      Entidades del modelo de datos sin pantalla ni controlador propio, pendientes para una futura
+      iteración.
+    </p>
+    <div class="flex flex-col gap-3">
+      {story_map.fuera_de_alcance.map(f => (
+        <div class="kv-block">
+          <h4>{f.item}</h4>
+          <p>{f.nota}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">6.4</span>Casos de uso</h2>
+    <p class="text-ink-soft text-[0.94rem] max-w-[720px] mb-5">
+      Diagramas de casos de uso reconstruidos a partir de las historias de usuario, agrupando cada una por
+      el actor que la protagoniza. El objetivo de cada caso es el mismo título del catálogo de
+      requerimientos de arriba.
+    </p>
+    {casosPorActorYModulo.map(({ actor, unGrupo, grupos }) => (
+      <div class="mb-8">
+        <h3 class="font-head text-[0.95rem] mb-3 text-ink">{actor}</h3>
+        <div class={unGrupo ? '' : 'grid-2 items-start'}>
+          {grupos.map(([modulo, casosModulo]) => (
+            <UseCaseDiagram
+              actor={actor}
+              sistema={PRODUCT_NAME}
+              casos={casosModulo.map(c => ({ objetivo: c.objetivo, id: c.id }))}
+              caption={unGrupo ? undefined : modulo}
+            />
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</DocLayout>

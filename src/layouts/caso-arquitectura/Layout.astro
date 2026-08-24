@@ -1,0 +1,30 @@
+---
+import '../../styles/caso-arquitectura.css';
+import { ClientRouter } from 'astro:transitions';
+import { STUDIO_NAME, PRODUCT_NAME } from '../../data/caso-arquitectura/brand';
+import LoadingOverlay from '../../components/caso-arquitectura/LoadingOverlay.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  noTransition?: boolean;
+}
+
+const { title, description = `Caso de estudio: ${PRODUCT_NAME}, la plataforma de gestión de proyectos desarrollada para ${STUDIO_NAME}.`, noTransition = false } = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {!noTransition && <ClientRouter />}
+    <title>{title}</title>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Saltar al contenido</a>
+    <LoadingOverlay />
+    <slot />
+  </body>
+</html>

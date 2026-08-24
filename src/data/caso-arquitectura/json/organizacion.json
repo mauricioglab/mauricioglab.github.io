@@ -1,0 +1,164 @@
+{
+ "intro": [
+  "MGD Arquitectura es un estudio de arquitectura de la ciudad de Córdoba. Este documento presenta la propuesta de diseño y desarrollo de un sistema de gestión de proyectos para sus clientes."
+ ],
+ "objetivo_organizacional": [
+  "Los objetivos son planificar, diseñar y ejecutar proyectos, bajo un modelo de administración compartida, especializándose en el Interiorismo y la Arquitectura comercial."
+ ],
+ "politicas_intro": [
+  "Estas políticas surgen del acuerdo formal entre los tres socios del estudio y rigen tanto la relación con los clientes como el funcionamiento interno del equipo. Se documentan acá porque el sistema, desde los datos que registra hasta los estados que administra, está diseñado para respetarlas."
+ ],
+ "politicas": [
+  {
+   "title": "POLÍTICA DE PRODUCCIÓN",
+   "paragraphs": [
+    "Se atenderá mediante la modalidad de administración compartida con uso de maquetas virtuales.",
+    "Los honorarios se abonan mensualmente, en montos y cantidad de cuotas a convenir previamente entre las partes. Solo se realizan cálculos y planos de incumbencia de la arquitectura.",
+    "Los cobros y presupuestos siguen lo publicado por el Colegio de Arquitectos; no incluyen costos de estudio de suelo ni administrativos."
+   ]
+  },
+  {
+   "title": "POLÍTICA COMERCIAL",
+   "paragraphs": [
+    "Se trabaja exclusivamente bajo contrato, con reuniones periódicas agendadas. El anticipo correspondiente debe abonarse antes de iniciar el proyecto y, según corresponda, antes de iniciar la obra.",
+    "Las reuniones de novedades y consultas se agendan con el cliente al iniciar el proyecto, y la comunicación se mantiene además por mail y teléfono durante todo su desarrollo."
+   ]
+  },
+  {
+   "title": "POLÍTICA DE PERSONAL",
+   "paragraphs": [
+    "La jerarquía es estrictamente horizontal para la toma de decisiones.",
+    "Se prioriza el trabajo en equipo y la responsabilidad autónoma de cada socio.",
+    "El código de vestimenta es casual de negocios."
+   ]
+  },
+  {
+   "title": "POLÍTICA FINANCIERA",
+   "paragraphs": [
+    "Los tres socios aportan financiamiento personal en partes iguales para invertir en el estudio, con asesoramiento externo en materia de contabilidad."
+   ]
+  },
+  {
+   "title": "POLÍTICA DE EQUIPAMIENTO",
+   "paragraphs": [
+    "Se utiliza un servicio de resguardo y protección para la información del estudio.",
+    "El mantenimiento informático debe estar a cargo de personal idóneo."
+   ]
+  }
+ ],
+ "estrategias": [
+  { "texto": "Priorizar la calidad y la atención personalizada por sobre la cantidad de proyectos tomados y los plazos de entrega.", "horizonte": "Permanente, rige cada proyecto en curso" },
+  { "texto": "Asesorar personalmente a cada cliente en la compra de materiales, en vez de delegar esa decisión a terceros.", "horizonte": "Permanente, rige cada proyecto en curso" }
+ ],
+ "planes": [
+  { "texto": "Aumentar la comunicación a través de medios digitales, dando acceso a los proyectos mediante un portafolio digital (Drive).", "horizonte": "Corto plazo", "impacto": "Reduce la fricción de acceso a la información de cada proyecto sin depender de una reunión presencial, antecedente directo de la visibilidad que hoy da el sistema al cliente." },
+  { "texto": "Implementar un plan de marketing, contratando un servicio de publicidad para ampliar el alcance y sumar nuevos clientes.", "horizonte": "Mediano plazo", "impacto": "Amplía la cartera de clientes más allá de la referencia boca a boca, el canal de captación actual del estudio." },
+  { "texto": "Brindar proyectos de alta calidad para lograr reconocimiento y contar con otro medio de atracción de clientes.", "horizonte": "Mediano plazo", "impacto": "El reconocimiento por calidad se vuelve, en sí mismo, un canal de captación adicional al de la publicidad paga." },
+  { "texto": "Realizar obras de mayor envergadura para obtener mayor reconocimiento y prestigio.", "horizonte": "Largo plazo", "impacto": "Consolida al estudio en el segmento de arquitectura comercial de mayor escala, más allá del interiorismo con el que arrancó." }
+ ],
+ "actores": [
+  {
+   "actor": "Cliente",
+   "rolSistema": "Cliente (portal del cliente)",
+   "hoy": "Llama o escribe para pedir novedades de su proyecto, y espera a que el estudio le informe.",
+   "conSistema": "Inicia sesión con su propio usuario y consulta directamente estado, avance, compromisos y arquitecto asignado."
+  },
+  {
+   "actor": "Socio, en su función de asesor comercial",
+   "rolSistema": "Usuario interno",
+   "hoy": "Recibe o realiza la entrevista inicial con el cliente y presenta la propuesta de diseño con su cotización.",
+   "conSistema": "Da de alta clientes y proyectos nuevos, y carga la propuesta y el presupuesto asociado."
+  },
+  {
+   "actor": "Socio, en su función de arquitecto",
+   "rolSistema": "Usuario interno",
+   "hoy": "Diseña, consulta con el diseñador externo si hace falta, y supervisa la obra en curso.",
+   "conSistema": "Asigna servicios y tareas al proyecto, y actualiza su avance y sus compromisos."
+  },
+  {
+   "actor": "Socio, en su función administrativa",
+   "rolSistema": "Usuario interno",
+   "hoy": "Emite el recibo de pago según la modalidad acordada y arma el legajo técnico para la entrega final.",
+   "conSistema": "Registra los cobros del proyecto, genera informes imprimibles y exporta el listado de proyectos."
+  },
+  {
+   "actor": "Diseñador, proveedor y cuadrilla de trabajo",
+   "rolSistema": "Sin acceso al sistema",
+   "hoy": "Participan de la obra coordinados directamente por el arquitecto, por teléfono o en persona.",
+   "conSistema": "Siguen sin operar el sistema en esta versión: el arquitecto los coordina por fuera, como hoy."
+  }
+ ],
+ "actores_nota": [
+  "Los tres socios rotan de función según el proyecto: el mismo socio actúa como asesor comercial en un caso y como arquitecto de obra en otro, por eso los roles de usuario interno no corresponden a tres personas fijas.",
+  "El catálogo de roles del sistema (Admin, Usuario, Soporte, Técnico, Visitante) es más amplio que esta lista de actores: \"Visitante\" es el rol por defecto sin permisos, y Soporte/Técnico no tienen actor de negocio confirmado en el legajo (ver Modelado, DER)."
+ ],
+ "funcionamiento": [
+  "Al ser una estructura horizontal y compartir diferentes tareas, cada uno de los socios toma en cierta forma un rol específico dentro de la organización. Por debajo de los socios, el estudio organiza el trabajo en seis áreas (Diseño, Contabilidad, Marketing digital, Administración, Clientes y Obra) y se apoya en dos asesorías externas, Legal (Aravena y Asoc.) e Informática (Ingeniería en sistemas), que no operan el día a día pero sí intervienen en decisiones puntuales de cada área."
+ ],
+ "reglas_negocio": [
+  {
+   "id": "RN-01",
+   "regla": "Un proyecto no puede marcarse como completado si ninguna de sus tareas se completó u omitió.",
+   "implementacion": "Al intentar cerrar un proyecto, el sistema revisa sus tareas antes de aplicar el cambio de estado a Completado; si ninguna cumple la condición, el cambio no se ejecuta.",
+   "violacion": "El proyecto queda en su estado anterior, aunque se intente cerrarlo manualmente.",
+   "origen": "Código real (HandleProjectCompletion)",
+   "validado_por": "No relevado en el legajo original"
+  },
+  {
+   "id": "RN-02",
+   "regla": "Todo cambio de estado de un proyecto tiene que quedar registrado, para poder reconstruir su historia completa.",
+   "implementacion": "Cada transición de estado, salvo el pase a Pendiente, inserta un registro con la fecha y el estado alcanzado en el historial del proyecto.",
+   "violacion": "Se pierde la trazabilidad de cuándo y por qué cambió de estado un proyecto.",
+   "origen": "Código real (registro histórico por transición)",
+   "validado_por": "No relevado en el legajo original"
+  },
+  {
+   "id": "RN-03",
+   "regla": "El anticipo (seña) debe abonarse antes de iniciar el proyecto, y según corresponda, antes de iniciar la obra.",
+   "implementacion": "El registro de cobros permite asentar ese anticipo como el primer cobro del proyecto, antes de que se le asignen tareas de obra.",
+   "violacion": "Sin ese registro, el estudio no tiene evidencia de que el anticipo se cobró antes de comprometer recursos.",
+   "origen": "Política Comercial del estudio (ver Organización)",
+   "validado_por": "Política escrita de MGD Arquitectura (sin firma individual de un cliente puntual)"
+  },
+  {
+   "id": "RN-04",
+   "regla": "Los honorarios y presupuestos se calculan según lo publicado por el Colegio de Arquitectos, sin incluir estudio de suelo ni costos administrativos.",
+   "implementacion": "Cada tipología de proyecto guarda un honorario profesional de referencia y un rango de superficie, que se usan como base para calcular el presupuesto.",
+   "violacion": "Un presupuesto fuera de ese rango queda fuera de la política comercial acordada entre los socios.",
+   "origen": "Política de Producción del estudio (ver Organización)",
+   "validado_por": "Política escrita de MGD Arquitectura (sin firma individual de un cliente puntual)"
+  },
+  {
+   "id": "RN-05",
+   "regla": "El saldo pendiente de un proyecto siempre tiene que reflejar lo que realmente falta cobrar.",
+   "implementacion": "El sistema calcula el saldo automáticamente como la diferencia entre el presupuesto y la suma de los cobros registrados; no es un campo editable a mano.",
+   "violacion": "Si se pudiera editar el saldo directamente, quedaría desincronizado de los cobros reales.",
+   "origen": "Requerimiento HU-036 (Cobros)",
+   "validado_por": "No relevado en el legajo original"
+  },
+  {
+   "id": "RN-06",
+   "regla": "Todo cobro pendiente con fecha de vencimiento próxima o vencida debe mostrar una alerta visible, para que el estudio lo sepa con anticipación y no lo descubra tarde.",
+   "implementacion": "Cada cobro pendiente puede llevar una fecha de vencimiento; el sistema muestra una alerta visible cuando esa fecha se acerca o ya venció.",
+   "violacion": "Sin la alerta, el vencimiento pasa desapercibido hasta que alguien lo revisa manualmente.",
+   "origen": "Requerimiento HU-040 (Cobros)",
+   "validado_por": "No relevado en el legajo original"
+  },
+  {
+   "id": "RN-07",
+   "regla": "Un cobro no se elimina directamente: anularlo exige registrar el motivo de la anulación.",
+   "implementacion": "El botón \"Anular\" de un cobro abre una pantalla aparte que pide indicar el motivo antes de confirmar la baja; el cobro anulado no vuelve a contarse en el saldo del proyecto.",
+   "violacion": "Sin el motivo registrado, no queda evidencia de por qué se dio de baja un cobro ya asentado.",
+   "origen": "Manual de usuario Arquisoft (pantalla de anulación de cobro)",
+   "validado_por": "No relevado en el legajo original"
+  },
+  {
+   "id": "RN-08",
+   "regla": "Al recuperar la contraseña, el sistema valida DNI, correo electrónico y teléfono contra los datos del alta, y restablece como contraseña provisoria el propio DNI del usuario o cliente.",
+   "implementacion": "La pantalla de recuperación pide esos tres datos; si coinciden con el registro existente, la contraseña se reemplaza por el DNI, que la persona puede cambiar después desde su sesión.",
+   "violacion": "Si alguno de los tres datos no coincide, la recuperación no procede y la contraseña anterior queda vigente.",
+   "origen": "Manual de usuario Arquisoft (recuperación de contraseña de usuario y de cliente)",
+   "validado_por": "No relevado en el legajo original"
+  }
+ ]
+}

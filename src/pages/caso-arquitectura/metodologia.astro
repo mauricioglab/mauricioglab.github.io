@@ -1,0 +1,137 @@
+---
+import DocLayout from '../../layouts/caso-arquitectura/DocLayout.astro';
+import DataTable from '../../components/caso-arquitectura/DataTable.astro';
+import metodologia from '../../data/caso-arquitectura/metodologia';
+import diseno from '../../data/caso-arquitectura/diseno';
+import sprints from '../../data/caso-arquitectura/sprints';
+
+function parseLinked(t: string) {
+  const [name, ...rest] = t.split(':');
+  return { name, desc: rest.join(':').trim() };
+}
+
+const backlogResumen = sprints.map(s => [
+  `Sprint ${s.numero}`,
+  s.objetivo,
+  s.backlog.length > 0 ? `${s.backlog.length} ítems` : '—',
+  s.estimacion.length > 1 ? `${s.estimacion.length - 1} tareas estimadas` : 'Sin tabla en el legajo original',
+]);
+---
+<DocLayout title="Metodología" chapterHref="/caso-arquitectura/metodologia">
+  <div class="doc-block doc-prose">
+    {metodologia.texto.map(p => <p>{p}</p>)}
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">10.1</span>Roles del equipo</h2>
+    <div class="grid-2">
+      {metodologia.roles.map(r => (
+        <div class="card">
+          <h3>{r.rol}</h3>
+          <p class="text-ink-soft text-[0.94rem] mt-1.5">{r.responsabilidad}</p>
+          <p class="text-ink-faint text-[0.82rem] mt-2.5">{r.conexion}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">10.2</span>Ceremonias</h2>
+    <div class="flex flex-col gap-3.5">
+      {metodologia.ceremonias.map(c => (
+        <div class="kv-block">
+          <h3>{c.nombre}: <span class="font-normal normal-case text-ink-soft">{c.proposito}</span></h3>
+          <p>{c.detalle.intro}</p>
+          <ul class="m-0 pl-4.5 mt-1.5 flex flex-col gap-1 text-ink-soft text-sm">
+            {c.detalle.items.map(item => <li>{item}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">10.3</span>Artefactos</h2>
+    <div class="grid-2">
+      {metodologia.artefactos.map(a => (
+        <div class="card">
+          <h3>{a.nombre}</h3>
+          <p class="text-ink-soft text-[0.94rem] mt-1.5">{a.descripcion}</p>
+          <p class="text-ink-faint text-[0.82rem] mt-2.5">{a.conexion}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">10.4</span>Herramientas del equipo</h2>
+    <p class="text-ink-soft text-[0.94rem] max-w-[720px] mb-5">
+      Lo que el equipo usó para gestionar el proyecto y desarrollarlo, no lo que forma parte del producto
+      entregado (esas librerías están en el capítulo de Diseño).
+    </p>
+    <div class="grid-3">
+      {diseno.herramientas_desarrollo.map(t => {
+        const { name, desc } = parseLinked(t);
+        return (
+          <div class="card">
+            <h3>{name}</h3>
+            <p>{desc}</p>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+
+  <div class="doc-block doc-prose">
+    <h2><span class="doc-block-n">10.5</span>Cadencia</h2>
+    <div class="callout">
+      {metodologia.cadencia.map(c => <p class="m-0">{c}</p>)}
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">10.6</span>Backlog y estimación</h2>
+    <p class="text-ink-soft text-[0.94rem] max-w-[720px] mb-5">
+      El Product Backlog completo vivía en Jira; acá va el resumen de qué se comprometió y estimó en cada
+      Sprint Planning. El detalle completo de cada ítem, con su desglose de horas y el resultado final,
+      está en el capítulo de <a href="/caso-arquitectura/sprints" class="text-teal-deep font-semibold">Sprints</a>.
+    </p>
+    <DataTable rows={[
+      ['Sprint', 'Objetivo', 'Ítems de backlog', 'Estimación'],
+      ...backlogResumen,
+    ]} compact />
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">10.7</span>Análisis de costos</h2>
+    <p class="doc-prose text-ink-soft text-[0.94rem] mb-3">{metodologia.costos_ilustrativos.intro}</p>
+    <div class="callout">
+      <p>{metodologia.costos_ilustrativos.disclaimer}</p>
+    </div>
+    <h3 class="font-head text-[0.95rem] mb-3 mt-6 text-ink">Estimación por tarifa de mercado</h3>
+    <DataTable rows={metodologia.costos_ilustrativos.tabla_mercado} compact />
+    <h3 class="font-head text-[0.95rem] mb-3 mt-6 text-ink">Punto de comparación: honorarios CPCIPC (Córdoba)</h3>
+    <div class="kv-block">
+      <h4>{metodologia.costos_ilustrativos.referencia_cpcipc.valor}</h4>
+      <p>{metodologia.costos_ilustrativos.referencia_cpcipc.fuente}</p>
+      <p>{metodologia.costos_ilustrativos.referencia_cpcipc.nota}</p>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">10.8</span>Análisis de riesgos del ejercicio de estimación</h2>
+    <div class="grid-2">
+      {metodologia.riesgos_estimacion.map(r => (
+        <div class="card">
+          <span class="pill">{r.titulo}</span>
+          <p class="mt-3.5">{r.texto}</p>
+        </div>
+      ))}
+    </div>
+    <p class="doc-prose text-ink-soft mt-6">
+      Con Scrum, el backlog y el estudio de costos ya cubiertos, lo que sigue es cómo se construyó cada
+      incremento, sprint a sprint, en el próximo capítulo:
+      <a href="/caso-arquitectura/sprints" class="text-teal-deep font-semibold">Sprints</a>.
+    </p>
+  </div>
+</DocLayout>

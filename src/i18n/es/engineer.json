@@ -1,0 +1,107 @@
+{
+  "title": "Software Engineer",
+  "subtitle": "IA y Automatización",
+  "description": "Software Engineer especializado en IA y Automatización · Python · .NET Core · Angular",
+  "seo": {
+    "title": "Mauricio González | Software Engineer especializado en IA y Automatización",
+    "description": "Software Engineer con base en .NET Core y Angular, especializado en IA aplicada y automatización de procesos. IA en producción, modelos predictivos y arquitectura enterprise."
+  },
+  "hero": {
+    "badge": "DISPONIBLE PARA NUEVOS DESAFÍOS",
+    "headline": "Software Engineer especializado en <span class=\"text-blue-600 dark:text-blue-400\">IA y Automatización</span>.",
+    "subheadline": "Base sólida en desarrollo full-stack (.NET Core, Angular) y especialización creciente en IA aplicada. Experiencia real llevando soluciones de IA a producción a escala gubernamental/enterprise, además de construir y validar modelos predictivos propios con Python.",
+    "ctaPrimary": "Descargar CV",
+    "ctaSecondary": "Ver Proyectos"
+  },
+  "projectsDescription": "Sistemas enterprise que soportan carga real y modelos de IA/datos validados con rigor.",
+  "ctaTitle": "¿Buscás un Software Engineer que combine desarrollo e IA?",
+  "ctaDescription": "Hablemos de tu proyecto. Puedo empezar de inmediato.",
+  "aiSection": {
+    "title": "IA y Datos",
+    "flagship": {
+      "badge": "GyL Group · En producción",
+      "title": "Validación Biométrica con IA — RENAPER + AWS Rekognition",
+      "items": [
+        "Reconocimiento facial y prueba de vida en producción: 500+ verificaciones diarias, 99.8% de precisión.",
+        "Backend Node.js/NestJS integrado con RENAPER, frontend Angular.",
+        "Almacenamiento inmutable con AWS QLDB para trazabilidad completa de validaciones."
+      ]
+    },
+    "personal": [
+      {
+        "badge": "Proyecto personal",
+        "title": "Predicción Mundial 2026",
+        "description": "Modelo Elo + Poisson + Monte Carlo, validado contra el torneo real (22/32 aciertos de bracket). Python, Pandas, Streamlit."
+      },
+      {
+        "badge": "Proyecto personal",
+        "title": "Predicción de Abandono Estudiantil",
+        "description": "Clasificación (regresión logística vs. Random Forest), evaluación con recall/AUC y trade-off de negocio en el umbral de decisión. Python, scikit-learn."
+      }
+    ]
+  },
+  "experience": [
+    {
+      "role": "Desarrollador Full Stack",
+      "company": "GyL Group",
+      "period": "01/2023 – Presente",
+      "items": [
+        "Referente técnico de un equipo de 8 desarrolladores en proyectos gubernamentales y empresariales.",
+        "Automatización de liquidaciones: reducción de 4h a 30min (87.5% de mejora) procesando 250K registros/mes.",
+        "Migración técnica a Angular 19; formularios dinámicos con 27K+ usuarios activos.",
+        "API Billetera Virtual: microservicios en Docker/AWS ECS, DDD, CQRS, Facade y Mediator.",
+        "También: validación biométrica con IA (RENAPER/AWS Rekognition), automatización de auditorías, monitoreo agrícola con ML para cliente en España, y sistemas para Coca-Cola Embonor y Renaseg."
+      ]
+    },
+    {
+      "role": "Desarrollador .NET",
+      "company": "SimpleMak",
+      "period": "11/2022 – 02/2023",
+      "items": [
+        "Módulo Warehousing aplicando DDD y CQRS.",
+        "Formularios complejos con JavaScript vanilla emulando reactividad."
+      ]
+    },
+    {
+      "role": "Analista - Desarrollador",
+      "company": "Universidad Nacional de San Martín",
+      "period": "11/2021 – 12/2022",
+      "items": [
+        "Formularios web accesibles para el Ministerio de Desarrollo Social.",
+        "Relevamiento directo con stakeholders, traducción de requerimientos a especificaciones técnicas."
+      ]
+    },
+    {
+      "role": "Desarrollador C#",
+      "company": "RocketBot",
+      "period": "07/2021 – 09/2021",
+      "items": [
+        "Orchestrator de gestión de bots RPA para automatización empresarial.",
+        "Módulo de autenticación y sistema de roles/auditoría."
+      ]
+    }
+  ],
+  "docencia": {
+    "title": "Docencia",
+    "role": "Profesor — 3 carreras de tecnología",
+    "company": "Instituto Cervantes",
+    "period": "08/2024 – Presente",
+    "description": "Docente en las carreras de Analista de Sistemas, Desarrollo Web y Ciencia de Datos e IA. Incluye Proyecto Integrador y Procesamiento de Datos (Power BI) en la carrera de Ciencia de Datos. 5 de 20 estudiantes consiguieron empleo como Jr Developer en el último ciclo.",
+    "tags": [
+      "Programación 1 (Python)",
+      "Laboratorio 1 y 2",
+      "Desarrollo Web 2 (React)",
+      "Apps Móviles (React Native/Expo)",
+      "Administración de Proyecto",
+      "Práctica Profesionalizante 2 y 3",
+      "Proyecto Integrador (Ciencia de Datos)",
+      "Procesamiento de Datos (Power BI)"
+    ]
+  },
+  "education": [
+    { "title": "Analista de Sistemas de Computación", "institution": "Instituto Cervantes", "period": "2023 · Cuadro de Honor" },
+    { "title": "Diplomatura en Ciencias de Datos e IA", "institution": "UTN", "period": "2025" },
+    { "title": "Diplomatura en Python", "institution": "UTN", "period": "2025" },
+    { "title": "Google Data Analytics Professional Certificate", "institution": "Coursera", "period": "En curso" }
+  ]
+}

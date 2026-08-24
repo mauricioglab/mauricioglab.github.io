@@ -1,0 +1,39 @@
+---
+import DocLayout from '../../layouts/caso-arquitectura/DocLayout.astro';
+import imp from '../../data/caso-arquitectura/impulsos';
+import { slug } from '../../data/caso-arquitectura/moduleMap';
+---
+<DocLayout title="Impulsos del proyecto" chapterHref="/caso-arquitectura/impulsos">
+<div class="doc-block">
+    <h2><span class="doc-block-n">3.1</span>Problema, necesidad y oportunidad</h2>
+    <div class="flex flex-col gap-5">
+      {imp.items.map(it => (
+        <div id={slug(it.tema)} class="card">
+          <h3 class="font-head text-[0.95rem] mb-4 text-ink">{it.tema}</h3>
+          <div class="grid-3">
+            <div>
+              <span class="pill">Problema</span>
+              <p class="mt-3 text-[0.94rem] text-ink-soft">{it.problema}</p>
+            </div>
+            <div>
+              <span class="pill">Necesidad</span>
+              <p class="mt-3 text-[0.94rem] text-ink-soft">{it.necesidad}</p>
+            </div>
+            <div>
+              <span class="pill">Oportunidad</span>
+              <p class="mt-3 text-[0.94rem] text-ink-soft">{it.oportunidad}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="doc-block doc-prose">
+    <p class="text-ink-soft">
+      A partir de estos tres impulsos, el siguiente paso fue confirmar si el proyecto era viable, en el
+      próximo capítulo:
+      <a href="/caso-arquitectura/factibilidad" class="text-teal-deep font-semibold">Estudio de factibilidad</a>.
+    </p>
+  </div>
+</DocLayout>

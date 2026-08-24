@@ -1,0 +1,80 @@
+{
+ "der": {
+  "intro": "El modelo completo tiene más tablas que las cuatro entidades centrales (Usuario, Cliente, Proyecto, Tipología): una decena de catálogos (roles, estados, métodos de pago, tipos de servicio y tarea, geografía) las sostienen. Maestras: existen antes de que pase algo. Transaccionales (★): registran que algo pasó, con fecha y estado propio.",
+  "relaciones": [
+   "Un Cliente puede tener varios Proyectos, y cuelga de un catálogo geográfico propio (Dirección, Localidad, Provincia).",
+   "Cada Proyecto tiene una Tipología (clasificación fija: anteproyecto, con detalle o gestión y conducción de obra) y, por separado, un Estado de flujo propio (Activo, Inactivo, En progreso, Completado o Pendiente) que si avanza queda registrado en su Historial.",
+   "Cada Proyecto agrupa los Servicios contratados, y cada Servicio se descompone en Tareas predefinidas por su tipo.",
+   "Cada Tarea puede tener uno o más registros de Hub colgando de ella: un compromiso, un mensaje o un archivo adjunto, visible tanto para el usuario interno como para el cliente.",
+   "Cada Proyecto tiene un Presupuesto con su propio estado de aprobación (en revisión, finalizado, aprobado, pagado), y los Cobros se registran contra ese presupuesto, cada uno con su medio de pago."
+  ],
+  "tabla": [
+   ["Entidad", "Atributos principales", "Tipo", "Se relaciona con"],
+   ["Usuario", "Nombre, apellido, DNI, mail, teléfono", "Maestra (con auditoría)", "Rol y Estado de usuario, Proyecto"],
+   ["Rol de usuario", "Descripción: Admin, Usuario, Soporte, Técnico, Visitante", "Maestra", "Usuario"],
+   ["Cliente", "Nombre, apellido, DNI, mail, teléfono, dirección", "Maestra (con auditoría)", "Rol y Estado de cliente, Dirección, Proyecto"],
+   ["Dirección / Localidad / Provincia", "Calle, número, piso, código postal", "Maestras (catálogo geográfico)", "Cliente"],
+   ["Proyecto ★", "Nombre, cliente, usuario responsable, presupuesto", "Transaccional", "Cliente, Usuario, Tipología, Estado de proyecto, Tipo de servicio, Tarea, Historial, Presupuesto"],
+   ["Estado de proyecto", "Descripción: Activo, Inactivo, En progreso, Completado, Pendiente", "Maestra", "Proyecto"],
+   ["Tipología de proyecto", "Nombre, rango de superficie, honorario profesional", "Maestra", "Proyecto"],
+   ["Tipo de servicio", "Nombre, si es privado", "Maestra", "Proyecto, Tipo de tarea"],
+   ["Tipo de tarea", "Nombre, orden dentro del servicio (25 tareas estándar predefinidas)", "Maestra", "Tarea, Tipo de servicio"],
+   ["Tarea (Assignment) ★", "Iniciada, completada, omitida u oculta, fecha de compromiso original", "Transaccional", "Proyecto, Tipo de tarea, Hub"],
+   ["Hub ★", "Compromiso (fecha, nota) o mensaje o archivo adjunto de una tarea", "Transaccional", "Tarea"],
+   ["Historial de proyecto ★", "Fecha del cambio, estado alcanzado", "Transaccional (bitácora)", "Proyecto"],
+   ["Presupuesto ★", "Superficie, costo por m², fecha de creación y vencimiento", "Transaccional", "Proyecto, Estado de presupuesto, Cobro"],
+   ["Estado de presupuesto", "Descripción: en Revisión, Finalizado, Aprobado, Pagado", "Maestra", "Presupuesto"],
+   ["Cobro (Payment) ★", "Monto, fecha de cobro", "Transaccional", "Presupuesto, Método de pago"],
+   ["Método de pago", "Descripción: Efectivo, Transferencia, Débito", "Maestra", "Cobro"]
+  ]
+ },
+ "diccionario_datos": [
+  {
+   "entidad": "Usuario",
+   "campos": [
+    { "campo": "nombre", "tipo": "Varchar(50)", "obligatorio": "Sí", "unico": "No", "ejemplo": "Julieta", "descripcion": "El nombre de pila de ese colaborador interno; junto con el apellido identifica al usuario en cada pantalla donde aparece (asignaciones, historial, contacto para el cliente)." },
+    { "campo": "apellido", "tipo": "Varchar(50)", "obligatorio": "Sí", "unico": "No", "ejemplo": "Ferreyra", "descripcion": "El apellido de ese colaborador interno; se muestra siempre junto al nombre en las mismas pantallas." },
+    { "campo": "número de usuario", "tipo": "Int (identity)", "obligatorio": "Sí", "unico": "Sí", "ejemplo": "2187", "descripcion": "El identificador que el sistema asigna solo al dar de alta; sirve para iniciar sesión junto con la contraseña." },
+    { "campo": "DNI", "tipo": "Varchar(10)", "obligatorio": "Sí", "unico": "Sí", "ejemplo": "29.874.512", "descripcion": "Además de identificar a la persona, es la contraseña provisoria que el sistema asigna al recuperar el acceso (ver Catálogo de reglas de negocio)." },
+    { "campo": "correo y teléfono", "tipo": "Varchar(100) / Varchar(20)", "obligatorio": "Sí", "unico": "No", "ejemplo": "julieta.ferreyra@mgdarquitectura.com / 351-445-2290", "descripcion": "Los dos datos de contacto que, junto al DNI, el sistema valida para recuperar la contraseña." },
+    { "campo": "rol", "tipo": "Int (FK a Rol de usuario)", "obligatorio": "Sí", "unico": "No", "ejemplo": "3 (Técnico)", "descripcion": "Qué puede hacer ese usuario dentro del sistema; un mismo usuario puede tener más de un rol a la vez (ver Organización, Actores del negocio)." }
+   ]
+  },
+  {
+   "entidad": "Cliente",
+   "campos": [
+    { "campo": "nombre", "tipo": "Varchar(50)", "obligatorio": "Sí", "unico": "No", "ejemplo": "Braian", "descripcion": "El nombre de pila con el que el estudio identifica a ese cliente; junto con el apellido es lo que ve el socio a cargo al abrir cualquiera de sus proyectos." },
+    { "campo": "apellido", "tipo": "Varchar(50)", "obligatorio": "Sí", "unico": "No", "ejemplo": "Quiroga", "descripcion": "El apellido del cliente; se muestra siempre junto al nombre en las mismas pantallas." },
+    { "campo": "número de cliente", "tipo": "Int (identity)", "obligatorio": "Sí", "unico": "Sí", "ejemplo": "3654", "descripcion": "El identificador que el sistema asigna al dar de alta al cliente; junto con la contraseña, habilita el acceso al Portal del cliente." },
+    { "campo": "DNI", "tipo": "Varchar(10)", "obligatorio": "Sí", "unico": "Sí", "ejemplo": "31.208.677", "descripcion": "Igual que en Usuario, es también la contraseña provisoria al recuperar el acceso." },
+    { "campo": "dirección", "tipo": "Int (FK a Dirección)", "obligatorio": "No", "unico": "No", "ejemplo": "58 (Bv. Illia 1200, Córdoba)", "descripcion": "El domicilio del cliente, apoyado en el catálogo geográfico (Dirección, Localidad, Provincia); no es la dirección de la obra, que se registra por proyecto." }
+   ]
+  },
+  {
+   "entidad": "Proyecto",
+   "campos": [
+    { "campo": "nombre", "tipo": "Varchar(100)", "obligatorio": "Sí", "unico": "No", "ejemplo": "Ampliación vivienda unifamiliar, Bº Cerro", "descripcion": "Cómo identifica el estudio a ese proyecto puntual; no es un código interno, es el nombre por el que se lo reconoce en una conversación." },
+    { "campo": "cliente", "tipo": "Int (FK a Cliente)", "obligatorio": "Sí", "unico": "No", "ejemplo": "3654 (Braian Quiroga)", "descripcion": "Quién encargó y paga el proyecto. Un mismo cliente puede tener varios proyectos con el estudio a la vez." },
+    { "campo": "tipología", "tipo": "Int (FK a Tipología de proyecto)", "obligatorio": "Sí", "unico": "No", "ejemplo": "2 (Gestión y conducción de obra)", "descripcion": "En qué etapa de trabajo está el proyecto. No es lo mismo que el estado: la tipología no cambia sola, se reclasifica cuando el cliente avanza de etapa." },
+    { "campo": "estado", "tipo": "Int (FK a Estado de proyecto)", "obligatorio": "Sí", "unico": "No", "ejemplo": "3 (Activo)", "descripcion": "Dónde está el proyecto en su flujo real de trabajo. Cambia solo por reglas del sistema (ver Catálogo de reglas de negocio), nunca se edita a mano." },
+    { "campo": "presupuesto", "tipo": "Decimal(18,2)", "obligatorio": "No", "unico": "No", "ejemplo": "$7.850.000", "descripcion": "El monto acordado con el cliente, contra el cual se registran los cobros. No incluye estudio de suelo ni costos administrativos, según la política de producción del estudio." },
+    { "campo": "usuario responsable", "tipo": "Int (FK a Usuario)", "obligatorio": "Sí", "unico": "No", "ejemplo": "2187 (Julieta Ferreyra)", "descripcion": "El socio del estudio a cargo del proyecto; es el arquitecto que el cliente ve como su contacto en el Portal del cliente." }
+   ]
+  },
+  {
+   "entidad": "Cobro",
+   "campos": [
+    { "campo": "monto", "tipo": "Decimal(18,2)", "obligatorio": "Sí", "unico": "No", "ejemplo": "$320.000", "descripcion": "Lo efectivamente cobrado en ese pago puntual, no el presupuesto total del proyecto." },
+    { "campo": "fecha de cobro", "tipo": "Date", "obligatorio": "Sí", "unico": "No", "ejemplo": "02/07/2025", "descripcion": "Cuándo se recibió el pago, no cuándo se acordó ni cuándo vence." },
+    { "campo": "medio de pago", "tipo": "Int (FK a Método de pago)", "obligatorio": "Sí", "unico": "No", "ejemplo": "1 (Efectivo)", "descripcion": "Cómo entró la plata; alimenta los reportes de distribución por medio de pago del capítulo Funcionalidades." },
+    { "campo": "vencimiento", "tipo": "Date", "obligatorio": "No (solo si el cobro está pendiente)", "unico": "No", "ejemplo": "18/07/2025", "descripcion": "La fecha límite acordada para un cobro todavía no recibido; dispara la alerta cuando se acerca sin cobrarse (ver Catálogo de reglas de negocio)." },
+    { "campo": "motivo de anulación", "tipo": "Varchar(200)", "obligatorio": "No (solo si el cobro se anula)", "unico": "No", "ejemplo": "Transferencia rechazada por error de CBU", "descripcion": "Por qué se dio de baja un cobro ya registrado; el cobro anulado no vuelve a contarse en el saldo del proyecto, pero el motivo queda como evidencia (ver Catálogo de reglas de negocio)." }
+   ]
+  }
+ ],
+ "estados": [
+  "Sesión: No autenticada → Autenticada con login válido, y de vuelta al cerrar sesión o expirar. Usuario interno y Cliente tienen flujos separados, con distinto subconjunto de pantallas.",
+  "Tipología de proyecto (Anteproyecto, Proyecto con detalle, Gestión y conducción de obra) es una etiqueta fija, no transiciona. Estado de proyecto sí es una máquina de estados (Pendiente, Activo, En progreso, Completado, Inactivo): el pase a Completado exige que al menos una tarea quede completada u omitida. Todo cambio de estado, salvo el pase a Pendiente, queda en el Historial del proyecto.",
+  "Tarea: Pendiente → Iniciada → Completada, Omitida u Oculta (retirada del listado activo sin eliminarse). Alimenta el gráfico de avance del capítulo Requerimientos."
+ ]
+}

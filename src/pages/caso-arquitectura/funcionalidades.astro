@@ -1,0 +1,39 @@
+---
+import DocLayout from '../../layouts/caso-arquitectura/DocLayout.astro';
+import funcionalidades from '../../data/caso-arquitectura/funcionalidades';
+import { slug, CANONICAL_BY_FUNC } from '../../data/caso-arquitectura/moduleMap';
+---
+<DocLayout title="Funcionalidades" chapterHref="/caso-arquitectura/funcionalidades">
+  <div class="doc-block">
+    <div class="grid-2">
+      {funcionalidades.map(f => {
+        const canonicos = CANONICAL_BY_FUNC[f.modulo] ?? [];
+        return (
+          <div class="card" id={slug(f.modulo)}>
+            <h3>{f.modulo}</h3>
+            <p class="text-ink-soft text-[0.94rem] mt-1.5 mb-3">{f.descripcion}</p>
+            <ul class="m-0 pl-4.5 flex flex-col gap-1.5 text-[0.9rem] text-ink-soft">
+              {f.capacidades.map(c => <li>{c}</li>)}
+            </ul>
+            <div class="cross-links">
+              {canonicos.map(c => (
+                <>
+                  <a href={`/requerimientos#${slug(c)}`} class="text-teal-deep font-semibold">Ver requerimientos: {c} →</a>
+                  <a href={`/objetivos-alcance#${slug(c)}`} class="text-teal-deep font-semibold">Ver alcance: {c} →</a>
+                </>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+
+  <div class="doc-block doc-prose">
+    <p class="text-ink-soft">
+      El catálogo de funcionalidades queda así cerrado. Cómo se modela el sistema por dentro, de los datos
+      a los estados que transitan, es el tema del capítulo siguiente:
+      <a href="/caso-arquitectura/modelado" class="text-teal-deep font-semibold">Modelado</a>.
+    </p>
+  </div>
+</DocLayout>

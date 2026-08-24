@@ -1,0 +1,40 @@
+---
+import DocLayout from '../../layouts/caso-arquitectura/DocLayout.astro';
+import DataTable from '../../components/caso-arquitectura/DataTable.astro';
+import historial from '../../data/caso-arquitectura/historial';
+import sprints from '../../data/caso-arquitectura/sprints';
+
+const rows = [
+  ['Fecha', 'Motivo', 'Autor', 'Versión'],
+  ...historial.map(h => [h.fecha, h.motivo, h.autor, h.version]),
+];
+
+const first = historial[0];
+const last = historial[historial.length - 1];
+---
+<DocLayout title="Historial de revisión" chapterHref="/caso-arquitectura/historial">
+  <div class="doc-prose">
+    <p>
+      Cada cambio del proyecto quedó registrado en una carpeta de control de versiones, desde la
+      presentación inicial hasta el cierre. En total, <strong>{historial.length} revisiones</strong> documentadas
+      entre el <strong>{first.fecha}</strong> y el <strong>{last.fecha}</strong>, con la firma de quien la realizó.
+    </p>
+  </div>
+
+  <div class="stat-row">
+    <div>
+      <strong>{historial.length}</strong>
+      <span>revisiones registradas</span>
+    </div>
+    <div>
+      <strong>{sprints.length}</strong>
+      <span>sprints documentados</span>
+    </div>
+    <div>
+      <strong>v{last.version}</strong>
+      <span>versión de cierre</span>
+    </div>
+  </div>
+
+  <DataTable rows={rows} compact />
+</DocLayout>

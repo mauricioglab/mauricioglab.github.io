@@ -1,8 +1,12 @@
 ---
 import BaseTailwind from '@layouts/BaseTailwind.astro';
 import ContactModal from '@components/landing/ContactModal.astro';
-import PortfolioProfileSection from '@components/landing/PortfolioProfileSection.astro';
-import type { ProfileId } from '@data/profiles';
+import ProjectCard from '@components/landing/ProjectCard.astro';
+import SkillsSection from '@components/landing/SkillsSection.astro';
+import ExperienceTimeline from '@components/landing/ExperienceTimeline.astro';
+import CTASection from '@components/landing/CTASection.astro';
+import { profiles } from '@data/profiles';
+import { getProjectsByProfile } from '@data/projects';
 import { getLanguagePaths } from '@utils/i18n-paths';
 import { type Lang, useTranslations, getAlternateUrl } from '@i18n/index';
 
@@ -10,38 +14,43 @@ export const getStaticPaths = getLanguagePaths;
 
 const { lang } = Astro.params as { lang: Lang };
 const t = await useTranslations<any>(lang, 'portfolio');
+const content = await useTranslations<any>(lang, 'engineer');
 const altPath = getAlternateUrl(Astro.url, lang);
 const altLang = lang === 'es' ? 'en' : 'es';
 
-// Orden de las secciones (una por CV)
-const PROFILE_ORDER: ProfileId[] = ['analista', 'developer', 'ia-engineer', 'freelance', 'speaker', 'docente'];
+const profile = profiles.engineer;
+const projects = getProjectsByProfile('engineer', true);
 
-// Títulos de cada perfil para el sub-nav
-const profileTitles = new Map<ProfileId, string>();
-for (const id of PROFILE_ORDER) {
-  const content = await useTranslations<any>(lang, id);
-  profileTitles.set(id, content.title);
-}
+const startDate = new Date('2021-07-01');
+const years = Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
+
+const experiences = content.experience.map((exp: any) => ({
+  role: exp.role,
+  company: `${exp.company} | ${exp.period}`,
+  items: exp.items,
+}));
+
+const ctaButtons = [
+  { text: 'Contactar', href: '#', icon: 'fas fa-envelope', primary: true, isContactTrigger: true },
+  { text: t.downloadCV, href: profile.cvUrl, icon: 'fas fa-file-pdf' },
+];
 ---
 
 <BaseTailwind title={`${t.seo.title}`} description={t.seo.description} lang={lang} layoutType="landing">
-  <!-- Header / Sub-nav por CV -->
+  <!-- Header -->
   <header class="bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-50 border-b border-slate-200 dark:border-slate-700 transition-colors">
     <nav class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
       <div class="text-2xl font-bold text-slate-900 dark:text-white">
         MG<span class="text-blue-600">.</span>
-        <span class="text-sm font-normal text-slate-600 dark:text-slate-400 ml-2">| {t.subtitle}</span>
+        <span class="text-sm font-normal text-slate-600 dark:text-slate-400 ml-2">| {content.subtitle}</span>
       </div>
 
       <div class="hidden lg:flex items-center space-x-1">
-        {PROFILE_ORDER.map((id) => (
-          <a
-            href={`#${id}`}
-            class="px-3 py-1.5 rounded-lg text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-          >
-            {profileTitles.get(id)}
-          </a>
-        ))}
+        <a href="#proyectos" class="px-3 py-1.5 rounded-lg text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Proyectos</a>
+        <a href="#ia-datos" class="px-3 py-1.5 rounded-lg text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">{content.aiSection.title}</a>
+        <a href="#skills" class="px-3 py-1.5 rounded-lg text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Skills</a>
+        <a href="#experiencia" class="px-3 py-1.5 rounded-lg text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Experiencia</a>
+        <a href={`/${lang}/servicios`} class="px-3 py-1.5 rounded-lg text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Servicios</a>
       </div>
 
       <div class="flex items-center gap-3">
@@ -66,16 +75,152 @@ for (const id of PROFILE_ORDER) {
     <section class="py-20 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 transition-colors">
       <div class="max-w-4xl mx-auto px-4 text-center">
         <span class="inline-block bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-4 py-1 rounded-full text-sm font-bold mb-6">
-          {t.subtitle}
+          {content.hero.badge}
         </span>
-        <h1 class="text-5xl font-extrabold mb-6 text-slate-900 dark:text-white">{t.title}</h1>
-        <p class="text-xl text-slate-600 dark:text-slate-400 leading-relaxed">{t.intro}</p>
+        <h1 class="text-5xl font-extrabold mb-6 text-slate-900 dark:text-white" set:html={content.hero.headline}></h1>
+        <p class="text-xl text-slate-600 dark:text-slate-400 leading-relaxed mb-8">{content.hero.subheadline}</p>
+        <div class="flex flex-wrap justify-center gap-3 mb-8">
+          <span class="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-full text-sm font-semibold border border-blue-200 dark:border-blue-800">
+            {years}+ años de experiencia
+          </span>
+          <span class="px-4 py-2 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 rounded-full text-sm font-semibold border border-purple-200 dark:border-purple-800">
+            IA en producción (RENAPER/AWS Rekognition)
+          </span>
+          <span class="px-4 py-2 bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 rounded-full text-sm font-semibold border border-orange-200 dark:border-orange-800">
+            Docente en Ciencia de Datos e IA
+          </span>
+        </div>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href={profile.cvUrl} class="bg-blue-600 dark:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold hover:opacity-90 transition inline-flex items-center">
+            <i class="fas fa-file-pdf mr-2"></i>{content.hero.ctaPrimary}
+          </a>
+          <a href="#proyectos" class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-8 py-4 rounded-xl font-bold border border-blue-600 dark:border-blue-500 hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition">
+            {content.hero.ctaSecondary}
+          </a>
+        </div>
       </div>
     </section>
 
-    {PROFILE_ORDER.map((id) => (
-      <PortfolioProfileSection profileId={id} lang={lang} />
-    ))}
+    <!-- Proyectos -->
+    <section id="proyectos" class="py-20 bg-white dark:bg-slate-900 transition-colors">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold mb-4 text-slate-900 dark:text-white">Proyectos Destacados</h2>
+          <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">{content.projectsDescription}</p>
+        </div>
+        {projects.length > 0 ? (
+          <div class="grid md:grid-cols-2 gap-8">
+            {projects.map((project) => (
+              <ProjectCard project={project} profileId="engineer" lang={lang} />
+            ))}
+          </div>
+        ) : (
+          <div class="rounded-2xl border border-dashed border-slate-300 dark:border-slate-600 p-10 text-center">
+            <p class="text-slate-500 dark:text-slate-400 text-sm italic">{t.emptyProjects}</p>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- IA y Datos -->
+    <section id="ia-datos" class="py-20 bg-slate-50 dark:bg-slate-800 transition-colors">
+      <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-3xl font-bold mb-12 text-center text-slate-900 dark:text-white">{content.aiSection.title}</h2>
+
+        <div class="max-w-4xl mx-auto space-y-6">
+          <div class="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-950/40 dark:to-blue-950/40 rounded-2xl p-8 border-2 border-purple-200 dark:border-purple-800">
+            <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white">{content.aiSection.flagship.title}</h3>
+              <span class="px-4 py-1 bg-purple-600 text-white rounded-full text-sm font-semibold whitespace-nowrap">
+                {content.aiSection.flagship.badge}
+              </span>
+            </div>
+            <ul class="space-y-2 text-slate-700 dark:text-slate-300 text-sm">
+              {content.aiSection.flagship.items.map((item: string) => (
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle mt-1 mr-2 text-purple-600 dark:text-purple-400"></i>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-6">
+            {content.aiSection.personal.map((p: any) => (
+              <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
+                <div class="flex items-start justify-between gap-3 mb-2">
+                  <h4 class="text-lg font-bold text-slate-900 dark:text-white">{p.title}</h4>
+                  <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-full text-xs font-semibold whitespace-nowrap">
+                    {p.badge}
+                  </span>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-400">{p.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <SkillsSection profile={profile} lang={lang} />
+
+    <!-- Experiencia -->
+    <ExperienceTimeline
+      title="Experiencia"
+      experiences={experiences}
+      profileId="engineer"
+    />
+
+    <!-- Docencia -->
+    <section class="py-20 bg-white dark:bg-slate-900 transition-colors">
+      <div class="max-w-4xl mx-auto px-4">
+        <h2 class="text-3xl font-bold mb-12 text-center text-slate-900 dark:text-white">{content.docencia.title}</h2>
+        <div class="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-950/40 dark:to-blue-950/40 rounded-2xl p-8 border-2 border-purple-200 dark:border-purple-800">
+          <div class="flex flex-wrap items-start justify-between gap-4 mb-3">
+            <div>
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white">{content.docencia.role}</h3>
+              <p class="text-purple-700 dark:text-purple-400 font-semibold">{content.docencia.company}</p>
+            </div>
+            <span class="px-4 py-1 bg-purple-600 text-white rounded-full text-sm font-semibold whitespace-nowrap">
+              {content.docencia.period}
+            </span>
+          </div>
+          <p class="text-slate-700 dark:text-slate-300 mb-4">{content.docencia.description}</p>
+          <div class="flex flex-wrap gap-2">
+            {content.docencia.tags.map((tag: string) => (
+              <span class="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 rounded-full text-xs font-medium">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Educación -->
+    <section class="py-20 bg-slate-50 dark:bg-slate-800 transition-colors">
+      <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-3xl font-bold mb-12 text-center text-slate-900 dark:text-white">Educación</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          {content.education.map((edu: any) => (
+            <div class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-700 text-center">
+              <h4 class="font-bold text-slate-900 dark:text-white mb-1">{edu.title}</h4>
+              <p class="text-blue-600 dark:text-blue-400 font-semibold text-sm">{edu.institution}</p>
+              <p class="text-slate-500 dark:text-slate-400 text-xs">{edu.period}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Final -->
+    <CTASection
+      title={content.ctaTitle}
+      description={content.ctaDescription}
+      buttons={ctaButtons}
+      profileId="engineer"
+    />
   </main>
 
   <!-- Footer -->

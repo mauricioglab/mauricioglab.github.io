@@ -1,0 +1,96 @@
+---
+import DocLayout from '../../layouts/caso-arquitectura/DocLayout.astro';
+import Reveal from '../../components/caso-arquitectura/Reveal.astro';
+import DataTable from '../../components/caso-arquitectura/DataTable.astro';
+import BusinessRuleCard from '../../components/caso-arquitectura/BusinessRuleCard.astro';
+import org from '../../data/caso-arquitectura/organizacion';
+import { STUDIO_NAME, PRODUCT_NAME } from '../../data/caso-arquitectura/brand';
+---
+<DocLayout title={STUDIO_NAME} chapterHref="/caso-arquitectura/organizacion">
+  <div class="doc-block doc-prose">
+    <p>{org.intro[0]}</p>
+    <p><strong>Objetivo organizacional:</strong> {org.objetivo_organizacional[0]}</p>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">1.1</span>Políticas organizacionales</h2>
+    <p class="doc-prose text-ink-soft mb-5">{org.politicas_intro[0]}</p>
+    {org.politicas.map(p => (
+      <Reveal summary={p.title.replace(/^POLÍTICA\s+(DE\s+)?/i, '')}>
+        {p.paragraphs.map(par => <p>{par}</p>)}
+      </Reveal>
+    ))}
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">1.2</span>Estrategias y planes</h2>
+    <p class="doc-prose text-ink-soft mb-5">Así prioriza MGD Arquitectura su día a día, y hacia dónde apunta de acá en adelante.</p>
+    <div class="grid-2 items-start">
+      <div>
+        <h3 class="font-head text-[0.72rem] font-bold tracking-[0.04em] uppercase text-teal-deep mb-2.5">Estrategias</h3>
+        <ul class="list-none m-0 p-0 flex flex-col gap-2.5">
+          {org.estrategias.map(e => (
+            <li class="px-4.5 py-3.5 bg-card border border-line rounded-lg text-[0.94rem] text-ink-soft">
+              <p class="m-0">{e.texto}</p>
+              <span class="tag inline-block mt-2.5">{e.horizonte}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-head text-[0.72rem] font-bold tracking-[0.04em] uppercase text-sand-deep mb-2.5">Planes</h3>
+        <ul class="list-none m-0 p-0 flex flex-col gap-2.5">
+          {org.planes.map(p => (
+            <li class="px-4.5 py-3.5 bg-card border border-line rounded-lg text-[0.94rem] text-ink-soft">
+              <p class="m-0">{p.texto}</p>
+              <span class="tag inline-block mt-2.5">{p.horizonte}</span>
+              <p class="mt-2 text-[0.86rem] text-ink-faint">{p.impacto}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-block doc-prose">
+    <h2><span class="doc-block-n">1.3</span>Funcionamiento organizacional</h2>
+    <p>{org.funcionamiento[0]}</p>
+    <p class="text-ink-soft mt-2">
+      El circuito completo de un proyecto, del primer contacto a la entrega de obra, se detalla paso a paso
+      y con sus diagramas de flujo en el próximo capítulo:
+      <a href="/caso-arquitectura/procesos" class="text-teal-deep font-semibold">Procesos involucrados</a>.
+    </p>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">1.4</span>Actores del negocio</h2>
+    <DataTable rows={[
+      ['Actor del negocio', 'Rol en el sistema', 'Qué hace hoy, sin sistema', 'Qué hará con el sistema'],
+      ...org.actores.map(a => [a.actor, a.rolSistema, a.hoy, a.conSistema]),
+    ]} />
+    {org.actores_nota.map(n => <p class="doc-prose text-ink-soft text-[0.86rem] mt-3">{n}</p>)}
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">1.5</span>Catálogo de reglas de negocio</h2>
+    <p class="text-ink-soft text-[0.94rem] max-w-[720px] mb-5">
+      Restricciones que el sistema respeta siempre, más allá de cualquier flujo puntual: no son pasos de un
+      proceso, son condiciones que se verifican en cada intento de violarlas. Cada una tiene un origen
+      verificable, ya sea en el código real, el manual de usuario o una política ya documentada del estudio;
+      la columna "Validada por el cliente" deja constancia de cuáles quedaron respaldadas por escrito y
+      cuáles no llegaron a firmarse en el legajo original.
+    </p>
+    <div class="detail-card-list">
+      {org.reglas_negocio.map(r => (
+        <BusinessRuleCard
+          id={r.id}
+          regla={r.regla}
+          implementacion={r.implementacion}
+          violacion={r.violacion}
+          origen={r.origen}
+          validado_por={r.validado_por}
+        />
+      ))}
+    </div>
+  </div>
+</DocLayout>

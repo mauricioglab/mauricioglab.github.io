@@ -1,0 +1,56 @@
+{
+  "title": "Servicios Profesionales",
+  "subtitle": "Consultoría, Desarrollo & IA",
+  "description": "¿Qué problema te puedo resolver?",
+  "seo": {
+    "title": "Servicios | Consultoría, Desarrollo, IA y Capacitación",
+    "description": "Consultoría tecnológica, desarrollo de soluciones, IA aplicada, automatización, capacitación técnica y conferencias para empresas e instituciones."
+  },
+  "hero": {
+    "badge": "PARA EMPRESAS, INSTITUCIONES Y ORGANIZADORES DE EVENTOS",
+    "headline": "¿Qué problema te puedo <span class=\"text-blue-600 dark:text-blue-400\">resolver</span>?",
+    "subheadline": "Software Engineer especializado en IA y Automatización. Trabajo con empresas e instituciones en consultoría técnica, desarrollo de soluciones, IA aplicada, automatización de procesos, capacitación y conferencias.",
+    "ctaPrimary": "Agendar Reunión",
+    "ctaSecondary": "Ver Portfolio"
+  },
+  "ctaTitle": "¿Hablamos de tu proyecto?",
+  "ctaDescription": "Contame qué necesitás y vemos cómo puedo ayudarte.",
+  "services": [
+    {
+      "icon": "fas fa-comments",
+      "title": "Consultoría Tecnológica",
+      "description": "Auditorías de arquitectura y definición de soluciones técnicas, con base en experiencia real en sistemas gubernamentales y enterprise.",
+      "color": "blue-600"
+    },
+    {
+      "icon": "fas fa-code",
+      "title": "Desarrollo de Soluciones",
+      "description": "Full-stack .NET/Angular, integraciones y automatización de procesos. Respaldado en casos reales: optimización de 4h a 30min, validación biométrica con IA en producción.",
+      "color": "slate-900"
+    },
+    {
+      "icon": "fas fa-brain",
+      "title": "IA Aplicada",
+      "description": "Modelado predictivo y análisis de datos con Python. Evidencia real: modelo del Mundial 2026 y predicción de abandono estudiantil, ambos con validación rigurosa.",
+      "color": "purple-600"
+    },
+    {
+      "icon": "fas fa-cogs",
+      "title": "Automatización de Procesos",
+      "description": "Identificación y automatización de tareas manuales repetitivas — de planillas Excel a sistemas interactivos, de horas a minutos.",
+      "color": "emerald-600"
+    },
+    {
+      "icon": "fas fa-chalkboard-teacher",
+      "title": "Capacitación Técnica",
+      "description": "Basada en experiencia docente real: profesor activo en 3 carreras de tecnología (Analista de Sistemas, Desarrollo Web, Ciencia de Datos e IA).",
+      "color": "orange-600"
+    },
+    {
+      "icon": "fas fa-microphone",
+      "title": "Conferencias y Workshops",
+      "description": "Charlas y talleres sobre IA práctica, automatización y desarrollo de software, anclados en proyectos y experiencia real, no en teoría.",
+      "color": "green-600"
+    }
+  ]
+}

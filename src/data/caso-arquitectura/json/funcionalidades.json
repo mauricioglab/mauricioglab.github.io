@@ -1,0 +1,47 @@
+[
+ {
+  "modulo": "Clientes",
+  "descripcion": "Alta y administración de la ficha de cada cliente del estudio.",
+  "capacidades": ["Listar todos los clientes registrados", "Registrar un cliente nuevo", "Editar los datos de contacto de un cliente", "Dar de baja a un cliente"]
+ },
+ {
+  "modulo": "Usuarios",
+  "descripcion": "Alta y administración de las cuentas internas del estudio.",
+  "capacidades": ["Listar todos los usuarios internos", "Registrar un usuario nuevo", "Editar los datos de un usuario", "Eliminar un usuario", "Cambiar el rol asignado a un usuario"]
+ },
+ {
+  "modulo": "Tipología",
+  "descripcion": "Catálogo de tipos de proyecto que ofrece el estudio.",
+  "capacidades": ["Listar las tipologías disponibles", "Registrar una tipología nueva", "Editar una tipología existente", "Eliminar una tipología"]
+ },
+ {
+  "modulo": "Servicios",
+  "descripcion": "Catálogo de servicios que se pueden ofrecer dentro de un proyecto, cada uno con sus tareas predeterminadas.",
+  "capacidades": ["Listar los servicios de un proyecto", "Registrar un servicio nuevo", "Editar el nombre de un servicio", "Eliminar un servicio", "Asignar tareas predeterminadas a un servicio"]
+ },
+ {
+  "modulo": "Proyectos",
+  "descripcion": "El objeto central del sistema: agrupa cliente, tipología, servicios, tareas y cobros.",
+  "capacidades": ["Listar todos los proyectos", "Registrar un proyecto nuevo y asignarle un cliente", "Editar el nombre o el cliente de un proyecto", "Eliminar un proyecto", "Generar un informe imprimible del proyecto, con su estado, requerimientos y comentarios", "Exportar el listado de proyectos a Excel"]
+ },
+ {
+  "modulo": "Tareas del proyecto",
+  "descripcion": "Seguimiento operativo del trabajo dentro de cada proyecto.",
+  "capacidades": ["Listar las tareas de un proyecto", "Iniciar una tarea", "Ver el detalle de una tarea (notas, adjuntos, compromisos)", "Completar u omitir una tarea", "Ocultar una tarea del listado activo", "Visualizar la barra de progreso de avance"]
+ },
+ {
+  "modulo": "Cobros",
+  "descripcion": "Registro de los pagos recibidos por proyecto y su saldo.",
+  "capacidades": ["Listar los cobros de un proyecto", "Registrar un cobro nuevo", "Anular un cobro", "Calcular automáticamente el saldo pendiente", "Registrar un plazo de vencimiento por cobro pendiente y alertar cuando se acerca la fecha"]
+ },
+ {
+  "modulo": "Gráficos de progreso",
+  "descripcion": "Visualización del cronograma y el avance de cada proyecto.",
+  "capacidades": ["Generar el diagrama de Gantt del proyecto", "Generar el diagrama de PERT del proyecto", "Filtrar los gráficos por período de tiempo", "Visualizar la distribución de proyectos por estado", "Visualizar los cobros por medio de pago"]
+ },
+ {
+  "modulo": "Portal del cliente",
+  "descripcion": "Acceso del cliente a la información de sus propios proyectos, sin depender de que el estudio se la reporte manualmente.",
+  "capacidades": ["Iniciar sesión con usuario propio", "Listar los proyectos asociados a su cuenta", "Ver el detalle, la tipología y el arquitecto asignado de cada proyecto", "Ver el estado y el avance de cada proyecto", "Ver los compromisos pactados con el estudio", "Ordenar y filtrar su lista de proyectos"]
+ }
+]

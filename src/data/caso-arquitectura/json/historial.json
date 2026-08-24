@@ -1,0 +1,596 @@
+[
+ {
+  "fecha": "10/3/2023",
+  "motivo": "Creación del proyecto y presentación",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "0.0"
+ },
+ {
+  "fecha": "13/3/2023",
+  "motivo": "Creación Sprint 0 e Interfaz de presentación",
+  "autor": "Analista Funcional/QA",
+  "version": "0.1"
+ },
+ {
+  "fecha": "17/3/2023",
+  "motivo": "Determinación organización Sprint 0",
+  "autor": "Analista Funcional/QA",
+  "version": "0.2"
+ },
+ {
+  "fecha": "24/3/2023",
+  "motivo": "Revisión sprint 0 y control de faltantes",
+  "autor": "Analista Funcional/QA",
+  "version": "0.3"
+ },
+ {
+  "fecha": "31/3/2023",
+  "motivo": "Cierre de sprint 0 y actualización de carpeta",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "0.4"
+ },
+ {
+  "fecha": "3/4/2023",
+  "motivo": "Creación Sprint 1: Generar Perfil Cliente (como Usuario)",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "0.5"
+ },
+ {
+  "fecha": "7/4/2023",
+  "motivo": "Programación/ Desarrollo de Generar Perfil Cliente (como Usuario)",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "1.1"
+ },
+ {
+  "fecha": "14/4/2023",
+  "motivo": "Actualización  Interfaz usuario, creación Clientes",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "1.2"
+ },
+ {
+  "fecha": "17/4/2023",
+  "motivo": "Actualización Login de ingreso Usuarios , recuperación de cuentas, registro de nuevos clientes",
+  "autor": "Equipo de Desarrollo/QA",
+  "version": "1.3"
+ },
+ {
+  "fecha": "28/4/2023",
+  "motivo": "Actualización Carpeta agregado de Clientes y contenido.  Como (Usuario)",
+  "autor": "Analista Funcional",
+  "version": "1.4"
+ },
+ {
+  "fecha": "1/5/2023",
+  "motivo": "Correcciones:  funciones agregar  clientes nuevos, interfaz y funcionalidades",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "1.5"
+ },
+ {
+  "fecha": "5/5/2023",
+  "motivo": "Prueba de funcionalidades",
+  "autor": "QA",
+  "version": "1.6"
+ },
+ {
+  "fecha": "12/5/2023",
+  "motivo": "Creación Sprint 2 : Configuración de Perfil Usuario (como Usuario)",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "2.0"
+ },
+ {
+  "fecha": "15/5/2023",
+  "motivo": "Programación/ Desarrollo de Generar Perfil Usuario",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "2.1"
+ },
+ {
+  "fecha": "21/5/2023",
+  "motivo": "Actualización  Interfaz usuario, creación Usuarios datos generales",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "2.2"
+ },
+ {
+  "fecha": "28/5/2023",
+  "motivo": "Actualización Carpeta agregado de Usuarios y roles .  Como (Usuario)",
+  "autor": "Analista Funcional",
+  "version": "2.3"
+ },
+ {
+  "fecha": "8/5/2023",
+  "motivo": "Correcciones:  funciones agregar usuarios nuevos, interfaz y funcionalidades",
+  "autor": "Equipo de Desarrollo/QA",
+  "version": "2.4"
+ },
+ {
+  "fecha": "12/5/2023",
+  "motivo": "Prueba de funcionalidades nuevas",
+  "autor": "QA",
+  "version": "2.5"
+ },
+ {
+  "fecha": "19/5/2023",
+  "motivo": "Actualización de Carpeta",
+  "autor": "Analista Funcional",
+  "version": "2.6"
+ },
+ {
+  "fecha": "22/5/2023",
+  "motivo": "Permisos a ingresos de Datos",
+  "autor": "Equipo de Desarrollo/QA",
+  "version": "3.0"
+ },
+ {
+  "fecha": "26/5/2023",
+  "motivo": "Creación Sprint 3: Logueo de clientes y  usuarios",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "4.0"
+ },
+ {
+  "fecha": "29/5/2023",
+  "motivo": "Programación/ Desarrollo de Loguin",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "4.1"
+ },
+ {
+  "fecha": "2/6/2023",
+  "motivo": "Actualización Interfaz Login",
+  "autor": "Analista Funcional",
+  "version": "4.2"
+ },
+ {
+  "fecha": "5/6/2023",
+  "motivo": "Actualización carpeta documentación de logueo, cambio de contraseñas, validaciones.",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "4.3"
+ },
+ {
+  "fecha": "9/6/2023",
+  "motivo": "Correcciones:  logueo, cambio de contraseñas, validaciones.",
+  "autor": "QA",
+  "version": "4.4"
+ },
+ {
+  "fecha": "12/6/2023",
+  "motivo": "Prueba de funcionalidades nuevas",
+  "autor": "QA",
+  "version": "4.5"
+ },
+ {
+  "fecha": "16/6/2023",
+  "motivo": "Actualización de Carpeta",
+  "autor": "Analista Funcional",
+  "version": "4.6"
+ },
+ {
+  "fecha": "19/6/2023",
+  "motivo": "Creación Sprint 4: Proyectos y tipología de proyectos 1 versión.",
+  "autor": "Analista Funcional",
+  "version": "5.0"
+ },
+ {
+  "fecha": "20/6/2023",
+  "motivo": "Programación/ Desarrollo de Proyectos y tipología de proyectos 1 versión.",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "5.1"
+ },
+ {
+  "fecha": "23/6/2023",
+  "motivo": "Actualización Interfaz Proyectos y tipología de proyectos 1 versión.",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "5.2"
+ },
+ {
+  "fecha": "30/8/2023",
+  "motivo": "Actualización carpeta documentación de registro, asignar, modificar.",
+  "autor": "Analista Funcional",
+  "version": "5.3"
+ },
+ {
+  "fecha": "1/9/2023",
+  "motivo": "Correcciones:  registro, asignar cliente modificar.",
+  "autor": "QA",
+  "version": "5.4"
+ },
+ {
+  "fecha": "6/9/2023",
+  "motivo": "Prueba de funcionalidades nuevas",
+  "autor": "QA",
+  "version": "5.5"
+ },
+ {
+  "fecha": "8/9/2023",
+  "motivo": "Actualización de Carpeta",
+  "autor": "Analista Funcional",
+  "version": "5.6"
+ },
+ {
+  "fecha": "13/9/2023",
+  "motivo": "Creación Sprint 5: Generar estadisticas de cliente como (Usuario)",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "6.0"
+ },
+ {
+  "fecha": "15/9/2023",
+  "motivo": "Programación/ Desarrollo de listar estadísticas de cliente",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "6.1"
+ },
+ {
+  "fecha": "20/9/2023",
+  "motivo": "Actualización Interfaz listar estadísticas de cliente  / usuarios cantidades",
+  "autor": "Analista Funcional",
+  "version": "6.2"
+ },
+ {
+  "fecha": "22/9/2023",
+  "motivo": "Actualización carpeta documentación de nuevo reporte",
+  "autor": "Equipo de Desarrollo/QA",
+  "version": "6.3"
+ },
+ {
+  "fecha": "27/9/2023",
+  "motivo": "Correcciones:  Cálculos y unidades",
+  "autor": "QA",
+  "version": "6.4"
+ },
+ {
+  "fecha": "29/9/2023",
+  "motivo": "Prueba de funcionalidades nuevas",
+  "autor": "QA",
+  "version": "6.5"
+ },
+ {
+  "fecha": "4/10/2023",
+  "motivo": "Actualización de Carpeta",
+  "autor": "Analista Funcional",
+  "version": "6.6"
+ },
+ {
+  "fecha": "6/10/2023",
+  "motivo": "Cierre de corrección sprint 5",
+  "autor": "Analista Funcional",
+  "version": "6.7"
+ },
+ {
+  "fecha": "11/10/2023",
+  "motivo": "Creación Sprint 6: Tareas y servicios de tareas",
+  "autor": "Equipo de Desarrollo",
+  "version": "7.0"
+ },
+ {
+  "fecha": "13/10/2023",
+  "motivo": "Programación/ Desarrollo de crear, modificar y listar tareas y servicios de tareas",
+  "autor": "Equipo de Desarrollo",
+  "version": "7.1"
+ },
+ {
+  "fecha": "18/10/2023",
+  "motivo": "Actualización Interfaz   tareas y servicios de tareas",
+  "autor": "Equipo de Desarrollo/QA",
+  "version": "7.2"
+ },
+ {
+  "fecha": "20/10/2023",
+  "motivo": "Actualización carpeta documentación de nuevo funcionalidad",
+  "autor": "Analista Funcional",
+  "version": "7.3"
+ },
+ {
+  "fecha": "25/10/2023",
+  "motivo": "Correcciones:  Interfaz y funconalidades de  tareas y servicios de tareas",
+  "autor": "QA",
+  "version": "7.4"
+ },
+ {
+  "fecha": "27/10/2023",
+  "motivo": "Prueba de funcionalidades nuevas",
+  "autor": "QA",
+  "version": "7.5"
+ },
+ {
+  "fecha": "1/11/2023",
+  "motivo": "Actualización de Carpeta",
+  "autor": "Analista Funcional",
+  "version": "7.6"
+ },
+ {
+  "fecha": "3/11/2023",
+  "motivo": "Creación Sprint 7: Tareas",
+  "autor": "Analista Funcional",
+  "version": "8.0"
+ },
+ {
+  "fecha": "8/11/2023",
+  "motivo": "Programación/ Desarrollo de registro, asignar fecha. Adjuntar archivos, \nregistrar compromisos tareas.",
+  "autor": "Equipo de Desarrollo",
+  "version": "8.1"
+ },
+ {
+  "fecha": "10/11/2023",
+  "motivo": "Actualización Interfaz   Tareas",
+  "autor": "Equipo de Desarrollo",
+  "version": "8.2"
+ },
+ {
+  "fecha": "15/11/2023",
+  "motivo": "Actualización carpeta documentación de nuevo funcionalidad",
+  "autor": "Analista Funcional",
+  "version": "8.3"
+ },
+ {
+  "fecha": "17/11/2023",
+  "motivo": "Correcciones:  Interfaz y funcionalidades de tareas",
+  "autor": "Scrum Master/QA",
+  "version": "8.4"
+ },
+ {
+  "fecha": "22/11/2023",
+  "motivo": "Prueba de funcionalidades nuevas",
+  "autor": "QA",
+  "version": "8.5"
+ },
+ {
+  "fecha": "24/11/2023",
+  "motivo": "actualización de Carpeta",
+  "autor": "Analista Funcional",
+  "version": "8.6"
+ },
+ {
+  "fecha": "29/11/2023",
+  "motivo": "Cierre de corrección sprint 7",
+  "autor": "Analista Funcional",
+  "version": "8.7"
+ },
+ {
+  "fecha": "1/12/2023",
+  "motivo": "Creación Sprint 8: Gráficos de avance de tareas",
+  "autor": "Equipo de Desarrollo",
+  "version": "9.0"
+ },
+ {
+  "fecha": "6/12/2023",
+  "motivo": "Programación/ Desarrollo algoritmos para gráficos y cálculos de avance",
+  "autor": "Equipo de Desarrollo",
+  "version": "9.1"
+ },
+ {
+  "fecha": "13/12/2023",
+  "motivo": "Actualización Interfaz    Gráficos de avance de tareas",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "9.2"
+ },
+ {
+  "fecha": "15/12/2023",
+  "motivo": "Actualización carpeta documentación de nuevo funcionalidad",
+  "autor": "Analista Funcional",
+  "version": "9.3"
+ },
+ {
+  "fecha": "20/12/2023",
+  "motivo": "Correcciones:  Interfaz y funcionalidades de   gráficos de avance de tareas",
+  "autor": "Equipo de Desarrollo",
+  "version": "9.4"
+ },
+ {
+  "fecha": "10/1/2024",
+  "motivo": "Prueba de funcionalidades nuevas",
+  "autor": "QA",
+  "version": "9.5"
+ },
+ {
+  "fecha": "12/1/2024",
+  "motivo": "Actualizacion de Carpeta",
+  "autor": "Analista Funcional",
+  "version": "9.6"
+ },
+ {
+  "fecha": "17/1/2024",
+  "motivo": "Cierre de corrección sprint 8",
+  "autor": "Analista Funcional/QA",
+  "version": "9.7"
+ },
+ {
+  "fecha": "19/1/2024",
+  "motivo": "Creación Sprint 9: Generar cobros",
+  "autor": "Analista Funcional",
+  "version": "10.0"
+ },
+ {
+  "fecha": "24/1/2024",
+  "motivo": "Programación/ Desarrollo de crear, anular y listar cobros, desde proyectos",
+  "autor": "Analista Funcional/Scrum Master",
+  "version": "10.1"
+ },
+ {
+  "fecha": "26/1/2024",
+  "motivo": "Actualización Interfaz   Cobros",
+  "autor": "Analista Funcional/Scrum Master",
+  "version": "10.2"
+ },
+ {
+  "fecha": "31/1/2024",
+  "motivo": "Actualización carpeta documentación de nuevo funcionalidad",
+  "autor": "Equipo de Desarrollo",
+  "version": "10.3"
+ },
+ {
+  "fecha": "2/2/2024",
+  "motivo": "Correcciones:  Interfaz y funcionalidades de  Cobros",
+  "autor": "QA",
+  "version": "10.4"
+ },
+ {
+  "fecha": "7/2/2024",
+  "motivo": "Prueba de funcionalidades nuevas",
+  "autor": "QA",
+  "version": "10.5"
+ },
+ {
+  "fecha": "9/2/2024",
+  "motivo": "actualización de Carpeta",
+  "autor": "Analista Funcional",
+  "version": "10.6"
+ },
+ {
+  "fecha": "14/2/2024",
+  "motivo": "Cierre de corrección sprint 9",
+  "autor": "Analista Funcional",
+  "version": "10.7"
+ },
+ {
+  "fecha": "16/2/2024",
+  "motivo": "Creación Sprint 10: gráficos de Gantt y  Pert",
+  "autor": "Equipo de Desarrollo",
+  "version": "11.0"
+ },
+ {
+  "fecha": "21/2/2024",
+  "motivo": "Programación/ Desarrollo de crear Gráficos de Gantt y Pert",
+  "autor": "Equipo de Desarrollo",
+  "version": "11.1"
+ },
+ {
+  "fecha": "23/2/2024",
+  "motivo": "Actualización Interfaz  diagramas, algoritmos.",
+  "autor": "Equipo de Desarrollo",
+  "version": "11.2"
+ },
+ {
+  "fecha": "28/2/2024",
+  "motivo": "Actualización carpeta documentación de nuevo funcionalidad",
+  "autor": "Analista Funcional",
+  "version": "11.3"
+ },
+ {
+  "fecha": "1/3/2024",
+  "motivo": "Correcciones:  Interfaz y funcionalidades de  diagramas, algoritmos.",
+  "autor": "Scrum Master/QA",
+  "version": "11.4"
+ },
+ {
+  "fecha": "6/3/2024",
+  "motivo": "Prueba de funcionalidades nuevas",
+  "autor": "QA",
+  "version": "11.5"
+ },
+ {
+  "fecha": "8/3/2024",
+  "motivo": "Actualizacion de Carpeta",
+  "autor": "Analista Funcional",
+  "version": "11.6"
+ },
+ {
+  "fecha": "9/3/2024",
+  "motivo": "Creación Sprint 11: Interfaz perfil cliente",
+  "autor": "QA",
+  "version": "12.0"
+ },
+ {
+  "fecha": "10/3/2024",
+  "motivo": "Programación/ Desarrollo listar, visualizar proyectos y estados de avance por cliente",
+  "autor": "Scrum Master/QA",
+  "version": "12.1"
+ },
+ {
+  "fecha": "13/3/2024",
+  "motivo": "Actualización Interfaz  cliente",
+  "autor": "QA",
+  "version": "12.2"
+ },
+ {
+  "fecha": "15/3/2024",
+  "motivo": "Actualización carpeta documentacion de nueva funcionalidad",
+  "autor": "Analista Funcional",
+  "version": "12.3"
+ },
+ {
+  "fecha": "18/3/2024",
+  "motivo": "Correcciones:  Interfaz y funcionalidades de listar, visualizar proyectos y estados de su avance por cliente",
+  "autor": "Scrum Master/QA",
+  "version": "12.4"
+ },
+ {
+  "fecha": "20/3/2024",
+  "motivo": "Prueba de funcionalidades nuevas",
+  "autor": "QA",
+  "version": "12.5"
+ },
+ {
+  "fecha": "22/3/2024",
+  "motivo": "Actualizacion de Carpeta",
+  "autor": "Analista Funcional",
+  "version": "12.6"
+ },
+ {
+  "fecha": "23/3/2024",
+  "motivo": "Creación Sprint 12: Gráficas para Análisis de Datos del Proyecto",
+  "autor": "Analista Funcional",
+  "version": "13.0"
+ },
+ {
+  "fecha": "24/3/2024",
+  "motivo": "Programación/ Desarrollo interfaz de gráficos, cálculos estadísticos, filtros de fecha.",
+  "autor": "Equipo de Desarrollo",
+  "version": "13.1"
+ },
+ {
+  "fecha": "25/3/2024",
+  "motivo": "Actualización Gráficas para Análisis",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "13.2"
+ },
+ {
+  "fecha": "26/3/2024",
+  "motivo": "Actualización carpeta documentación de nuevo funcionalidad",
+  "autor": "Analista Funcional",
+  "version": "13.3"
+ },
+ {
+  "fecha": "27/3/2024",
+  "motivo": "Correcciones:  Interfaz y funcionalidades de  interfaz de gráficos, cálculos estadísticos , filtros de fecha.",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "13.4"
+ },
+ {
+  "fecha": "2/4/2024",
+  "motivo": "Prueba de funcionalidades nuevas",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "13.5"
+ },
+ {
+  "fecha": "3/4/2024",
+  "motivo": "Actualizacion de Carpeta",
+  "autor": "Analista Funcional",
+  "version": "13.6"
+ },
+ {
+  "fecha": "4/4/2024",
+  "motivo": "Pruebas automatizadas apartado cliente, usuarios, proyectos",
+  "autor": "QA",
+  "version": "14.0"
+ },
+ {
+  "fecha": "5/4/2024",
+  "motivo": "Pruebas automatizadas apartado diagrama",
+  "autor": "QA",
+  "version": "14.1"
+ },
+ {
+  "fecha": "6/4/2024",
+  "motivo": "Pruebas automatizadas cobros, gráficos estadísticos",
+  "autor": "QA",
+  "version": "14.2"
+ },
+ {
+  "fecha": "7/4/2024",
+  "motivo": "Pruebas de todas las funcionalidades del sistema",
+  "autor": "QA",
+  "version": "14.3"
+ },
+ {
+  "fecha": "8/4/2024",
+  "motivo": "Revisión General y cierre de carpeta",
+  "autor": "Scrum Master/Equipo de Desarrollo",
+  "version": "15.0"
+ }
+]

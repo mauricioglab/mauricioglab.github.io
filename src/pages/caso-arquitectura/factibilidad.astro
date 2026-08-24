@@ -1,0 +1,60 @@
+---
+import DocLayout from '../../layouts/caso-arquitectura/DocLayout.astro';
+import factibilidad from '../../data/caso-arquitectura/factibilidad';
+---
+<DocLayout title="Estudio de factibilidad" chapterHref="/caso-arquitectura/factibilidad">
+  <div class="doc-block">
+    <h2><span class="doc-block-n">4.1</span>Factibilidad técnica</h2>
+    <div class="grid-2">
+      {factibilidad.tecnica.map(pt => (
+        <div class="card">
+          <span class="pill">{pt.titulo}</span>
+          <p class="mt-3.5">{pt.texto}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">4.2</span>Factibilidad económica</h2>
+    <div class="grid-2">
+      {factibilidad.economica.map(pt => (
+        <div class="card">
+          <span class="pill">{pt.titulo}</span>
+          <p class="mt-3.5">{pt.texto}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">4.3</span>Factibilidad operativa</h2>
+    <div class="grid-2">
+      {factibilidad.operativa.map(pt => (
+        <div class="card">
+          <span class="pill">{pt.titulo}</span>
+          <p class="mt-3.5">{pt.texto}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">4.4</span>Factibilidad legal</h2>
+    <div class="grid-2">
+      {factibilidad.legal.map(pt => (
+        <div class="card">
+          <span class="pill">{pt.titulo}</span>
+          <p class="mt-3.5">{pt.texto}</p>
+        </div>
+      ))}
+    </div>
+    <p class="doc-prose text-ink-soft mt-6">
+      Con el proyecto justificado en las cuatro dimensiones, el siguiente paso fue definir qué se iba a
+      construir y hasta dónde, en el próximo capítulo:
+      <a href="/caso-arquitectura/objetivos-alcance" class="text-teal-deep font-semibold">Objetivos y alcance</a>. El análisis
+      de costos y de riesgos que se desprende de este estudio de factibilidad se retoma, junto al resto de
+      la gestión del proyecto, en el capítulo <a href="/caso-arquitectura/metodologia" class="text-teal-deep font-semibold">Metodología</a>.
+    </p>
+  </div>
+</DocLayout>

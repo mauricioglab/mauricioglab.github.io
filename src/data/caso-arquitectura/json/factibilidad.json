@@ -1,0 +1,74 @@
+{
+ "tecnica": [
+  {
+   "titulo": "Sin infraestructura propia",
+   "texto": "Hosting externo con Windows Server, IIS y SQL Server: sin hardware especializado ni servidores propios que mantener."
+  },
+  {
+   "titulo": "Curva de aprendizaje baja",
+   "texto": "Visual Studio, SQL Management Studio, DBeaver, Jira, Trello y Google Drive ya eran conocidos o de bajo costo para el equipo."
+  },
+  {
+   "titulo": "Volumen acotado",
+   "texto": "Tres socios operando el sistema a diario, más el acceso ocasional de la cartera de clientes: sin riesgos de rendimiento ni de concurrencia."
+  },
+  {
+   "titulo": "Modelo de roles sin exigir alta disponibilidad",
+   "texto": "El modelo de datos define roles de usuario interno (Admin, Usuario, Soporte, Técnico, Visitante) pensados para limitar el acceso por módulo, y la consulta del cliente filtra por su propia cuenta para mostrarle solo sus proyectos. La verificación formal de esos roles internos en cada acción (autorización) no llegó a implementarse como capa aparte en el código entregado: es un límite de alcance documentado, no un control activo y auditado. El sistema, de todos modos, tolera ventanas de mantenimiento fuera de horario, sin exigir disponibilidad crítica."
+  }
+ ],
+ "economica": [
+  {
+   "titulo": "Presupuesto reservado",
+   "texto": "El legajo original incluye montos y condiciones de pago acordados con el estudio. Por ser información comercial del cliente, no se reproduce aquí, igual que el calendario de obra y la ficha de caracterización."
+  },
+  {
+   "titulo": "Costo de desarrollo",
+   "texto": "Cuantificado de forma indirecta en la estimación por tarea de cada sprint: la inversión principal fue el tiempo del equipo, no la compra de licencias o hardware."
+  },
+  {
+   "titulo": "Infraestructura de bajo costo",
+   "texto": "No requiere hardware dedicado: alcanza con un hosting que soporte Windows Server, IIS y SQL Server. El licenciamiento de base de datos se evita con SQL Server Express o Developer."
+  },
+  {
+   "titulo": "Soporte posterior acotado",
+   "texto": "Se limita al soporte remoto mensual y a las mejoras incrementales ya previstas en el plan de mantenimiento, sin necesidad de un equipo de soporte dedicado."
+  }
+ ],
+ "operativa": [
+  {
+   "titulo": "Validación directa",
+   "texto": "La jerarquía horizontal del estudio, con los tres socios compartiendo tareas y decisiones, permitió probar el sistema con los mismos arquitectos que lo operan a diario."
+  },
+  {
+   "titulo": "Baja resistencia al cambio",
+   "texto": "La cercanía entre quien construye y quien usa el sistema redujo uno de los obstáculos más comunes al digitalizar procesos antes manuales."
+  },
+  {
+   "titulo": "Adopción acotada",
+   "texto": "Solo tres socios a capacitar y, del lado del cliente, un uso de consulta simple: menor esfuerzo que en una organización más grande."
+  },
+  {
+   "titulo": "Capacitación planificada",
+   "texto": "El manual de usuario y la capacitación se pensaron desde el inicio del proyecto, no como tarea de último momento, dando tiempo a ajustar el sistema según las pruebas con el equipo."
+  }
+ ],
+ "legal": [
+  {
+   "titulo": "Licencias open source",
+   "texto": "Bootstrap, jQuery, jQuery UI, Chart.js y DataTables.js se usan bajo licencia MIT."
+  },
+  {
+   "titulo": "Stack Microsoft",
+   "texto": ".NET y ASP.NET Core son gratuitos incluso para uso comercial. SQL Server requiere una edición paga a partir de cierto volumen de datos, pero la edición Express o Developer cubre la operación de MGD Arquitectura sin costo de licencia."
+  },
+  {
+   "titulo": "Datos personales",
+   "texto": "El sistema registra datos de clientes (nombre, domicilio, DNI, correo, teléfono) y de colaboradores del estudio, sujeto a la Ley 25.326: corresponde informar qué se almacena y con qué fin, y limitar el acceso según el rol. El modelo de datos ya prevé esos roles; falta la capa de autorización que los haga cumplir (ver Factibilidad técnica), un pendiente a resolver antes de tratar el dato personal como protegido en la práctica."
+  },
+  {
+   "titulo": "Cesión de derechos",
+   "texto": "Al ser un desarrollo académico entregado a una empresa real, correspondería formalizar por escrito la cesión de los derechos del código fuente y la responsabilidad del mantenimiento posterior, un punto que el legajo original no detalló."
+  }
+ ]
+}

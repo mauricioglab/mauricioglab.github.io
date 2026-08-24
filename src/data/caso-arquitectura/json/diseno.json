@@ -1,0 +1,165 @@
+{
+ "tabla_tecnologias": [
+  [
+   "TECNOLOGÍA",
+   "VERSIÓN",
+   "DESCRIPCIÓN",
+   "MOTIVO"
+  ],
+  [
+   "BACK-END",
+   "BACK-END",
+   "BACK-END",
+   "BACK-END"
+  ],
+  [
+   ".Net (C#)",
+   ".Net 6",
+   "Marco de desarrollo de código abierto, con tooling integrado de build y testing para proyectos web, mobile y API.",
+   "Robustez Escalabilidad"
+  ],
+  [
+   "ASP.Net",
+   ".Net 6",
+   "Favorece las buenas prácticas la monitorización y el testing, aportando numerosas herramientas,\nlibrerías y utilidades.",
+   "Robustez Escalabilidad"
+  ],
+  [
+   "Sql Server",
+   "8.12.1",
+   "Motor de base de datos de Microsoft, con integración directa con .NET y buen rendimiento en consultas complejas.",
+   "Rendimiento"
+  ],
+  [
+   "FRONT-END",
+   "FRONT-END",
+   "FRONT-END",
+   "FRONT-END"
+  ],
+  [
+   "JavaScript, HTML, Css, Bootstrap",
+   "ECMAScript 6",
+   "Lenguaje del front-end; junto con HTML y CSS arma una interfaz dinámica y liviana.",
+   "Ligero y Dinámico"
+  ]
+ ],
+ "arquitectura": {
+  "intro": [
+   "El diseño sigue Domain-Driven Design (DDD), para que el modelo de código refleje el lenguaje del negocio de gestión de proyectos de arquitectura, sobre arquitectura limpia (hexagonal, de Robert C. Martin y Alistair Cockburn) que separa el código en las cuatro capas independientes de abajo.",
+   "En el front-end, ASP MVC entrega HTML estilizado con Bootstrap, y jQuery cubre la manipulación del DOM y las llamadas AJAX donde hace falta actualizar la página sin recargarla."
+  ],
+  "capas": [
+   {
+    "title": "Capa de dominio",
+    "paragraphs": [
+     "Contiene las entidades y la lógica de negocio central de la aplicación.",
+     "Aquí se definen los objetos y las reglas que representan el problema que se está resolviendo.",
+     "Es el núcleo del sistema y no debe depender de ninguna otra capa."
+    ]
+   },
+   {
+    "title": "Capa de negocios",
+    "paragraphs": [
+     "Implementa la lógica de negocio, las validaciones y las reglas de la aplicación.",
+     "Coordina la interacción entre la capa de dominio y las demás capas.",
+     "Proporciona servicios y casos de uso que consume la capa de vistas."
+    ]
+   },
+   {
+    "title": "Capa de infraestructura",
+    "paragraphs": [
+     "Maneja la comunicación con servicios externos y el acceso a datos.",
+     "Combina Entity Framework, un ORM Code First, para las operaciones estándar, y Dapper para las consultas donde el rendimiento importa más que la abstracción.",
+     "La base de datos es SQL Server, elegida por su integración directa con .NET, su rendimiento y sus funcionalidades avanzadas de consulta con Transact-SQL."
+    ]
+   },
+   {
+    "title": "Capa de vistas",
+    "paragraphs": [
+     "Contiene la presentación de la interfaz de usuario.",
+     "Recibe las interacciones del usuario y las envía a la capa de negocios.",
+     "Recibe los datos de la capa de negocios y los muestra al usuario."
+    ]
+   }
+  ],
+  "solid": [
+   {
+    "principio": "Responsabilidad única",
+    "aplicacion": "Cada clase de dominio (Usuario, Cliente, Proyecto, Tarea) resuelve un solo motivo de cambio, sin mezclar reglas de negocio con acceso a datos."
+   },
+   {
+    "principio": "Abierto/cerrado",
+    "aplicacion": "Los servicios de negocio se extienden agregando nuevas implementaciones, por ejemplo un nuevo tipo de informe, sin modificar el código ya probado."
+   },
+   {
+    "principio": "Sustitución de Liskov",
+    "aplicacion": "Las clases del tipo Repository pueden intercambiarse sin alterar el comportamiento esperado por la capa de negocios que las consume."
+   },
+   {
+    "principio": "Segregación de interfaces",
+    "aplicacion": "Los ViewModels exponen a cada vista solo los datos que efectivamente necesita, en vez de forzarla a depender de una entidad de dominio completa."
+   },
+   {
+    "principio": "Inversión de dependencias",
+    "aplicacion": "Los Servicios Singleton y Transient se inyectan por interfaz, de modo que la capa de negocios no depende de una implementación concreta de infraestructura."
+   }
+  ]
+ },
+ "adr": [
+  {
+   "id": "ADR-01",
+   "titulo": "Arquitectura limpia por capas con Domain-Driven Design",
+   "estado": "Aceptado",
+   "contexto": [
+    "El dominio del estudio mezcla reglas de negocio concretas (tipologías, estados de proyecto, honorarios según el Colegio de Arquitectos) con una interfaz que dos tipos de usuario muy distintos van a consumir: el equipo interno y el cliente. Sin una separación clara, esas reglas terminan repetidas o mezcladas con el código de presentación."
+   ],
+   "decision": [
+    "Adoptar Domain-Driven Design sobre una arquitectura limpia (hexagonal, de Robert C. Martin y Alistair Cockburn) de cuatro capas independientes: dominio, negocios, infraestructura y vistas, cada una descripta en la sección de Arquitectura de este capítulo."
+   ],
+   "consecuencias": [
+    "Las reglas de negocio quedan concentradas en la capa de dominio y de negocios, reutilizables tanto para las vistas del usuario interno como para el Portal del cliente.",
+    "El equipo necesita disciplina para no filtrar lógica de negocio hacia la capa de vistas, algo más exigente que escribir todo en los controladores.",
+    "La capa de infraestructura queda aislada, lo que habilitó después la decisión híbrida de acceso a datos (ver ADR-02)."
+   ]
+  },
+  {
+   "id": "ADR-02",
+   "titulo": "ORM híbrido: Entity Framework (Code First) + Dapper",
+   "estado": "Aceptado",
+   "contexto": [
+    "El dominio a persistir es relativamente simple (Usuario, Cliente, Proyecto, Tarea, Cobro), pero varias pantallas (gráficos de avance, Gantt/PERT, reportes de cobros) dependen de consultas de lectura más pesadas, donde el mapeo objeto-relacional completo de un ORM agrega overhead sin aportar valor."
+   ],
+   "decision": [
+    "Usar Entity Framework Code First para las operaciones CRUD estándar de la capa de infraestructura, y Dapper para las consultas de lectura donde el rendimiento importa más que la abstracción."
+   ],
+   "consecuencias": [
+    "Las consultas de reporting corren más rápido al evitar el tracking y la generación de SQL genérico de EF.",
+    "La capa de infraestructura mantiene dos formas de acceder a los datos, lo que exige disciplina para no duplicar lógica de mapeo entre ambas.",
+    "Dapper se usa solo para lectura, nunca para escritura: el modelo de dominio sigue centralizado en las entidades de EF, evitando inconsistencias."
+   ]
+  }
+ ],
+ "clases": [
+  "El diagrama de clases modela cuatro clases de dominio principales: Usuario (con sus roles), Cliente, Proyecto y Estadísticas; esta última no persiste datos propios, sino que calcula agregados sobre las demás.",
+  "Proyecto es la clase con más relaciones: conecta con Cliente, Tipología, Servicio, Tarea y Cobro."
+ ],
+ "paquetes": [
+  "En ArqStudio, los paquetes agrupan las clases por el área del estudio a la que sirven, no por capa técnica; cada paquete, a su vez, se apoya en las cuatro capas de arquitectura descritas más arriba."
+ ],
+ "herramientas_desarrollo": [
+  "Visual Studio / Visual Studio Code: Entornos de desarrollo integrados (IDE) que facilitan la creación, depuración y publicación de la aplicación.",
+  "SQL Management Studio / DBeaver: Herramientas de administración y consulta de bases de datos SQL Server.",
+  "Chrome: Navegador web utilizado para probar y depurar la aplicación.",
+  "Jira: Herramienta de gestión de proyectos y seguimiento de tareas.",
+  "Google Drive: Plataforma de almacenamiento y colaboración en la nube.",
+  "Trello: Aplicación de gestión de proyectos y organización de tareas.",
+  "Cypress: Framework de pruebas end-to-end para aplicaciones web."
+ ],
+ "librerias_frontend": [
+  "Bootstrap (https://getbootstrap.com/): Framework CSS y JavaScript para el desarrollo de interfaces web responsivas y atractivas.",
+  "AnyChart (https://www.anychart.com/): Biblioteca de gráficos y visualizaciones.",
+  "CSS Progress Wizard (https://github.com/kurtextrem/CSS-Progress-Wizard): Componente de formulario con asistente.",
+  "Chart.js (https://www.chartjs.org/): Biblioteca de gráficos.",
+  "DataTables.js (https://datatables.net/): Biblioteca de tablas HTML avanzadas."
+ ]
+}

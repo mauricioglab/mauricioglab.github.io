@@ -1,0 +1,133 @@
+---
+import DocLayout from '../../layouts/caso-arquitectura/DocLayout.astro';
+import Reveal from '../../components/caso-arquitectura/Reveal.astro';
+import DataTable from '../../components/caso-arquitectura/DataTable.astro';
+import BurndownChart from '../../components/caso-arquitectura/BurndownChart.astro';
+import sprints from '../../data/caso-arquitectura/sprints';
+
+const cerLabel: Record<string, string> = {
+  PLANIFICACION: 'Planificación',
+  REVISION: 'Revisión',
+  RETROSPECTIVA: 'Retrospectiva',
+  REFINAMIENTO: 'Refinamiento',
+};
+
+function cleanBullet(s: string) {
+  return s.replace(/^[•\-]\s*\t?\s*/, '').trim();
+}
+
+function groupByColon(lines: string[]) {
+  const groups: { title: string; items: string[] }[] = [];
+  let current: { title: string; items: string[] } | null = null;
+  for (const raw of lines) {
+    const line = cleanBullet(raw);
+    if (line.endsWith(':')) {
+      current = { title: line.slice(0, -1), items: [] };
+      groups.push(current);
+    } else if (current) {
+      current.items.push(line);
+    } else {
+      groups.push({ title: '', items: [line] });
+    }
+  }
+  return groups;
+}
+---
+<!-- noTransition: esta página renderiza 13 <Reveal> (<details>) anidados con
+     tablas y un gráfico de burndown; las View Transitions de Astro producían
+     jank al morfear ese volumen de nodos -->
+<DocLayout title="Sprints" chapterHref="/caso-arquitectura/sprints" noTransition>
+  <div class="doc-block doc-prose">
+    <p>
+      El desarrollo se organizó en 13 iteraciones, de Sprint 0 a Sprint 12, bajo Scrum. Cada uno abrió con un
+      objetivo y un product backlog propio, y cerró con revisión, retrospectiva y métricas de avance. Tocá
+      cada sprint para ver el detalle completo.
+    </p>
+  </div>
+
+  <div class="sprint-list">
+    {sprints.map(s => {
+      const backlogGroups = groupByColon(s.backlog);
+      const hasGroups = backlogGroups.some(g => g.title);
+      const reunionesCount = Math.max(s.reuniones.length - 1, 0);
+      const huCount = Math.max(s.historia_usuario.length - 1, 0);
+      const metaParts = [
+        s.backlog.length > 0 && `${s.backlog.length} backlog`,
+        reunionesCount > 0 && `${reunionesCount} reuniones`,
+        huCount > 0 && `${huCount} HU`,
+      ].filter(Boolean);
+      return (
+        <Reveal id={`sprint-${s.numero}`} summary={`Sprint ${s.numero}`} meta={metaParts.join(' · ')}>
+          <div class="kv-block">
+            <h4>Objetivo</h4>
+            <p>{s.objetivo}</p>
+          </div>
+
+          {s.backlog.length > 0 && (
+            <Reveal nested summary="Product backlog" meta={`${s.backlog.length} ítems`}>
+              {hasGroups ? (
+                <div class="grid-2">
+                  {backlogGroups.map(g => (
+                    <div class="kv-block">
+                      {g.title && <h4>{g.title}</h4>}
+                      <ul class="list-none m-0 p-0 flex flex-col gap-1 text-ink-soft text-sm">
+                        {g.items.map(i => <li>{i}</li>)}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <ul class="columns-2 gap-x-8 text-ink-soft text-sm [&>li]:mb-1.5 [&>li]:break-inside-avoid">
+                  {s.backlog.map(b => <li>{cleanBullet(b)}</li>)}
+                </ul>
+              )}
+            </Reveal>
+          )}
+
+          {s.estimacion.length > 1 && (
+            <Reveal nested summary="Estimación del sprint">
+              <DataTable rows={s.estimacion} compact />
+            </Reveal>
+          )}
+
+          {Object.keys(s.ceremonias).length > 0 && (
+            <Reveal nested summary="Ceremonias" meta={`${Object.keys(s.ceremonias).length} etapas`}>
+              {Object.entries(s.ceremonias).map(([k, v]) => v && (
+                typeof v === 'string' ? (
+                  <p><strong>{cerLabel[k] ?? k}:</strong> {v}</p>
+                ) : (
+                  <div class="kv-block">
+                    <h4>{cerLabel[k] ?? k}</h4>
+                    <p>{v.intro}</p>
+                    <ul class="m-0 pl-4.5 flex flex-col gap-1 text-ink-soft text-sm">
+                      {v.items.map((item: string) => <li>{item}</li>)}
+                    </ul>
+                  </div>
+                )
+              ))}
+            </Reveal>
+          )}
+
+          {s.reuniones.length > 1 && (
+            <Reveal nested summary="Reuniones del sprint" meta={`${reunionesCount} reuniones`}>
+              <DataTable rows={s.reuniones} compact />
+            </Reveal>
+          )}
+
+          {(s.metricas_texto.length > 0 || s.metricas_tabla.length > 1) && (
+            <Reveal nested summary="Métricas de burndown">
+              {s.metricas_texto.map(t => <p>{t}</p>)}
+              {s.metricas_tabla.length > 1 && <BurndownChart rows={s.metricas_tabla} />}
+            </Reveal>
+          )}
+
+          {s.historia_usuario.length > 1 && (
+            <Reveal nested summary="Historias de usuario" meta={`${huCount} HU`}>
+              <DataTable rows={s.historia_usuario} compact />
+            </Reveal>
+          )}
+        </Reveal>
+      );
+    })}
+  </div>
+</DocLayout>

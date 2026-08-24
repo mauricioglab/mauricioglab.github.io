@@ -1,0 +1,61 @@
+---
+import DocLayout from '../../layouts/caso-arquitectura/DocLayout.astro';
+import propuesta from '../../data/caso-arquitectura/propuesta';
+import alcances from '../../data/caso-arquitectura/alcances';
+import { slug, FUNC_BY_CANONICAL } from '../../data/caso-arquitectura/moduleMap';
+---
+<DocLayout title="Objetivos y alcance" chapterHref="/caso-arquitectura/objetivos-alcance">
+  <div class="doc-block doc-prose">
+    <h2><span class="doc-block-n">5.1</span>La propuesta</h2>
+    <p>{propuesta.propuesta[0]}</p>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">5.2</span>Objetivos</h2>
+    <div class="grid-2">
+      <div class="card">
+        <span class="pill">Objetivo de proyecto</span>
+        <p class="mt-3.5">{propuesta.objetivo_proyecto[0]}</p>
+      </div>
+      <div class="card">
+        <span class="pill">Objetivo de producto</span>
+        <p class="mt-3.5">{propuesta.objetivo_producto[0]}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">5.3</span>Alcance por módulo</h2>
+    <p class="text-ink-soft text-[0.94rem] max-w-[720px] mb-5">
+      Hasta dónde llega cada módulo del sistema, alineado con los requerimientos relevados.
+    </p>
+    <div class="grid-2">
+      {alcances.map((a, i) => {
+        const funcs = FUNC_BY_CANONICAL[a.modulo] ?? [];
+        return (
+          <div class="card" id={slug(a.modulo)}>
+            <span class="pill-neutral">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="mt-3">{a.modulo}</h3>
+            <ul class="m-0 pl-4.5 mt-2.5 flex flex-col gap-1.5 text-[0.94rem] text-ink-soft">
+              {a.incluye.map(t => <li>{t}</li>)}
+            </ul>
+            <div class="cross-links">
+              <a href={`/requerimientos#${slug(a.modulo)}`} class="text-teal-deep font-semibold">Ver requerimientos →</a>
+              {funcs.map(f => (
+                <a href={`/funcionalidades#${slug(f)}`} class="text-teal-deep font-semibold">Ver funcionalidades: {f} →</a>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+
+  <div class="doc-block doc-prose">
+    <p class="text-ink-soft">
+      Confirmados los objetivos y delimitado el alcance de cada módulo, lo que sigue es el desglose completo
+      en historias de usuario, en el próximo capítulo:
+      <a href="/caso-arquitectura/requerimientos" class="text-teal-deep font-semibold">Requerimientos</a>.
+    </p>
+  </div>
+</DocLayout>

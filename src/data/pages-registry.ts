@@ -42,12 +42,7 @@ export const pagesRegistry: PageEntry[] = [
   // LANDINGS (solo en admin, solo español)
   // =====================
   { id: 'portfolio', name: 'Portfolio', url: '/es/portfolio/', category: 'landing', icon: '📁', active: true },
-  { id: 'landing-developer', name: 'Landing Developer', url: '/es/landing/developer/', category: 'landing', icon: '💻' },
-  { id: 'landing-analista', name: 'Landing Analista', url: '/es/landing/analista/', category: 'landing', icon: '📊', active: true },
-  { id: 'landing-ia', name: 'Landing IA Engineer', url: '/es/landing/ia-engineer/', category: 'landing', icon: '🤖', active: false },
-  { id: 'landing-freelance', name: 'Landing Freelance', url: '/es/landing/freelance/', category: 'landing', icon: '🚀' },
-  { id: 'landing-speaker', name: 'Landing Speaker', url: '/es/landing/speaker/', category: 'landing', icon: '🎤' },
-  { id: 'landing-docente', name: 'Landing Docente', url: '/es/landing/docente/', category: 'landing', icon: '🎓' },
+  { id: 'servicios', name: 'Servicios', url: '/es/servicios/', category: 'landing', icon: '🤝', active: true },
 
   // =====================
   // HERRAMIENTAS (solo en admin)
@@ -67,6 +62,7 @@ export const pagesRegistry: PageEntry[] = [
   { id: 'project-taskmanager', name: 'Case: Task Manager DDD', url: '/es/proyectos/task-manager-ddd/', category: 'project', icon: '✅' },
   { id: 'project-mundial-2026', name: 'Case: Mundial 2026', url: '/es/proyectos/mundial-2026/', category: 'project', icon: '⚽' },
   { id: 'project-abandono-estudiantil', name: 'Case: Abandono Estudiantil', url: '/es/proyectos/abandono-estudiantil/', category: 'project', icon: '🎓' },
+  { id: 'project-caso-arquitectura', name: 'Case: Analista de Sistemas (ArqStudio)', url: '/caso-arquitectura/', category: 'project', icon: '📐' },
 ];
 
 // =====================

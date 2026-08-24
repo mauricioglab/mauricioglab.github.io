@@ -1,0 +1,586 @@
+{
+ "dor": [
+  "La historia está redactada en formato Como/Quiero/Para, con sus criterios de aceptación explícitos.",
+  "Las dependencias de datos están identificadas: qué entidades del modelo toca (ver Diseño del sistema).",
+  "El equipo la estimó en la planificación del sprint.",
+  "No tiene bloqueos de diseño pendientes."
+ ],
+ "dod": [
+  "El código está integrado y revisado por al menos un compañero del equipo.",
+  "Los criterios de aceptación están verificados, manualmente o con Cypress según el caso.",
+  "El caso de prueba correspondiente fue ejecutado (ver capítulo de Pruebas del sistema).",
+  "Se demostró en el Sprint Review sin errores bloqueantes."
+ ],
+ "story_map": {
+  "actividades": [
+   {
+    "actividad": "Gestionar identidad",
+    "tareas": [
+     "Alta y roles de usuarios internos",
+     "Alta y acceso del cliente"
+    ],
+    "rango": "HU-001 a HU-005"
+   },
+   {
+    "actividad": "Gestionar proyectos",
+    "tareas": [
+     "Crear y clasificar proyectos por tipología",
+     "Ver estadísticas generales de la operación"
+    ],
+    "rango": "HU-006 a HU-012"
+   },
+   {
+    "actividad": "Ejecutar el trabajo",
+    "tareas": [
+     "Servicios y tareas por proyecto",
+     "Seguimiento visual del avance",
+     "Cronograma con Gantt y PERT"
+    ],
+    "rango": "HU-013 a HU-046"
+   },
+   {
+    "actividad": "Cobrar",
+    "tareas": [
+     "Registrar y validar cobros",
+     "Alertar vencimientos pendientes"
+    ],
+    "rango": "HU-033 a HU-040"
+   },
+   {
+    "actividad": "Dar visibilidad al cliente",
+    "tareas": [
+     "Portal de consulta propio",
+     "Reportes y estadísticas gráficas"
+    ],
+    "rango": "HU-047 a HU-059"
+   }
+  ],
+  "fuera_de_alcance": [
+   {
+    "item": "Mensajería interna entre usuarios",
+    "nota": "Modelada en el dominio real (entidad Message), pero ningún controlador ni servicio la usa: no llegó a tener pantalla propia."
+   },
+   {
+    "item": "Notificaciones automáticas",
+    "nota": "Modelada en el dominio real (entidad Notification), sin lógica de disparo conectada a ningún flujo."
+   },
+   {
+    "item": "Envío de mails desde el sistema",
+    "nota": "Modelada en el dominio real (entidad Mail), sin integración con un proveedor de correo."
+   },
+   {
+    "item": "Gestión de documentos e imágenes fuera de los adjuntos de tarea",
+    "nota": "Modeladas por separado del adjunto de una tarea (entidades Document e Image), sin uso real."
+   },
+   {
+    "item": "Reportes adicionales más allá de los ya construidos",
+    "nota": "Modelada como catálogo propio (entidad Report), sin pantalla que la consuma."
+   }
+  ]
+ },
+ "modulos": [
+  {
+   "modulo": "Cuentas de usuario y cliente",
+   "descripcion": "Antes de gestionar un solo proyecto, el sistema necesita saber quién es cada persona que lo usa: el cliente que contrató al estudio y el usuario interno (arquitecto o administrativo) que opera el día a día. Estas historias consolidan el backlog original de los Sprints 1 a 3, que no llegó a redactarse como historias de usuario en su momento.",
+   "origen": "Sprints 1-3 (consolidado a partir del Product Backlog)",
+   "necesidad_origen": "Seguimiento disperso de los proyectos",
+   "cobertura_pruebas": "Cubierto por los casos de prueba Login Usuario, Login Cliente, Clientes y Usuario del capítulo de Pruebas.",
+   "requerimientos": [
+    {
+     "id": "HU-001",
+     "epica": "Cuentas de usuario y cliente",
+     "historia": "Como administrativo del estudio, quiero registrar los datos de contacto de un cliente nuevo (nombre, apellido, domicilio, DNI, correo electrónico y teléfono), para tener su información centralizada antes de asignarle un proyecto.",
+     "criterios": "El sistema debe asignar automáticamente un número de cliente y una contraseña inicial; todos los campos de contacto deben poder modificarse después del alta sin perder el número asignado.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-002",
+     "epica": "Cuentas de usuario y cliente",
+     "historia": "Como socio del estudio, quiero dar de alta a un usuario interno con su nombre, domicilio, DNI, correo y teléfono, para que cada arquitecto o administrativo tenga su propia cuenta dentro del sistema.",
+     "criterios": "El sistema debe generar un número y una contraseña de usuario; el alta debe permitir asignar uno o más roles y modificarlos después sin recrear la cuenta.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-003",
+     "epica": "Cuentas de usuario y cliente",
+     "historia": "Como socio del estudio, quiero asignar y modificar roles a cada usuario interno, para que el acceso a cada módulo respete la estructura horizontal de decisiones del estudio.",
+     "criterios": "Debe existir al menos un rol por función (administración de proyectos, gestión de cobros, gestión de tareas); un usuario puede tener más de un rol a la vez.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-004",
+     "epica": "Cuentas de usuario y cliente",
+     "historia": "Como usuario interno, quiero iniciar sesión con mi usuario y contraseña, para acceder únicamente a la información que me corresponde según mi rol.",
+     "criterios": "El sistema debe validar usuario y contraseña antes de conceder acceso, permitir mostrar u ocultar la contraseña mientras se escribe, y permitir cambiarla desde la sesión activa.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-005",
+     "epica": "Cuentas de usuario y cliente",
+     "historia": "Como cliente, quiero iniciar sesión con mi propio usuario y contraseña, para consultar el estado de mis proyectos sin depender de que el estudio me lo informe por teléfono o mail.",
+     "criterios": "El acceso del cliente debe quedar limitado a sus propios proyectos; debe poder cambiar su contraseña y elegir si visualizarla mientras la escribe, igual que el usuario interno.",
+     "puntos": 2
+    }
+   ]
+  },
+  {
+   "modulo": "Proyectos y tipología",
+   "descripcion": "Con cliente y usuario identificados, el sistema necesita poder crear el proyecto en sí y clasificarlo: la tipología (anteproyecto, proyecto con detalle o gestión y conducción de obra) determina qué servicios y tareas se le asignan más adelante.",
+   "origen": "Sprint 4 (consolidado a partir del Product Backlog)",
+   "necesidad_origen": "Seguimiento disperso de los proyectos",
+   "cobertura_pruebas": "Cubierto por los casos de prueba Proyectos y Tipologías.",
+   "requerimientos": [
+    {
+     "id": "HU-006",
+     "epica": "Proyectos y tipología",
+     "historia": "Como usuario interno, quiero registrar un proyecto nuevo con su nombre y el cliente al que corresponde, para empezar a asociarle tareas, servicios y cobros.",
+     "criterios": "El proyecto debe quedar vinculado a un cliente ya existente; el nombre y el cliente asignado deben poder modificarse después del alta sin perder el historial de tareas ya cargadas.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-007",
+     "epica": "Proyectos y tipología",
+     "historia": "Como usuario interno, quiero asignar una tipología a cada proyecto (anteproyecto, proyecto con detalle o gestión y conducción de obra), para que el sistema y el cliente entiendan en qué etapa se encuentra.",
+     "criterios": "La tipología debe poder modificarse si el proyecto avanza de etapa, por ejemplo de anteproyecto a proyecto con detalle, sin perder los datos ya cargados.",
+     "puntos": 1
+    },
+    {
+     "id": "HU-008",
+     "epica": "Proyectos y tipología",
+     "historia": "Como usuario interno, quiero generar un informe imprimible de un proyecto, para compartir su estado, requerimientos y comentarios sin depender del acceso al sistema.",
+     "criterios": "El informe debe incluir el estado actual del proyecto, sus requerimientos y los comentarios cargados, y debe poder imprimirse o guardarse en PDF desde el navegador.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-009",
+     "epica": "Proyectos y tipología",
+     "historia": "Como usuario interno, quiero exportar el listado de proyectos a Excel, para analizarlo o compartirlo fuera del sistema.",
+     "criterios": "El archivo exportado debe incluir los mismos proyectos visibles en el filtro aplicado, con sus columnas principales (cliente, tipología, estado, avance).",
+     "puntos": 2
+    }
+   ]
+  },
+  {
+   "modulo": "Estadísticas generales",
+   "descripcion": "Antes de entrar al detalle de cada proyecto, el estudio necesita una fotografía general de la operación: cuántos usuarios, clientes y proyectos hay activos en un momento dado.",
+   "origen": "Sprint 5 (consolidado a partir del Product Backlog)",
+   "necesidad_origen": "Seguimiento disperso de los proyectos",
+   "cobertura_pruebas": "Sin caso de prueba específico relevado en el plan de testing.",
+   "requerimientos": [
+    {
+     "id": "HU-010",
+     "epica": "Estadísticas generales",
+     "historia": "Como socio del estudio, quiero ver la cantidad total de usuarios internos y cuántos están activos o inactivos, para dimensionar el equipo disponible.",
+     "criterios": "El conteo debe distinguir activos de inactivos y actualizarse automáticamente al dar de alta o baja a un usuario.",
+     "puntos": 1
+    },
+    {
+     "id": "HU-011",
+     "epica": "Estadísticas generales",
+     "historia": "Como socio del estudio, quiero ver la cantidad total de clientes y cuántos están activos o inactivos, para entender el tamaño real de la cartera.",
+     "criterios": "El conteo debe distinguir activos de inactivos y actualizarse automáticamente al dar de alta o baja a un cliente.",
+     "puntos": 1
+    },
+    {
+     "id": "HU-012",
+     "epica": "Estadísticas generales",
+     "historia": "Como socio del estudio, quiero ver la cantidad total de proyectos y cuántos están activos o inactivos, para dimensionar la carga de trabajo en curso.",
+     "criterios": "El conteo debe distinguir activos de inactivos y actualizarse automáticamente al cambiar el estado de un proyecto.",
+     "puntos": 1
+    }
+   ]
+  },
+  {
+   "modulo": "Servicios y tareas de servicio",
+   "descripcion": "Cada proyecto ofrece servicios (por ejemplo, anteproyecto o dirección de obra), y cada servicio trae consigo un set de tareas predeterminadas que se pueden ajustar.",
+   "origen": "Sprint 6 (historias de usuario relevadas con el equipo)",
+   "necesidad_origen": "Plazos, tareas y cambios imprevistos",
+   "cobertura_pruebas": "Cubierto por el caso de prueba Servicios; las tareas de servicio no tienen caso propio.",
+   "requerimientos": [
+    {
+     "id": "HU-013",
+     "epica": "Servicios y tareas de servicio",
+     "historia": "Como usuario interno quiero poder crear un nuevo servicio en el proyecto para que podamos ofrecer nuevas funcionalidades a nuestros usuarios.",
+     "criterios": "El usuario debe poder ingresar el nombre y descripción del nuevo servicio; el sistema debe validar que el nombre no exista previamente y confirmar la creación.",
+     "puntos": 1
+    },
+    {
+     "id": "HU-014",
+     "epica": "Servicios y tareas de servicio",
+     "historia": "Como usuario interno quiero ver una lista de todos los servicios asociados a un proyecto para tener una visión general de los servicios existentes.",
+     "criterios": "Se deben listar los servicios con su nombre y breve descripción; la lista debe actualizarse en tiempo real con las últimas adiciones o modificaciones.",
+     "puntos": 1
+    },
+    {
+     "id": "HU-015",
+     "epica": "Servicios y tareas de servicio",
+     "historia": "Como usuario interno quiero poder modificar el nombre de un servicio existente para que refleje mejor sus funcionalidades.",
+     "criterios": "El usuario debe poder seleccionar un servicio de la lista para modificar su nombre; el sistema debe validar que el nuevo nombre no esté en uso y confirmar la modificación.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-016",
+     "epica": "Servicios y tareas de servicio",
+     "historia": "Como usuario interno quiero poder eliminar un servicio que ya no se necesite para que el proyecto se mantenga actualizado y relevante.",
+     "criterios": "El sistema debe pedir confirmación antes de eliminar un servicio y notificar al usuario una vez eliminado.",
+     "puntos": 1
+    },
+    {
+     "id": "HU-017",
+     "epica": "Servicios y tareas de servicio",
+     "historia": "Como usuario interno quiero poder visualizar las tareas asociadas a un servicio para comprender mejor el trabajo pendiente o completado en ese servicio.",
+     "criterios": "Al seleccionar un servicio se deben mostrar todas las tareas relacionadas, incluyendo su estado (pendiente, en progreso, completado).",
+     "puntos": 1
+    },
+    {
+     "id": "HU-018",
+     "epica": "Servicios y tareas de servicio",
+     "historia": "Como usuario interno quiero poder añadir nuevas tareas a un servicio para organizar el trabajo necesario para desarrollarlo.",
+     "criterios": "El usuario debe poder definir título, descripción y estado inicial de la tarea; debe recibir confirmación una vez creada.",
+     "puntos": 1
+    },
+    {
+     "id": "HU-019",
+     "epica": "Servicios y tareas de servicio",
+     "historia": "Como usuario interno quiero ver una lista de todas las tareas de un proyecto, independientemente del servicio al que pertenezcan, para tener una visión completa del trabajo pendiente.",
+     "criterios": "Debe poder listarse cada tarea con título, descripción, estado y servicio asociado, actualizándose automáticamente con cualquier cambio.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-020",
+     "epica": "Servicios y tareas de servicio",
+     "historia": "Como usuario interno quiero poder modificar los detalles de una tarea existente para que la información esté actualizada y sea relevante.",
+     "criterios": "El usuario debe poder cambiar título, descripción y estado de una tarea, con confirmación tras la modificación.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-021",
+     "epica": "Servicios y tareas de servicio",
+     "historia": "Como usuario interno quiero poder eliminar tareas que ya no sean necesarias o estén completadas para que el proyecto se mantenga limpio y organizado.",
+     "criterios": "El sistema debe solicitar confirmación antes de eliminar una tarea y notificar al usuario una vez eliminada.",
+     "puntos": 1
+    }
+   ]
+  },
+  {
+   "modulo": "Tareas del proyecto",
+   "descripcion": "Además de las tareas heredadas de un servicio, el proyecto necesita su propio seguimiento operativo: fechas, adjuntos y compromisos que se comunican al equipo.",
+   "origen": "Sprint 7 (historias de usuario relevadas con el equipo)",
+   "necesidad_origen": "Plazos, tareas y cambios imprevistos",
+   "cobertura_pruebas": "Cubierto parcialmente por el caso de prueba Proyectos (asignación de tareas); sin caso de prueba dedicado a la gestión de tareas en sí.",
+   "requerimientos": [
+    {
+     "id": "HU-022",
+     "epica": "Tareas del proyecto",
+     "historia": "Como usuario interno quiero poder registrar nuevas tareas en el sistema, para organizar y planificar el trabajo que necesita ser realizado.",
+     "criterios": "El usuario debe poder acceder a un formulario con título, fecha de inicio, fecha de compromiso, descripción y adjuntos; debe poder elegir un estado inicial (pendiente, en progreso, completado) y recibir confirmación al guardar.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-023",
+     "epica": "Tareas del proyecto",
+     "historia": "Como usuario interno quiero registrar las fechas de inicio y de compromiso de las tareas, para que todos los miembros del equipo tengan claridad sobre los plazos.",
+     "criterios": "El registro y la edición deben ofrecer selección de fecha por calendario para ambas fechas; el sistema debe validar que la fecha de compromiso no sea anterior a la de inicio y notificar si la combinación no es válida.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-024",
+     "epica": "Tareas del proyecto",
+     "historia": "Como usuario interno quiero adjuntar archivos a las tareas, para proporcionar o consultar material de referencia relevante.",
+     "criterios": "Debe poder adjuntarse uno o varios archivos durante el registro o la edición, soportando formatos de documento, PDF e imagen.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-025",
+     "epica": "Tareas del proyecto",
+     "historia": "Como usuario interno quiero registrar un compromiso y enviar un mensaje relacionado con él, para comunicar de manera efectiva las expectativas y responsabilidades asociadas a la tarea.",
+     "criterios": "Al registrar o actualizar una tarea debe poder agregarse un compromiso con un campo de texto para el mensaje; debe existir la opción de enviarlo a los miembros del equipo relacionados y el sistema debe confirmar el envío.",
+     "puntos": 5
+    },
+    {
+     "id": "HU-026",
+     "epica": "Tareas del proyecto",
+     "historia": "Como usuario interno quiero agregar nuevos ítems a una tarea existente, para reflejar cambios o adiciones a los requerimientos o al alcance de la tarea.",
+     "criterios": "Debe poder agregarse nuevos ítems o subtareas a una tarea principal, cada uno con su propia descripción, fechas y archivos adjuntos; el sistema debe confirmar cuando el ítem se agregó exitosamente.",
+     "puntos": 1
+    }
+   ]
+  },
+  {
+   "modulo": "Gráfico de avance de tareas",
+   "descripcion": "El progreso de las tareas necesita traducirse en una lectura visual rápida, tanto para el equipo interno como para el cliente que consulta su proyecto.",
+   "origen": "Sprint 8 (historias de usuario relevadas con el equipo)",
+   "necesidad_origen": "Plazos, tareas y cambios imprevistos",
+   "cobertura_pruebas": "Cubierto parcialmente por el caso de prueba Proyectos (verificación de avances mediante gráficos); sin caso de prueba dedicado.",
+   "requerimientos": [
+    {
+     "id": "HU-027",
+     "epica": "Gráfico de avance de tareas",
+     "historia": "Como usuario interno, quiero que exista un módulo que genere gráficos de avance de tareas, para tener una representación visual del progreso del proyecto.",
+     "criterios": "Debe implementarse un módulo dedicado a la generación de estos gráficos, integrado a la ficha de cada proyecto.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-028",
+     "epica": "Gráfico de avance de tareas",
+     "historia": "Como usuario interno, deseo poder ver el avance de las tareas directamente en la interfaz, para una rápida comprensión del estado del proyecto.",
+     "criterios": "La visualización del avance debe estar disponible sin necesidad de navegar a una pantalla aparte.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-029",
+     "epica": "Gráfico de avance de tareas",
+     "historia": "Como usuario interno, necesito que el sistema calcule el progreso de las tareas y le asigne un color, para una lectura visual clara.",
+     "criterios": "El cálculo del porcentaje de avance y la asignación de color deben ser automáticos, sin intervención manual del usuario.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-030",
+     "epica": "Gráfico de avance de tareas",
+     "historia": "Como usuario interno, quiero que los gráficos muestren el porcentaje de avance mediante barras de progreso, para una comprensión rápida y precisa.",
+     "criterios": "Cada barra de progreso debe reflejar el porcentaje calculado en tiempo real.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-031",
+     "epica": "Gráfico de avance de tareas",
+     "historia": "Como usuario interno, necesito visualizar tareas en distintos estados (iniciadas, en espera, completadas), para una mejor gestión del trabajo pendiente.",
+     "criterios": "El gráfico debe distinguir visualmente cada estado posible de una tarea.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-032",
+     "epica": "Gráfico de avance de tareas",
+     "historia": "Como usuario interno, quiero que los gráficos puedan reflejar valores negativos, para identificar tareas retrasadas.",
+     "criterios": "El sistema debe representar los atrasos con un indicador claramente diferenciado del avance normal.",
+     "puntos": 2
+    }
+   ]
+  },
+  {
+   "modulo": "Cobros",
+   "descripcion": "El estudio necesita registrar lo que cobra por cada proyecto y saber en todo momento cuánto queda pendiente sobre el presupuesto acordado.",
+   "origen": "Sprint 9 (historias de usuario relevadas con el equipo)",
+   "necesidad_origen": "Plazos, tareas y cambios imprevistos",
+   "cobertura_pruebas": "Cubierto parcialmente por el caso de prueba Proyectos (registro de cobros); sin caso de prueba dedicado a la gestión de cobros.",
+   "requerimientos": [
+    {
+     "id": "HU-033",
+     "epica": "Cobros",
+     "historia": "Como usuario interno quiero ver un botón \"Cobros\" claramente visible en la interfaz de proyectos, para acceder fácilmente a la gestión de cobros.",
+     "criterios": "Debe agregarse un botón etiquetado como \"Cobros\" en la interfaz de proyectos, visible y de fácil acceso.",
+     "puntos": 1
+    },
+    {
+     "id": "HU-034",
+     "epica": "Cobros",
+     "historia": "Como usuario interno quiero tener una página dedicada a la gestión de cobros, para gestionar eficientemente los cobros asociados a los proyectos.",
+     "criterios": "La página debe incluir todas las funciones necesarias para gestionar los cobros de manera efectiva.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-035",
+     "epica": "Cobros",
+     "historia": "Como usuario interno quiero un formulario que me permita ingresar la fecha y el monto cobrado, para registrar nuevos cobros de manera precisa.",
+     "criterios": "El formulario debe incluir campos obligatorios para fecha y monto cobrado, que garanticen la precisión de los registros.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-036",
+     "epica": "Cobros",
+     "historia": "Como usuario interno quiero que el sistema calcule automáticamente el saldo del proyecto considerando el presupuesto y los cobros realizados.",
+     "criterios": "El saldo debe calcularse a partir del monto presupuestado y los cobros realizados, y actualizarse automáticamente al registrar un nuevo cobro.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-037",
+     "epica": "Cobros",
+     "historia": "Como usuario interno quiero poder editar y eliminar cobros existentes, para corregir errores o eliminar registros innecesarios.",
+     "criterios": "Los cambios y eliminaciones deben reflejarse correctamente en el saldo del proyecto.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-038",
+     "epica": "Cobros",
+     "historia": "Como usuario interno quiero que el sistema valide el formulario de ingreso de cobros, para asegurar la precisión de los datos.",
+     "criterios": "El sistema debe validar los campos de fecha y monto cobrado para garantizar la integridad de la información ingresada.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-039",
+     "epica": "Cobros",
+     "historia": "Como usuario interno, quiero que la gestión de cobros haya sido probada exhaustivamente antes de usarla en producción, para confiar en que los montos y saldos que el sistema calcula son correctos.",
+     "criterios": "Deben realizarse pruebas de funcionalidad y usabilidad sobre todas las funciones relacionadas con la gestión de cobros.",
+     "puntos": 1
+    },
+    {
+     "id": "HU-040",
+     "epica": "Cobros",
+     "historia": "Como usuario interno quiero registrar un plazo de vencimiento para un cobro pendiente, para saber a tiempo cuándo se acerca la fecha sin tener que revisarlo a mano.",
+     "criterios": "El sistema debe permitir asociar una fecha de vencimiento a un cobro pendiente y mostrar una alerta visible cuando esa fecha está próxima o vencida.",
+     "puntos": 2
+    }
+   ]
+  },
+  {
+   "modulo": "Gráficos de Gantt y PERT",
+   "descripcion": "Para proyectos con muchas actividades dependientes entre sí, el estudio necesita una vista de cronograma más avanzada que el simple listado de tareas: un Gantt (barras por actividad en el tiempo) y un PERT (red de nodos que muestra dependencias y rutas críticas).",
+   "origen": "Sprint 10 (historias de usuario relevadas con el equipo)",
+   "necesidad_origen": "Plazos, tareas y cambios imprevistos",
+   "cobertura_pruebas": "Sin caso de prueba específico relevado en el plan de testing.",
+   "requerimientos": [
+    {
+     "id": "HU-041",
+     "epica": "Gráficos de Gantt y PERT",
+     "historia": "Como usuario interno, quiero que se diseñe la interfaz del Diagrama de Gantt, incluyendo actividades, fechas de inicio y duración.",
+     "criterios": "La interfaz debe incluir elementos para definir actividades, fechas de inicio y duración de manera clara y precisa.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-042",
+     "epica": "Gráficos de Gantt y PERT",
+     "historia": "Como usuario interno, necesito poder agregar, modificar y eliminar actividades en el Diagrama de Gantt.",
+     "criterios": "Debe ser posible agregar, modificar y eliminar actividades de manera intuitiva desde la interfaz del diagrama.",
+     "puntos": 1
+    },
+    {
+     "id": "HU-043",
+     "epica": "Gráficos de Gantt y PERT",
+     "historia": "Como usuario interno, deseo poder establecer dependencias entre las actividades en el Diagrama de Gantt.",
+     "criterios": "Debe implementarse la capacidad de establecer dependencias entre actividades de manera flexible y sencilla.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-044",
+     "epica": "Gráficos de Gantt y PERT",
+     "historia": "Como usuario interno, necesito que el sistema calcule automáticamente las fechas de finalización previstas, considerando dependencias y duración.",
+     "criterios": "El sistema debe calcular automáticamente las fechas de finalización de todas las actividades, teniendo en cuenta sus dependencias y duración.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-045",
+     "epica": "Gráficos de Gantt y PERT",
+     "historia": "Como usuario interno, quiero ver el Diagrama de PERT con nodos y flechas que representen las actividades y sus dependencias, identificando la ruta crítica.",
+     "criterios": "El diagrama debe construirse automáticamente a partir de las actividades cargadas, mostrar la ruta crítica claramente diferenciada del resto, y representar cada dependencia con una flecha entre los nodos correspondientes.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-046",
+     "epica": "Gráficos de Gantt y PERT",
+     "historia": "Como usuario interno, deseo poder ajustar las actividades y sus dependencias en el Diagrama de PERT.",
+     "criterios": "Debe ser posible ajustar actividades y dependencias de manera interactiva, recalculando la ruta crítica al confirmar el cambio.",
+     "puntos": 2
+    }
+   ]
+  },
+  {
+   "modulo": "Portal del cliente",
+   "descripcion": "El objetivo original del proyecto se cierra acá: darle al cliente visibilidad directa de sus propios proyectos, sin depender de que el estudio se la reporte manualmente.",
+   "origen": "Sprint 11 (historias de usuario relevadas con el equipo)",
+   "necesidad_origen": "Historial y credibilidad ante el cliente",
+   "cobertura_pruebas": "Cubierto por el caso de prueba Login Cliente para el acceso; el contenido del portal (proyectos, compromisos) no tiene caso de prueba propio.",
+   "requerimientos": [
+    {
+     "id": "HU-047",
+     "epica": "Portal del cliente",
+     "historia": "Como cliente quiero poder visualizar una lista de todos mis proyectos, para tener una vista general y rápida de todos los proyectos en curso.",
+     "criterios": "La interfaz debe listar todos los proyectos asociados a cada cliente, fácilmente accesible desde la página principal de la interfaz de clientes.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-048",
+     "epica": "Portal del cliente",
+     "historia": "Como cliente quiero poder visualizar información detallada de cada proyecto al seleccionarlo, para entender mejor sus especificaciones y necesidades.",
+     "criterios": "Al seleccionar un proyecto debe mostrarse una sección con toda la información detallada, incluyendo objetivos, alcance, presupuesto y cronograma.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-049",
+     "epica": "Portal del cliente",
+     "historia": "Como cliente quiero ver el arquitecto asignado a cada uno de mis proyectos, para saber quién está a cargo y poder contactarlo si es necesario.",
+     "criterios": "Cada proyecto debe incluir el nombre del arquitecto asignado y un medio directo (como un enlace a su correo) para contactarlo desde la interfaz.",
+     "puntos": 1
+    },
+    {
+     "id": "HU-050",
+     "epica": "Portal del cliente",
+     "historia": "Como cliente quiero visualizar la tipología de cada uno de mis proyectos, para entender el enfoque y la metodología de trabajo aplicada.",
+     "criterios": "La tipología debe ser visible en la información general de cada proyecto, con una breve descripción si se selecciona.",
+     "puntos": 1
+    },
+    {
+     "id": "HU-051",
+     "epica": "Portal del cliente",
+     "historia": "Como cliente quiero visualizar el estado actual y el avance de cada uno de mis proyectos, para conocer su progreso y si se están cumpliendo los plazos.",
+     "criterios": "El estado y avance deben actualizarse regularmente y mostrarse con una vista gráfica (barra de progreso) para una comprensión rápida.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-052",
+     "epica": "Portal del cliente",
+     "historia": "Como cliente quiero visualizar los compromisos relacionados con cada proyecto, para estar al tanto de entregas, pagos y otros hitos importantes.",
+     "criterios": "Los compromisos deben listarse de forma clara dentro de los detalles del proyecto, con fechas, descripciones y estado (completado, pendiente).",
+     "puntos": 2
+    },
+    {
+     "id": "HU-053",
+     "epica": "Portal del cliente",
+     "historia": "Como cliente quiero ordenar y filtrar la lista de proyectos por nombre, estado o avance, para personalizar la visualización según mis necesidades.",
+     "criterios": "Debe existir una funcionalidad intuitiva para ordenar la lista según el criterio seleccionado, y un filtro que muestre solo los proyectos que coincidan con el estado elegido.",
+     "puntos": 2
+    }
+   ]
+  },
+  {
+   "modulo": "Estadísticas y reportes gráficos",
+   "descripcion": "Con el sistema ya operando, el estudio necesita poder leer patrones agregados, no solo el estado de un proyecto puntual, para tomar decisiones de negocio.",
+   "origen": "Sprint 12 (historias de usuario relevadas con el equipo)",
+   "necesidad_origen": "Seguimiento disperso de los proyectos",
+   "cobertura_pruebas": "Sin caso de prueba específico relevado en el plan de testing.",
+   "requerimientos": [
+    {
+     "id": "HU-054",
+     "epica": "Estadísticas y reportes gráficos",
+     "historia": "Como usuario interno, necesito un diseño de interfaz intuitivo que facilite la interacción con las visualizaciones gráficas interactivas.",
+     "criterios": "La interfaz debe ser visualmente atractiva, con controles claros para manipular y explorar los datos.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-055",
+     "epica": "Estadísticas y reportes gráficos",
+     "historia": "Como usuario interno, quiero poder filtrar datos por periodos de tiempo, para analizar la evolución de los proyectos y los cobros realizados.",
+     "criterios": "Debe implementarse un filtro que permita seleccionar y visualizar datos de periodos definidos, fácil de usar.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-056",
+     "epica": "Estadísticas y reportes gráficos",
+     "historia": "Como usuario interno, necesito gráficos que categoricen los proyectos según su estado, para una mejor comprensión de su progreso y rendimiento.",
+     "criterios": "Los gráficos deben mostrar claramente la distribución de proyectos según su estado (iniciados, en progreso, completados, etc.), de forma fácil de interpretar.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-057",
+     "epica": "Estadísticas y reportes gráficos",
+     "historia": "Como usuario interno, deseo gráficos detallados sobre los cobros realizados según el medio de pago, para comprender mejor los patrones de pago.",
+     "criterios": "Los gráficos deben clasificar los cobros por medio de pago (transferencia, tarjeta, etc.) y ofrecer una visión completa de su distribución.",
+     "puntos": 3
+    },
+    {
+     "id": "HU-058",
+     "epica": "Estadísticas y reportes gráficos",
+     "historia": "Como usuario interno, quiero ver el porcentaje de participación de cada medio en el total cobrado, para evaluar su importancia relativa.",
+     "criterios": "Los gráficos de medio de pago deben incluir el porcentaje de participación, visible y comprensible.",
+     "puntos": 2
+    },
+    {
+     "id": "HU-059",
+     "epica": "Estadísticas y reportes gráficos",
+     "historia": "Como usuario interno, necesito ajustes de diseño y optimización de rendimiento en las visualizaciones, para una experiencia fluida y eficiente.",
+     "criterios": "Debe mejorarse la estética y legibilidad, y optimizarse el rendimiento incluso con grandes cantidades de datos.",
+     "puntos": 2
+    }
+   ]
+  }
+ ]
+}

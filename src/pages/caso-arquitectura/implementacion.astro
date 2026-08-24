@@ -1,0 +1,80 @@
+---
+import DocLayout from '../../layouts/caso-arquitectura/DocLayout.astro';
+import implementacion from '../../data/caso-arquitectura/implementacion';
+
+function splitLabel(t: string) {
+  const m = t.match(/^([^:]{3,60}):\s*(.+)$/s);
+  if (m) return { label: m[1], text: m[2] };
+  return { label: '', text: t };
+}
+
+function parseItem(t: string) {
+  const [name, ...rest] = t.split(':');
+  return { name, desc: rest.join(':').trim() };
+}
+
+const [ambienteIntro, ...ambienteInfra] = implementacion.ambiente;
+const steps = implementacion.texto.map(splitLabel);
+---
+<DocLayout title="Implementación" chapterHref="/caso-arquitectura/implementacion">
+  <div class="doc-block">
+    <h2><span class="doc-block-n">13.1</span>Ambiente de implementación</h2>
+    <div class="doc-prose">
+      <p class="text-ink-soft mb-5">{ambienteIntro}</p>
+    </div>
+    <div class="grid-3">
+      {ambienteInfra.map(i => {
+        const { name, desc } = parseItem(i);
+        return (
+          <div class="card">
+            <h3>{name}</h3>
+            <p>{desc}</p>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">13.2</span>Puesta en marcha</h2>
+    <div class="step-flow">
+      {steps.map((s, i) => (
+        <div class="step-flow-item">
+          <div class="step-flow-num">{i + 1}</div>
+          <div class="step-flow-body">
+            <h4>{s.label || `Etapa ${i + 1}`}</h4>
+            <p>{s.text}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">13.3</span>Plan de capacitación</h2>
+    <p class="doc-prose text-ink-soft mb-5">
+      El objetivo no fue solo "enseñar a usar el software", sino generar la confianza necesaria para que el
+      estudio adoptara el sistema sin fricción en su día a día.
+    </p>
+    <div class="grid-3">
+      <div class="kv-block">
+        <h4>Material</h4>
+        <p>{implementacion.capacitacion.objetivo}</p>
+      </div>
+      <div class="kv-block">
+        <h4>Modalidad</h4>
+        {implementacion.capacitacion.modalidad.map(p => <p>{p}</p>)}
+      </div>
+      <div class="kv-block">
+        <h4>Evaluación</h4>
+        {implementacion.capacitacion.evaluacion.map(p => <p>{p}</p>)}
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-closing">
+    <h2 class="text-[1.6rem]">Fin del recorrido</h2>
+    <p class="my-3 mb-5.5 text-ink-soft">Volvé al índice para revisar cualquier capítulo del documento.</p>
+    <a href="/" class="btn btn-primary">Volver al índice</a>
+  </div>
+</DocLayout>

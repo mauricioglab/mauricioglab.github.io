@@ -1,27 +1,32 @@
-# CVs Deprecados
+# CV único
 
-Esta carpeta contiene versiones anteriores de CVs que se mantienen como referencia para extraer información.
+Esta carpeta contiene el contenido de referencia del CV unificado del usuario.
 
-**Estos archivos NO se renderizan ni generan rutas en el sitio.**
+**Este archivo NO se renderiza ni genera rutas en el sitio.** Es la fuente de contenido que alimenta:
 
-## Versiones
-
-| Archivo | Descripción | Estilo |
-|---------|-------------|--------|
-| `cv1-fullstack-developer.astro` | CV original Full Stack Developer | Dark theme con glassmorphism |
-| `cv2-lider-tecnico.astro` | CV Líder Técnico / +10 años | Light theme minimalista |
-| `cv3-landing-docente.astro` | Landing page estilo docente/speaker | Gradient colorido con confetti |
-| `cv4-hibrido.astro` | CV híbrido con timeline detallado | Light theme con cards |
-| `cv5-freelance.astro` | Landing para freelance/consultoría | Dark theme impactante |
-
-## Información extraída
-
-Los datos de estos CVs se utilizan en:
 - `/blog/about/` - Página "Acerca de" del blog
-- `/[lang]/landing/*` - Landing pages de perfiles
+- `/[lang]/portfolio/` - Portfolio unificado
+- `/[lang]/servicios/` - Landing de servicios
 - `src/i18n/` - Traducciones de experiencia y skills
+- El PDF descargable del sitio (`public/cv.pdf`)
+
+## Versión
+
+| Archivo | Descripción |
+|---------|-------------|
+| `cv-unificado.astro` | CV único: Software Engineer especializado en IA y Automatización. Reemplaza las 5 versiones anteriores (developer, líder técnico, docente/speaker, híbrido, freelance), que se consolidaron en una sola identidad. |
+
+## Reglas de contenido
+
+- **Un solo posicionamiento**: Software Engineer especializado en IA y Automatización. Analista de Sistemas, Datos y Docencia son fortalezas complementarias, no identidades separadas.
+- **Regla de foco**: no representar todas las actividades con el mismo peso. El eje es Software Engineering + IA/Automatización.
+- **Sin claims no verificables**: cualquier logro, métrica o proyecto debe ser defendible en una entrevista técnica. No incluir años/proyectos/equipos inflados.
+- **Años de experiencia**: no hardcodear un número — se calcula desde el inicio real (07/2021) en función de la fecha de build.
 
 ## Contacto (datos reales)
 
 - **Email:** mauriciogcode@gmail.com
-- **LinkedIn:** linkedin.com/in/mauriciogdev/
+- **LinkedIn:** linkedin.com/in/mauricioglab
+- **GitHub:** github.com/mauricioglab
+- **Calendly:** calendly.com/mauricioglab
+- **Ubicación:** Córdoba, Argentina

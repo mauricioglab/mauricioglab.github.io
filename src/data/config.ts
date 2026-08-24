@@ -36,9 +36,9 @@ export const SITE_CONFIG = {
   // =====================
   // REDES SOCIALES Y ENLACES
   // =====================
-  github: 'https://github.com/mauriciogcode',
+  github: 'https://github.com/mauricioglab',
   linkedin: 'https://linkedin.com/in/mauricioglab',
-  calendly: 'https://calendly.com/mauriciogcode/30min',  // Agendar reunión
+  calendly: 'https://calendly.com/mauricioglab',  // Agendar reunión
   twitter: '',                              // Opcional: 'https://twitter.com/tu-usuario'
   youtube: '',                              // Opcional
   
@@ -50,16 +50,11 @@ export const SITE_CONFIG = {
   defaultDescription: 'MG Lab Applications',
   
   // =====================
-  // CVs (rutas relativas a /public)
+  // CV (único)
   // =====================
-  cvs: {
-    developer: '/cv-developer.pdf',
-    analista: '/cv-analista.pdf',
-    'ia-engineer': '/cv-ia.pdf',
-    freelance: '/cv-freelance.pdf',
-    speaker: '/cv-speaker.pdf',
-    docente: '/cv-docente.pdf',
-  },
+  // Ruta a la página del CV único (ver src/pages/cv.astro). No hay PDF real
+  // todavía — cuando exista, apuntar acá al archivo en /public.
+  cv: '/cv/',
   
   // =====================
   // IDIOMAS

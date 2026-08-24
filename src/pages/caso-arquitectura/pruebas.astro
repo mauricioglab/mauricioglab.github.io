@@ -1,0 +1,69 @@
+---
+import DocLayout from '../../layouts/caso-arquitectura/DocLayout.astro';
+import pruebas from '../../data/caso-arquitectura/pruebas';
+import { PRODUCT_NAME } from '../../data/caso-arquitectura/brand';
+
+function groupByColon(lines: string[]) {
+  const groups: { title: string; items: string[] }[] = [];
+  let current: { title: string; items: string[] } | null = null;
+  for (const line of lines) {
+    if (line.endsWith(':')) {
+      current = { title: line.slice(0, -1), items: [] };
+      groups.push(current);
+    } else if (current) {
+      current.items.push(line);
+    } else {
+      groups.push({ title: '', items: [line] });
+    }
+  }
+  return groups;
+}
+
+const casos = groupByColon(pruebas.casos_prueba);
+const plan = groupByColon(pruebas.plan_pruebas);
+const ejecucionIntro = pruebas.ejecucion[0];
+const ejecucion = groupByColon(pruebas.ejecucion.slice(1));
+---
+<DocLayout title="Pruebas del sistema" chapterHref="/caso-arquitectura/pruebas">
+  <div class="doc-block">
+    <h2><span class="doc-block-n">12.1</span>Casos de prueba por módulo</h2>
+    <div class="grid-3">
+      {casos.map(c => (
+        <div class="card">
+          <h3>{c.title}</h3>
+          <p>{c.items.join(' ')}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">12.2</span>Plan de pruebas para {PRODUCT_NAME}</h2>
+    {plan.map(g => (
+      <div class="kv-block">
+        <h4>{g.title}</h4>
+        <ul class="list-none m-0 p-0 flex flex-col gap-1.5 text-ink-soft text-sm">
+          {g.items.map(i => <li>{i}</li>)}
+        </ul>
+      </div>
+    ))}
+  </div>
+
+  <div class="doc-block">
+    <h2><span class="doc-block-n">12.3</span>Ejecución del testing</h2>
+    <p class="doc-prose text-ink-soft mb-5">{ejecucionIntro}</p>
+    <div class="grid-3">
+      {ejecucion.map(g => (
+        <div class="card">
+          <h3>{g.title}</h3>
+          <p>{g.items.join(' ')}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="doc-block doc-prose">
+    <h2><span class="doc-block-n">12.4</span>Documentación del resultado</h2>
+    <p>{pruebas.documentacion_resultado[0]}</p>
+  </div>
+</DocLayout>

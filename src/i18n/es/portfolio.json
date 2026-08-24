@@ -1,11 +1,11 @@
 {
   "seo": {
-    "title": "Portfolio | Proyectos por perfil",
-    "description": "Portfolio técnico de Mauricio Gonzalez: casos de ciencia de datos, desarrollo, arquitectura, IA, docencia y más, agrupados por perfil."
+    "title": "Portfolio | Mauricio González - Software Engineer, IA y Automatización",
+    "description": "Portfolio de Mauricio González: Software Engineer especializado en IA y Automatización. Proyectos reales de desarrollo, IA aplicada en producción y modelos predictivos."
   },
   "title": "Portfolio",
-  "subtitle": "Proyectos de cada perfil",
-  "intro": "Todos los proyectos en una sola página, agrupados por perfil. Cada CV toma sus casos desde acá: al agregar un proyecto nuevo, la sección correspondiente se actualiza sola.",
+  "subtitle": "Software Engineer · IA y Automatización",
+  "intro": "Proyectos, experiencia y especialización en un solo lugar. Al agregar un proyecto nuevo, esta página se actualiza sola.",
   "projectsLabel": "Proyectos",
   "downloadCV": "Descargar CV",
   "viewProfile": "Ver perfil completo",

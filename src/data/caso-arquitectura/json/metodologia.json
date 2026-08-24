@@ -1,0 +1,144 @@
+{
+ "texto": [
+  "El Product Backlog completo se armó y se mantuvo en Jira desde el Sprint 0, y de ahí salía, sprint a sprint, el subconjunto de tareas que el equipo se comprometía a entregar. Lo que sigue es cómo se usó cada rol, cada ceremonia y cada artefacto a lo largo de las 13 iteraciones reales del proyecto."
+ ],
+ "roles": [
+  {
+   "rol": "Scrum Master",
+   "responsabilidad": "Vela por que el equipo siga el marco de trabajo Scrum, facilita las ceremonias y remueve los obstáculos que frenan el avance del sprint.",
+   "conexion": "Esa disciplina de reunión queda registrada sprint a sprint en las tablas de asistencia y duración del capítulo Sprints: cuándo se cumplió el horario pactado y cuándo una reunión se extendió más de lo previsto."
+  },
+  {
+   "rol": "Product Owner",
+   "responsabilidad": "Representa la voz de MGD Arquitectura, prioriza el Product Backlog y da el feedback que cierra cada Sprint Review.",
+   "conexion": "Su feedback es el que cierra cada ceremonia de Revisión, citado tal cual en el detalle de cada sprint del capítulo Sprints."
+  },
+  {
+   "rol": "Analista Funcional",
+   "responsabilidad": "Traduce las necesidades relevadas con el estudio en historias de usuario y criterios de aceptación consumibles por el equipo de desarrollo.",
+   "conexion": "Ese trabajo de traducción es el que queda consolidado en las historias de usuario con criterios de aceptación del capítulo Requerimientos."
+  },
+  {
+   "rol": "Equipo de Desarrollo",
+   "responsabilidad": "Diseña, construye y estima las tareas del Sprint Backlog, y demuestra el incremento funcional en cada revisión.",
+   "conexion": "Sus estimaciones en horas, tarea por tarea, y el backlog que fue tomando forma sprint a sprint están en el detalle de cada iteración del capítulo Sprints."
+  },
+  {
+   "rol": "QA",
+   "responsabilidad": "Verifica que cada historia de usuario cumpla sus criterios de aceptación antes de darla por completada.",
+   "conexion": "Esa verificación es la que se documenta, caso por caso, en el capítulo Pruebas del sistema, sobre los mismos criterios de aceptación que salieron de Requerimientos."
+  }
+ ],
+ "ceremonias": [
+  {
+   "nombre": "Sprint Planning",
+   "proposito": "Definir el objetivo del sprint y seleccionar, del Product Backlog, las tareas que el equipo se compromete a completar.",
+   "detalle": {
+    "intro": "Cada Planning arrancaba repasando el Product Backlog armado en Jira y cerraba con una tabla de estimación en horas por tarea.",
+    "items": [
+     "Sprint 1: se fijó el objetivo (perfiles de cliente y usuario), se estimó cada tarea, se distribuyó el trabajo y se marcaron las dependencias.",
+     "Sprint 6: se asignaron las historias de usuario de gestión de servicios y se estimó el esfuerzo de cada una antes de repartirlas.",
+     "Sprint 10: se investigaron primero las herramientas para Gantt y PERT, y recién después se repartió el trabajo de diseño e implementación."
+    ]
+   }
+  },
+  {
+   "nombre": "Sprint Review",
+   "proposito": "Mostrar el incremento funcional construido durante el sprint y recoger feedback del Product Owner antes de cerrarlo.",
+   "detalle": {
+    "intro": "El patrón se repite sprint a sprint: se demuestra el incremento contra el objetivo fijado en la planificación y se recoge feedback para el backlog siguiente.",
+    "items": [
+     "Sprint 6: se mostró el alta, edición, baja y listado de servicios con sus tareas asociadas, y se recogieron sugerencias para las próximas iteraciones.",
+     "Sprint 7: se demostró el apartado de tareas por proyecto, con fechas de inicio y compromiso y la opción de marcar el inicio de una tarea.",
+     "Sprint 12: se contrastaron las visualizaciones de cobros, filtrado por período y categorización de proyectos por estado, contra los criterios de diseño del Product Backlog, y se dejaron anotadas las desviaciones."
+    ]
+   }
+  },
+  {
+   "nombre": "Retrospectiva",
+   "proposito": "Revisar cómo trabajó el equipo, no qué se construyó, para ajustar el proceso de cara al siguiente sprint.",
+   "detalle": {
+    "intro": "Cada Retrospectiva dejaba al menos una acción concreta para el sprint siguiente, no solo una ronda de sensaciones.",
+    "items": [
+     "Sprint 5: se marcó como fortaleza la calidad lograda a fuerza de pruebas exhaustivas, y como mejora, optimizar la estimación de tareas y reforzar la documentación.",
+     "Sprint 6: se discutieron los obstáculos encontrados durante la gestión de servicios y se propusieron soluciones concretas para el sprint siguiente.",
+     "Sprint 9: se acordó seguir monitoreando en producción el rendimiento de lo recién entregado y recolectar feedback adicional antes de encarar nuevas funcionalidades."
+    ]
+   }
+  },
+  {
+   "nombre": "Refinamiento",
+   "proposito": "Aclarar y desglosar los elementos del backlog que todavía tienen incertidumbre, para que lleguen listos a la siguiente planificación.",
+   "detalle": {
+    "intro": "Es la ceremonia donde se resolvían pendientes de calidad y se preparaban historias para el sprint siguiente.",
+    "items": [
+     "Sprint 1: se retomaron detalles de validación pendientes (habilitar campos recién validado el cliente, controlar que los datos ingresados fueran correctos) y se desglosaron en tareas más chicas.",
+     "Sprint 2: se analizó cada tarea de configuración de perfiles con el detalle suficiente para asignarle prioridad y estimación.",
+     "Sprint 11: se repriorizaron las historias de usuario restantes de la interfaz de cliente y se sumaron al backlog nuevas funcionalidades con sus criterios de aceptación ya definidos."
+    ]
+   }
+  }
+ ],
+ "artefactos": [
+  {
+   "nombre": "Product Backlog",
+   "descripcion": "Lista completa de todo lo que el sistema podría necesitar, priorizada por el Product Owner y armada en Jira desde el Sprint 0. De ahí salía, sprint a sprint, el recorte que el equipo se comprometía a construir.",
+   "conexion": "Ese recorte por sprint está documentado, backlog por backlog, en el capítulo Sprints."
+  },
+  {
+   "nombre": "Sprint Backlog",
+   "descripcion": "El subconjunto del Product Backlog que el equipo se comprometía a entregar en el sprint en curso, con cada tarea ya estimada en horas.",
+   "conexion": "Esas tablas de estimación, tarea por tarea, están en el detalle de cada sprint del capítulo Sprints."
+  },
+  {
+   "nombre": "Incremento",
+   "descripcion": "La porción de software funcional y potencialmente entregable que resultaba de cada sprint, la que se demostraba en cada Sprint Review.",
+   "conexion": "La suma de esos incrementos, sprint tras sprint, es el catálogo de capacidades del capítulo Funcionalidades."
+  },
+  {
+   "nombre": "Burndown Chart",
+   "descripcion": "Gráfico que comparaba el trabajo esperado contra el real a lo largo del sprint, revisado como métrica de avance en cada iteración.",
+   "conexion": "El gráfico armado con esos datos aparece al pie de cada sprint, en el capítulo Sprints."
+  }
+ ],
+ "cadencia": [
+  "13 sprints, de Sprint 0 a Sprint 12, cada uno con su propio objetivo, backlog y cierre de métricas.",
+  "La planificación del Sprint 0 dejó fijada la cadencia del equipo: reuniones los viernes a las 19 hs y, cada 15 días, también los lunes a las 20 hs para la revisión de sprint, con una duración ideal de 2 horas, por Discord como plataforma principal y Meet cuando hacía falta.",
+  "Cada sprint registra su propia tabla de asistencia y duración real versus ideal: ahí quedaron, por ejemplo, la reunión del Sprint 0 que se extendió de 2 a 4 horas o la del Sprint 3 que llegó a 5."
+ ],
+ "costos_ilustrativos": {
+  "intro": "El costo real del proyecto es información comercial del cliente y ya quedó cubierto por el tiempo de equipo (ver Factibilidad económica). Lo que sigue es otra cosa: el mismo ejercicio de estimación que ya se hizo en ese capítulo, aplicando dos tarifas de referencia a las horas ya publicadas por sprint, retomado acá junto al resto de la gestión.",
+  "disclaimer": "Los dos valores de referencia de abajo no son comparables entre sí ni deben sumarse: están en monedas distintas, salen de fuentes distintas y ninguno reemplaza el monto real acordado con el cliente.",
+  "tabla_mercado": [
+   ["Concepto", "Valor"],
+   ["Horas estimadas registradas (9 de 13 sprints con tabla de estimación; Sprints 0, 11 y 12 no la incluyen en el legajo original)", "236 h"],
+   ["Tarifa de referencia (mercado, perfil semi-senior, valor orientativo)", "USD 20 / h"],
+   ["Subtotal", "USD 4.720"],
+   ["Contingencia (+15%)", "USD 708"],
+   ["Total estimado de referencia", "USD 5.428"]
+  ],
+  "referencia_cpcipc": {
+   "valor": "ARS 7.894,88 / h",
+   "fuente": "Perfil Desarrollador Full Stack Developer, cuadro de honorarios recomendados del Consejo Profesional de Ciencias Informáticas de la Pcia. de Córdoba (CPCIPC), actualización septiembre 2022 (cpcipc.org.ar/honorarios-recomendados, captura archivada 18-oct-2022 en web.archive.org).",
+   "nota": "Valor nominal de esa fecha, sin convertir a USD por la volatilidad de la brecha cambiaria del período. Se incluye solo como segundo punto de comparación metodológico, no para sumarlo al total en dólares de arriba."
+  }
+ },
+ "riesgos_estimacion": [
+  {
+   "titulo": "Cobertura parcial de horas",
+   "texto": "Solo 9 de los 13 sprints incluyen tabla de estimación en el legajo original (faltan Sprints 0, 11 y 12): las 236 h son un piso, no el total real de horas invertidas en el proyecto."
+  },
+  {
+   "titulo": "Tarifa no auditada",
+   "texto": "USD 20/h es un valor orientativo de mercado para un perfil semi-senior, no una tarifa contractual ni verificada contra una fuente externa citable."
+  },
+  {
+   "titulo": "ARS y USD no son comparables acá",
+   "texto": "La referencia CPCIPC es un valor nominal de septiembre de 2022, sin convertir por la brecha cambiaria de ese período: no debe sumarse ni promediarse con el total en dólares."
+  },
+  {
+   "titulo": "Riesgo de interpretación",
+   "texto": "Ninguno de estos números es el costo real acordado con el cliente (ver Factibilidad económica): es un ejercicio de criterio de estimación con fines pedagógicos, no una cotización."
+  }
+ ]
+}

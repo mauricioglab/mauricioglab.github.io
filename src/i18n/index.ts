@@ -7,8 +7,8 @@ export const supportedLangs: Lang[] = ['es', 'en'];
 
 /**
  * Extract language from URL pathname
- * @example /es/landing/developer -> 'es'
- * @example /en/landing/developer -> 'en'
+ * @example /es/portfolio -> 'es'
+ * @example /en/portfolio -> 'en'
  */
 export function getLangFromUrl(url: URL): Lang {
   const [, lang] = url.pathname.split('/');
@@ -30,7 +30,7 @@ export function getAlternateUrl(url: URL, currentLang: Lang): string {
 /**
  * Load translations from a namespace (JSON file)
  * @param lang - The language to load ('es' | 'en')
- * @param namespace - The translation file to load (e.g., 'common', 'developer')
+ * @param namespace - The translation file to load (e.g., 'common', 'engineer')
  */
 export async function useTranslations<T = Record<string, unknown>>(
   lang: Lang,
@@ -68,14 +68,6 @@ export interface CommonTranslations {
     contact: string;
     portfolio: string;
   };
-  hero: {
-    yearsExp: string;
-    yearsExpSub: string;
-    location: string;
-    locationSub: string;
-    availability: string;
-    availabilitySub: string;
-  };
   sections: {
     featuredProjects: string;
     techStack: string;
@@ -99,74 +91,6 @@ export interface CommonTranslations {
   theme: {
     light: string;
     dark: string;
-  };
-}
-
-export interface ProfileTranslations {
-  title: string;
-  subtitle: string;
-  description: string;
-  seo: {
-    title: string;
-    description: string;
-  };
-  hero: {
-    badge: string;
-    headline: string;
-    subheadline: string;
-    ctaPrimary: string;
-    ctaSecondary: string;
-  };
-  projectsDescription: string;
-  ctaTitle: string;
-  ctaDescription: string;
-  methodology?: {
-    title1: string;
-    desc1: string;
-    title2: string;
-    desc2: string;
-    title3: string;
-    desc3: string;
-  };
-  background?: {
-    title1: string;
-    desc1: string;
-    title2: string;
-    desc2: string;
-  };
-  services?: {
-    title1: string;
-    desc1: string;
-    title2: string;
-    desc2: string;
-    title3: string;
-    desc3: string;
-  };
-  topics?: {
-    title1: string;
-    desc1: string;
-    title2: string;
-    desc2: string;
-    title3: string;
-    desc3: string;
-  };
-  subjects?: {
-    title1: string;
-    desc1: string;
-    title2: string;
-    desc2: string;
-    title3: string;
-    desc3: string;
-    title4?: string;
-    desc4?: string;
-  };
-  experience: {
-    role1: string;
-    company1: string;
-    items1: string[];
-    role2: string;
-    company2: string;
-    items2: string[];
   };
 }
 
