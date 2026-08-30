@@ -93,6 +93,29 @@
           <button @click="generarPropuestas()" :disabled="busy" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-50 text-sm font-bold rounded-lg">
             <span x-text="busy && !propuestas.length ? 'Generando...' : 'Generar propuestas'"></span>
           </button>
+          <template x-if="temasHistory.length">
+            <div class="border-t border-slate-700 pt-3 space-y-1.5">
+              <p class="text-xs font-bold text-slate-400">
+                Historial de temas
+                <span class="font-normal text-slate-500">(últimos <span x-text="temasHistory.length"></span>/10)</span>
+              </p>
+              <div class="space-y-1">
+                <template x-for="e in temasHistory" :key="e.id">
+                  <div class="flex items-start gap-2 bg-slate-900 rounded-lg p-2 text-xs">
+                    <div class="flex-1 min-w-0">
+                      <p class="text-slate-200 truncate" x-text="e.tema"></p>
+                      <p class="text-slate-500 text-[10px] mt-0.5">
+                        <span x-show="e.enfoque" x-text="'enfoque: ' + e.enfoque + ' · '"></span>
+                        <span x-text="new Date(e.savedAt).toLocaleString()"></span>
+                      </p>
+                    </div>
+                    <button @click="useTemaEntry(e.id)" class="text-indigo-400 hover:text-indigo-300 font-bold shrink-0">Usar</button>
+                    <button @click="deleteTemaEntry(e.id)" class="text-red-400 hover:text-red-300 font-bold shrink-0" title="Borrar">✕</button>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </template>
         </div>
 
         <!-- Propuestas -->
@@ -380,6 +403,7 @@
     iteracion: 0,
     correccionPrompt: '',
     categoriesText: '',
+    temasHistory: [] as any[],
     coverPrompt: '',
     coverUrl: '',
     editingId: null as any,
@@ -397,6 +421,7 @@
         if (this.userRole === 'admin') this.loadPosts();
       }
       this.loadingAuth = false;
+      this.loadTemasHistory();
     },
 
     async loadProfile() {
@@ -446,6 +471,58 @@
       if (!error) this.posts = data || [];
     },
 
+    loadTemasHistory() {
+      try {
+        const raw = localStorage.getItem('mglab_blog_temas_history');
+        const arr = raw ? JSON.parse(raw) : [];
+        this.temasHistory = Array.isArray(arr) ? arr : [];
+      } catch {
+        this.temasHistory = [];
+      }
+    },
+
+    persistTemasHistory() {
+      try {
+        localStorage.setItem('mglab_blog_temas_history', JSON.stringify(this.temasHistory));
+      } catch {}
+    },
+
+    saveTemaEntry() {
+      const tema = (this.form.tema || '').trim();
+      if (!tema) return;
+      const entry = {
+        id: (typeof crypto !== 'undefined' && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        tema,
+        enfoque: (this.form.enfoque || '').trim() || null,
+        tono: (this.form.tono || '').trim() || null,
+        fraseClave: (this.form.fraseClave || '').trim() || null,
+        savedAt: new Date().toISOString(),
+      };
+      this.temasHistory = [
+        entry,
+        ...this.temasHistory.filter(
+          (e: any) => (e.tema || '').toLowerCase() !== tema.toLowerCase()
+        ),
+      ].slice(0, 10);
+      this.persistTemasHistory();
+    },
+
+    deleteTemaEntry(id: string) {
+      this.temasHistory = this.temasHistory.filter((e: any) => e.id !== id);
+      this.persistTemasHistory();
+    },
+
+    useTemaEntry(id: string) {
+      const e = this.temasHistory.find((x: any) => x.id === id);
+      if (!e) return;
+      this.form.tema = e.tema || '';
+      this.form.enfoque = e.enfoque || '';
+      this.form.tono = e.tono || '';
+      this.form.fraseClave = e.fraseClave || '';
+    },
+
     async generarPropuestas() {
       if (!this.form.tema) { this.status = 'Ingresá un tema.'; return; }
       this.busy = true;
@@ -455,6 +532,7 @@
         if (error) throw new Error(error.context?.error || error.message);
         this.propuestas = data.propuestas || [];
         this.propuestaIndex = -1;
+        this.saveTemaEntry();
         this.status = `${this.propuestas.length} propuesta(s) generadas. Elegí una.`;
       } catch (e) {
         this.status = (e as Error).message;
