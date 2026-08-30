@@ -150,14 +150,25 @@
                 </div>
               </template>
             </div>
+            <p x-show="review && review.aprobado" class="text-xs text-green-300">
+              El crítico lo aprobó. Si igual querés, pedile un ajuste abajo.
+            </p>
+            <p x-show="review && !review.aprobado && iteracion >= 2" class="text-xs text-amber-300">
+              Tope de revisiones alcanzado. Editá a mano o publicá el borrador.
+            </p>
+          </div>
+          <div class="bg-slate-900 border border-slate-700 rounded-lg p-3 space-y-2">
+            <label class="block text-xs font-bold text-slate-300">
+              Pedile una corrección al IA <span class="font-normal text-slate-500">(opcional)</span>
+            </label>
+            <textarea x-model="correccionPrompt" rows="2" class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      placeholder="Ej: 'Hacelo más corto (5 min)', 'Agregá una sección sobre deploy', 'Cambiá el tono a más formal', 'Reescribí el hook'"></textarea>
             <div class="flex flex-wrap items-center gap-3">
-              <button x-show="review && !review.aprobado && iteracion < 2" @click="aplicarCorrecciones()" :disabled="busy"
+              <button @click="aplicarCorrecciones()" :disabled="busy || iteracion >= 2"
                       class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-50 text-sm font-bold rounded-lg">
-                <span x-text="busy ? 'Corrigiendo...' : 'Aplicar correcciones'"></span>
+                <span x-text="busy ? 'Corrigiendo...' : '✨ Aplicar corrección'"></span>
               </button>
-              <p x-show="review && !review.aprobado && iteracion >= 2" class="text-xs text-amber-300">
-                Tope de revisiones alcanzado. Editá a mano o publicá el borrador.
-              </p>
+              <span x-show="iteracion >= 2" class="text-xs text-amber-300">Tope de 2 correcciones alcanzado.</span>
             </div>
           </div>
           <div>
@@ -363,6 +374,7 @@
     borrador: null as any,
     review: null as any,
     iteracion: 0,
+    correccionPrompt: '',
     categoriesText: '',
     coverPrompt: '',
     coverUrl: '',
@@ -459,6 +471,7 @@
         this.borrador = data.borrador;
         this.review = null;
         this.iteracion = 0;
+        this.correccionPrompt = '';
         this.categoriesText = (data.borrador.categories || []).join(', ');
         this.coverUrl = '';
         this.coverPrompt = '';
@@ -500,10 +513,15 @@
     },
 
     async aplicarCorrecciones() {
-      if (!this.borrador || !this.review) return;
+      if (!this.borrador) { this.status = 'Primero redactá el post.'; return; }
+      const instruccion = (this.correccionPrompt || '').trim();
+      if (!this.review && !instruccion) {
+        this.status = 'Escribí una corrección abajo o corré el crítico con "Revisar con IA".';
+        return;
+      }
       if (this.iteracion >= 2) { this.status = 'Tope de revisiones alcanzado.'; return; }
       this.busy = true;
-      this.status = 'Aplicando correcciones del crítico...';
+      this.status = 'Aplicando correcciones del IA...';
       try {
         const { data, error } = await supabase.functions.invoke('blog-revise', {
           body: {
@@ -513,7 +531,8 @@
               description: this.borrador.description,
               bodyMarkdown: this.borrador.bodyMarkdown,
             },
-            problemas: this.review.problemas || [],
+            problemas: this.review?.problemas || [],
+            instruccion,
             tiempoLecturaMin: Number(this.form.tiempoLecturaMin) || null,
           },
         });
@@ -522,8 +541,9 @@
         this.categoriesText = (data.borrador.categories || []).join(', ');
         this.iteracion++;
         this.review = null;
+        this.correccionPrompt = '';
         this.showPreview = false;
-        this.status = `Correcciones aplicadas (iteración ${this.iteracion}/2). Revisá de nuevo.`;
+        this.status = `Corrección aplicada (iteración ${this.iteracion}/2). Revisá de nuevo.`;
       } catch (e) {
         this.status = (e as Error).message;
       } finally {
@@ -626,9 +646,9 @@
         bodyMarkdown: p.body_markdown,
         categories: p.categories || [],
       };
-      this.review = null;
+this.review = null;
       this.iteracion = 0;
-      this.categoriesText = (p.categories || []).join(', ');
+      this.correccionPrompt = '';
       this.coverUrl = p.cover_url || '';
       this.coverPrompt = '';
       this.showPreview = false;
@@ -645,6 +665,7 @@
       this.borrador = null;
       this.review = null;
       this.iteracion = 0;
+      this.correccionPrompt = '';
       this.coverUrl = '';
       this.coverPrompt = '';
       this.propuestas = [];

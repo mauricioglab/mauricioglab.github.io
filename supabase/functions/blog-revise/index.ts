@@ -90,11 +90,12 @@ async function deepseekJson<T>(system: string, user: string, maxTokens = 2048): 
 }
 
 const SYSTEM_REVISER = `
-Sos el revisor de un blog técnico en español rioplatense. Recibís un borrador y una
-lista de problemas que señaló el crítico.
+Sos el revisor de un blog técnico en español rioplatense. Recibís un borrador, una
+instrucción del autor (si la hay) y una lista de problemas que señaló el crítico.
 
-Aplicá SOLO esos problemas: cambiá puntualmente lo que indican, preservando el resto
-del contenido tal cual salvo que el problema indique lo contrario.
+La instrucción del autor tiene prioridad máxima: aplicala tal cual se pide.
+Después aplicá los problemas del crítico: cambiá puntualmente lo que indican,
+preservando el resto del contenido tal cual salvo que indiquen lo contrario.
 Si hay un problema de extensión, ajustá la longitud del post al target de palabras
 indicado (expandí con contenido útil y on-topic, o recortá lo redundante).
 Respetá el estilo: hook al inicio, párrafos cortos, voz activa, markdown con ## y
@@ -149,6 +150,7 @@ Deno.serve(async (req: Request) => {
     const problemas: Problema[] = (body?.problemas || []).filter(
       (p: Problema) => p && p.fixSugerido
     );
+    const instruccion = (body?.instruccion || "").toString().trim();
     const tiempoLecturaMin = body?.tiempoLecturaMin ? Number(body.tiempoLecturaMin) : null;
     const target = tiempoLecturaMin ? tiempoLecturaMin * 200 : null;
     const actual = countWords(borrador.bodyMarkdown);
@@ -161,6 +163,13 @@ Deno.serve(async (req: Request) => {
         ? `Target de extensión: ~${target} palabras (${tiempoLecturaMin} min de lectura). Actual: ~${actual}.`
         : "",
       ``,
+      ...(instruccion
+        ? [
+            `Instrucción del autor (lo más importante, prioridad máxima):`,
+            instruccion,
+            ``,
+          ]
+        : []),
       `Problemas del crítico:`,
       ...(problemas.length
         ? problemas.map(
