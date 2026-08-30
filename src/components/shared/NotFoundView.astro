@@ -1,49 +1,135 @@
 ---
-import { getPublicPages, getPagesWithBaseUrl } from '../../data/pages-registry';
-
 const base = import.meta.env.BASE_URL;
 const b = base.endsWith("/") ? base : `${base}/`;
-const publicPages = getPagesWithBaseUrl(getPublicPages());
+
+const resolveUrl = (url: string) => url.startsWith('/') ? `${b}${url.slice(1)}` : url;
+
+const clusters = [
+  {
+    label: "Profesional",
+    primary: true,
+    links: [
+      { id: 'cv', label: 'CV', url: resolveUrl('/es/cv/'), hint: 'Perfil completo' },
+      { id: 'servicios', label: 'Servicios', url: resolveUrl('/es/servicios/'), hint: 'Consultoría, desarrollo, IA' },
+      { id: 'portfolio', label: 'Portfolio', url: resolveUrl('/es/portfolio/'), hint: 'Proyectos y casos' },
+    ],
+  },
+  {
+    label: "Blog",
+    primary: false,
+    links: [
+      { id: 'blog', label: 'Blog', url: resolveUrl('/blog/'), hint: 'Artículos y pensamientos' },
+    ],
+  },
+  {
+    label: "Recursos",
+    primary: false,
+    links: [
+      { id: 'noticias', label: 'Noticias IA', url: resolveUrl('/noticias/'), hint: 'OpenAI · Gemini · Reddit' },
+      { id: 'urls', label: 'URLs útiles', url: resolveUrl('/urls/'), hint: 'Dev tools y apps' },
+    ],
+  },
+  {
+    label: "Apps",
+    primary: false,
+    links: [
+      { id: 'prompt', label: 'Teleprompter', url: resolveUrl('/prompt/'), hint: 'Ingeniería de prompts' },
+      { id: 'videos', label: 'Video Organizer', url: resolveUrl('/videos/'), hint: 'YouTube + Udemy' },
+      { id: 'extensions', label: 'Extensiones', url: resolveUrl('/extensions/'), hint: 'Chrome / Firefox' },
+      { id: 'seguimiento', label: 'Panel Seguimiento', url: resolveUrl('/seguimiento/'), hint: 'Tutorías y prácticas' },
+    ],
+  },
+  {
+    label: "Retro",
+    primary: false,
+    links: [
+      { id: 'main', label: 'Main (Retro)', url: resolveUrl('/main/'), hint: 'El MG Lab Depot original' },
+    ],
+  },
+];
 ---
 
-<main class="min-h-[calc(100vh-112px)] flex bg-white">
-  <div class="w-1/2 flex items-start justify-center py-8 overflow-y-auto">
-    <div class="w-full max-w-lg px-8">
-      <table class="w-full">
-        <tbody>
-          {publicPages.map((p) => (
-            <tr class="border-b border-stone-200 hover:bg-stone-50 transition-colors duration-300">
-              <td class="py-3 px-4 text-stone-700 font-light text-sm">
-                {p.icon && <span class="mr-2">{p.icon}</span>}
-                {p.name}
-              </td>
-              <td class="py-3 px-4 text-right">
-                <a
-                  href={p.url}
-                  class="text-stone-500 hover:text-stone-900 transition-colors duration-300 text-sm"
-                >
-                  Ir →
-                </a>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="w-px bg-stone-200 sticky top-0 h-screen"></div>
-  <div class="w-1/2 flex items-center justify-center sticky top-0 h-screen">
-    <div class="text-center space-y-6">
-      <div class="text-8xl text-stone-300 font-light">404</div>
-      <p class="text-stone-500 text-lg font-light tracking-wide">
-        Página no encontrada
-      </p>
-      <a
-        href={b}
-        class="inline-block text-stone-500 hover:text-stone-900 transition-colors text-sm"
-      >
-        ← Volver al inicio
-      </a>
-    </div>
+<main>
+  <div class="home-split mx-auto max-w-6xl h-[calc(100vh-112px)] min-h-[560px] flex flex-col md:flex-row">
+
+    <!-- Left: Clusters -->
+    <section class="home-clusters md:w-1/2 px-6 sm:px-10 py-8 md:py-10 overflow-y-auto">
+      <nav aria-label="Secciones principales" class="border-t border-[#e4e8f0]">
+        {clusters.map((cluster) => (
+          <section class="py-4 border-b border-[#e4e8f0]">
+            <div class="flex items-baseline justify-between gap-4 mb-2">
+              <h2 class:list={[
+                'uppercase tracking-[0.14em] text-[#1e40af]',
+                cluster.primary ? 'text-sm font-semibold' : 'text-xs font-semibold',
+              ]}>
+                {cluster.label}
+              </h2>
+              {!cluster.primary && (
+                <span class="text-xs text-[#8b94ab]">
+                  {cluster.links.length} {cluster.links.length === 1 ? 'página' : 'páginas'}
+                </span>
+              )}
+            </div>
+            <ul class:list={[cluster.primary ? 'grid sm:grid-cols-3 gap-x-2' : 'divide-y divide-[#e4e8f0]']}>
+              {cluster.links.map((link) => (
+                <li class={cluster.primary ? '' : 'py-2.5'}>
+                  <a
+                    href={link.url}
+                    class:list={[
+                      'group flex items-baseline justify-between gap-3 transition-colors duration-200',
+                      cluster.primary
+                        ? 'block px-3 py-3 rounded-md hover:bg-[#eef2ff]'
+                        : 'text-[#141a2e] hover:text-[#1e40af]',
+                    ]}
+                  >
+                    <span class={cluster.primary ? 'font-medium text-[#141a2e] text-base' : 'text-sm'}>
+                      {link.label}
+                    </span>
+                    {link.hint && (
+                      <span class:list={[
+                        'text-[#8b94ab] group-hover:text-[#1e40af] transition-colors',
+                        cluster.primary ? 'text-xs' : 'text-[0.7rem]',
+                      ]}>
+                        {link.hint}
+                      </span>
+                    )}
+                    {!cluster.primary && (
+                      <span aria-hidden="true" class="text-[#8b94ab] group-hover:text-[#1e40af] transition-colors text-sm">→</span>
+                    )}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </nav>
+    </section>
+
+    <!-- Divider -->
+    <div class="hidden md:block w-px bg-[#e4e8f0]"></div>
+
+    <!-- Right: 404 message -->
+    <section class="home-greeting md:w-1/2 px-6 sm:px-10 py-8 md:py-10 flex items-center justify-center">
+      <div class="text-center space-y-6">
+        <div class="text-8xl sm:text-9xl text-[#e4e8f0] font-light leading-none select-none">404</div>
+        <p class="text-[#8b94ab] text-lg font-light tracking-wide">
+          Página no encontrada
+        </p>
+        <a
+          href={b}
+          class="inline-block text-[#8b94ab] hover:text-[#1e40af] transition-colors text-sm"
+        >
+          ← Volver al inicio
+        </a>
+      </div>
+    </section>
   </div>
 </main>
+
+<style>
+  @media (max-width: 767px) {
+    .home-split { height: auto; min-height: calc(100vh - 112px); }
+    .home-clusters { overflow-y: visible; }
+    .home-greeting { min-height: 30vh; }
+  }
+</style>

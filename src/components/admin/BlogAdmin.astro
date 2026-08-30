@@ -53,8 +53,53 @@
       </div>
     </div>
 
-    <!-- Status bar -->
-    <div x-show="status" class="mb-4 px-4 py-3 rounded-lg bg-indigo-600/20 border border-indigo-500/30 text-sm" x-text="status"></div>
+    <!-- Consola de actividad -->
+    <div class="mb-4 space-y-2">
+      <template x-if="op">
+        <div class="rounded-lg border border-indigo-500/40 bg-slate-800/90 overflow-hidden">
+          <div class="shimmer-bar h-1"></div>
+          <div class="p-4 space-y-3">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2 text-sm font-bold text-indigo-200">
+                <span class="spinner spinner-sm"></span>
+                <span x-text="op.label"></span>
+              </div>
+              <span class="text-xs font-mono text-slate-400">⏱ <span x-text="op.elapsed"></span></span>
+            </div>
+            <p class="text-xs text-indigo-300" x-text="op.messages[op.msgIndex]"></p>
+            <div class="space-y-1.5">
+              <template x-for="(step, i) in op.steps" :key="i">
+                <div class="flex items-center gap-2 text-xs">
+                  <span x-show="step.status === 'active'" class="spinner spinner-xs"></span>
+                  <span x-show="step.status === 'done'" class="text-green-400 font-bold">✓</span>
+                  <span x-show="step.status === 'error'" class="text-red-400 font-bold">✗</span>
+                  <span x-show="step.status === 'pending'" class="w-2 h-2 rounded-full bg-slate-600"></span>
+                  <span :class="step.status === 'active' ? 'text-slate-100 font-bold' : step.status === 'done' ? 'text-green-300' : step.status === 'error' ? 'text-red-300' : 'text-slate-500'" x-text="step.label"></span>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </template>
+      <div x-show="!op && status" class="px-4 py-3 rounded-lg bg-indigo-600/15 border border-indigo-500/30 text-sm" x-text="status"></div>
+      <template x-if="opHistory.length">
+        <details class="group text-xs">
+          <summary class="text-slate-400 hover:text-slate-200 cursor-pointer select-none font-bold">
+            Actividad reciente (<span x-text="opHistory.length"></span>)
+          </summary>
+          <div class="mt-1.5 space-y-1">
+            <template x-for="h in opHistory" :key="h.ts">
+              <div class="flex items-start gap-2" :class="h.ok ? 'text-slate-400' : 'text-red-400'">
+                <span x-text="h.ok ? '✓' : '✗'"></span>
+                <span class="font-bold" x-text="h.label"></span>
+                <span class="font-mono" x-text="h.elapsed"></span>
+                <span class="truncate" x-text="h.result"></span>
+              </div>
+            </template>
+          </div>
+        </details>
+      </template>
+    </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- ===== Editor ===== -->
@@ -68,8 +113,9 @@
           </div>
           <div class="flex flex-col sm:flex-row gap-2">
             <input x-model="urlRef" type="text" placeholder="Pegá la URL de un reportaje o artículo para traer su texto..." class="flex-1 px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
-            <button @click="traerTextoUrl()" :disabled="busy" class="shrink-0 px-4 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-sm font-bold rounded-lg">
-              <span x-text="busy ? 'Trayendo...' : '⬇ Traer texto'"></span>
+            <button @click="traerTextoUrl()" :disabled="busy" class="shrink-0 px-4 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-sm font-bold rounded-lg inline-flex items-center gap-2 justify-center">
+              <span x-show="op && op.id === 'url'" class="spinner spinner-xs"></span>
+              <span x-text="op && op.id === 'url' ? 'Trayendo…' : '⬇ Traer texto'"></span>
             </button>
           </div>
           <div>
@@ -99,8 +145,9 @@
               <input x-model="form.tiempoLecturaMin" type="number" min="1" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
             </div>
           </div>
-          <button @click="generarPropuestas()" :disabled="busy" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-50 text-sm font-bold rounded-lg">
-            <span x-text="busy && !propuestas.length ? 'Generando...' : 'Generar propuestas'"></span>
+          <button @click="generarPropuestas()" :disabled="busy" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-60 text-sm font-bold rounded-lg inline-flex items-center gap-2 justify-center">
+            <span x-show="op && op.id === 'propuestas'" class="spinner spinner-xs"></span>
+            <span x-text="op && op.id === 'propuestas' ? 'Generando…' : 'Generar propuestas'"></span>
           </button>
           <template x-if="temasHistory.length">
             <div class="border-t border-slate-700 pt-3 space-y-1.5">
@@ -128,9 +175,14 @@
         </div>
 
         <!-- Propuestas -->
-        <div x-show="propuestas.length > 0" class="bg-slate-800 rounded-xl p-5 space-y-3">
+        <div x-show="propuestas.length > 0 || (op && op.id === 'propuestas')" class="bg-slate-800 rounded-xl p-5 space-y-3">
           <h2 class="text-base font-bold">2. Elegí un ángulo</h2>
-          <div class="space-y-2">
+          <div x-show="op && op.id === 'propuestas'" class="space-y-2">
+            <template x-for="n in 3" :key="n">
+              <div class="skeleton h-20 w-full"></div>
+            </template>
+          </div>
+          <div x-show="!(op && op.id === 'propuestas')" class="space-y-2">
             <template x-for="(prop, i) in propuestas" :key="i">
               <label class="block cursor-pointer">
                 <div
@@ -147,8 +199,9 @@
               </label>
             </template>
           </div>
-          <button @click="redactar()" :disabled="busy || propuestaIndex < 0" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-50 text-sm font-bold rounded-lg">
-            <span x-text="busy ? 'Redactando...' : 'Redactar post'"></span>
+          <button @click="redactar()" :disabled="busy || propuestaIndex < 0" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-60 text-sm font-bold rounded-lg inline-flex items-center gap-2 justify-center">
+            <span x-show="op && op.id === 'redactar'" class="spinner spinner-xs"></span>
+            <span x-text="op && op.id === 'redactar' ? 'Redactando…' : 'Redactar post'"></span>
           </button>
         </div>
 
@@ -157,11 +210,13 @@
           <div class="bg-slate-800 rounded-xl p-5 space-y-3">
             <h2 class="text-base font-bold">3. Revisá y ajustá el borrador</h2>
           <div class="flex flex-wrap items-center gap-3">
-            <button @click="revisar()" :disabled="busy" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-50 text-sm font-bold rounded-lg">
-              <span x-text="busy ? 'Revisando...' : (review ? 'Volver a revisar' : '🔍 Revisar con IA')"></span>
+            <button @click="revisar()" :disabled="busy" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-60 text-sm font-bold rounded-lg inline-flex items-center gap-2 justify-center">
+              <span x-show="op && op.id === 'revisar'" class="spinner spinner-xs"></span>
+              <span x-text="op && op.id === 'revisar' ? 'Revisando…' : (review ? 'Volver a revisar' : '🔍 Revisar con IA')"></span>
             </button>
             <span x-show="iteracion > 0" class="text-xs text-slate-500">Correcciones aplicadas: <span x-text="iteracion"></span>/2</span>
           </div>
+          <div x-show="op && (op.id === 'revisar' || op.id === 'corregir')" class="skeleton h-28 w-full"></div>
           <template x-if="review">
           <div class="rounded-lg border p-4 space-y-3"
                :class="review && review.aprobado ? 'bg-green-600/10 border-green-500/30' : 'bg-amber-600/10 border-amber-500/30'">
@@ -200,8 +255,9 @@
                       placeholder="Ej: 'Hacelo más corto (5 min)', 'Agregá una sección sobre deploy', 'Cambiá el tono a más formal', 'Reescribí el hook'"></textarea>
             <div class="flex flex-wrap items-center gap-3">
               <button @click="aplicarCorrecciones()" :disabled="busy || iteracion >= 2"
-                      class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-50 text-sm font-bold rounded-lg">
-                <span x-text="busy ? 'Corrigiendo...' : '✨ Aplicar corrección'"></span>
+                      class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-60 text-sm font-bold rounded-lg inline-flex items-center gap-2 justify-center">
+                <span x-show="op && op.id === 'corregir'" class="spinner spinner-xs"></span>
+                <span x-text="op && op.id === 'corregir' ? 'Corrigiendo…' : '✨ Aplicar corrección'"></span>
               </button>
               <span x-show="iteracion >= 2" class="text-xs text-amber-300">Tope de 2 correcciones alcanzado.</span>
             </div>
@@ -238,24 +294,32 @@
           <!-- Imagen -->
           <div class="border-t border-slate-700 pt-4 space-y-3">
             <h3 class="text-sm font-bold text-slate-200">4. Imagen de tapa (800x450)</h3>
-            <div x-show="coverUrl" class="rounded-lg overflow-hidden border border-slate-600">
+            <div x-show="op && op.id === 'imagen'" class="rounded-lg overflow-hidden border border-slate-700">
+              <div class="skeleton aspect-video w-full"></div>
+            </div>
+            <div x-show="coverUrl && !(op && op.id === 'imagen')" class="rounded-lg overflow-hidden border border-slate-600">
               <img :src="coverUrl" alt="Tapa generada" class="w-full aspect-video object-cover">
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-300 mb-1">Prompt de la tapa (generado por DeepSeek, editable)</label>
               <textarea x-model="coverPrompt" rows="2" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600" placeholder="Dejalo vacío para que DeepSeek lo genere solo."></textarea>
             </div>
-            <button @click="generarImagen()" :disabled="busy" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-50 text-sm font-bold rounded-lg">
-              <span x-text="busy ? 'Generando imagen...' : (coverUrl ? 'Regenerar imagen' : 'Generar imagen')"></span>
+            <button @click="generarImagen()" :disabled="busy" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-60 text-sm font-bold rounded-lg inline-flex items-center gap-2 justify-center">
+              <span x-show="op && op.id === 'imagen'" class="spinner spinner-xs"></span>
+              <span x-text="op && op.id === 'imagen' ? 'Generando…' : (coverUrl ? 'Regenerar imagen' : 'Generar imagen')"></span>
             </button>
           </div>
 
           <!-- Publicar -->
           <div class="border-t border-slate-700 pt-4 flex flex-wrap gap-3">
-            <button @click="publicar(false)" :disabled="busy" class="px-5 py-2 bg-green-700 hover:bg-green-800 disabled:opacity-50 text-sm font-bold rounded-lg">
-              <span x-text="busy ? 'Publicando...' : (editingId ? 'Actualizar y publicar' : 'Publicar')"></span>
+            <button @click="publicar(false)" :disabled="busy" class="px-5 py-2 bg-green-700 hover:bg-green-800 disabled:opacity-60 text-sm font-bold rounded-lg inline-flex items-center gap-2 justify-center">
+              <span x-show="op && op.id === 'publicar'" class="spinner spinner-xs"></span>
+              <span x-text="op && op.id === 'publicar' ? 'Guardando…' : (editingId ? 'Actualizar y publicar' : 'Publicar')"></span>
             </button>
-            <button @click="publicar(true)" :disabled="busy" class="px-5 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-sm font-bold rounded-lg">Guardar borrador</button>
+            <button @click="publicar(true)" :disabled="busy" class="px-5 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-sm font-bold rounded-lg inline-flex items-center gap-2 justify-center">
+              <span x-show="op && op.id === 'publicar'" class="spinner spinner-xs"></span>
+              <span x-text="op && op.id === 'publicar' ? 'Guardando…' : 'Guardar borrador'"></span>
+            </button>
             <button @click="nuevoPost()" class="px-5 py-2 border border-slate-600 hover:border-slate-500 text-sm font-bold rounded-lg">Nuevo post</button>
           </div>
           </div>
@@ -297,6 +361,15 @@
 
   <style>
     [x-cloak] { display: none !important; }
+    @keyframes mglab-spin { to { transform: rotate(360deg); } }
+    .spinner { display: inline-block; border-radius: 9999px; border: 2px solid rgba(255,255,255,.18); border-top-color: #818cf8; animation: mglab-spin .7s linear infinite; vertical-align: middle; }
+    .spinner-sm { width: 14px; height: 14px; }
+    .spinner-xs { width: 10px; height: 10px; border-width: 2px; }
+    @keyframes mglab-shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+    .shimmer-bar { position: relative; overflow: hidden; background: rgba(99,102,241,.18); }
+    .shimmer-bar::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(129,140,248,.8), transparent); animation: mglab-shimmer 1.1s infinite; }
+    .skeleton { position: relative; overflow: hidden; background: rgba(255,255,255,.06); border-radius: 8px; }
+    .skeleton::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 60%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent); transform: translateX(-100%); animation: mglab-shimmer 1.3s infinite; }
     .markdown-preview h1, .markdown-preview h2, .markdown-preview h3 { font-weight: 700; margin: 0.75em 0 0.4em; }
     .markdown-preview h1 { font-size: 1.4em; } .markdown-preview h2 { font-size: 1.2em; } .markdown-preview h3 { font-size: 1.05em; }
     .markdown-preview p { margin: 0.5em 0; }
@@ -396,6 +469,25 @@
     return html;
   }
 
+  const OP_STEPS: Record<string, string[]> = {
+    url: ['Conectar', 'Extraer el texto', 'Limpiar el texto'],
+    propuestas: ['Conectar', 'Analizar el tema', 'Buscar ángulos', 'Armar respuesta'],
+    redactar: ['Conectar', 'Redactar el borrador', 'Parsear respuesta'],
+    revisar: ['Conectar', 'Revisar calidad', 'Chequear extensión'],
+    corregir: ['Conectar', 'Aplicar correcciones', 'Parsear respuesta'],
+    imagen: ['Conectar', 'Prompt de tapa', 'Generar imagen', 'Subir a storage'],
+    publicar: ['Guardar en la base'],
+  };
+  const OP_MSGS: Record<string, string[]> = {
+    url: ['Conectando…', 'Extrayendo el artículo…', 'Limpiando el texto…'],
+    propuestas: ['Conectando con DeepSeek…', 'Analizando el tema…', 'Buscando ángulos distintos…', 'Redactando resúmenes…'],
+    redactar: ['Redactando el borrador…', 'Puliendo el hook…', 'Ajustando la estructura…'],
+    revisar: ['Revisando hook y precisión…', 'Chequeando tono…', 'Verificando extensión…'],
+    corregir: ['Aplicando correcciones…', 'Reescribiendo pasajes…', 'Puliendo detalles…'],
+    imagen: ['Consultando al director de arte…', 'Generando la imagen 16:9…', 'Subiendo a storage…'],
+    publicar: ['Guardando en la base…'],
+  };
+
   Alpine.data('blogAdmin', () => ({
     loadingAuth: true,
     user: null as any,
@@ -422,6 +514,8 @@
     busy: false,
     status: '',
     posts: [] as any[],
+    op: null as any,
+    opHistory: [] as any[],
 
     async init() {
       const { data } = await supabase.auth.getSession();
@@ -467,6 +561,9 @@
 
     async logout(auto = false) {
       if (!auto) clearSessionStart();
+      this.clearOpInterval();
+      this.op = null;
+      this.busy = false;
       await supabase.auth.signOut();
       this.user = null;
       this.userRole = null;
@@ -533,45 +630,140 @@
       this.form.fraseClave = e.fraseClave || '';
     },
 
+    startOp(id: string, label: string, steps: string[], messages: string[]) {
+      this.clearOpInterval();
+      const now = Date.now();
+      this.op = {
+        id,
+        label,
+        startedAt: now,
+        elapsed: '0:00',
+        messages,
+        msgIndex: 0,
+        stepIndex: 0,
+        steps: steps.map((s, i) => ({
+          label: s,
+          status: i === 0 ? 'active' : 'pending',
+          ts: i === 0 ? now : null,
+        })),
+        interval: null as any,
+        msgInterval: null as any,
+        finished: false,
+      };
+      this.busy = true;
+      this.status = messages[0] || '';
+      this.op.interval = setInterval(() => this.tickOp(), 1000);
+      this.op.msgInterval = setInterval(() => this.rotateOpMsg(), 3000);
+    },
+
+    clearOpInterval() {
+      if (this.op?.interval) { clearInterval(this.op.interval); this.op.interval = null; }
+      if (this.op?.msgInterval) { clearInterval(this.op.msgInterval); this.op.msgInterval = null; }
+    },
+
+    tickOp() {
+      if (!this.op || this.op.finished) return;
+      const now = Date.now();
+      const secs = Math.floor((now - this.op.startedAt) / 1000);
+      this.op.elapsed = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+      const cur = this.op.steps[this.op.stepIndex];
+      if (cur && cur.status === 'active' && cur.ts && now - cur.ts > 8000) {
+        cur.status = 'done';
+        const next = this.op.stepIndex + 1;
+        if (next < this.op.steps.length) {
+          this.op.steps[next].status = 'active';
+          this.op.steps[next].ts = now;
+          this.op.stepIndex = next;
+        }
+      }
+      this.op = { ...this.op };
+    },
+
+    rotateOpMsg() {
+      if (!this.op || this.op.finished) return;
+      const len = this.op.messages?.length || 1;
+      this.op.msgIndex = (this.op.msgIndex + 1) % len;
+      this.op = { ...this.op };
+    },
+
+    _opElapsed(): string {
+      const secs = Math.floor((Date.now() - (this.op?.startedAt || Date.now())) / 1000);
+      return `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+    },
+
+    finishOp(successMsg: string) {
+      if (!this.op) { this.busy = false; return; }
+      const o = this.op;
+      this.clearOpInterval();
+      o.steps.forEach((s: any) => { if (s.status !== 'error') s.status = 'done'; });
+      o.finished = true;
+      this.opHistory.unshift({
+        id: o.id,
+        label: o.label,
+        ok: true,
+        result: successMsg,
+        elapsed: this._opElapsed(),
+        ts: Date.now(),
+      });
+      this.opHistory = this.opHistory.slice(0, 5);
+      this.status = successMsg;
+      this.busy = false;
+      this.op = null;
+    },
+
+    failOp(errorMsg: string) {
+      if (!this.op) { this.busy = false; return; }
+      const o = this.op;
+      this.clearOpInterval();
+      const cur = o.steps[o.stepIndex] || o.steps[o.steps.length - 1];
+      if (cur) cur.status = 'error';
+      o.finished = true;
+      this.opHistory.unshift({
+        id: o.id,
+        label: o.label,
+        ok: false,
+        result: errorMsg,
+        elapsed: this._opElapsed(),
+        ts: Date.now(),
+      });
+      this.opHistory = this.opHistory.slice(0, 5);
+      this.status = errorMsg;
+      this.busy = false;
+      this.op = null;
+    },
+
     async traerTextoUrl() {
       const url = (this.urlRef || '').trim();
       if (!url) { this.status = 'Pegá una URL primero.'; return; }
-      this.busy = true;
-      this.status = 'Trayendo el texto del artículo...';
+      this.startOp('url', 'Traer texto de la URL', OP_STEPS.url, OP_MSGS.url);
       try {
         const { data, error } = await supabase.functions.invoke('blog-fetch-url', { body: { url } });
         if (error) throw new Error(error.context?.error || error.message);
         this.form.fraseClave = data.text || '';
-        this.status = 'Texto traído. Ajustalo si hace falta y generá propuestas.';
+        this.finishOp('Texto traído. Ajustalo si hace falta y generá propuestas.');
       } catch (e) {
-        this.status = (e as Error).message;
-      } finally {
-        this.busy = false;
+        this.failOp((e as Error).message);
       }
     },
 
     async generarPropuestas() {
       if (!this.form.tema) { this.status = 'Ingresá un tema.'; return; }
-      this.busy = true;
-      this.status = 'Generando propuestas...';
+      this.startOp('propuestas', 'Generar propuestas', OP_STEPS.propuestas, OP_MSGS.propuestas);
       try {
         const { data, error } = await supabase.functions.invoke('blog-proposals', { body: this.form });
         if (error) throw new Error(error.context?.error || error.message);
         this.propuestas = data.propuestas || [];
         this.propuestaIndex = -1;
         this.saveTemaEntry();
-        this.status = `${this.propuestas.length} propuesta(s) generadas. Elegí una.`;
+        this.finishOp(`${this.propuestas.length} propuesta(s) generadas. Elegí una.`);
       } catch (e) {
-        this.status = (e as Error).message;
-      } finally {
-        this.busy = false;
+        this.failOp((e as Error).message);
       }
     },
 
     async redactar() {
       if (this.propuestaIndex < 0) { this.status = 'Elegí una propuesta.'; return; }
-      this.busy = true;
-      this.status = 'Redactando... (puede tardar)';
+      this.startOp('redactar', 'Redactar el post', OP_STEPS.redactar, OP_MSGS.redactar);
       try {
         const { data, error } = await supabase.functions.invoke('blog-write', {
           body: { ...this.form, propuesta: this.propuestas[this.propuestaIndex] },
@@ -585,18 +777,15 @@
         this.coverUrl = '';
         this.coverPrompt = '';
         this.showPreview = false;
-        this.status = 'Borrador listo. Revisalo, ajustá y publicá.';
+        this.finishOp('Borrador listo. Revisalo, ajustá y publicá.');
       } catch (e) {
-        this.status = (e as Error).message;
-      } finally {
-        this.busy = false;
+        this.failOp((e as Error).message);
       }
     },
 
     async revisar() {
       if (!this.borrador) { this.status = 'Primero redactá el post.'; return; }
-      this.busy = true;
-      this.status = 'Revisando con el crítico IA...';
+      this.startOp('revisar', 'Revisar con el crítico IA', OP_STEPS.revisar, OP_MSGS.revisar);
       try {
         const { data, error } = await supabase.functions.invoke('blog-review', {
           body: {
@@ -611,13 +800,13 @@
         });
         if (error) throw new Error(error.context?.error || error.message);
         this.review = data.review || null;
-        this.status = this.review?.aprobado
-          ? 'El crítico aprobó el borrador. Listo para publicar.'
-          : 'El crítico marcó problemas. Podés aplicar correcciones o editarlas a mano.';
+        this.finishOp(
+          this.review?.aprobado
+            ? 'El crítico aprobó el borrador. Listo para publicar.'
+            : 'El crítico marcó problemas. Podés aplicar correcciones o editarlas a mano.'
+        );
       } catch (e) {
-        this.status = (e as Error).message;
-      } finally {
-        this.busy = false;
+        this.failOp((e as Error).message);
       }
     },
 
@@ -629,8 +818,7 @@
         return;
       }
       if (this.iteracion >= 2) { this.status = 'Tope de revisiones alcanzado.'; return; }
-      this.busy = true;
-      this.status = 'Aplicando correcciones del IA...';
+      this.startOp('corregir', 'Aplicar corrección', OP_STEPS.corregir, OP_MSGS.corregir);
       try {
         const { data, error } = await supabase.functions.invoke('blog-revise', {
           body: {
@@ -652,18 +840,15 @@
         this.review = null;
         this.correccionPrompt = '';
         this.showPreview = false;
-        this.status = `Corrección aplicada (iteración ${this.iteracion}/2). Revisá de nuevo.`;
+        this.finishOp(`Corrección aplicada (iteración ${this.iteracion}/2). Revisá de nuevo.`);
       } catch (e) {
-        this.status = (e as Error).message;
-      } finally {
-        this.busy = false;
+        this.failOp((e as Error).message);
       }
     },
 
     async generarImagen() {
       if (!this.borrador) { this.status = 'Primero redactá el post.'; return; }
-      this.busy = true;
-      this.status = 'Generando imagen de tapa... (puede tardar)';
+      this.startOp('imagen', 'Generar imagen de tapa', OP_STEPS.imagen, OP_MSGS.imagen);
       try {
         const { data, error } = await supabase.functions.invoke('blog-cover', {
           body: {
@@ -676,11 +861,9 @@
         if (error) throw new Error(error.context?.error || error.message);
         this.coverUrl = data.coverUrl;
         this.coverPrompt = data.prompt;
-        this.status = 'Imagen de tapa lista.';
+        this.finishOp('Imagen de tapa lista.');
       } catch (e) {
-        this.status = (e as Error).message;
-      } finally {
-        this.busy = false;
+        this.failOp((e as Error).message);
       }
     },
 
@@ -698,8 +881,7 @@
         this.status = 'No hay borrador para publicar.';
         return;
       }
-      this.busy = true;
-      this.status = draft ? 'Guardando borrador...' : 'Publicando...';
+      this.startOp('publicar', draft ? 'Guardar borrador' : 'Publicar', OP_STEPS.publicar, OP_MSGS.publicar);
       try {
         const payload: any = {
           title: this.borrador.title,
@@ -720,15 +902,15 @@
           const res = await supabase.from('blogs').insert(payload);
           if (res.error) throw new Error(res.error.message);
         }
-        this.status = draft
-          ? 'Borrador guardado.'
-          : '¡Publicado! Aparece en /blog tras el próximo build (cron 12 hs o deploy manual).';
         this.editingId = null;
         await this.loadPosts();
+        this.finishOp(
+          draft
+            ? 'Borrador guardado.'
+            : '¡Publicado! Aparece en /blog tras el próximo build (cron 12 hs o deploy manual).'
+        );
       } catch (e) {
-        this.status = (e as Error).message;
-      } finally {
-        this.busy = false;
+        this.failOp((e as Error).message);
       }
     },
 
