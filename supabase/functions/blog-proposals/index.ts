@@ -114,7 +114,10 @@ Deno.serve(async (req: Request) => {
     const user = [`Tema: ${tema}`];
     if (body?.enfoque) user.push(`Enfoque sugerido: ${body.enfoque}`);
     if (body?.tono) user.push(`Tono: ${body.tono}`);
-    if (body?.fraseClave) user.push(`Frase/idea semilla: ${body.fraseClave}`);
+    if (body?.fraseClave) {
+      const ref = body.fraseClave.toString().trim().slice(0, 8000);
+      if (ref) user.push(`Frase/idea semilla o referencia:\n${ref}`);
+    }
 
     const result = await deepseekJson<{
       propuestas: { angulo: string; tituloSugerido: string; resumen: string }[];

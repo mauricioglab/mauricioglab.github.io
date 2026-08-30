@@ -140,6 +140,14 @@ function buildUserBlogger(body: any, propuesta: any): string {
       `Tiempo de lectura objetivo: ~${m} minutos (a 200 palabras/minuto, ~${m * 200} palabras).`
     );
   }
+  if (body?.fraseClave) {
+    const ref = (body.fraseClave).toString().trim().slice(0, 8000);
+    if (ref) {
+      lines.push("");
+      lines.push("Material de referencia (usalo como fuente, no lo copies textual):");
+      lines.push(ref);
+    }
+  }
   return lines.join("\n");
 }
 
