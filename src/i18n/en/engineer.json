@@ -1,14 +1,14 @@
 {
   "title": "Software Engineer",
   "subtitle": "AI & Automation",
-  "description": "Software Engineer specialized in AI and Automation · Python · .NET Core · Angular",
+  "description": "Software Engineer · AI & Automation · Python · .NET Core · Angular",
   "seo": {
-    "title": "Mauricio González | Software Engineer specialized in AI and Automation",
-    "description": "Software Engineer with a base in .NET Core and Angular, specialized in applied AI and process automation. AI in production, predictive models and enterprise architecture."
+    "title": "Mauricio González | Software Engineer · AI & Automation",
+    "description": "Software Engineer · AI & Automation · Python · .NET Core · Angular. AI in production, predictive models and enterprise architecture."
   },
   "hero": {
     "badge": "AVAILABLE FOR NEW CHALLENGES",
-    "headline": "Software Engineer specialized in <span class=\"text-blue-600 dark:text-blue-400\">AI and Automation</span>.",
+    "headline": "Software Engineer · <span class=\"text-blue-600 dark:text-blue-400\">AI &amp; Automation</span>.",
     "subheadline": "Solid foundation in full-stack development (.NET Core, Angular) and a growing specialization in applied AI. Real experience taking AI solutions to production at government/enterprise scale, plus building and validating my own predictive models with Python.",
     "ctaPrimary": "Download CV",
     "ctaSecondary": "View Projects"
@@ -49,8 +49,7 @@
         "Technical reference for a team of 8 developers on government and enterprise projects.",
         "Automated settlement processing: reduced from 4h to 30min (87.5% improvement) processing 250K records/month.",
         "Led the technical migration to Angular 19; dynamic forms with 27K+ active users.",
-        "Virtual Wallet API: microservices on Docker/AWS ECS, DDD, CQRS, Facade and Mediator.",
-        "Also: AI-powered biometric validation (RENAPER/AWS Rekognition), audit automation, ML-based crop monitoring for a Spanish client, and systems for Coca-Cola Embonor and Renaseg."
+        "Also: AI-powered biometric validation (RENAPER/AWS Rekognition), ML-based crop monitoring for a Spanish client, and Renaseg."
       ]
     },
     {

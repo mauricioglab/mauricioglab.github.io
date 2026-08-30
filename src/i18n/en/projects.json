@@ -1,42 +1,56 @@
 {
-  "ecommerce": {
-    "title": "Enterprise E-commerce Platform",
-    "shortDescription": "Scalable e-commerce system with microservices architecture",
+  "validacion-biometrica": {
+    "title": "AI-Powered Biometric Validation",
+    "shortDescription": "Facial recognition + liveness detection with AWS Rekognition, integrated with RENAPER",
     "profiles": {
       "engineer": {
-        "description": "Microservices architecture with .NET Core 8 and Angular 17, designed with Domain-Driven Design and Event Storming. Payment system integrated with Stripe and real-time inventory management.",
+        "description": "Complete solution (backend + frontend) for identity validation through facial recognition with liveness detection, integrated with RENAPER and with immutable traceability on AWS QLDB.",
         "highlights": [
-          "API Gateway with Ocelot + Redis Cache for 50k req/min",
-          "5 Bounded Contexts identified (Catalog, Orders, Payments, Inventory, Users)",
-          "60% reduction in response times vs. previous monolith"
+          "500+ daily verifications in production, 99.8% precision",
+          "Node.js/NestJS backend integrated with RENAPER, Angular frontend",
+          "Immutable traceability with AWS QLDB"
         ]
       }
     }
   },
-  "task-manager-ddd": {
-    "title": "Task Manager with DDD",
-    "shortDescription": "Enterprise task manager with clean architecture and DDD",
+  "billetera-virtual": {
+    "title": "Core API — TotalCoin virtual wallet",
+    "shortDescription": "Core API and microservices for TotalCoin's virtual wallet and payment gateway",
     "profiles": {
       "engineer": {
-        "description": "Full-stack application with Clean Architecture, CQRS and Event Sourcing. Backend in .NET 8 and frontend in Angular with NgRx. Complex domain design with multiple aggregates and state machines.",
+        "description": "Development of the Core API and microservices infrastructure for TotalCoin's virtual wallet and payment gateway. Multi-level authorization flow for 4 commercial sub-wallets, and migration of 3 legacy microservices to Docker/ECS.",
         "highlights": [
-          "CQRS implementation with MediatR and Event Sourcing",
-          "3 main Aggregates (Task, Project, Team) with UML and C4 documentation",
-          "Automated testing with 85% coverage (xUnit + Cypress)"
+          "Multi-level signer/approver module for 4 commercial sub-wallets",
+          "CQRS, Facade and Mediator patterns on DDD",
+          "3 legacy microservices migrated to Docker/ECS: -40% deployment time"
         ]
       }
     }
   },
-  "microservicios-api": {
-    "title": "API Gateway with Microservices",
-    "shortDescription": "Microservices architecture with asynchronous messaging",
+  "monitoreo-agricola": {
+    "title": "Agricultural monitoring with Machine Learning",
+    "shortDescription": "Crop monitoring app with ML and IoT traceability on AWS QLDB (Spanish client)",
     "profiles": {
       "engineer": {
-        "description": "Distributed system with 8 independent microservices. Asynchronous communication with RabbitMQ and synchronization with gRPC, from a zero-downtime monolith decomposition strategy.",
+        "description": "Web application for crop monitoring integrating data analysis with Python and Google Colab. Nightly sync to AWS QLDB for immutable IoT sensor traceability and real-time visualizations with Matplotlib/Seaborn.",
         "highlights": [
-          "API Gateway with JWT authentication and rate limiting",
-          "Gradual migration strategy: Saga, API Composition, CQRS patterns",
-          "Observability with Prometheus, Grafana and Seq for logs"
+          "IoT sensor data analysis with Python + Google Colab",
+          "Immutable data traceability with AWS QLDB",
+          "Real-time visualizations and automated crop alerts"
+        ]
+      }
+    }
+  },
+  "auditorias-datos": {
+    "title": "Audits with data analysis",
+    "shortDescription": "Interactive data analysis system for audits in the power sector (ISA CTEEP)",
+    "profiles": {
+      "engineer": {
+        "description": "For ISA CTEEP, a Brazilian power transmission company: turned a manual Excel review into an interactive system with advanced filters and visual prioritization, with automated PDF/Excel report generation.",
+        "highlights": [
+          "From manual Excel review to an interactive system with advanced filters",
+          "PDF/Excel reports generated server-side for massive datasets",
+          "+60% operational efficiency with visual prioritization"
         ]
       }
     }
@@ -51,6 +65,20 @@
           "14 navigable chapters: from initial requirements gathering to production rollout",
           "Custom-built diagrams (class, use case, ERD, DFD, state, deployment) instead of static screenshots",
           "Full backlog, burndown, and traceability between requirements and delivered features"
+        ]
+      }
+    }
+  },
+  "coca-cola-embonor": {
+    "title": "Corporate expense web system",
+    "shortDescription": "User/permission management + SAP integration for Coca-Cola Embonor",
+    "profiles": {
+      "engineer": {
+        "description": "User, group and permission management modules for a responsive solution, with SAP integration to automate accounting processes.",
+        "highlights": [
+          "User, group and permission modules (hundreds of daily transactions)",
+          "SAP API integration for accounting automation",
+          "-75% manual errors"
         ]
       }
     }

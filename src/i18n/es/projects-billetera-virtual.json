@@ -1,0 +1,127 @@
+{
+  "back": "← Volver a proyectos",
+  "badge": "TotalCoin · Billetera virtual",
+  "title": "Core API — Billetera virtual TotalCoin",
+  "description": "Desarrollo del Core API e infraestructura de microservicios para la plataforma de billetera virtual y pasarela de pagos de TotalCoin.",
+  "stats": {
+    "wallets": { "value": "4", "label": "Sub-billeteras comerciales" },
+    "deploy": { "value": "-40%", "label": "Tiempo de deployment (Docker/ECS)" },
+    "micro": { "value": "3", "label": "Microservicios heredados migrados" }
+  },
+  "links": {
+    "confidential": "🔒 Proyecto cliente — código no público"
+  },
+  "problem": {
+    "title": "El Problema",
+    "intro": "La plataforma de billetera virtual y pasarela de pagos de TotalCoin necesitaba un backend transaccional robusto: un flujo de autorización multi-nivel para operaciones sensibles, con reglas de negocio distintas por sub-billetera, y una infraestructura que dejara de trabar los despliegues.",
+    "items": [
+      "Flujo de firmantes/aprobadores multi-nivel con reglas de negocio diferenciadas por sub-billetera",
+      "Microservicios heredados en .NET Framework 4.5 con despliegues lentos y acoplados",
+      "Deployments que frenaban la entrega de nuevas funcionalidades",
+      "Necesidad de separar responsabilidades sin caer en sobre-ingeniería"
+    ]
+  },
+  "process": {
+    "title": "Mi Proceso",
+    "phases": [
+      {
+        "title": "1. Relevamiento de reglas de negocio",
+        "description": "Mapeé las reglas de las 4 sub-billeteras comerciales: quién firma, quién aprueba, en qué orden y con qué montos. Cada sub-billetera tenía reglas diferenciadas reales.",
+        "items": [
+          "Flujo de autorización multi-nivel parametrizado por sub-billetera",
+          "Reglas de límites y jerarquías documentadas antes de escribir código",
+          "Reglas de negocio diferenciadas, no cosméticas"
+        ]
+      },
+      {
+        "title": "2. Arquitectura DDD y CQRS",
+        "description": "Diseñé el módulo con Domain-Driven Design, separando comandos de consultas para que la escritura y la lectura evolucionaran por separado.",
+        "items": [
+          "Patrones CQRS, Facade y Mediator para separación de responsabilidades",
+          "Agregados del dominio (billetera, firmante, aprobador, operación)",
+          "Repositorios y servicios de aplicación bien delimitados"
+        ]
+      },
+      {
+        "title": "3. Migración a Docker y Amazon ECS",
+        "description": "Migré 3 microservicios críticos heredados (.NET Framework 4.5) hacia contenedores Docker desplegados en Amazon ECS.",
+        "items": [
+          "Optimización de la arquitectura con contenedores Docker",
+          "Amazon ECS como orquestador de los microservicios",
+          "Reducción del 40% en tiempos de deployment"
+        ]
+      },
+      {
+        "title": "4. Entrega y validación",
+        "description": "Validé el flujo completo contra los casos de negocio de las 4 billeteras y estabilicé la operación en producción.",
+        "items": [
+          "Pruebas del flujo de autorización por cada regla de negocio",
+          "Rollout gradual sin downtime del monolito",
+          "Reducción del 40% en tiempo de deployment medido en entrega real"
+        ]
+      }
+    ]
+  },
+  "solution": {
+    "title": "La Solución",
+    "subsections": [
+      {
+        "title": "Dominio modelado, no improvisado",
+        "description": "El flujo de autorización se modeló como parte del dominio, con las reglas de cada billetera como política configurable en vez de ifs dispersos.",
+        "items": [
+          "Cadena de firmantes y aprobadores con niveles y montos por billetera",
+          "Reglas de negocio aisladas por billetera, reutilizando la maquinaria común",
+          "Trazabilidad de cada decisión de autorización"
+        ]
+      },
+      {
+        "title": "CQRS + Mediator para crecer sin romper",
+        "description": "Comandos y consultas separados con el patrón Mediator (via CQRS) para que agregar una billetera o una regla no recompilara todo el flujo.",
+        "items": [
+          "Handlers por comando: firma, aprobación, rechazo, cancelación",
+          "Consultas de estado y auditoría desacopladas de la escritura",
+          "Facade hacia los clientes internos de la billetera"
+        ]
+      },
+      {
+        "title": "Microservicios en Docker/ECS",
+        "description": "Los 3 microservicios más volátiles salieron del monolito a contenedores, logrando despliegues independientes.",
+        "items": [
+          "-40% de tiempo de deployment por deployments independientes",
+          "Aislamiento de fallos: un servicio caído no tumba la billetera",
+          "Escalado por servicio según la carga real"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "title": "Resultados & Impacto",
+    "metrics": {
+      "deploy": { "value": "-40%", "label": "Tiempo de deployment" },
+      "wallets": { "value": "4", "label": "Sub-billeteras comerciales" },
+      "uptime": { "value": "99.5%", "label": "Uptime del módulo en producción" },
+      "firmas": { "value": "Multi-nivel", "label": "Flujo firmantes → aprobadores" }
+    },
+    "learnings": {
+      "title": "Aprendizajes Clave",
+      "items": [
+        { "label": "El dominio primero:", "text": "modelar las reglas reales de cada billetera antes de escribir código evitó rediseñar a mitad del proyecto." },
+        { "label": "CQRS no es solo patrón:", "text": "separar comandos de consultas permitió que la auditoría y el flujo operativo crecieran en ritmos distintos." },
+        { "label": "Contenerizar paga:", "text": "migrar a Docker/ECS no fue cosmético: el -40% en deployment salió de eliminar el acoplamiento al release del monolito." }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Stack Tecnológico",
+    "columns": [
+      { "title": "Backend", "items": [".NET Framework 4.5", "C#", "ASP.NET Web API", "Entity Framework"] },
+      { "title": "Arquitectura", "items": ["DDD", "CQRS", "Mediator", "Facade", "Microservicios"] },
+      { "title": "Infraestructura", "items": ["Docker", "Amazon ECS", "CI/CD", "SQL Server"] }
+    ]
+  },
+  "cta": {
+    "title": "¿Tenés una lógica de negocio que hay que desacoplar?",
+    "subtitle": "Si tu sistema creció y el deployment o las reglas de negocio te frenan, hablemos. Mismo enfoque DDD/microservicios, resultados medibles.",
+    "button": "Contactar"
+  }
+}

@@ -1,14 +1,14 @@
 {
   "title": "Software Engineer",
-  "subtitle": "IA y Automatización",
-  "description": "Software Engineer especializado en IA y Automatización · Python · .NET Core · Angular",
+  "subtitle": "IA & Automatización",
+  "description": "Software Engineer · IA & Automatización · Python · .NET Core · Angular",
   "seo": {
-    "title": "Mauricio González | Software Engineer especializado en IA y Automatización",
-    "description": "Software Engineer con base en .NET Core y Angular, especializado en IA aplicada y automatización de procesos. IA en producción, modelos predictivos y arquitectura enterprise."
+    "title": "Mauricio González | Software Engineer · IA & Automatización",
+    "description": "Software Engineer · IA & Automatización · Python · .NET Core · Angular. IA en producción, modelos predictivos y arquitectura enterprise."
   },
   "hero": {
     "badge": "DISPONIBLE PARA NUEVOS DESAFÍOS",
-    "headline": "Software Engineer especializado en <span class=\"text-blue-600 dark:text-blue-400\">IA y Automatización</span>.",
+    "headline": "Software Engineer · <span class=\"text-blue-600 dark:text-blue-400\">IA &amp; Automatización</span>.",
     "subheadline": "Base sólida en desarrollo full-stack (.NET Core, Angular) y especialización creciente en IA aplicada. Experiencia real llevando soluciones de IA a producción a escala gubernamental/enterprise, además de construir y validar modelos predictivos propios con Python.",
     "ctaPrimary": "Descargar CV",
     "ctaSecondary": "Ver Proyectos"
@@ -49,8 +49,7 @@
         "Referente técnico de un equipo de 8 desarrolladores en proyectos gubernamentales y empresariales.",
         "Automatización de liquidaciones: reducción de 4h a 30min (87.5% de mejora) procesando 250K registros/mes.",
         "Migración técnica a Angular 19; formularios dinámicos con 27K+ usuarios activos.",
-        "API Billetera Virtual: microservicios en Docker/AWS ECS, DDD, CQRS, Facade y Mediator.",
-        "También: validación biométrica con IA (RENAPER/AWS Rekognition), automatización de auditorías, monitoreo agrícola con ML para cliente en España, y sistemas para Coca-Cola Embonor y Renaseg."
+        "También: validación biométrica con IA (RENAPER/AWS Rekognition), monitoreo agrícola con ML para cliente en España, y Renaseg."
       ]
     },
     {

@@ -1,56 +1,85 @@
 {
   "title": "Servicios Profesionales",
-  "subtitle": "Consultoría, Desarrollo & IA",
-  "description": "¿Qué problema te puedo resolver?",
+  "subtitle": "Consultoría · Desarrollo · IA",
+  "description": "Lo que puedo hacer por tu empresa",
+  "sectionSubtitle": "Del relevamiento a la puesta en producción, con foco en datos y resultados medibles.",
   "seo": {
-    "title": "Servicios | Consultoría, Desarrollo, IA y Capacitación",
-    "description": "Consultoría tecnológica, desarrollo de soluciones, IA aplicada, automatización, capacitación técnica y conferencias para empresas e instituciones."
+    "title": "Servicios | Software Engineer · IA & Automatización · Consultoría en Córdoba, Argentina",
+    "description": "Software Engineer especializado en IA y automatización. Consultoría técnica, documentación para aprobación, desarrollo full-stack, IA aplicada, automatización, capacitación y speaking. Córdoba, Argentina."
+  },
+  "nav": {
+    "portfolio": "Portfolio",
+    "cv": "CV"
   },
   "hero": {
-    "badge": "PARA EMPRESAS, INSTITUCIONES Y ORGANIZADORES DE EVENTOS",
-    "headline": "¿Qué problema te puedo <span class=\"text-blue-600 dark:text-blue-400\">resolver</span>?",
-    "subheadline": "Software Engineer especializado en IA y Automatización. Trabajo con empresas e instituciones en consultoría técnica, desarrollo de soluciones, IA aplicada, automatización de procesos, capacitación y conferencias.",
-    "ctaPrimary": "Agendar Reunión",
+    "badge": "Software Engineer · IA & Automatización",
+    "headlinePrefix": "Tu equipo pierde horas en procesos manuales.",
+    "rotate": [
+      "Yo los automatizo.",
+      "Lo documento para aprobar.",
+      "Lo llevo a producción con IA.",
+      "Yo lo enseño en workshops."
+    ],
+    "subheadline": "Soy Software Engineer especializado en IA y automatización. Relevo tu problema, lo documento para que se apruebe, lo desarrollo y lo dejo funcionando. Speaker y docente en IA aplicada.",
+    "ctaPrimary": "Conversemos sin compromiso",
     "ctaSecondary": "Ver Portfolio"
   },
+  "ctaViewCV": "Ver CV",
   "ctaTitle": "¿Hablamos de tu proyecto?",
-  "ctaDescription": "Contame qué necesitás y vemos cómo puedo ayudarte.",
+  "ctaDescription": "La conversación inicial es sin cargo. El análisis técnico es parte del trabajo.",
+  "groups": [
+    { "id": "consultoria", "label": "Consultoría técnica" },
+    { "id": "desarrollo", "label": "Desarrollo y datos" },
+    { "id": "capacitacion", "label": "Capacitación y speaking" }
+  ],
+  "speaking": {
+    "title": "Speaker",
+    "text": "Doy charlas y workshops sobre IA aplicada y automatización, siempre anclados en proyectos reales, no en teoría.",
+    "credential": "Docente en 3 carreras de tecnología · 5 de 20 alumnos consiguieron empleo como Jr Dev",
+    "cta": "Quiero a Mauricio en mi evento"
+  },
   "services": [
     {
-      "icon": "fas fa-comments",
-      "title": "Consultoría Tecnológica",
-      "description": "Auditorías de arquitectura y definición de soluciones técnicas, con base en experiencia real en sistemas gubernamentales y enterprise.",
-      "color": "blue-600"
+      "icon": "fas fa-search",
+      "title": "Análisis y relevamiento",
+      "description": "Relevamiento con stakeholders, especificaciones técnicas y modelado (UML, DER, DFD). Entiendo el problema antes de escribir código.",
+      "color": "blue-600",
+      "group": "consultoria"
+    },
+    {
+      "icon": "fas fa-clipboard-check",
+      "title": "Documentación para aprobación",
+      "description": "Documentación de sistemas para auditorías y cumplimiento: CMMI, normativa SSN, modelos de datos. Lo dejo listo para aprobar.",
+      "color": "blue-600",
+      "group": "consultoria"
     },
     {
       "icon": "fas fa-code",
-      "title": "Desarrollo de Soluciones",
-      "description": "Full-stack .NET/Angular, integraciones y automatización de procesos. Respaldado en casos reales: optimización de 4h a 30min, validación biométrica con IA en producción.",
-      "color": "slate-900"
+      "title": "Desarrollo full-stack",
+      "description": "Aplicaciones .NET Core, Angular, Node y Python. Microservicios, DDD y CQRS, en producción real.",
+      "color": "slate-900",
+      "group": "desarrollo"
     },
     {
       "icon": "fas fa-brain",
-      "title": "IA Aplicada",
-      "description": "Modelado predictivo y análisis de datos con Python. Evidencia real: modelo del Mundial 2026 y predicción de abandono estudiantil, ambos con validación rigurosa.",
-      "color": "purple-600"
+      "title": "IA aplicada",
+      "description": "Llevo IA de la idea a producción: biometría con AWS Rekognition, RAG con LangChain y modelos predictivos en Python.",
+      "color": "purple-600",
+      "group": "desarrollo"
     },
     {
       "icon": "fas fa-cogs",
-      "title": "Automatización de Procesos",
-      "description": "Identificación y automatización de tareas manuales repetitivas — de planillas Excel a sistemas interactivos, de horas a minutos.",
-      "color": "emerald-600"
+      "title": "Automatización de procesos",
+      "description": "Convierto tareas manuales en sistemas con métricas verificables: 4h → 30min, -75% de errores, +60% de eficiencia.",
+      "color": "emerald-600",
+      "group": "desarrollo"
     },
     {
       "icon": "fas fa-chalkboard-teacher",
-      "title": "Capacitación Técnica",
-      "description": "Basada en experiencia docente real: profesor activo en 3 carreras de tecnología (Analista de Sistemas, Desarrollo Web, Ciencia de Datos e IA).",
-      "color": "orange-600"
-    },
-    {
-      "icon": "fas fa-microphone",
-      "title": "Conferencias y Workshops",
-      "description": "Charlas y talleres sobre IA práctica, automatización y desarrollo de software, anclados en proyectos y experiencia real, no en teoría.",
-      "color": "green-600"
+      "title": "Disertaciones, charlas, clases y workshops",
+      "description": "Charlas y workshops de IA aplicada y automatización anclados en proyectos reales, no en teoría. Docente en 3 carreras de tecnología.",
+      "color": "orange-600",
+      "group": "capacitacion"
     }
   ]
 }

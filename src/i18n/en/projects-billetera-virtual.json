@@ -1,0 +1,127 @@
+{
+  "back": "← Back to projects",
+  "badge": "TotalCoin · Virtual wallet",
+  "title": "Core API — TotalCoin virtual wallet",
+  "description": "Development of the Core API and microservices infrastructure for TotalCoin's virtual wallet and payment gateway platform.",
+  "stats": {
+    "wallets": { "value": "4", "label": "Commercial sub-wallets" },
+    "deploy": { "value": "-40%", "label": "Deployment time (Docker/ECS)" },
+    "micro": { "value": "3", "label": "Legacy microservices migrated" }
+  },
+  "links": {
+    "confidential": "🔒 Client project — code not public"
+  },
+  "problem": {
+    "title": "The Problem",
+    "intro": "TotalCoin's virtual wallet and payment gateway platform needed a robust transactional backend: a multi-level authorization flow for sensitive operations, with different business rules per sub-wallet, and infrastructure that stopped slowing down deployments.",
+    "items": [
+      "Multi-level signer/approver flow with business rules differentiated per sub-wallet",
+      "Legacy microservices on .NET Framework 4.5 with slow, coupled deployments",
+      "Deployments that blocked shipping new functionality",
+      "The need to separate responsibilities without over-engineering"
+    ]
+  },
+  "process": {
+    "title": "My Process",
+    "phases": [
+      {
+        "title": "1. Business rules discovery",
+        "description": "Mapped the rules of the 4 commercial sub-wallets: who signs, who approves, in what order and with what amounts. Each sub-wallet had real, differentiated rules.",
+        "items": [
+          "Multi-level authorization flow parameterized per sub-wallet",
+          "Limits and hierarchy rules documented before writing code",
+          "Differentiated business rules, not cosmetic ones"
+        ]
+      },
+      {
+        "title": "2. DDD and CQRS architecture",
+        "description": "Designed the module with Domain-Driven Design, separating commands from queries so writes and reads could evolve independently.",
+        "items": [
+          "CQRS, Facade and Mediator patterns for separation of responsibilities",
+          "Domain aggregates (wallet, signer, approver, operation)",
+          "Well-bounded repositories and application services"
+        ]
+      },
+      {
+        "title": "3. Migration to Docker and Amazon ECS",
+        "description": "Migrated 3 critical legacy microservices (.NET Framework 4.5) into Docker containers deployed on Amazon ECS.",
+        "items": [
+          "Architecture optimization with Docker containers",
+          "Amazon ECS as the microservices orchestrator",
+          "40% reduction in deployment time"
+        ]
+      },
+      {
+        "title": "4. Delivery and validation",
+        "description": "Validated the full flow against the business cases of all 4 wallets and stabilized operations in production.",
+        "items": [
+          "Authorization flow tests for each business rule",
+          "Gradual rollout with zero monolith downtime",
+          "40% deployment time reduction measured on real releases"
+        ]
+      }
+    ]
+  },
+  "solution": {
+    "title": "The Solution",
+    "subsections": [
+      {
+        "title": "A modeled domain, not improvised",
+        "description": "The authorization flow was modeled as part of the domain, with each wallet's rules as configurable policy instead of scattered conditionals.",
+        "items": [
+          "Signer/approver chain with levels and amounts per wallet",
+          "Business rules isolated per wallet, reusing the common machinery",
+          "Traceability of every authorization decision"
+        ]
+      },
+      {
+        "title": "CQRS + Mediator to grow without breaking",
+        "description": "Commands and queries separated with the Mediator pattern (via CQRS) so adding a wallet or a rule didn't recompile the whole flow.",
+        "items": [
+          "Handlers per command: sign, approve, reject, cancel",
+          "State and audit queries decoupled from writes",
+          "Facade toward the wallet's internal clients"
+        ]
+      },
+      {
+        "title": "Microservices on Docker/ECS",
+        "description": "The 3 most volatile microservices moved out of the monolith into containers, achieving independent deployments.",
+        "items": [
+          "-40% deployment time from independent releases",
+          "Failure isolation: one service down doesn't take down the wallet",
+          "Per-service scaling based on real load"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "title": "Results & Impact",
+    "metrics": {
+      "deploy": { "value": "-40%", "label": "Deployment time" },
+      "wallets": { "value": "4", "label": "Commercial sub-wallets" },
+      "uptime": { "value": "99.5%", "label": "Module uptime in production" },
+      "firmas": { "value": "Multi-level", "label": "Signer → approver flow" }
+    },
+    "learnings": {
+      "title": "Key Learnings",
+      "items": [
+        { "label": "Domain first:", "text": "modeling each wallet's real rules before writing code avoided a mid-project redesign." },
+        { "label": "CQRS is not just a pattern:", "text": "separating commands from queries let audit and operational flows grow at different paces." },
+        { "label": "Containerizing pays off:", "text": "moving to Docker/ECS wasn't cosmetic: the -40% in deployment came from removing coupling to the monolith release." }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Tech Stack",
+    "columns": [
+      { "title": "Backend", "items": [".NET Framework 4.5", "C#", "ASP.NET Web API", "Entity Framework"] },
+      { "title": "Architecture", "items": ["DDD", "CQRS", "Mediator", "Facade", "Microservices"] },
+      { "title": "Infrastructure", "items": ["Docker", "Amazon ECS", "CI/CD", "SQL Server"] }
+    ]
+  },
+  "cta": {
+    "title": "Got business logic that needs decoupling?",
+    "subtitle": "If your system outgrew its monolith and deployments or business rules are slowing you down, let's talk. Same DDD/microservices approach, measurable results.",
+    "button": "Contact"
+  }
+}

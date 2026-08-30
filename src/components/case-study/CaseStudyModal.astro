@@ -1,0 +1,159 @@
+---
+import { type Lang } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+  cases: Record<string, any>;
+  labels: { title: string; viewFull: string; contact: string; close: string; problem: string; solution: string };
+}
+
+const { lang, cases, labels } = Astro.props;
+
+const casesJson = JSON.stringify(cases);
+---
+
+<div id="caseModal" class="cs-modal" role="dialog" aria-modal="true" aria-labelledby="csModalTitle" hidden>
+  <div class="cs-backdrop" data-cs-close></div>
+  <div class="cs-panel" role="document">
+    <button class="cs-close" data-cs-close aria-label={labels.close}>&times;</button>
+    <div class="cs-content">
+      <span class="cs-badge" id="csModalBadge"></span>
+      <h2 class="cs-title" id="csModalTitle"></h2>
+      <div class="cs-cols">
+        <div class="cs-col">
+          <div class="cs-sub">{labels.problem}</div>
+          <p class="cs-problem" id="csProblem"></p>
+        </div>
+        <div class="cs-col">
+          <div class="cs-sub">{labels.solution}</div>
+          <p class="cs-solution" id="csSolution"></p>
+        </div>
+      </div>
+      <div class="cs-metrics" id="csMetrics"></div>
+      <div class="cs-stack" id="csStack"></div>
+      <div class="cs-actions">
+        <a class="cs-full" id="csFullLink" href="#">{labels.viewFull}</a>
+        <button class="cs-contact" data-contact-trigger>{labels.contact}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ casesJson }}>
+  var cases = JSON.parse(casesJson);
+  var modal = document.getElementById('caseModal');
+  var badge = document.getElementById('csModalBadge');
+  var title = document.getElementById('csModalTitle');
+  var problem = document.getElementById('csProblem');
+  var solution = document.getElementById('csSolution');
+  var metrics = document.getElementById('csMetrics');
+  var stack = document.getElementById('csStack');
+  var fullLink = document.getElementById('csFullLink');
+  var lastFocused = null;
+
+  function openModal(id, fullUrl) {
+    var c = cases[id];
+    if (!c) return;
+    badge.textContent = c.badge || '';
+    title.textContent = c.title || '';
+    problem.textContent = c.problem || '';
+    solution.textContent = c.solution || '';
+
+    metrics.innerHTML = '';
+    (c.metrics || []).forEach(function (m) {
+      var el = document.createElement('div');
+      el.className = 'cs-metric';
+      var v = document.createElement('div');
+      v.className = 'cs-metric-v';
+      v.textContent = m.value;
+      var l = document.createElement('div');
+      l.className = 'cs-metric-l';
+      l.textContent = m.label;
+      el.appendChild(v);
+      el.appendChild(l);
+      metrics.appendChild(el);
+    });
+
+    stack.innerHTML = '';
+    (c.stack || []).forEach(function (s) {
+      var el = document.createElement('span');
+      el.className = 'cs-tag';
+      el.textContent = s;
+      stack.appendChild(el);
+    });
+
+    fullLink.href = fullUrl || '#';
+
+    lastFocused = document.activeElement;
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    modal.querySelector('.cs-close').focus();
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+    document.body.style.overflow = '';
+    if (lastFocused) lastFocused.focus();
+  }
+
+  window.openCaseModal = openModal;
+  window.closeCaseModal = closeModal;
+
+  modal.addEventListener('click', function (e) {
+    if (e.target.closest('[data-cs-close]')) closeModal();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.hidden) closeModal();
+  });
+
+  modal.addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab') return;
+    var focusable = modal.querySelectorAll('button, a[href]');
+    if (!focusable.length) return;
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+</script>
+
+<style is:global>
+  .cs-modal { position: fixed; inset: 0; z-index: 90; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .cs-modal[hidden] { display: none; }
+  .cs-backdrop { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(2px); }
+  .cs-panel {
+    position: relative; width: 100%; max-width: 640px; max-height: 88vh; overflow-y: auto;
+    background: #fff; border: 1px solid #e4e8f0; border-radius: 14px; box-shadow: 0 40px 80px -20px rgba(15,23,42,.4);
+    padding: 34px 36px;
+  }
+  .cs-close { position: absolute; top: 14px; right: 16px; background: transparent; border: none; font-size: 1.6rem; line-height: 1; color: #8b94ab; cursor: pointer; padding: 4px 8px; }
+  .cs-close:hover { color: #141a2e; }
+  .cs-badge { display: inline-block; font-family: 'Space Grotesk', 'Inter', sans-serif; font-size: .72rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #1e40af; background: #eef2ff; padding: 4px 12px; border-radius: 999px; margin-bottom: 14px; }
+  .cs-title { font-family: 'Space Grotesk', 'Inter', sans-serif; font-size: 1.5rem; font-weight: 600; letter-spacing: -.015em; color: #141a2e; margin: 0 0 18px; line-height: 1.15; }
+  .cs-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .cs-col { background: #f4f6fa; border: 1px solid #e4e8f0; border-radius: 8px; padding: 14px 16px; }
+  .cs-sub { font-family: 'Space Grotesk', sans-serif; font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #8b94ab; margin-bottom: 6px; }
+  .cs-problem, .cs-solution { font-size: .88rem; color: #5c6785; line-height: 1.6; margin: 0; }
+  .cs-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+  .cs-metric { background: #eef2ff; border: 1px solid #c9d5f7; border-radius: 8px; padding: 12px 14px; }
+  .cs-metric-v { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 700; color: #1e40af; line-height: 1.1; }
+  .cs-metric-l { font-size: .72rem; color: #5c6785; margin-top: 4px; line-height: 1.35; }
+  .cs-stack { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
+  .cs-tag { font-family: 'Space Grotesk', sans-serif; font-size: .7rem; font-weight: 600; color: #1e40af; background: #eef2ff; padding: 4px 10px; border-radius: 999px; }
+  .cs-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .cs-full { font-family: 'Space Grotesk', sans-serif; font-size: .88rem; font-weight: 600; color: #fff; background: #1e40af; padding: 11px 20px; border-radius: 999px; text-decoration: none; }
+  .cs-full:hover { opacity: .9; }
+  .cs-contact { font-family: 'Space Grotesk', sans-serif; font-size: .88rem; font-weight: 600; color: #1e40af; background: transparent; border: 1.5px solid #1e40af; padding: 10px 18px; border-radius: 999px; cursor: pointer; }
+  .cs-contact:hover { background: #1e40af; color: #fff; }
+  @media (max-width: 560px) {
+    .cs-cols { grid-template-columns: 1fr; }
+    .cs-metrics { grid-template-columns: 1fr; }
+    .cs-panel { padding: 26px 22px; }
+  }
+</style>

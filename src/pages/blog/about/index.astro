@@ -6,11 +6,14 @@ export const prerender = true;
 
 const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
 const currentUrl = `${Astro.site}${normalizedBase}blog/about/`;
+
+const startDate = new Date('2021-07-01');
+const years = Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
 ---
 
-<BlogLayout 
-  title="Acerca de | Blog" 
-  description="Sobre Mauricio González - Full Stack Developer, Docente y apasionado por la tecnología"
+<BlogLayout
+  title="Acerca de | Blog"
+  description="Sobre Mauricio González - Software Engineer especializado en IA y Automatización"
   blogTitle="Blog"
   blogSubtitle="Artículos y pensamientos"
 >
@@ -22,49 +25,51 @@ const currentUrl = `${Astro.site}${normalizedBase}blog/about/`;
     <header class="entry-header">
       <h1 class="entry-title">Acerca de mí</h1>
     </header>
-    
+
     <div class="entry-content">
-      <p>Hola, soy <strong>Mauricio González</strong>, Full Stack Developer especializado en <strong>.NET y Angular</strong> con más de 4 años de experiencia profesional en desarrollo de software.</p>
-      
+      <p>Hola, soy <strong>Mauricio González</strong>, Software Engineer especializado en <strong>IA y Automatización</strong>, con base en desarrollo full-stack (.NET Core, Angular) y {years}+ años de experiencia profesional.</p>
+
       <h3>Qué hago</h3>
-      
-      <p>Actualmente trabajo como desarrollador en <strong>GyL Group</strong>, donde me desempeño como referente técnico en proyectos de sistemas críticos. Me especializo en arquitecturas como DDD, CQRS y microservicios, y tengo experiencia con cloud computing en AWS.</p>
-      
-      <p>Además, soy <strong>profesor en carreras de tecnología</strong> en el Instituto Cervantes, donde dicto materias como Programación Web, Bases de Datos y Desarrollo de Aplicaciones Móviles.</p>
-      
+
+      <p>Actualmente trabajo como desarrollador en <strong>GyL Group</strong>, donde me desempeño como referente técnico en proyectos gubernamentales y empresariales. Ahí llevé a producción una solución de validación biométrica con IA (AWS Rekognition + RENAPER), además de trabajar con arquitecturas como DDD, CQRS y microservicios en AWS.</p>
+
+      <p>En paralelo, construyo y valido modelos predictivos propios con Python (un modelo del Mundial 2026 y un modelo de predicción de abandono estudiantil), y sumo a esto mi formación como <strong>Analista de Sistemas</strong> y mi trabajo como <strong>profesor</strong> en tecnología: son fortalezas que se complementan, no carreras separadas.</p>
+
+      <p>Doy clases en el Instituto Cervantes, en las carreras de Analista de Sistemas, Desarrollo Web y Ciencia de Datos e IA.</p>
+
       <h3>Stack técnico</h3>
-      
+
       <ul>
         <li><strong>Backend:</strong> .NET Core, C#, Node.js, NestJS</li>
         <li><strong>Frontend:</strong> Angular, TypeScript, JavaScript</li>
+        <li><strong>IA y Datos:</strong> Python, Pandas, scikit-learn, SQL, AWS Rekognition</li>
         <li><strong>Cloud & DevOps:</strong> AWS, Docker, CI/CD</li>
-        <li><strong>Bases de datos:</strong> SQL Server, Oracle PL/SQL</li>
         <li><strong>Arquitectura:</strong> DDD, CQRS, Microservicios</li>
       </ul>
-      
+
       <h3>Formación</h3>
-      
+
       <ul>
         <li>Analista de Sistemas de Computación - Instituto Cervantes</li>
-        <li>Diplomatura en Programación .NET - UTN</li>
-        <li>Diplomatura en Ciencia de Datos e IA - UTN</li>
+        <li>Diplomatura en Ciencias de Datos e IA - UTN</li>
+        <li>Diplomatura en Python - UTN</li>
       </ul>
-      
+
       <h3>Sobre este blog</h3>
-      
-      <p>Este espacio está dedicado a compartir conocimientos, experiencias y reflexiones sobre desarrollo de software, tecnología y docencia. Aquí encontrarás artículos sobre:</p>
-      
+
+      <p>Este espacio está dedicado a compartir conocimientos, experiencias y reflexiones sobre desarrollo de software, IA aplicada y docencia. Aquí encontrarás artículos sobre:</p>
+
       <ul>
         <li>Desarrollo web y arquitectura de software</li>
-        <li>Buenas prácticas y patrones de diseño</li>
+        <li>IA aplicada y automatización</li>
         <li>Cloud computing y DevOps</li>
         <li>Experiencias en docencia tecnológica</li>
       </ul>
-      
+
       <h3>Contacto</h3>
-      
+
       <p>Podés encontrarme en <a href="https://www.linkedin.com/in/mauricioglab/" target="_blank" rel="noopener">LinkedIn</a> o escribirme a <a href="mailto:mauriciogcode@gmail.com">mauriciogcode@gmail.com</a>.</p>
-      
+
       <p>Gracias por visitar el blog.</p>
     </div>
   </article>

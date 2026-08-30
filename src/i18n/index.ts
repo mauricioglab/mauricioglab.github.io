@@ -60,37 +60,8 @@ export function getStaticPaths() {
 
 // Type definitions for common translations
 export interface CommonTranslations {
-  nav: {
-    projects: string;
-    skills: string;
-    experience: string;
-    blog: string;
-    contact: string;
-    portfolio: string;
-  };
   sections: {
-    featuredProjects: string;
     techStack: string;
-    experience: string;
-    methodology: string;
-    background: string;
-  };
-  cta: {
-    contact: string;
-    downloadCV: string;
-    sendEmail: string;
-    scheduleCall: string;
-    connectLinkedIn: string;
-    viewRepos: string;
-  };
-  footer: {
-    links: string;
-    contact: string;
-    rights: string;
-  };
-  theme: {
-    light: string;
-    dark: string;
   };
 }
 

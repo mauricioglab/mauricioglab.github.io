@@ -17,58 +17,84 @@ export interface Project {
   };
   image?: string;
   featured: boolean;
+  category?: 'ia' | 'desarrollo' | 'analisis';
 }
 
 export const projects: Project[] = [
   {
-    id: 'ecommerce',
+    id: 'validacion-biometrica',
     featured: true,
+    category: 'ia',
     profiles: {
       engineer: {
-        tags: ['.NET Core 8', 'Angular 17', 'SQL Server', 'Redis', 'Docker', 'DDD', 'Event Storming'],
-        icon: 'fa-shopping-cart'
+        tags: ['AWS Rekognition', 'RENAPER', 'Node.js/NestJS', 'Angular', 'AWS QLDB', 'Reconocimiento facial'],
+        icon: 'fa-fingerprint'
       }
     },
     links: {
-      demo: 'https://demo-ecommerce.example.com',
-      github: 'https://github.com/tu-usuario/ecommerce-platform',
-      caseStudy: '/proyectos/ecommerce-platform'
-    },
-    image: '/projects/ecommerce.jpg'
+      caseStudy: '/proyectos/validacion-biometrica'
+    }
   },
   {
-    id: 'task-manager-ddd',
+    id: 'billetera-virtual',
     featured: true,
+    category: 'desarrollo',
     profiles: {
       engineer: {
-        tags: ['.NET 8', 'Angular', 'CQRS', 'Event Sourcing', 'Azure', 'DDD', 'Clean Architecture'],
-        icon: 'fa-tasks'
+        tags: ['.NET Framework 4.5', 'DDD', 'CQRS', 'Mediator', 'Docker', 'Amazon ECS', 'Microservicios'],
+        icon: 'fa-wallet'
       }
     },
     links: {
-      github: 'https://github.com/tu-usuario/task-manager-ddd',
-      caseStudy: '/proyectos/task-manager-ddd'
-    },
-    image: '/projects/task-manager.jpg'
+      caseStudy: '/proyectos/billetera-virtual'
+    }
   },
   {
-    id: 'microservicios-api',
+    id: 'monitoreo-agricola',
     featured: true,
+    category: 'ia',
     profiles: {
       engineer: {
-        tags: ['.NET Core', 'RabbitMQ', 'gRPC', 'Docker', 'Kubernetes', 'Event-Driven', 'Saga Pattern'],
-        icon: 'fa-network-wired'
+        tags: ['Python', 'Scikit-learn', 'Google Colab', 'AWS Lambda', 'AWS QLDB', 'Node.js', 'Angular'],
+        icon: 'fa-leaf'
       }
     },
     links: {
-      github: 'https://github.com/tu-usuario/microservices-api',
-      caseStudy: '/proyectos/microservicios-api'
+      caseStudy: '/proyectos/monitoreo-agricola'
+    }
+  },
+  {
+    id: 'auditorias-datos',
+    featured: true,
+    category: 'desarrollo',
+    profiles: {
+      engineer: {
+        tags: ['Angular 17-18', '.NET Core', 'C#', 'SQL Server', 'Entity Framework', 'Reportes PDF/Excel'],
+        icon: 'fa-clipboard-check'
+      }
     },
-    image: '/projects/microservices.jpg'
+    links: {
+      caseStudy: '/proyectos/auditorias-datos'
+    }
+  },
+  {
+    id: 'coca-cola-embonor',
+    featured: true,
+    category: 'desarrollo',
+    profiles: {
+      engineer: {
+        tags: ['ASP.NET', 'C#', 'SQL Server', 'Entity Framework', 'SAP API'],
+        icon: 'fa-building'
+      }
+    },
+    links: {
+      caseStudy: '/proyectos/coca-cola-embonor'
+    }
   },
   {
     id: 'mundial-2026',
     featured: true,
+    category: 'ia',
     profiles: {
       engineer: {
         tags: ['Python', 'Pandas', 'Statsmodels', 'Plotly', 'Streamlit', 'Monte Carlo'],
@@ -84,6 +110,7 @@ export const projects: Project[] = [
   {
     id: 'caso-arquitectura',
     featured: true,
+    category: 'analisis',
     profiles: {
       engineer: {
         tags: ['UML', 'DER', 'DFD', 'Event Storming', 'Feasibility Study', 'Scrum'],
@@ -98,6 +125,7 @@ export const projects: Project[] = [
   {
     id: 'abandono-estudiantil',
     featured: true,
+    category: 'ia',
     profiles: {
       engineer: {
         tags: ['Python', 'Pandas', 'Scikit-learn', 'Plotly', 'Streamlit', 'Clasificación'],

@@ -1,0 +1,118 @@
+{
+  "back": "← Volver a proyectos",
+  "badge": "Coca-Cola Embonor · Consumo masivo",
+  "title": "Sistema web de gastos empresariales",
+  "description": "Módulos de gestión de usuarios, grupos y permisos para una solución responsive, con integración a SAP para automatizar procesos contables.",
+  "stats": {
+    "errores": { "value": "-75%", "label": "Errores manuales" },
+    "transacciones": { "value": "Cientos", "label": "Transacciones diarias" },
+    "responsive": { "value": "100%", "label": "Solución responsive" }
+  },
+  "links": {
+    "confidential": "🔒 Proyecto cliente — código no público"
+  },
+  "problem": {
+    "title": "El Problema",
+    "intro": "Coca-Cola Embonor necesitaba una solución para gestionar gastos empresariales: usuarios, grupos y permisos, y sobre todo automatizar el envío de datos contables a SAP, que se hacía a mano y con errores.",
+    "items": [
+      "Gestión manual de usuarios, grupos y permisos",
+      "Envío manual de datos contables a SAP con errores recurrentes",
+      "Necesidad de una solución responsive para múltiples dispositivos",
+      "Procesos contables que consumían tiempo y generaban errores"
+    ]
+  },
+  "process": {
+    "title": "Mi Proceso",
+    "phases": [
+      {
+        "title": "1. Módulos de usuarios, grupos y permisos",
+        "description": "Desarrollé la gestión de usuarios, grupos y permisos para una solución responsive que procesa cientos de transacciones diarias.",
+        "items": [
+          "Módulos de usuarios, grupos y permisos",
+          "Solución responsive para múltiples dispositivos",
+          "Cientos de transacciones procesadas por día"
+        ]
+      },
+      {
+        "title": "2. Integración con API SAP",
+        "description": "Integré la solución con la API de SAP para automatizar procesos contables mediante envío de datos estructurados.",
+        "items": [
+          "Integración con API SAP",
+          "Envío de datos estructurados para contabilidad",
+          "Automatización del proceso contable"
+        ]
+      },
+      {
+        "title": "3. Reducción de errores manuales",
+        "description": "La automatización del envío a SAP eliminó la carga manual y redujo los errores de forma medible.",
+        "items": [
+          "Reducción del 75% en errores manuales",
+          "Eliminación de la carga manual de datos",
+          "Contabilidad más confiable"
+        ]
+      }
+    ]
+  },
+  "solution": {
+    "title": "La Solución",
+    "subsections": [
+      {
+        "title": "Gestión de acceso completa",
+        "description": "Usuarios, grupos y permisos centralizados en una solución responsive.",
+        "items": [
+          "Alta y gestión de usuarios y grupos",
+          "Permisos granulares por rol",
+          "Interfaz responsive para el equipo"
+        ]
+      },
+      {
+        "title": "Automatización contable con SAP",
+        "description": "Los datos contables se envían a SAP de forma automática y estructurada.",
+        "items": [
+          "Integración directa con la API de SAP",
+          "Envío de datos estructurados",
+          "Automatización del proceso contable"
+        ]
+      },
+      {
+        "title": "Resultado medible",
+        "description": "Menos errores, menos carga manual, más confiabilidad.",
+        "items": [
+          "-75% de errores manuales",
+          "Proceso contable automatizado",
+          "Stack: ASP.NET + C# + SQL Server + Entity Framework + SAP API"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "title": "Resultados & Impacto",
+    "metrics": {
+      "errores": { "value": "-75%", "label": "Errores manuales" },
+      "transacciones": { "value": "Cientos", "label": "Transacciones diarias" },
+      "sap": { "value": "API", "label": "Integración SAP automatizada" },
+      "acceso": { "value": "Roles", "label": "Usuarios, grupos y permisos" }
+    },
+    "learnings": {
+      "title": "Aprendizajes Clave",
+      "items": [
+        { "label": "Automatizar paga:", "text": "integrar con SAP eliminó la carga manual y redujo los errores contables en un 75%." },
+        { "label": "Acceso bien modelado:", "text": "gestionar usuarios, grupos y permisos desde el inicio evitó re-trabajo de seguridad." },
+        { "label": "Responsive importa:", "text": "el equipo usa la solución desde múltiples dispositivos, así que el diseño responsive fue requisito, no adorno." }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Stack Tecnológico",
+    "columns": [
+      { "title": "Backend", "items": ["ASP.NET", "C#", "Entity Framework"] },
+      { "title": "Datos", "items": ["SQL Server", "SAP API"] },
+      { "title": "Frontend", "items": ["Solución responsive", "Gestión de permisos"] }
+    ]
+  },
+  "cta": {
+    "title": "¿Necesitás automatizar procesos contables o integrar SAP?",
+    "subtitle": "Si tu equipo carga datos a mano y tiene errores, puedo ayudarte a automatizarlo. Lo hice para Coca-Cola Embonor con -75% de errores.",
+    "button": "Contactar"
+  }
+}

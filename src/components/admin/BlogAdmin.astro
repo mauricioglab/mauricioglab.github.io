@@ -1,0 +1,554 @@
+<div x-data="blogAdmin" x-init="init()" class="min-h-screen bg-slate-900 text-white" x-cloak>
+  <!-- ============ LOGIN / GATE ============ -->
+  <div x-show="!user || userRole !== 'admin'" class="min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-sm">
+      <div class="bg-slate-800 rounded-xl p-6 shadow-xl">
+        <h1 class="text-xl font-bold mb-1">📝 Admin Blog</h1>
+        <p class="text-sm text-slate-400 mb-4">Acceso restringido al equipo docente.</p>
+
+        <div x-show="user && userRole && userRole !== 'admin'">
+          <p class="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg p-3 mb-4">
+            Tu usuario no tiene rol <strong>admin</strong>. Contactá al administrador.
+          </p>
+          <button @click="logout()" class="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-bold rounded-lg">
+            Cerrar sesión
+          </button>
+        </div>
+
+        <template x-if="!user">
+          <div>
+            <div x-show="loadingAuth" class="text-center text-sm text-slate-400 py-6">Cargando...</div>
+            <form x-show="!loadingAuth" @submit.prevent="login()">
+              <div class="mb-3">
+                <label class="block text-xs font-bold text-slate-300 mb-1">Usuario o Email</label>
+                <input x-model="loginEmail" type="text" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-600">
+              </div>
+              <div class="mb-4">
+                <label class="block text-xs font-bold text-slate-300 mb-1">Contraseña</label>
+                <input x-model="loginPassword" type="password" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-600" required>
+              </div>
+              <p x-show="loginError" class="text-xs text-red-400 mb-3 font-bold" x-text="loginError"></p>
+              <button type="submit" class="w-full py-2 bg-indigo-700 hover:bg-indigo-800 text-white text-sm font-bold rounded-lg" :disabled="loadingAuth">
+                <span x-text="loadingAuth ? '...' : 'Ingresar'"></span>
+              </button>
+            </form>
+            <a :href="`${window.__BLOG_BASE__}blog/`" class="block w-full text-center text-xs text-slate-500 hover:text-slate-300 mt-3">← Volver al blog</a>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ADMIN ============ -->
+  <div x-show="user && userRole === 'admin'" class="max-w-5xl mx-auto p-4 md:p-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-bold">📝 Admin Blog</h1>
+        <p class="text-sm text-slate-400" x-text="user ? user.email : ''"></p>
+      </div>
+      <div class="flex items-center gap-3">
+        <a :href="`${window.__BLOG_BASE__}blog/`" class="text-sm text-slate-400 hover:text-white">Ver blog</a>
+        <button @click="logout()" class="px-3 py-1.5 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600/30 text-sm">Salir</button>
+      </div>
+    </div>
+
+    <!-- Status bar -->
+    <div x-show="status" class="mb-4 px-4 py-3 rounded-lg bg-indigo-600/20 border border-indigo-500/30 text-sm" x-text="status"></div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- ===== Editor ===== -->
+      <section class="lg:col-span-2 space-y-6">
+        <!-- Form de tema -->
+        <div class="bg-slate-800 rounded-xl p-5 space-y-3">
+          <h2 class="text-base font-bold">1. Tema del post</h2>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Tema *</label>
+            <input x-model="form.tema" type="text" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Enfoque</label>
+              <input x-model="form.enfoque" type="text" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Tono</label>
+              <input x-model="form.tono" type="text" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Frase / idea semilla</label>
+              <input x-model="form.fraseClave" type="text" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Min. lectura</label>
+                <input x-model="form.tiempoLecturaMin" type="number" min="1" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Autor</label>
+                <input x-model="form.autor" type="text" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+              </div>
+            </div>
+          </div>
+          <button @click="generarPropuestas()" :disabled="busy" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-50 text-sm font-bold rounded-lg">
+            <span x-text="busy && !propuestas.length ? 'Generando...' : 'Generar propuestas'"></span>
+          </button>
+        </div>
+
+        <!-- Propuestas -->
+        <div x-show="propuestas.length > 0" class="bg-slate-800 rounded-xl p-5 space-y-3">
+          <h2 class="text-base font-bold">2. Elegí un ángulo</h2>
+          <div class="space-y-2">
+            <template x-for="(prop, i) in propuestas" :key="i">
+              <label class="block cursor-pointer">
+                <div
+                  class="p-3 rounded-lg border transition flex gap-3 items-start"
+                  :class="propuestaIndex === i ? 'border-indigo-500 bg-indigo-600/20' : 'border-slate-600 bg-slate-900 hover:border-slate-500'"
+                >
+                  <input type="radio" name="propuesta" :value="i" x-model="propuestaIndex" class="mt-1">
+                  <div>
+                    <p class="font-bold text-sm" x-text="prop.tituloSugerido"></p>
+                    <p class="text-xs text-indigo-300 italic" x-text="prop.angulo"></p>
+                    <p class="text-sm text-slate-300 mt-1" x-text="prop.resumen"></p>
+                  </div>
+                </div>
+              </label>
+            </template>
+          </div>
+          <button @click="redactar()" :disabled="busy || propuestaIndex < 0" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-50 text-sm font-bold rounded-lg">
+            <span x-text="busy ? 'Redactando...' : 'Redactar post'"></span>
+          </button>
+        </div>
+
+        <!-- Borrador -->
+        <div x-show="borrador" class="bg-slate-800 rounded-xl p-5 space-y-3">
+          <h2 class="text-base font-bold">3. Revisá y ajustá el borrador</h2>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Título</label>
+            <input x-model="borrador.title" type="text" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Categorías (separadas por coma)</label>
+              <input x-model="categoriesText" type="text" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Descripción (SEO)</label>
+              <input x-model="borrador.description" type="text" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-xs font-bold text-slate-300">Contenido (Markdown)</label>
+              <div class="flex gap-2">
+                <button @click="togglePreview()" type="button" class="text-xs text-indigo-400 hover:text-indigo-300 font-bold">
+                  <span x-text="showPreview ? 'Editar' : 'Vista previa'"></span>
+                </button>
+                <span x-show="showPreview" @click="showPreview = false" class="text-xs text-slate-500 cursor-pointer">✕</span>
+              </div>
+            </div>
+            <textarea x-show="!showPreview" x-model="borrador.bodyMarkdown" rows="14" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-600"></textarea>
+            <div x-show="showPreview" class="prose-pre:bg-slate-950 bg-slate-900 border border-slate-600 rounded-lg p-4 text-sm max-h-[420px] overflow-y-auto markdown-preview" x-html="previewHtml"></div>
+          </div>
+
+          <!-- Imagen -->
+          <div class="border-t border-slate-700 pt-4 space-y-3">
+            <h3 class="text-sm font-bold text-slate-200">4. Imagen de tapa (800x450)</h3>
+            <div x-show="coverUrl" class="rounded-lg overflow-hidden border border-slate-600">
+              <img :src="coverUrl" alt="Tapa generada" class="w-full aspect-video object-cover">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Prompt de la tapa (generado por DeepSeek, editable)</label>
+              <textarea x-model="coverPrompt" rows="2" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600" placeholder="Dejalo vacío para que DeepSeek lo genere solo."></textarea>
+            </div>
+            <button @click="generarImagen()" :disabled="busy" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-50 text-sm font-bold rounded-lg">
+              <span x-text="busy ? 'Generando imagen...' : (coverUrl ? 'Regenerar imagen' : 'Generar imagen')"></span>
+            </button>
+          </div>
+
+          <!-- Publicar -->
+          <div class="border-t border-slate-700 pt-4 flex flex-wrap gap-3">
+            <button @click="publicar(false)" :disabled="busy" class="px-5 py-2 bg-green-700 hover:bg-green-800 disabled:opacity-50 text-sm font-bold rounded-lg">
+              <span x-text="busy ? 'Publicando...' : (editingId ? 'Actualizar y publicar' : 'Publicar')"></span>
+            </button>
+            <button @click="publicar(true)" :disabled="busy" class="px-5 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-sm font-bold rounded-lg">Guardar borrador</button>
+            <button @click="nuevoPost()" class="px-5 py-2 border border-slate-600 hover:border-slate-500 text-sm font-bold rounded-lg">Nuevo post</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Lista de posts ===== -->
+      <aside class="space-y-4">
+        <div class="bg-slate-800 rounded-xl p-5">
+          <h2 class="text-base font-bold mb-3">Posts existentes</h2>
+          <div x-show="!posts.length" class="text-sm text-slate-400">Sin posts todavía.</div>
+          <div class="space-y-2">
+            <template x-for="p in posts" :key="p.id">
+              <div class="bg-slate-900 border border-slate-700 rounded-lg p-3">
+                <div class="flex items-start justify-between gap-2">
+                  <p class="text-sm font-bold" x-text="p.title"></p>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full shrink-0" :class="p.draft ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400'" x-text="p.draft ? 'borrador' : 'publicado'"></span>
+                </div>
+                <p class="text-xs text-slate-400 mt-1" x-text="p.pub_date + ' · ' + (p.categories || []).join(', ')"></p>
+                <div class="flex gap-2 mt-2 text-xs">
+                  <button @click="cargarPost(p)" class="text-indigo-400 hover:text-indigo-300 font-bold">Editar</button>
+                  <button @click="toggleDraft(p)" class="text-slate-400 hover:text-white font-bold" x-text="p.draft ? 'Publicar' : 'A borrador'"></button>
+                  <button @click="borrarPost(p)" class="text-red-400 hover:text-red-300 font-bold">Eliminar</button>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <div class="bg-slate-800 rounded-xl p-5 text-xs text-slate-400 space-y-2">
+          <h3 class="text-sm font-bold text-slate-200">Notas</h3>
+          <p>Al publicar, el post se guarda en la base y aparece en <span class="text-slate-200">/blog</span> tras el próximo build (el deploy corre cada 12 hs o manual desde GitHub).</p>
+          <p>Las llaves de IA viven como secrets de Supabase: nunca viajan al navegador.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <style>
+    [x-cloak] { display: none !important; }
+    .markdown-preview h1, .markdown-preview h2, .markdown-preview h3 { font-weight: 700; margin: 0.75em 0 0.4em; }
+    .markdown-preview h1 { font-size: 1.4em; } .markdown-preview h2 { font-size: 1.2em; } .markdown-preview h3 { font-size: 1.05em; }
+    .markdown-preview p { margin: 0.5em 0; }
+    .markdown-preview ul, .markdown-preview ol { margin: 0.5em 0 0.5em 1.4em; list-style: disc; }
+    .markdown-preview ol { list-style: decimal; }
+    .markdown-preview code { background: #0f172a; padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }
+    .markdown-preview pre { background: #0f172a; padding: 10px; border-radius: 6px; overflow-x: auto; margin: 0.5em 0; }
+    .markdown-preview pre code { background: transparent; padding: 0; }
+    .markdown-preview blockquote { border-left: 3px solid #6366f1; padding-left: 12px; color: #94a3b8; font-style: italic; margin: 0.5em 0; }
+    .markdown-preview a { color: #818cf8; text-decoration: underline; }
+    .markdown-preview img { max-width: 100%; border-radius: 6px; }
+    .markdown-preview strong { font-weight: 700; }
+    .markdown-preview em { font-style: italic; }
+  </style>
+</div>
+
+<script>
+  import Alpine from 'alpinejs';
+  import {
+    supabase,
+    resolveLoginUser,
+    markSessionStart,
+    clearSessionStart,
+    scheduleSessionEnd,
+  } from '../../lib/supabase';
+
+  window.Alpine = Alpine;
+
+  const BASE = import.meta.env.BASE_URL;
+  window.__BLOG_BASE__ = BASE.endsWith('/') ? BASE : `${BASE}/`;
+
+  function slugify(text: string) {
+    return (text || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 80) || 'post';
+  }
+
+  // Preview minimalista de markdown (solo para el editor)
+  function escapeHtml(s: string) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function inlineMd(s: string) {
+    return escapeHtml(s)
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/(^|[^*])\*([^*]+)\*/g, '$1<em>$2</em>')
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  }
+  function renderMarkdown(md: string) {
+    if (!md) return '';
+    const lines = md.split(/\r?\n/);
+    let html = '';
+    let inCode = false;
+    let listType = null;
+    for (const raw of lines) {
+      const line = raw.replace(/\s+$/, '');
+      if (line.startsWith('```')) {
+        if (inCode) { html += '</code></pre>'; inCode = false; }
+        else { html += '<pre><code>'; inCode = true; }
+        continue;
+      }
+      if (inCode) { html += escapeHtml(line) + '\n'; continue; }
+      const h = line.match(/^(#{1,6})\s+(.*)$/);
+      if (h) {
+        const lvl = h[1].length;
+        if (listType) { html += `</${listType}>`; listType = null; }
+        html += `<h${lvl}>${inlineMd(h[2])}</h${lvl}>`;
+        continue;
+      }
+      if (/^\s*(-|\*|\+)\s+/.test(line)) {
+        const content = line.replace(/^\s*(-|\*|\+)\s+/, '');
+        if (listType !== 'ul') { if (listType) html += `</${listType}>`; html += '<ul>'; listType = 'ul'; }
+        html += `<li>${inlineMd(content)}</li>`;
+        continue;
+      }
+      if (/^\s*\d+\.\s+/.test(line)) {
+        const content = line.replace(/^\s*\d+\.\s+/, '');
+        if (listType !== 'ol') { if (listType) html += `</${listType}>`; html += '<ol>'; listType = 'ol'; }
+        html += `<li>${inlineMd(content)}</li>`;
+        continue;
+      }
+      if (line.startsWith('> ')) {
+        if (listType) { html += `</${listType}>`; listType = null; }
+        html += `<blockquote>${inlineMd(line.slice(2))}</blockquote>`;
+        continue;
+      }
+      if (listType) { html += `</${listType}>`; listType = null; }
+      if (line.trim() === '') continue;
+      html += `<p>${inlineMd(line)}</p>`;
+    }
+    if (inCode) html += '</code></pre>';
+    if (listType) html += `</${listType}>`;
+    return html;
+  }
+
+  Alpine.data('blogAdmin', () => ({
+    loadingAuth: true,
+    user: null as any,
+    userRole: null as any,
+    loginEmail: 'cervantes',
+    loginPassword: '',
+    loginError: '',
+
+    form: { tema: '', enfoque: '', tono: '', fraseClave: '', tiempoLecturaMin: '', autor: 'MG Lab' },
+    propuestas: [] as any[],
+    propuestaIndex: -1,
+    borrador: null as any,
+    categoriesText: '',
+    coverPrompt: '',
+    coverUrl: '',
+    editingId: null as any,
+    showPreview: false,
+    previewHtml: '',
+    busy: false,
+    status: '',
+    posts: [] as any[],
+
+    async init() {
+      const { data } = await supabase.auth.getSession();
+      if (data?.session?.user) {
+        this.user = data.session.user;
+        await this.loadProfile();
+        if (this.userRole === 'admin') this.loadPosts();
+      }
+      this.loadingAuth = false;
+    },
+
+    async loadProfile() {
+      const { data } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', this.user.id)
+        .maybeSingle();
+      this.userRole = data?.role || null;
+    },
+
+    async login() {
+      this.loginError = '';
+      this.busy = true;
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: resolveLoginUser(this.loginEmail),
+          password: this.loginPassword,
+        });
+        if (error) throw error;
+        this.user = data.user;
+        this.loginPassword = '';
+        await this.loadProfile();
+        markSessionStart();
+        scheduleSessionEnd(() => this.logout(true));
+        if (this.userRole === 'admin') this.loadPosts();
+      } catch (e) {
+        this.loginError = (e as Error).message || 'Error al iniciar sesión';
+      } finally {
+        this.busy = false;
+      }
+    },
+
+    async logout(auto = false) {
+      if (!auto) clearSessionStart();
+      await supabase.auth.signOut();
+      this.user = null;
+      this.userRole = null;
+      this.posts = [];
+    },
+
+    async loadPosts() {
+      const { data, error } = await supabase
+        .from('blogs')
+        .select('*')
+        .order('pub_date', { ascending: false });
+      if (!error) this.posts = data || [];
+    },
+
+    async generarPropuestas() {
+      if (!this.form.tema) { this.status = 'Ingresá un tema.'; return; }
+      this.busy = true;
+      this.status = 'Generando propuestas...';
+      try {
+        const { data, error } = await supabase.functions.invoke('blog-proposals', { body: this.form });
+        if (error) throw new Error(error.context?.error || error.message);
+        this.propuestas = data.propuestas || [];
+        this.propuestaIndex = -1;
+        this.status = `${this.propuestas.length} propuesta(s) generadas. Elegí una.`;
+      } catch (e) {
+        this.status = (e as Error).message;
+      } finally {
+        this.busy = false;
+      }
+    },
+
+    async redactar() {
+      if (this.propuestaIndex < 0) { this.status = 'Elegí una propuesta.'; return; }
+      this.busy = true;
+      this.status = 'Redactando... (puede tardar)';
+      try {
+        const { data, error } = await supabase.functions.invoke('blog-write', {
+          body: { ...this.form, propuesta: this.propuestas[this.propuestaIndex] },
+        });
+        if (error) throw new Error(error.context?.error || error.message);
+        this.borrador = data.borrador;
+        this.categoriesText = (data.borrador.categories || []).join(', ');
+        this.coverUrl = '';
+        this.coverPrompt = '';
+        this.showPreview = false;
+        this.status = 'Borrador listo. Revisalo, ajustá y publicá.';
+      } catch (e) {
+        this.status = (e as Error).message;
+      } finally {
+        this.busy = false;
+      }
+    },
+
+    async generarImagen() {
+      if (!this.borrador) { this.status = 'Primero redactá el post.'; return; }
+      this.busy = true;
+      this.status = 'Generando imagen de tapa... (puede tardar)';
+      try {
+        const { data, error } = await supabase.functions.invoke('blog-cover', {
+          body: {
+            title: this.borrador.title,
+            description: this.borrador.description,
+            bodyMarkdown: this.borrador.bodyMarkdown,
+            prompt: this.coverPrompt || null,
+          },
+        });
+        if (error) throw new Error(error.context?.error || error.message);
+        this.coverUrl = data.coverUrl;
+        this.coverPrompt = data.prompt;
+        this.status = 'Imagen de tapa lista.';
+      } catch (e) {
+        this.status = (e as Error).message;
+      } finally {
+        this.busy = false;
+      }
+    },
+
+    async uniqueSlug(base: string) {
+      const { data } = await supabase.from('blogs').select('slug');
+      const existing = new Set((data || []).map((r) => r.slug));
+      if (!existing.has(base)) return base;
+      let i = 2;
+      while (existing.has(`${base}-${i}`)) i++;
+      return `${base}-${i}`;
+    },
+
+    async publicar(draft: boolean) {
+      if (!this.borrador?.title || !this.borrador?.bodyMarkdown) {
+        this.status = 'No hay borrador para publicar.';
+        return;
+      }
+      this.busy = true;
+      this.status = draft ? 'Guardando borrador...' : 'Publicando...';
+      try {
+        const payload: any = {
+          title: this.borrador.title,
+          pub_date: new Date().toISOString().slice(0, 10),
+          author: this.form.autor || 'MG Lab',
+          categories: this.categoriesText.split(',').map((s) => s.trim()).filter(Boolean),
+          description: this.borrador.description,
+          body_markdown: this.borrador.bodyMarkdown,
+          cover_url: this.coverUrl || null,
+          draft,
+        };
+        if (this.editingId) {
+          payload.slug = slugify(this.borrador.title);
+          const res = await supabase.from('blogs').update(payload).eq('id', this.editingId);
+          if (res.error) throw new Error(res.error.message);
+        } else {
+          payload.slug = await this.uniqueSlug(slugify(this.borrador.title));
+          const res = await supabase.from('blogs').insert(payload);
+          if (res.error) throw new Error(res.error.message);
+        }
+        this.status = draft
+          ? 'Borrador guardado.'
+          : '¡Publicado! Aparece en /blog tras el próximo build (cron 12 hs o deploy manual).';
+        this.editingId = null;
+        await this.loadPosts();
+      } catch (e) {
+        this.status = (e as Error).message;
+      } finally {
+        this.busy = false;
+      }
+    },
+
+    async toggleDraft(p: any) {
+      const res = await supabase.from('blogs').update({ draft: !p.draft }).eq('id', p.id);
+      if (!res.error) this.loadPosts();
+    },
+
+    async borrarPost(p: any) {
+      if (!window.confirm(`¿Eliminar "${p.title}"? Esta acción no se puede deshacer.`)) return;
+      const res = await supabase.from('blogs').delete().eq('id', p.id);
+      if (!res.error) {
+        if (this.editingId === p.id) this.nuevoPost();
+        this.loadPosts();
+      }
+    },
+
+    cargarPost(p: any) {
+      this.editingId = p.id;
+      this.form.autor = p.author;
+      this.borrador = {
+        title: p.title,
+        description: p.description,
+        bodyMarkdown: p.body_markdown,
+        categories: p.categories || [],
+      };
+      this.categoriesText = (p.categories || []).join(', ');
+      this.coverUrl = p.cover_url || '';
+      this.coverPrompt = '';
+      this.showPreview = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    togglePreview() {
+      this.previewHtml = renderMarkdown(this.borrador?.bodyMarkdown || '');
+      this.showPreview = !this.showPreview;
+    },
+
+    nuevoPost() {
+      this.editingId = null;
+      this.borrador = null;
+      this.coverUrl = '';
+      this.coverPrompt = '';
+      this.propuestas = [];
+      this.propuestaIndex = -1;
+      this.showPreview = false;
+      this.form.tema = '';
+      this.form.enfoque = '';
+      this.form.tono = '';
+      this.form.fraseClave = '';
+      this.form.tiempoLecturaMin = '';
+    },
+  }));
+</script>

@@ -1,0 +1,127 @@
+{
+  "back": "← Volver a proyectos",
+  "badge": "ISA CTEEP · Sector eléctrico (Brasil)",
+  "title": "Auditorías con análisis de datos",
+  "description": "Para ISA CTEEP, empresa de transmisión de energía eléctrica de Brasil: de la revisión manual de planillas Excel a un sistema interactivo con filtros avanzados, priorización visual y reportes PDF/Excel generados automáticamente.",
+  "stats": {
+    "eficiencia": { "value": "+60%", "label": "Eficiencia operativa" },
+    "datos": { "value": "Miles", "label": "Registros analizados por ciclo" },
+    "reportes": { "value": "Auto", "label": "Reportes PDF/Excel generados" }
+  },
+  "links": {
+    "confidential": "🔒 Proyecto cliente — código no público"
+  },
+  "problem": {
+    "title": "El Problema",
+    "intro": "En el sector eléctrico, la revisión de auditoría se hacía a mano sobre planillas Excel: miles de registros, filtros en memoria del analista y reportes armados uno por uno. Lento, propenso a error y sin priorización objetiva.",
+    "items": [
+      "Revisión manual de miles de registros en planillas Excel",
+      "Filtros y criterios viviendo en la cabeza del analista",
+      "Reportes PDF/Excel armados uno a uno, manualmente",
+      "Sin forma de priorizar qué casos requieren atención primero"
+    ]
+  },
+  "process": {
+    "title": "Mi Proceso",
+    "phases": [
+      {
+        "title": "1. Relevamiento del proceso manual",
+        "description": "Entendí el flujo real de la auditoría: qué revisaba el analista, con qué criterios y qué salidas generaba.",
+        "items": [
+          "Mapeo de criterios de revisión y reglas de negocio del área",
+          "Inventario de los tipos de reportes que se entregaban",
+          "Identificación de los cuellos de botella del proceso manual"
+        ]
+      },
+      {
+        "title": "2. Aplicación full stack",
+        "description": "Construí un sistema interactivo que reemplazó la planilla: carga de datos, filtros avanzados y visualización.",
+        "items": [
+          "Frontend Angular 17-18 con filtros avanzados y tablas interactivas",
+          "Backend .NET Core con procesamiento server-side de datasets",
+          "Entity Framework sobre SQL Server para la persistencia"
+        ]
+      },
+      {
+        "title": "3. Priorización visual",
+        "description": "Diseñé un sistema de priorización basado en las reglas de negocio, para que el analista ataque los casos críticos primero.",
+        "items": [
+          "Reglas de negocio complejas traducidas a scoring automático",
+          "Priorización visual de casos por nivel de riesgo",
+          "El analista pasa de buscar a decidir"
+        ]
+      },
+      {
+        "title": "4. Reportes automatizados",
+        "description": "Automaticé la generación de informes PDF y Excel con procesamiento server-side para datasets masivos.",
+        "items": [
+          "Reportes PDF/Excel generados por el servidor",
+          "Optimización para datasets de miles de registros",
+          "Resultado: +60% de eficiencia operativa medido en el ciclo real"
+        ]
+      }
+    ]
+  },
+  "solution": {
+    "title": "La Solución",
+    "subsections": [
+      {
+        "title": "Sistema interactivo en vez de planilla",
+        "description": "Los miles de registros dejan de ser una planilla estática y pasan a un sistema con filtros, búsqueda y vistas.",
+        "items": [
+          "Carga de datos con validación y normalización",
+          "Filtros avanzados combinables por múltiples criterios",
+          "Tablas interactivas con el detalle por registro"
+        ]
+      },
+      {
+        "title": "Priorización por reglas de negocio",
+        "description": "Las reglas que vivían en la cabeza del analista pasan a un scoring automático.",
+        "items": [
+          "Reglas de negocio complejas codificadas como scoring",
+          "Priorización visual por nivel de riesgo",
+          "El analista decide sobre una lista ya ordenada"
+        ]
+      },
+      {
+        "title": "Reportes generados server-side",
+        "description": "Los informes se generan solos, optimizados para datasets masivos.",
+        "items": [
+          "Generación automatizada de PDF y Excel",
+          "Procesamiento server-side para no colgar el navegador",
+          "+60% de eficiencia operativa en el ciclo de auditoría"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "title": "Resultados & Impacto",
+    "metrics": {
+      "eficiencia": { "value": "+60%", "label": "Eficiencia operativa" },
+      "manual": { "value": "0", "label": "Reportes armados a mano" },
+      "datos": { "value": "Miles", "label": "Registros por ciclo" },
+      "priorizacion": { "value": "Auto", "label": "Priorización por riesgo" }
+    },
+    "learnings": {
+      "title": "Aprendizajes Clave",
+      "items": [
+        { "label": "Relevar antes de automatizar:", "text": "sin mapear los criterios reales del analista, cualquier sistema automatiza el proceso equivocado." },
+        { "label": "Server-side importa:", "text": "procesar datasets masivos en el servidor fue lo que hizo los reportes viables sin degradar la experiencia." },
+        { "label": "Priorizar cambia el trabajo:", "text": "pasar de 'buscar' a 'decidir' fue el verdadero salto de eficiencia, no el filtro en sí." }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Stack Tecnológico",
+    "columns": [
+      { "title": "Frontend", "items": ["Angular 17-18", "TypeScript", "Tablas interactivas", "Filtros avanzados"] },
+      { "title": "Backend", "items": [".NET Core", "C#", "Entity Framework", "Procesamiento server-side"] },
+      { "title": "Datos y reportes", "items": ["SQL Server", "Generación PDF/Excel", "Reglas de scoring"] }
+    ]
+  },
+  "cta": {
+    "title": "¿Tenés un proceso manual sobre planillas que debería ser un sistema?",
+    "subtitle": "Si tu equipo pierde horas revisando Excel, convertí ese proceso en un sistema interactivo con priorización y reportes automáticos.",
+    "button": "Contactar"
+  }
+}

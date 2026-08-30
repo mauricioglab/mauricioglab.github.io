@@ -27,3 +27,19 @@ pnpm-debug.log*
 *.md
 !README.md
 !src/content/blog/*.md
+
+# tool state json en la raíz (no versionar)
+/commit.json
+/events.json
+/latest.json
+/latest2.json
+/master.json
+/new.json
+/perm.json
+/pushruns.json
+/recent.json
+/repo.json
+/runs.json
+/runs391.json
+/runs391b.json
+/suites.json

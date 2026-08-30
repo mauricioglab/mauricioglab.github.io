@@ -1,0 +1,127 @@
+{
+  "back": "← Volver a proyectos",
+  "badge": "GyL Group · Cliente España",
+  "title": "Monitoreo agrícola con Machine Learning",
+  "description": "Aplicación web de monitoreo de cultivos que integra análisis de datos de sensores IoT con Python y ML, trazabilidad inmutable en AWS QLDB y visualizaciones en tiempo real para alertas de cultivo.",
+  "stats": {
+    "iot": { "value": "IoT", "label": "Sensores con sync nocturno" },
+    "trace": { "value": "QLDB", "label": "Trazabilidad inmutable" },
+    "realtime": { "value": "Tiempo real", "label": "Visualizaciones y alertas" }
+  },
+  "links": {
+    "confidential": "🔒 Proyecto cliente — código no público"
+  },
+  "problem": {
+    "title": "El Problema",
+    "intro": "Un cliente en España necesita monitorear cultivos en tiempo real a partir de datos de sensores IoT distribuidos en el campo. Los datos llegan dispersos, el histórico no es auditable y las alertas llegan tarde.",
+    "items": [
+      "Datos de sensores IoT dispersos y sin un historial confiable",
+      "Sin trazabilidad auditable de los datos que alimentan las decisiones",
+      "Alertas de cultivo tardías por falta de análisis automatizado",
+      "Equipo sin una vista unificada del estado de los cultivos"
+    ]
+  },
+  "process": {
+    "title": "Mi Proceso",
+    "phases": [
+      {
+        "title": "1. Análisis de datos con Python + Colab",
+        "description": "Modelé el análisis de los datos de sensores con Python en Google Colab, entendiendo patrones de humedad, temperatura y riego.",
+        "items": [
+          "EDA de los datos de sensores IoT para detectar patrones de cultivo",
+          "Preparación del pipeline de datos con Scikit-learn para señales tempranas",
+          "Prototipo rápido en Colab antes de productizarlo"
+        ]
+      },
+      {
+        "title": "2. Sincronización nocturna a AWS QLDB",
+        "description": "Arquitecté una sincronización nocturna de los datos de sensores hacia AWS QLDB, garantizando trazabilidad inmutable.",
+        "items": [
+          "Ledger de QLDB como fuente de verdad del histórico de sensores",
+          "Sync nocturno automatizado con AWS Lambda y EventBridge",
+          "Cada dato del historial queda inmutable y auditable"
+        ]
+      },
+      {
+        "title": "3. Visualizaciones y alertas en tiempo real",
+        "description": "Construí la interfaz web con visualizaciones en tiempo real para insights de cultivos y alertas automatizadas.",
+        "items": [
+          "Visualizaciones en tiempo real con Matplotlib y Seaborn",
+          "Alertas automatizadas por umbrales de cultivo definidos con el cliente",
+          "Frontend Angular consumiendo la API de Node.js"
+        ]
+      },
+      {
+        "title": "4. Auditoría de proyecto I+D",
+        "description": "El proyecto participó de una auditoría de I+D, validando el diseño de datos y la metodología utilizada.",
+        "items": [
+          "Documentación del pipeline de datos para la auditoría",
+          "Validación de la trazabilidad QLDB como garantía de calidad",
+          "Cierre con los hallazgos del equipo de I+D"
+        ]
+      }
+    ]
+  },
+  "solution": {
+    "title": "La Solución",
+    "subsections": [
+      {
+        "title": "Datos con respaldo auditable",
+        "description": "El histórico de sensores deja de ser un archivo perdido: cada lectura queda en un ledger inmutable.",
+        "items": [
+          "AWS QLDB como registro inmutable del histórico de sensores",
+          "Trazabilidad completa: qué dato, de qué sensor, en qué momento",
+          "Base para auditoría de datos y decisiones informadas"
+        ]
+      },
+      {
+        "title": "Análisis ML productizado",
+        "description": "Lo que nació como prototipo en Colab terminó como pipeline productivo.",
+        "items": [
+          "Pipeline de datos con Python + Scikit-learn",
+          "Análisis de señales de humedad, temperatura y riego",
+          "Sincronización nocturna automatizada sin intervención manual"
+        ]
+      },
+      {
+        "title": "Visibilidad en tiempo real",
+        "description": "El equipo ve el estado de los cultivos al día y recibe alertas automáticas.",
+        "items": [
+          "Visualizaciones en tiempo real con Matplotlib/Seaborn",
+          "Alertas automatizadas de cultivo por umbrales",
+          "Una sola vista unificada del campo para el equipo"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "title": "Resultados & Impacto",
+    "metrics": {
+      "audit": { "value": "I+D", "label": "Auditoría de proyecto aprobada" },
+      "trace": { "value": "100%", "label": "Datos de sensores con trazabilidad" },
+      "alertas": { "value": "Automáticas", "label": "Alertas por umbrales de cultivo" },
+      "sync": { "value": "Nocturno", "label": "Sincronización IoT automatizada" }
+    },
+    "learnings": {
+      "title": "Aprendizajes Clave",
+      "items": [
+        { "label": "Prototipo a producción:", "text": "empezar en Colab aceleró la validación de hipótesis antes de invertir en infraestructura." },
+        { "label": "Ledger como activo:", "text": "QLDB convirtió el histórico en un activo auditable en vez de un repositorio de datos sueltos." },
+        { "label": "Alertas que llegan solas:", "text": "automatizar la sincronización fue lo que hizo la diferencia operativa: sin pipeline, no hay alertas." }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Stack Tecnológico",
+    "columns": [
+      { "title": "Datos y ML", "items": ["Python", "Scikit-learn", "Google Colab", "Matplotlib", "Seaborn"] },
+      { "title": "Backend", "items": ["Node.js", "AWS Lambda", "AWS EventBridge", "AWS QLDB"] },
+      { "title": "Frontend", "items": ["Angular", "Visualizaciones en tiempo real"] }
+    ]
+  },
+  "cta": {
+    "title": "¿Necesitás datos de sensores con respaldo y alertas?",
+    "subtitle": "Si tenés dispositivos IoT generando datos que no estás aprovechando, armemos el pipeline: análisis, trazabilidad y alertas.",
+    "button": "Contactar"
+  }
+}

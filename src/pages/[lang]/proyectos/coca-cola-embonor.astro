@@ -13,51 +13,27 @@ import CaseStudyCTA from '@components/case-study/CaseStudyCTA.astro';
 export const getStaticPaths = getLanguagePaths;
 
 const { lang } = Astro.params as { lang: Lang };
-const content = await useTranslations<any>(lang, 'projects-microservicios-api');
+const content = await useTranslations<any>(lang, 'projects-coca-cola-embonor');
 
 const accentColor = 'emerald';
 
-// Transform content to component props
 const headerStats = [
-  { value: content.stats.services.value, label: content.stats.services.label },
-  { value: content.stats.uptime.value, label: content.stats.uptime.label },
-  { value: content.stats.latency.value, label: content.stats.latency.label },
+  { value: content.stats.errores.value, label: content.stats.errores.label },
+  { value: content.stats.transacciones.value, label: content.stats.transacciones.label },
+  { value: content.stats.responsive.value, label: content.stats.responsive.label },
 ];
 
-const headerLinks = [
-  { text: content.links.github, url: 'https://github.com/mauricioglab/microservicios-api', primary: true },
-  { text: content.links.docs, url: 'https://api-docs.example.com' },
-];
+const headerLinks = [];
 
-const resultMetrics = content.results.metrics.map((m: any) => ({ 
-  value: m.value, 
-  label: m.label 
-}));
-
-const solutionSubsections = [
-  {
-    title: content.solution.architecture.title,
-    items: content.solution.architecture.items,
-  },
-  {
-    title: content.solution.patterns.title,
-    gridItems: content.solution.patterns.items,
-  },
-  {
-    title: content.solution.infra.title,
-    items: content.solution.infra.items,
-  },
-];
-
-const infraLabel = lang === 'es' ? 'Infraestructura' : 'Infrastructure';
-const techStackColumns = [
-  { title: 'Backend', items: ['.NET Core 8', 'C#', 'MassTransit (RabbitMQ)', 'Polly (Resilience)', 'Serilog (Logging)'] },
-  { title: infraLabel, items: ['Docker', 'AWS ECS Fargate', 'RabbitMQ', 'PostgreSQL', 'Redis'] },
-  { title: content.stack.observability, items: ['CloudWatch', 'X-Ray', 'Grafana', 'Prometheus', 'GitHub Actions (CI/CD)'] },
+const resultMetrics = [
+  { value: content.results.metrics.errores.value, label: content.results.metrics.errores.label },
+  { value: content.results.metrics.transacciones.value, label: content.results.metrics.transacciones.label },
+  { value: content.results.metrics.sap.value, label: content.results.metrics.sap.label },
+  { value: content.results.metrics.acceso.value, label: content.results.metrics.acceso.label },
 ];
 ---
 
-<CaseStudyLayout 
+<CaseStudyLayout
   title={`${content.title} - Case Study`}
   description={content.description}
   lang={lang}
@@ -91,7 +67,7 @@ const techStackColumns = [
 
   <SolutionSection
     title={content.solution.title}
-    subsections={solutionSubsections}
+    subsections={content.solution.subsections}
   />
 
   <MetricsGrid
@@ -103,7 +79,7 @@ const techStackColumns = [
 
   <TechStack
     title={content.stack.title}
-    columns={techStackColumns}
+    columns={content.stack.columns}
   />
 
   <CaseStudyCTA

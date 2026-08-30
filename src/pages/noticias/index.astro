@@ -111,70 +111,67 @@ for (let i = 0; i < noticias.length; i += 6) {
 ---
 
 <BaseTailwind title="Noticias IA — MG Lab" description="Noticias sobre Inteligencia Artificial">
-	<div class="max-w-4xl mx-auto px-4 py-8">
-		<h1 class="text-3xl font-light mb-6 text-center text-gray-800">Noticias IA</h1>
+	<main class="bg-[#f4f6fa] text-[#141a2e]">
+		<div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+			<header class="mb-8">
+				<h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-[#141a2e]">Noticias IA</h1>
+				<p class="text-[#5c6785] text-sm mt-2">Fuentes independientes y oficiales</p>
+				<p class="text-xs text-[#8b94ab] mt-1">💡 Títulos y descripciones traducidos automáticamente</p>
+				<div class="flex flex-wrap gap-1 mt-3 text-xs">
+					<span class="text-[#5c6785]">OpenAI</span>
+					<span class="text-[#8b94ab]">•</span>
+					<span class="text-[#5c6785]">Gemini</span>
+					<span class="text-[#8b94ab]">•</span>
+					<span class="text-[#5c6785]">Reddit IA</span>
+				</div>
+			</header>
 
-		<div class="mb-6 text-center">
-			<p class="text-gray-500 text-sm">
-				Fuentes independientes y oficiales
-			</p>
-			<p class="text-xs text-gray-400 mt-1">
-				💡 Títulos y descripciones traducidos automáticamente
-			</p>
-			<div class="flex flex-wrap justify-center gap-1 mt-2">
-				<span class="text-xs text-gray-400">OpenAI</span>
-				<span class="text-xs text-gray-400">•</span>
-				<span class="text-xs text-gray-400">Gemini</span>
-				<span class="text-xs text-gray-400">•</span>
-				<span class="text-xs text-gray-400">Reddit IA</span>
-			</div>
-		</div>
+			{noticias.length > 0 ? (
+				<div class="space-y-2 bg-white border border-[#e4e8f0] rounded-lg overflow-hidden">
+					{noticias.map((item) => (
+						<article class="border-b border-[#e4e8f0] last:border-b-0 px-5 py-4 hover:bg-[#eef2ff] transition-colors">
+							<div class="flex flex-col space-y-1">
+								<h3 class="text-base font-medium leading-snug">
+									<a
+										href={item.link}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="text-[#141a2e] hover:text-[#1e40af] transition-colors"
+									>
+										{item.title}
+									</a>
+								</h3>
 
-		{noticias.length > 0 ? (
-			<div class="space-y-3">
-				{noticias.map((item) => (
-					<article class="border-b border-gray-100 pb-3 hover:bg-gray-50 transition-colors px-2 py-1">
-						<div class="flex flex-col space-y-1">
-							<h3 class="text-base font-normal leading-tight">
-								<a
-									href={item.link}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="text-gray-800 hover:text-blue-600 transition-colors"
-								>
-									{item.title}
-								</a>
-							</h3>
+								{item.description && (
+									<p class="text-sm text-[#5c6785] line-clamp-2">
+										{item.description}
+									</p>
+								)}
 
-							{item.description && (
-								<p class="text-sm text-gray-500 line-clamp-2">
-									{item.description}
-								</p>
-							)}
-
-							<div class="flex items-center text-xs text-gray-400 space-x-3">
-								<time datetime={item.pubDate.toISOString()}>
-									{item.pubDate.toLocaleDateString('es-AR', {
-										day: '2-digit',
-										month: '2-digit'
-									})}
-								</time>
-								<span class="text-blue-500">{getSourceName(item.source)}</span>
+								<div class="flex items-center text-xs text-[#8b94ab] space-x-3">
+									<time datetime={item.pubDate.toISOString()}>
+										{item.pubDate.toLocaleDateString('es-AR', {
+											day: '2-digit',
+											month: '2-digit'
+										})}
+									</time>
+									<span class="text-[#1e40af] font-medium">{getSourceName(item.source)}</span>
+								</div>
 							</div>
-						</div>
-					</article>
-				))}
-			</div>
-		) : (
-			<div class="text-center py-12">
-				<p class="text-gray-400 text-sm">No se encontraron noticias recientes</p>
-			</div>
-		)}
+						</article>
+					))}
+				</div>
+			) : (
+				<div class="text-center py-12 bg-white border border-[#e4e8f0] rounded-lg">
+					<p class="text-[#8b94ab] text-sm">No se encontraron noticias recientes</p>
+				</div>
+			)}
 
-		<div class="mt-8 pt-4 border-t border-gray-100">
-			<p>
-				<small><a href={b} class="text-gray-400 hover:text-gray-600 text-sm">← Inicio</a></small>
-			</p>
+			<div class="mt-10 pt-6 border-t border-[#e4e8f0]">
+				<p>
+					<small><a href={b} class="text-[#5c6785] hover:text-[#1e40af] transition-colors">← Inicio</a></small>
+				</p>
+			</div>
 		</div>
-	</div>
+	</main>
 </BaseTailwind>

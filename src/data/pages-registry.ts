@@ -37,12 +37,14 @@ export const pagesRegistry: PageEntry[] = [
   { id: 'noticias', name: 'Noticias IA', url: '/noticias/', category: 'public', icon: '📰' },
   { id: 'main', name: 'Main (Retro)', url: '/main/', category: 'public', icon: '🏠' },
   { id: 'seguimiento', name: 'Panel de Seguimiento de Alumnos', url: '/seguimiento/', category: 'public', icon: '📊' },
+  { id: 'floppy', name: 'Disquete 3½', url: '/floppy/', category: 'public', icon: '💾' },
 
   // =====================
   // LANDINGS (solo en admin, solo español)
   // =====================
   { id: 'portfolio', name: 'Portfolio', url: '/es/portfolio/', category: 'landing', icon: '📁', active: true },
   { id: 'servicios', name: 'Servicios', url: '/es/servicios/', category: 'landing', icon: '🤝', active: true },
+  { id: 'cv', name: 'CV', url: '/es/cv/', category: 'landing', icon: '📄' },
 
   // =====================
   // HERRAMIENTAS (solo en admin)
@@ -53,13 +55,16 @@ export const pagesRegistry: PageEntry[] = [
   { id: 'movilidad', name: 'Movilidad', url: '/movilidad/', category: 'tool', icon: '🧘' },
   { id: 'pausas-activas', name: 'Pausas Activas', url: '/pausas-activas/', category: 'tool', icon: '☀️' },
   { id: 'workspace-mapper', name: 'Workspace Mapper', url: '/workspace-mapper/', category: 'tool', icon: '🖥️' },
+  { id: 'admin-blog', name: 'Admin Blog', url: '/admin/blog/', category: 'tool', icon: '📝' },
 
   // =====================
   // CASE STUDIES (solo en admin)
   // =====================
-  { id: 'project-ecommerce', name: 'Case: E-commerce', url: '/es/proyectos/ecommerce-platform/', category: 'project', icon: '🛒' },
-  { id: 'project-microservicios', name: 'Case: Microservicios', url: '/es/proyectos/microservicios-api/', category: 'project', icon: '🔧' },
-  { id: 'project-taskmanager', name: 'Case: Task Manager DDD', url: '/es/proyectos/task-manager-ddd/', category: 'project', icon: '✅' },
+  { id: 'project-validacion-biometrica', name: 'Case: Validación Biométrica', url: '/es/proyectos/validacion-biometrica/', category: 'project', icon: '🪪' },
+  { id: 'project-billetera-virtual', name: 'Case: Billetera Virtual', url: '/es/proyectos/billetera-virtual/', category: 'project', icon: '💳' },
+  { id: 'project-monitoreo-agricola', name: 'Case: Monitoreo Agrícola', url: '/es/proyectos/monitoreo-agricola/', category: 'project', icon: '🌱' },
+  { id: 'project-auditorias-datos', name: 'Case: Auditorías con Datos', url: '/es/proyectos/auditorias-datos/', category: 'project', icon: '📊' },
+  { id: 'project-coca-cola-embonor', name: 'Case: Coca-Cola Embonor', url: '/es/proyectos/coca-cola-embonor/', category: 'project', icon: '🥤' },
   { id: 'project-mundial-2026', name: 'Case: Mundial 2026', url: '/es/proyectos/mundial-2026/', category: 'project', icon: '⚽' },
   { id: 'project-abandono-estudiantil', name: 'Case: Abandono Estudiantil', url: '/es/proyectos/abandono-estudiantil/', category: 'project', icon: '🎓' },
   { id: 'project-caso-arquitectura', name: 'Case: Analista de Sistemas (ArqStudio)', url: '/caso-arquitectura/', category: 'project', icon: '📐' },

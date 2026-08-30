@@ -9,9 +9,8 @@ export const SITE_CONFIG = {
   // =====================
   // INFORMACIÓN PERSONAL
   // =====================
-  author: 'Mauricio Gonzalez',
-  authorTitle: 'Full Stack Developer',
-  
+  author: 'Mauricio González',
+
   // =====================
   // CONTACTO
   // =====================
@@ -25,7 +24,7 @@ export const SITE_CONFIG = {
   formspreeEndpoint: 'https://formspree.io/f/xlgbvgek',
   
   phone: '',                                // Opcional: '+54 9 11 1234-5678'
-  location: 'Argentina',
+  location: 'Córdoba, Argentina',
 
   // WhatsApp dividido en chunks (ofuscación, como emailParts)
   // Unido forma: whatsappChunks.join('') = número en formato internacional
@@ -45,16 +44,15 @@ export const SITE_CONFIG = {
   // =====================
   // SITIO WEB
   // =====================
-  siteName: 'MG Lab Depot',
-  siteUrl: 'https://tu-dominio.com',        // URL de producción
-  defaultDescription: 'MG Lab Applications',
+  siteName: 'Mauricio González',
+  siteUrl: 'https://mauricioglab.github.io/',  // URL de producción
+  defaultDescription: 'Software Engineer especializado en IA y Automatización',
   
   // =====================
   // CV (único)
   // =====================
-  // Ruta a la página del CV único (ver src/pages/cv.astro). No hay PDF real
-  // todavía — cuando exista, apuntar acá al archivo en /public.
-  cv: '/cv/',
+  // Ruta a la página del CV único (localizada, default es). Ver src/pages/[lang]/cv.astro.
+  cv: '/es/cv/',
   
   // =====================
   // IDIOMAS
@@ -69,9 +67,3 @@ export type SupportedLang = typeof SITE_CONFIG.supportedLangs[number];
  * Get mailto link for the contact email
  */
 export const getMailtoLink = () => `mailto:${SITE_CONFIG.email}`;
-
-/**
- * Get copyright text with current year
- */
-export const getCopyright = (year = new Date().getFullYear()) => 
-  `© ${year} ${SITE_CONFIG.author} - ${SITE_CONFIG.authorTitle}`;

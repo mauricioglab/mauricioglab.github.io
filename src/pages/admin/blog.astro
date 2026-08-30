@@ -1,0 +1,16 @@
+---
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+import BlogAdmin from '../../components/admin/BlogAdmin.astro';
+
+export const prerender = true;
+---
+
+<BaseTailwind
+  title="Admin Blog — MG Lab"
+  description="Editor de blogs con IA"
+  lang="es"
+  layoutType="admin"
+  showMateGame={false}
+>
+  <BlogAdmin />
+</BaseTailwind>

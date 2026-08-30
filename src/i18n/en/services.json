@@ -1,56 +1,85 @@
 {
   "title": "Professional Services",
-  "subtitle": "Consulting, Development & AI",
-  "description": "What problem can I solve for you?",
+  "subtitle": "Consulting · Development · AI",
+  "description": "What I can do for your company",
+  "sectionSubtitle": "From requirements to production, with a focus on data and measurable results.",
   "seo": {
-    "title": "Services | Consulting, Development, AI and Training",
-    "description": "Technical consulting, solution development, applied AI, automation, technical training and conference talks for companies and institutions."
+    "title": "Services | Software Engineer · AI & Automation · Consulting in Córdoba, Argentina",
+    "description": "Software Engineer specialized in AI and automation. Technical consulting, approval documentation, full-stack development, applied AI, automation, training and speaking. Córdoba, Argentina."
+  },
+  "nav": {
+    "portfolio": "Portfolio",
+    "cv": "CV"
   },
   "hero": {
-    "badge": "FOR COMPANIES, INSTITUTIONS AND EVENT ORGANIZERS",
-    "headline": "What problem can I <span class=\"text-blue-600 dark:text-blue-400\">solve</span> for you?",
-    "subheadline": "Software Engineer specialized in AI and Automation. I work with companies and institutions on technical consulting, solution development, applied AI, process automation, training and conference talks.",
-    "ctaPrimary": "Schedule a Meeting",
+    "badge": "Software Engineer · AI & Automation",
+    "headlinePrefix": "Your team loses hours on manual processes.",
+    "rotate": [
+      "I automate them.",
+      "I get them approved.",
+      "I ship them to production.",
+      "I teach it in workshops."
+    ],
+    "subheadline": "I'm a Software Engineer specialized in AI and automation. I gather your requirements, document them for approval, build them and leave them working. Speaker and instructor in applied AI.",
+    "ctaPrimary": "Let's talk, no strings attached",
     "ctaSecondary": "View Portfolio"
   },
+  "ctaViewCV": "View CV",
   "ctaTitle": "Let's talk about your project?",
-  "ctaDescription": "Tell me what you need and let's see how I can help.",
+  "ctaDescription": "The initial conversation is free. The technical analysis is part of the work.",
+  "groups": [
+    { "id": "consultoria", "label": "Technical consulting" },
+    { "id": "desarrollo", "label": "Development & data" },
+    { "id": "capacitacion", "label": "Training & speaking" }
+  ],
+  "speaking": {
+    "title": "Speaker",
+    "text": "I give talks and workshops on applied AI and automation, always grounded in real projects, not theory.",
+    "credential": "Instructor across 3 tech programs · 5 of 20 students landed Jr Dev jobs",
+    "cta": "I want Mauricio at my event"
+  },
   "services": [
     {
-      "icon": "fas fa-comments",
-      "title": "Technical Consulting",
-      "description": "Architecture audits and technical solution design, based on real experience in government and enterprise systems.",
-      "color": "blue-600"
+      "icon": "fas fa-search",
+      "title": "Analysis & requirements",
+      "description": "Stakeholder requirements gathering, technical specs and modeling (UML, ERD, DFD). I understand the problem before writing code.",
+      "color": "blue-600",
+      "group": "consultoria"
+    },
+    {
+      "icon": "fas fa-clipboard-check",
+      "title": "Approval documentation",
+      "description": "System documentation for audits and compliance: CMMI, SSN regulations, data models. Left ready for approval.",
+      "color": "blue-600",
+      "group": "consultoria"
     },
     {
       "icon": "fas fa-code",
-      "title": "Solution Development",
-      "description": "Full-stack .NET/Angular, integrations and process automation. Backed by real cases: optimizing 4h down to 30min, AI biometric validation in production.",
-      "color": "slate-900"
+      "title": "Full-stack development",
+      "description": ".NET Core, Angular, Node and Python apps. Microservices, DDD and CQRS, in real production.",
+      "color": "slate-900",
+      "group": "desarrollo"
     },
     {
       "icon": "fas fa-brain",
       "title": "Applied AI",
-      "description": "Predictive modeling and data analysis with Python. Real evidence: a 2026 World Cup prediction model and a student dropout prediction model, both rigorously validated.",
-      "color": "purple-600"
+      "description": "I take AI from idea to production: biometrics with AWS Rekognition, RAG with LangChain and predictive models in Python.",
+      "color": "purple-600",
+      "group": "desarrollo"
     },
     {
       "icon": "fas fa-cogs",
-      "title": "Process Automation",
-      "description": "Identifying and automating repetitive manual tasks — from Excel spreadsheets to interactive systems, from hours to minutes.",
-      "color": "emerald-600"
+      "title": "Process automation",
+      "description": "I turn manual tasks into systems with verifiable metrics: 4h → 30min, -75% errors, +60% efficiency.",
+      "color": "emerald-600",
+      "group": "desarrollo"
     },
     {
       "icon": "fas fa-chalkboard-teacher",
-      "title": "Technical Training",
-      "description": "Based on real teaching experience: active instructor across 3 technology programs (Systems Analyst, Web Development, Data Science & AI).",
-      "color": "orange-600"
-    },
-    {
-      "icon": "fas fa-microphone",
-      "title": "Talks and Workshops",
-      "description": "Talks and workshops on applied AI, automation and software development, grounded in real projects and experience, not just theory.",
-      "color": "green-600"
+      "title": "Talks, classes & workshops",
+      "description": "Talks and workshops on applied AI and automation grounded in real projects, not theory. Instructor across 3 tech programs.",
+      "color": "orange-600",
+      "group": "capacitacion"
     }
   ]
 }

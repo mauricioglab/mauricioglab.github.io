@@ -22,8 +22,8 @@ const currentUrl = `${Astro.site}${normalizedBase}blog/search/`;
 
   <div>
     <header class="mb-12 text-center">
-      <h1 class="entry-title text-4xl font-normal text-[#594a42] mb-4">Buscar</h1>
-      <p class="text-lg text-[#594a42]">Busca artículos por título, contenido o categoría</p>
+      <h1 class="entry-title text-4xl font-semibold text-[#141a2e] mb-4">Buscar</h1>
+      <p class="text-lg text-[#5c6785]">Busca artículos por título, contenido o categoría</p>
     </header>
 
     <div class="mb-12">
@@ -32,7 +32,7 @@ const currentUrl = `${Astro.site}${normalizedBase}blog/search/`;
         type="text"
         id="search-input"
         placeholder="Escribe para buscar..."
-        class="w-full px-4 py-3 text-lg border border-[#e5e5e5] rounded focus:outline-none focus:border-[#594a42] text-[#594a42] font-[inherit]"
+        class="w-full px-4 py-3 text-lg border border-[#e4e8f0] rounded-lg focus:outline-none focus:border-[#1e40af] focus:ring-2 focus:ring-[#1e40af]/20 text-[#141a2e] bg-white font-[inherit]"
         aria-label="Buscar artículos"
       />
     </div>
@@ -43,7 +43,7 @@ const currentUrl = `${Astro.site}${normalizedBase}blog/search/`;
           <PostCard post={post} />
         ))}
       </div>
-      <div id="no-results" class="hidden text-center text-[#594a42] text-lg" role="status" aria-live="polite">
+      <div id="no-results" class="hidden text-center text-[#5c6785] text-lg" role="status" aria-live="polite">
         <p>No se encontraron resultados para tu búsqueda.</p>
       </div>
     </div>

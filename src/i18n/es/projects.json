@@ -1,56 +1,70 @@
 {
-  "ecommerce": {
-    "title": "Plataforma E-commerce Enterprise",
-    "shortDescription": "Sistema de comercio electrónico escalable con arquitectura de microservicios",
+  "validacion-biometrica": {
+    "title": "Validación Biométrica con IA",
+    "shortDescription": "Reconocimiento facial + prueba de vida con AWS Rekognition, integrado con RENAPER",
     "profiles": {
       "engineer": {
-        "description": "Arquitectura de microservicios con .NET Core 8 y Angular 17, diseñada con Domain-Driven Design y Event Storming. Sistema de pagos integrado con Stripe y gestión de inventario en tiempo real.",
+        "description": "Solución completa (backend + frontend) de validación de identidad por reconocimiento facial con prueba de vida, integrada con RENAPER y con trazabilidad inmutable en AWS QLDB.",
         "highlights": [
-          "API Gateway con Ocelot + Redis Cache para 50k req/min",
-          "5 Bounded Contexts identificados (Catálogo, Pedidos, Pagos, Inventario, Usuarios)",
-          "Reducción del 60% en tiempos de respuesta vs. monolito anterior"
+          "500+ verificaciones diarias en producción, 99.8% de precisión",
+          "Backend Node.js/NestJS integrado con RENAPER, frontend Angular",
+          "Trazabilidad inmutable con AWS QLDB"
         ]
       }
     }
   },
-  "task-manager-ddd": {
-    "title": "Task Manager con DDD",
-    "shortDescription": "Gestor de tareas empresarial con arquitectura limpia y DDD",
+  "billetera-virtual": {
+    "title": "Core API — Billetera virtual TotalCoin",
+    "shortDescription": "Core API y microservicios para la billetera virtual y pasarela de pagos de TotalCoin",
     "profiles": {
       "engineer": {
-        "description": "Aplicación full-stack con Clean Architecture, CQRS y Event Sourcing. Backend en .NET 8 y frontend en Angular con NgRx. Diseño de dominio con múltiples agregados y máquinas de estado.",
+        "description": "Desarrollo del Core API e infraestructura de microservicios para la plataforma de billetera virtual y pasarela de pagos de TotalCoin. Flujo de autorización multi-nivel para 4 sub-billeteras comerciales y migración de 3 microservicios heredados a Docker/ECS.",
         "highlights": [
-          "Implementación de CQRS con MediatR y Event Sourcing",
-          "3 Agregados principales (Task, Project, Team) con documentación UML y C4",
-          "Testing automatizado con 85% de cobertura (xUnit + Cypress)"
+          "Módulo de firmantes/aprobadores multi-nivel para 4 sub-billeteras comerciales",
+          "Patrones CQRS, Facade y Mediator sobre DDD",
+          "3 microservicios heredados migrados a Docker/ECS: -40% de deployment"
         ]
       }
     }
   },
-  "microservicios-api": {
-    "title": "API Gateway con Microservicios",
-    "shortDescription": "Arquitectura de microservicios con mensajería asíncrona",
+  "monitoreo-agricola": {
+    "title": "Monitoreo agrícola con Machine Learning",
+    "shortDescription": "App de monitoreo de cultivos con ML y trazabilidad IoT en AWS QLDB (cliente España)",
     "profiles": {
       "engineer": {
-        "description": "Sistema distribuido con 8 microservicios independientes. Comunicación asíncrona con RabbitMQ y sincronización con gRPC, a partir de una estrategia de descomposición de monolito sin downtime.",
+        "description": "Aplicación web de monitoreo de cultivos integrando análisis de datos con Python y Google Colab. Sincronización nocturna a AWS QLDB para trazabilidad inmutable de sensores IoT y visualizaciones en tiempo real con Matplotlib/Seaborn.",
         "highlights": [
-          "API Gateway con autenticación JWT y rate limiting",
-          "Estrategia de migración gradual: patrones Saga, API Composition, CQRS",
-          "Observabilidad con Prometheus, Grafana y Seq para logs"
+          "Análisis de datos de sensores IoT con Python + Google Colab",
+          "Trazabilidad inmutable de datos con AWS QLDB",
+          "Visualizaciones en tiempo real y alertas automatizadas de cultivos"
         ]
       }
     }
   },
-  "caso-arquitectura": {
-    "title": "Caso de Estudio: Analista de Sistemas",
-    "shortDescription": "Ciclo completo de análisis de sistemas para un estudio de arquitectura: relevamiento, UML, DFD y 13 sprints Scrum",
+  "auditorias-datos": {
+    "title": "Auditorías con análisis de datos",
+    "shortDescription": "Sistema interactivo de análisis de datos para auditoría en el sector eléctrico (ISA CTEEP)",
     "profiles": {
       "engineer": {
-        "description": "Caso de estudio interactivo del ciclo completo de análisis de sistemas: relevamiento, estudio de factibilidad, objetivos y alcance, requerimientos, modelado (UML, DER, DFD, diagrama de estados), diseño de arquitectura y metodología Scrum con 13 sprints documentados.",
+        "description": "Para ISA CTEEP, empresa de transmisión de energía eléctrica de Brasil: transformé una revisión manual de Excel en un sistema interactivo con filtros avanzados y priorización visual, con generación automatizada de informes PDF/Excel.",
         "highlights": [
-          "14 capítulos navegables: desde el relevamiento inicial hasta la puesta en producción",
-          "Diagramas propios (clases, casos de uso, DER, DFD, estados, despliegue) en vez de capturas estáticas",
-          "Backlog, burndown y trazabilidad completa entre requerimientos y funcionalidades entregadas"
+          "De revisión manual de Excel a sistema interactivo con filtros avanzados",
+          "Reportes PDF/Excel generados server-side para datasets masivos",
+          "+60% de eficiencia operativa con priorización visual"
+        ]
+      }
+    }
+  },
+  "coca-cola-embonor": {
+    "title": "Sistema web de gastos empresariales",
+    "shortDescription": "Gestión de usuarios/permisos + integración SAP para Coca-Cola Embonor",
+    "profiles": {
+      "engineer": {
+        "description": "Módulos de gestión de usuarios, grupos y permisos para una solución responsive, con integración a SAP para automatizar procesos contables.",
+        "highlights": [
+          "Módulos de usuarios, grupos y permisos (cientos de transacciones diarias)",
+          "Integración con SAP API para automatización contable",
+          "-75% de errores manuales"
         ]
       }
     }
@@ -65,6 +79,20 @@
           "Acertó las 2 semifinales y ubicó a España 2ª favorita (16%); España fue campeona",
           "Calibración del Elo validada sobre miles de partidos históricos",
           "Comparación honesta contra baseline logístico y líneas ingenuas (log-loss)"
+        ]
+      }
+    }
+  },
+  "caso-arquitectura": {
+    "title": "Caso de Estudio: Analista de Sistemas",
+    "shortDescription": "Ciclo completo de análisis de sistemas para un estudio de arquitectura: relevamiento, UML, DFD y 13 sprints Scrum",
+    "profiles": {
+      "engineer": {
+        "description": "Caso de estudio interactivo del ciclo completo de análisis de sistemas: relevamiento, estudio de factibilidad, objetivos y alcance, requerimientos, modelado (UML, DER, DFD, diagrama de estados), diseño de arquitectura y metodología Scrum con 13 sprints documentados.",
+        "highlights": [
+          "14 capítulos navegables: desde el relevamiento inicial hasta la puesta en producción",
+          "Diagramas propios (clases, casos de uso, DER, DFD, estados, despliegue) en vez de capturas estáticas",
+          "Backlog, burndown y trazabilidad completa entre requerimientos y funcionalidades entregadas"
         ]
       }
     }

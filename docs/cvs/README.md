@@ -1,20 +1,20 @@
 # CV único
 
-Esta carpeta contiene el contenido de referencia del CV unificado del usuario.
+Esta carpeta documenta la unificación de marca a un solo CV (histórico: antes había
+5 versiones separadas por perfil — developer, líder técnico, docente/speaker,
+híbrido, freelance — consolidadas en una sola identidad).
 
-**Este archivo NO se renderiza ni genera rutas en el sitio.** Es la fuente de contenido que alimenta:
+**La fuente de verdad del CV es la página viva `src/pages/[lang]/cv.astro`** (rutas
+`/es/cv/` y `/en/cv/`, localizadas; el contenido vive en `src/i18n/es/cv.json` y
+`src/i18n/en/cv.json`). `/es/cv/` es el destino real del botón "Descargar CV" del
+sitio — no hay PDF estático todavía.
+Este README queda solo como referencia de las reglas de contenido que rigen esa
+página y el resto del sitio:
 
 - `/blog/about/` - Página "Acerca de" del blog
 - `/[lang]/portfolio/` - Portfolio unificado
 - `/[lang]/servicios/` - Landing de servicios
 - `src/i18n/` - Traducciones de experiencia y skills
-- El PDF descargable del sitio (`public/cv.pdf`)
-
-## Versión
-
-| Archivo | Descripción |
-|---------|-------------|
-| `cv-unificado.astro` | CV único: Software Engineer especializado en IA y Automatización. Reemplaza las 5 versiones anteriores (developer, líder técnico, docente/speaker, híbrido, freelance), que se consolidaron en una sola identidad. |
 
 ## Reglas de contenido
 

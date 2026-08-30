@@ -1,0 +1,118 @@
+{
+  "back": "← Back to projects",
+  "badge": "Coca-Cola Embonor · Consumer goods",
+  "title": "Corporate expense web system",
+  "description": "User, group and permission management modules for a responsive solution, with SAP integration to automate accounting processes.",
+  "stats": {
+    "errores": { "value": "-75%", "label": "Manual errors" },
+    "transacciones": { "value": "Hundreds", "label": "Daily transactions" },
+    "responsive": { "value": "100%", "label": "Responsive solution" }
+  },
+  "links": {
+    "confidential": "🔒 Client project — code not public"
+  },
+  "problem": {
+    "title": "The Problem",
+    "intro": "Coca-Cola Embonor needed a solution to manage corporate expenses: users, groups and permissions, and above all to automate sending accounting data to SAP, which was done by hand and with errors.",
+    "items": [
+      "Manual management of users, groups and permissions",
+      "Manual sending of accounting data to SAP with recurring errors",
+      "Need for a responsive solution across multiple devices",
+      "Accounting processes that consumed time and generated errors"
+    ]
+  },
+  "process": {
+    "title": "My Process",
+    "phases": [
+      {
+        "title": "1. User, group and permission modules",
+        "description": "Built user, group and permission management for a responsive solution processing hundreds of daily transactions.",
+        "items": [
+          "User, group and permission modules",
+          "Responsive solution for multiple devices",
+          "Hundreds of transactions processed per day"
+        ]
+      },
+      {
+        "title": "2. SAP API integration",
+        "description": "Integrated the solution with the SAP API to automate accounting processes via structured data.",
+        "items": [
+          "SAP API integration",
+          "Structured data delivery for accounting",
+          "Accounting process automation"
+        ]
+      },
+      {
+        "title": "3. Manual error reduction",
+        "description": "Automating the SAP delivery eliminated manual entry and measurably reduced errors.",
+        "items": [
+          "75% reduction in manual errors",
+          "Elimination of manual data entry",
+          "More reliable accounting"
+        ]
+      }
+    ]
+  },
+  "solution": {
+    "title": "The Solution",
+    "subsections": [
+      {
+        "title": "Complete access management",
+        "description": "Users, groups and permissions centralized in a responsive solution.",
+        "items": [
+          "User and group management",
+          "Granular role-based permissions",
+          "Responsive interface for the team"
+        ]
+      },
+      {
+        "title": "Accounting automation with SAP",
+        "description": "Accounting data is sent to SAP automatically and in a structured way.",
+        "items": [
+          "Direct integration with the SAP API",
+          "Structured data delivery",
+          "Accounting process automation"
+        ]
+      },
+      {
+        "title": "Measurable result",
+        "description": "Fewer errors, less manual work, more reliability.",
+        "items": [
+          "-75% manual errors",
+          "Automated accounting process",
+          "Stack: ASP.NET + C# + SQL Server + Entity Framework + SAP API"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "title": "Results & Impact",
+    "metrics": {
+      "errores": { "value": "-75%", "label": "Manual errors" },
+      "transacciones": { "value": "Hundreds", "label": "Daily transactions" },
+      "sap": { "value": "API", "label": "Automated SAP integration" },
+      "acceso": { "value": "Roles", "label": "Users, groups and permissions" }
+    },
+    "learnings": {
+      "title": "Key Learnings",
+      "items": [
+        { "label": "Automation pays:", "text": "integrating with SAP eliminated manual entry and reduced accounting errors by 75%." },
+        { "label": "Well-modeled access:", "text": "managing users, groups and permissions from the start avoided security rework." },
+        { "label": "Responsive matters:", "text": "the team uses the solution from multiple devices, so responsive design was a requirement, not decoration." }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Tech Stack",
+    "columns": [
+      { "title": "Backend", "items": ["ASP.NET", "C#", "Entity Framework"] },
+      { "title": "Data", "items": ["SQL Server", "SAP API"] },
+      { "title": "Frontend", "items": ["Responsive solution", "Permission management"] }
+    ]
+  },
+  "cta": {
+    "title": "Need to automate accounting processes or integrate SAP?",
+    "subtitle": "If your team enters data by hand and has errors, I can help automate it. I did it for Coca-Cola Embonor with -75% errors.",
+    "button": "Contact"
+  }
+}

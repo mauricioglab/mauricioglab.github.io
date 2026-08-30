@@ -13,51 +13,27 @@ import CaseStudyCTA from '@components/case-study/CaseStudyCTA.astro';
 export const getStaticPaths = getLanguagePaths;
 
 const { lang } = Astro.params as { lang: Lang };
-const content = await useTranslations<any>(lang, 'projects-task-manager-ddd');
+const content = await useTranslations<any>(lang, 'projects-monitoreo-agricola');
 
-const accentColor = 'purple';
+const accentColor = 'orange';
 
-// Transform content to component props
 const headerStats = [
-  { value: content.stats.time.value, label: content.stats.time.label },
-  { value: content.stats.aggregates.value, label: content.stats.aggregates.label },
-  { value: content.stats.coverage.value, label: content.stats.coverage.label },
+  { value: content.stats.iot.value, label: content.stats.iot.label },
+  { value: content.stats.trace.value, label: content.stats.trace.label },
+  { value: content.stats.realtime.value, label: content.stats.realtime.label },
 ];
 
-const headerLinks = [
-  { text: content.links.demo, url: 'https://taskmanager-demo.example.com', primary: true },
-  { text: content.links.github, url: 'https://github.com/mauricioglab/task-manager-ddd' },
-];
+const headerLinks = [];
 
-const resultMetrics = content.results.metrics.map((m: any) => ({ 
-  value: m.value, 
-  label: m.label 
-}));
-
-const solutionSubsections = [
-  {
-    title: content.solution.layers.title,
-    items: content.solution.layers.items,
-  },
-  {
-    title: content.solution.patterns.title,
-    gridItems: content.solution.patterns.items,
-  },
-  {
-    title: content.solution.frontend.title,
-    description: content.solution.frontend.description,
-    items: content.solution.frontend.items,
-  },
-];
-
-const techStackColumns = [
-  { title: 'Backend', items: ['.NET Core 8', 'C#', 'MediatR (CQRS)', 'Entity Framework Core', 'xUnit (Testing)'] },
-  { title: 'Frontend', items: ['React 18', 'TypeScript', 'React Query', 'Tailwind CSS', 'React Beautiful DnD'] },
-  { title: content.stack.infrastructure, items: ['PostgreSQL', 'Docker', 'GitHub Actions', 'Swagger/OpenAPI', 'SonarQube (Code Quality)'] },
+const resultMetrics = [
+  { value: content.results.metrics.audit.value, label: content.results.metrics.audit.label },
+  { value: content.results.metrics.trace.value, label: content.results.metrics.trace.label },
+  { value: content.results.metrics.alertas.value, label: content.results.metrics.alertas.label },
+  { value: content.results.metrics.sync.value, label: content.results.metrics.sync.label },
 ];
 ---
 
-<CaseStudyLayout 
+<CaseStudyLayout
   title={`${content.title} - Case Study`}
   description={content.description}
   lang={lang}
@@ -91,7 +67,7 @@ const techStackColumns = [
 
   <SolutionSection
     title={content.solution.title}
-    subsections={solutionSubsections}
+    subsections={content.solution.subsections}
   />
 
   <MetricsGrid
@@ -103,7 +79,7 @@ const techStackColumns = [
 
   <TechStack
     title={content.stack.title}
-    columns={techStackColumns}
+    columns={content.stack.columns}
   />
 
   <CaseStudyCTA
@@ -111,6 +87,6 @@ const techStackColumns = [
     subtitle={content.cta.subtitle}
     buttonText={content.cta.button}
     accentColor={accentColor}
-    secondaryColor="blue"
+    secondaryColor="purple"
   />
 </CaseStudyLayout>

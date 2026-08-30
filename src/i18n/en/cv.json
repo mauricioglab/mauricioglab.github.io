@@ -1,0 +1,198 @@
+{
+  "meta": {
+    "title": "Mauricio González — Software Engineer · AI & Automation",
+    "description": "Software Engineer specialized in AI and Automation. Python, .NET Core, Angular. AI in production (RENAPER/AWS Rekognition), predictive models and enterprise architecture."
+  },
+  "header": {
+    "brand": "Mauricio González",
+    "brandSub": "· CV",
+    "print": "Print / PDF",
+    "back": "← Back",
+    "langLabel": "ES",
+    "portfolio": "Portfolio",
+    "servicios": "Services"
+  },
+  "masthead": {
+    "eyebrow": "// technical profile",
+    "name": "Mauricio González",
+    "role": "Software Engineer · <span class=\"accent\">AI &amp; Automation</span>",
+    "stack": "Python · .NET Core · Angular",
+    "location": "Córdoba, Argentina",
+    "linkedin": "LinkedIn",
+    "github": "GitHub"
+  },
+  "perfil": {
+    "num": "01",
+    "label": "Profile",
+    "paragraphs": [
+      "Software Engineer with a solid foundation in full-stack development (.NET Core, Angular) and a growing specialization in applied AI and process automation. Real experience taking AI solutions to production at government/enterprise scale, plus building and validating my own predictive models with Python. A Systems Analysis background that brings requirements gathering and design skills, not just implementation."
+    ],
+    "highlights": [
+      "{years}+ years of experience in full-stack development and automation.",
+      "AI in production: biometric validation with RENAPER / AWS Rekognition.",
+      "Instructor in Data Science & AI (Instituto Cervantes)."
+    ]
+  },
+  "experiencia": {
+    "num": "02",
+    "label": "Experience",
+    "jobs": [
+      {
+        "period": "2023 — Present",
+        "company": "GyL Group",
+        "current": true,
+        "role": "Full Stack Developer",
+        "summary": "Technical reference for a team of 8 developers on government and enterprise projects.",
+        "sections": [
+          {
+            "title": "Government Systems — Information Systems Agency (ASI)",
+            "items": [
+              "Settlement processing automation: reduced from 4h to 30min (87.5% improvement) processing 250K records/month.",
+              "Led the technical migration to Angular 19; dynamic forms with 27K+ active users.",
+              "Participation in CMMI government security audits."
+            ]
+          }
+        ],
+        "also": "Also at GyL: AI-powered biometric validation (RENAPER + AWS Rekognition — see AI &amp; Data section), ML-based crop monitoring for a Spanish client and Renaseg (99.5% uptime, 100% SSN regulatory compliance).",
+        "stack": "Angular 19 · .NET Core · Node.js/NestJS · Docker · AWS · DDD/CQRS"
+      },
+      {
+        "period": "11/2022 — 02/2023",
+        "company": "SimpleMak",
+        "current": false,
+        "role": ".NET Developer",
+        "summary": "",
+        "sections": [],
+        "also": "",
+        "stack": "ASP.NET Core · DDD · SQL Server",
+        "items": [
+          "Warehousing module applying DDD and CQRS (+35% maintainability).",
+          "Complex forms with vanilla JavaScript emulating reactivity."
+        ]
+      },
+      {
+        "period": "11/2021 — 12/2022",
+        "company": "National University of San Martín",
+        "current": false,
+        "role": "Analyst — Developer",
+        "summary": "",
+        "sections": [],
+        "also": "",
+        "stack": "ASP.NET MVC · Razor · Entity Framework",
+        "items": [
+          "Accessible web forms for the Ministry of Social Development (500+ enrollments/month).",
+          "Direct stakeholder requirements gathering, translated into technical specifications."
+        ]
+      },
+      {
+        "period": "07/2021 — 09/2021",
+        "company": "RocketBot",
+        "current": false,
+        "role": "C# Developer",
+        "summary": "",
+        "sections": [],
+        "also": "",
+        "stack": "ASP.NET Core · AngularJS · SQLite",
+        "items": [
+          "RPA bot management orchestrator for enterprise automation.",
+          "Authentication module and role/audit system with 100% traceability."
+        ]
+      }
+    ]
+  },
+  "proyectos": {
+    "num": "03",
+    "label": "Projects",
+    "intro": "Featured projects developed as a consultant for enterprise clients.",
+    "items": [
+      {
+        "client": "TotalCoin",
+        "title": "Core API — Virtual wallet and payment gateway",
+        "meta": "Buenos Aires · Fintech",
+        "desc": "Multi-level authorization flow for 4 commercial sub-wallets; migration of 3 legacy microservices (.NET 4.5) to Docker/ECS with -40% deployment time.",
+        "stack": "C# · .NET Framework 4.5 · Docker · Amazon ECS · DDD · CQRS · Mediator · Facade"
+      },
+      {
+        "client": "ISA CTEEP",
+        "title": "Audits with data analysis",
+        "meta": "Brazil · Power sector",
+        "desc": "From manual Excel review to an interactive system with visual prioritization and automated PDF/Excel reports, with +60% operational efficiency.",
+        "stack": "Angular 17-18 · .NET Core · SQL Server · Entity Framework"
+      },
+      {
+        "client": "Coca-Cola Embonor",
+        "title": "Corporate expense web system",
+        "meta": "Consumer goods · Chile",
+        "desc": "User, group and permission management modules; SAP integration for accounting automation with -75% manual errors.",
+        "stack": "ASP.NET · C# · SQL Server · Entity Framework · SAP API"
+      }
+    ]
+  },
+  "ia": {
+    "num": "04",
+    "label": "AI & Data",
+    "flagship": {
+      "title": "AI-Powered Biometric Validation — RENAPER + AWS Rekognition",
+      "badge": "GyL Group · In production",
+      "items": [
+        "Facial recognition and liveness detection in production: 500+ verifications daily, 99.8% precision.",
+        "Node.js/NestJS backend integrated with RENAPER, Angular frontend.",
+        "Immutable storage with AWS QLDB for full traceability of validations."
+      ]
+    },
+    "personalMeta": "Personal project",
+    "personal": [
+      {
+        "title": "2026 World Cup Prediction",
+        "desc": "Elo + Poisson + Monte Carlo model, validated against the real tournament (22/32 correct bracket picks). Python, Pandas, Streamlit."
+      },
+      {
+        "title": "Student Dropout Prediction",
+        "desc": "Classification (logistic regression vs. Random Forest), evaluated with recall/AUC and a business trade-off on the decision threshold. Python, scikit-learn."
+      }
+    ]
+  },
+  "tecnologias": {
+    "num": "05",
+    "label": "Technologies",
+    "rows": [
+      { "label": "Backend", "vals": [".NET Core", "C#", "ASP.NET", "Entity Framework", "Node.js / NestJS"] },
+      { "label": "Frontend", "vals": ["Angular", "TypeScript", "JavaScript", "React / React Native"] },
+      { "label": "AI &amp; Data", "vals": ["Python", "Pandas", "scikit-learn", "statsmodels", "EDA", "SQL", "Streamlit / Plotly", "Power BI", "AWS Rekognition"] },
+      { "label": "Cloud, DevOps &amp; Architecture", "vals": ["AWS (S3, Lambda, QLDB)", "Docker", "Amazon ECS", "CI/CD", "DDD / CQRS", "Microservices"] },
+      { "label": "Languages", "vals": ["English B2 (upper-intermediate)"] }
+    ]
+  },
+  "formacion": {
+    "num": "06",
+    "label": "Education",
+    "rows": [
+      { "period": "2025", "title": "Data Science & AI Diploma", "inst": "UTN" },
+      { "period": "2025", "title": "Python Diploma", "inst": "UTN" },
+      { "period": "2023", "title": "Systems Analyst", "inst": "Instituto Cervantes · Honor Roll" },
+      { "period": "2021", "title": "Full Stack with React JS Diploma", "inst": "UTN" },
+      { "period": "In progress", "title": "Google Data Analytics Professional Certificate", "inst": "Coursera" }
+    ]
+  },
+  "docencia": {
+    "num": "07",
+    "label": "Teaching",
+    "role": "Instructor — 3 technology programs",
+    "org": "Instituto Cervantes",
+    "when": "08/2024 — Present",
+    "description": "Instructor across the Systems Analyst, Web Development and Data Science & AI programs. Includes the Capstone Project and Data Processing (Power BI) course in the Data Science program. 5 of 20 students landed Jr Developer jobs in the last cycle.",
+    "materiasLabel": "Courses",
+    "materias": "Programming 1 (Python) · Lab 1 & 2 · Web Development 2 (React) · Mobile Apps (React Native/Expo) · Project Management · Capstone Practicum 2 & 3 · Capstone Project (Data Science) · Data Processing (Power BI)"
+  },
+  "closing": {
+    "title": "Let's work together?",
+    "links": [
+      { "text": "mauriciogcode@gmail.com", "url": "mailto:mauriciogcode@gmail.com" },
+      { "text": "LinkedIn", "url": "https://www.linkedin.com/in/mauricioglab" },
+      { "text": "GitHub", "url": "https://github.com/mauricioglab" }
+    ]
+  },
+  "footer": {
+    "text": "© 2026 Mauricio González — Software Engineer · AI &amp; Automation"
+  }
+}

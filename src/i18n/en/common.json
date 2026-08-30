@@ -1,34 +1,5 @@
 {
-  "nav": {
-    "projects": "Projects",
-    "skills": "Skills",
-    "experience": "Experience",
-    "blog": "Blog",
-    "contact": "Contact",
-    "portfolio": "Portfolio"
-  },
   "sections": {
-    "featuredProjects": "Featured Projects",
-    "techStack": "Tech Stack",
-    "experience": "Experience",
-    "methodology": "My Methodology",
-    "background": "Technical Background"
-  },
-  "cta": {
-    "contact": "Contact",
-    "downloadCV": "Download CV",
-    "sendEmail": "Send Message",
-    "scheduleCall": "Schedule a Call",
-    "connectLinkedIn": "Connect on LinkedIn",
-    "viewRepos": "View Repositories"
-  },
-  "footer": {
-    "links": "Links",
-    "contact": "Contact",
-    "rights": "All rights reserved."
-  },
-  "theme": {
-    "light": "Light",
-    "dark": "Dark"
+    "techStack": "Tech Stack"
   }
 }

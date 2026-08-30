@@ -21,8 +21,8 @@ interface PostsByYear {
 const postsByYearMonth: PostsByYear = {};
 
 posts.forEach((post) => {
-  const year = post.data.pubDate.getFullYear();
-  const monthIndex = post.data.pubDate.getMonth();
+  const year = post.pubDate.getFullYear();
+  const monthIndex = post.pubDate.getMonth();
   
   if (!postsByYearMonth[year]) {
     postsByYearMonth[year] = {};
@@ -56,30 +56,30 @@ const monthNames = [
 
   <div>
     <header class="mb-12 text-center">
-      <h1 class="entry-title text-4xl font-normal text-[#594a42] mb-4">Archivo</h1>
-      <p class="text-lg text-[#594a42]">Todos los artículos organizados por fecha</p>
+      <h1 class="entry-title text-4xl font-semibold text-[#141a2e] mb-4">Archivo</h1>
+      <p class="text-lg text-[#5c6785]">Todos los artículos organizados por fecha</p>
     </header>
 
     {sortedYears.length === 0 ? (
-      <p class="text-center text-[#594a42]">No hay artículos archivados.</p>
+      <p class="text-center text-[#5c6785]">No hay artículos archivados.</p>
     ) : (
       <div class="archives-content">
         {sortedYears.map((year) => {
           const months = Object.keys(postsByYearMonth[year])
             .map(Number)
             .sort((a, b) => b - a);
-          
+
           return (
             <section class="year-section mb-12" aria-labelledby={`year-${year}`}>
-              <h2 id={`year-${year}`} class="text-3xl font-normal text-[#594a42] mb-6 pb-3 border-b border-[#e5e5e5]">{year}</h2>
-              
+              <h2 id={`year-${year}`} class="text-3xl font-semibold text-[#141a2e] mb-6 pb-3 border-b border-[#e4e8f0]">{year}</h2>
+
               {months.map((monthIndex) => {
                 const monthPosts = postsByYearMonth[year][monthIndex];
                 const monthName = monthNames[monthIndex];
-                
+
                 return (
                   <div class="month-section mb-8">
-                    <h3 class="text-xl font-normal text-[#594a42] mb-4 capitalize">{monthName} {year}</h3>
+                    <h3 class="text-xl font-semibold text-[#141a2e] mb-4 capitalize">{monthName} {year}</h3>
                     <div class="posts-list" role="list">
                       {monthPosts.map((post) => (
                         <PostCard post={post} />

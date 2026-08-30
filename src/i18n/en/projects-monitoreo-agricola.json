@@ -1,0 +1,127 @@
+{
+  "back": "← Back to projects",
+  "badge": "GyL Group · Spanish client",
+  "title": "Agricultural monitoring with Machine Learning",
+  "description": "Web application for crop monitoring that integrates IoT sensor data analysis with Python and ML, immutable traceability on AWS QLDB and real-time visualizations for crop alerts.",
+  "stats": {
+    "iot": { "value": "IoT", "label": "Sensors with nightly sync" },
+    "trace": { "value": "QLDB", "label": "Immutable traceability" },
+    "realtime": { "value": "Real-time", "label": "Visualizations and alerts" }
+  },
+  "links": {
+    "confidential": "🔒 Client project — code not public"
+  },
+  "problem": {
+    "title": "The Problem",
+    "intro": "A client in Spain needs to monitor crops in real time from IoT sensor data spread across the field. The data arrives scattered, the history is not auditable and alerts arrive too late.",
+    "items": [
+      "Scattered IoT sensor data with no reliable history",
+      "No auditable traceability of the data feeding decisions",
+      "Late crop alerts due to a lack of automated analysis",
+      "A team without a unified view of crop status"
+    ]
+  },
+  "process": {
+    "title": "My Process",
+    "phases": [
+      {
+        "title": "1. Data analysis with Python + Colab",
+        "description": "Modeled the sensor data analysis with Python in Google Colab, understanding moisture, temperature and irrigation patterns.",
+        "items": [
+          "EDA of IoT sensor data to detect crop patterns",
+          "Data pipeline preparation with Scikit-learn for early signals",
+          "Fast prototyping in Colab before productizing"
+        ]
+      },
+      {
+        "title": "2. Nightly sync to AWS QLDB",
+        "description": "Architected a nightly synchronization of sensor data into AWS QLDB, guaranteeing immutable traceability.",
+        "items": [
+          "QLDB ledger as the single source of truth for sensor history",
+          "Automated nightly sync with AWS Lambda and EventBridge",
+          "Every piece of history stays immutable and auditable"
+        ]
+      },
+      {
+        "title": "3. Real-time visualizations and alerts",
+        "description": "Built the web UI with real-time visualizations for crop insights and automated alerts.",
+        "items": [
+          "Real-time visualizations with Matplotlib and Seaborn",
+          "Automated alerts by crop thresholds agreed with the client",
+          "Angular frontend consuming the Node.js API"
+        ]
+      },
+      {
+        "title": "4. R&D audit",
+        "description": "The project went through an R&D audit, validating the data design and the methodology used.",
+        "items": [
+          "Data pipeline documentation for the audit",
+          "QLDB traceability validated as a quality guarantee",
+          "Closed with the R&D team's findings"
+        ]
+      }
+    ]
+  },
+  "solution": {
+    "title": "The Solution",
+    "subsections": [
+      {
+        "title": "Data with auditable backing",
+        "description": "The sensor history stops being a lost file: every reading lands in an immutable ledger.",
+        "items": [
+          "AWS QLDB as an immutable record of sensor history",
+          "Full traceability: what data, from which sensor, at what time",
+          "Foundation for data audits and informed decisions"
+        ]
+      },
+      {
+        "title": "Productized ML analysis",
+        "description": "What started as a Colab prototype ended as a production pipeline.",
+        "items": [
+          "Data pipeline with Python + Scikit-learn",
+          "Moisture, temperature and irrigation signal analysis",
+          "Automated nightly sync with no manual intervention"
+        ]
+      },
+      {
+        "title": "Real-time visibility",
+        "description": "The team sees crop status up to date and receives automatic alerts.",
+        "items": [
+          "Real-time visualizations with Matplotlib/Seaborn",
+          "Automated crop alerts by thresholds",
+          "A single unified view of the field for the team"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "title": "Results & Impact",
+    "metrics": {
+      "audit": { "value": "R&D", "label": "Project audit passed" },
+      "trace": { "value": "100%", "label": "Sensor data with traceability" },
+      "alertas": { "value": "Automatic", "label": "Alerts by crop thresholds" },
+      "sync": { "value": "Nightly", "label": "Automated IoT sync" }
+    },
+    "learnings": {
+      "title": "Key Learnings",
+      "items": [
+        { "label": "Prototype to production:", "text": "starting in Colab accelerated hypothesis validation before investing in infrastructure." },
+        { "label": "Ledger as an asset:", "text": "QLDB turned the history into an auditable asset instead of a loose data repository." },
+        { "label": "Alerts that arrive on their own:", "text": "automating the sync is what made the operational difference: without a pipeline, there are no alerts." }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Tech Stack",
+    "columns": [
+      { "title": "Data and ML", "items": ["Python", "Scikit-learn", "Google Colab", "Matplotlib", "Seaborn"] },
+      { "title": "Backend", "items": ["Node.js", "AWS Lambda", "AWS EventBridge", "AWS QLDB"] },
+      { "title": "Frontend", "items": ["Angular", "Real-time visualizations"] }
+    ]
+  },
+  "cta": {
+    "title": "Need sensor data with backing and alerts?",
+    "subtitle": "If you have IoT devices generating data you're not leveraging, let's build the pipeline: analysis, traceability and alerts.",
+    "button": "Contact"
+  }
+}

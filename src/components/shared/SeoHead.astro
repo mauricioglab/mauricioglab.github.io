@@ -1,0 +1,45 @@
+---
+import { SITE_CONFIG } from '../../data/config';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: 'es' | 'en';
+  canonical: string;
+  type?: 'website' | 'profile';
+}
+
+const { title, description, lang, canonical, type = 'website' } = Astro.props;
+
+const jobTitle = lang === 'es'
+  ? 'Software Engineer · IA & Automatización'
+  : 'Software Engineer · AI & Automation';
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE_CONFIG.author,
+  jobTitle,
+  email: `mailto:${SITE_CONFIG.email}`,
+  url: SITE_CONFIG.siteUrl,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Córdoba',
+    addressCountry: 'AR',
+  },
+  sameAs: [SITE_CONFIG.linkedin, SITE_CONFIG.github],
+  knowsLanguage: lang === 'es' ? ['es', 'en'] : ['en', 'es'],
+};
+---
+
+<link rel="canonical" href={canonical} />
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={SITE_CONFIG.author} />
+<meta property="og:locale" content={lang === 'es' ? 'es_AR' : 'en_US'} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<script type="application/ld+json" set:html={JSON.stringify(personSchema)} />

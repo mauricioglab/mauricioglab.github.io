@@ -1,7 +1,7 @@
 {
   "seo": {
     "title": "Portfolio | Mauricio González - Software Engineer, AI & Automation",
-    "description": "Mauricio González's portfolio: Software Engineer specialized in AI and Automation. Real projects in development, AI in production, and predictive modeling."
+    "description": "Mauricio González's portfolio: Software Engineer · AI & Automation. Real projects in development, AI in production, and predictive modeling."
   },
   "title": "Portfolio",
   "subtitle": "Software Engineer · AI & Automation",
@@ -12,6 +12,8 @@
   "emptyProjects": "No projects yet — pending to complete",
   "contact": "Contact",
   "nav": {
-    "portfolio": "Portfolio"
+    "portfolio": "Portfolio",
+    "servicios": "Services",
+    "cv": "CV"
   }
 }

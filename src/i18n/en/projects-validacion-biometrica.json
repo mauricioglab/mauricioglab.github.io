@@ -1,0 +1,127 @@
+{
+  "back": "← Back to projects",
+  "badge": "GyL Group · In production",
+  "title": "AI-Powered Biometric Validation",
+  "description": "Complete solution (backend + frontend) for identity validation through facial recognition, with liveness detection and immutable traceability, integrated with RENAPER.",
+  "stats": {
+    "verificaciones": { "value": "500+", "label": "Daily verifications in production" },
+    "precision": { "value": "99.8%", "label": "Biometric validation precision" },
+    "vida": { "value": "Liveness", "label": "Motion detection" }
+  },
+  "links": {
+    "confidential": "🔒 Government project — code not public"
+  },
+  "problem": {
+    "title": "The Problem",
+    "intro": "A government agency needed to validate people's identity in real time, comparing against RENAPER data, with a liveness check to prevent fraud and traceability that makes every validation auditable.",
+    "items": [
+      "Real-time identity validation against RENAPER data",
+      "Liveness detection with motion capture to prevent impersonation",
+      "Full traceability of every validation (who, when, with what result)",
+      "Demanding precision for a government-scale system"
+    ]
+  },
+  "process": {
+    "title": "My Process",
+    "phases": [
+      {
+        "title": "1. Facial recognition with AWS Rekognition",
+        "description": "Implemented identity validation through facial recognition, integrating AWS Rekognition for biometric matching.",
+        "items": [
+          "Facial comparison against RENAPER data",
+          "Liveness check with motion detection",
+          "99.8% precision validated in production"
+        ]
+      },
+      {
+        "title": "2. Node.js/NestJS backend integrated with RENAPER",
+        "description": "Built the RESTful API in Node.js/NestJS that consumes RENAPER services, overcoming government documentation gaps.",
+        "items": [
+          "RESTful API consuming RENAPER services",
+          "Overcame the agency's documentation limitations",
+          "Angular frontend for biometric capture"
+        ]
+      },
+      {
+        "title": "3. Immutable traceability with AWS QLDB",
+        "description": "Implemented immutable storage with AWS QLDB so every validation is recorded and auditable.",
+        "items": [
+          "Immutable ledger with AWS QLDB",
+          "Full traceability of validations",
+          "Auditable history for the agency"
+        ]
+      },
+      {
+        "title": "4. Scale in production",
+        "description": "The system runs in production processing 500+ daily verifications reliably.",
+        "items": [
+          "500+ daily verifications in production",
+          "Stable operation at government scale",
+          "99.8% precision validated on real traffic"
+        ]
+      }
+    ]
+  },
+  "solution": {
+    "title": "The Solution",
+    "subsections": [
+      {
+        "title": "Real-time identity validation",
+        "description": "The person is validated against RENAPER via facial recognition, with a liveness check that rules out impersonation.",
+        "items": [
+          "Facial recognition with AWS Rekognition",
+          "Liveness check with motion detection",
+          "Direct integration with RENAPER"
+        ]
+      },
+      {
+        "title": "Immutable traceability",
+        "description": "Every validation is recorded in an immutable ledger, making the process auditable end to end.",
+        "items": [
+          "Immutable storage on AWS QLDB",
+          "Complete record of every validation",
+          "Guaranteed auditability for the agency"
+        ]
+      },
+      {
+        "title": "Precision validated in production",
+        "description": "The system operates at real scale with verifiable metrics.",
+        "items": [
+          "99.8% precision on real traffic",
+          "500+ daily verifications",
+          "Stack: Node.js/NestJS + Angular + AWS (Rekognition, QLDB)"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "title": "Results & Impact",
+    "metrics": {
+      "precision": { "value": "99.8%", "label": "Biometric precision" },
+      "verificaciones": { "value": "500+", "label": "Daily verifications" },
+      "trazabilidad": { "value": "100%", "label": "Validations with traceability" },
+      "produccion": { "value": "Prod", "label": "Running since 2024" }
+    },
+    "learnings": {
+      "title": "Key Learnings",
+      "items": [
+        { "label": "AI to production:", "text": "liveness detection with AWS Rekognition showed that taking AI to production requires integrating vision, backend and traceability, not just a model." },
+        { "label": "Agency integration:", "text": "working with RENAPER meant resolving incomplete documentation through direct requirements gathering and iterative testing." },
+        { "label": "Ledger as a guarantee:", "text": "immutable traceability (QLDB) is what made the system auditable and defensible before the agency." }
+      ]
+    }
+  },
+  "stack": {
+    "title": "Tech Stack",
+    "columns": [
+      { "title": "Backend", "items": ["Node.js", "NestJS", "TypeScript", "PostgreSQL"] },
+      { "title": "Frontend", "items": ["Angular", "Biometric capture"] },
+      { "title": "Cloud & AI", "items": ["AWS Rekognition", "AWS QLDB", "AWS S3", "AWS Lambda"] }
+    ]
+  },
+  "cta": {
+    "title": "Need identity validation or AI in production?",
+    "subtitle": "If your system needs facial recognition, liveness detection or immutable traceability, let's talk. I did it at government scale.",
+    "button": "Contact"
+  }
+}

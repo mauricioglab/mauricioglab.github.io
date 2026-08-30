@@ -1,10 +1,10 @@
 {
   "seo": {
-    "title": "Portfolio | Mauricio González - Software Engineer, IA y Automatización",
-    "description": "Portfolio de Mauricio González: Software Engineer especializado en IA y Automatización. Proyectos reales de desarrollo, IA aplicada en producción y modelos predictivos."
+    "title": "Portfolio | Mauricio González - Software Engineer · IA & Automatización",
+    "description": "Portfolio de Mauricio González: Software Engineer · IA & Automatización · Python · .NET Core · Angular. Proyectos reales de desarrollo, IA aplicada en producción y modelos predictivos."
   },
   "title": "Portfolio",
-  "subtitle": "Software Engineer · IA y Automatización",
+  "subtitle": "Software Engineer · IA & Automatización",
   "intro": "Proyectos, experiencia y especialización en un solo lugar. Al agregar un proyecto nuevo, esta página se actualiza sola.",
   "projectsLabel": "Proyectos",
   "downloadCV": "Descargar CV",
@@ -12,6 +12,8 @@
   "emptyProjects": "Sin proyectos aún — pendiente de completar",
   "contact": "Contacto",
   "nav": {
-    "portfolio": "Portfolio"
+    "portfolio": "Portfolio",
+    "servicios": "Servicios",
+    "cv": "CV"
   }
 }
