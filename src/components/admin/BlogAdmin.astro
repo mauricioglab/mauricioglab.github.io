@@ -239,7 +239,6 @@
   } from '../../lib/supabase';
 
   window.Alpine = Alpine;
-  Alpine.start();
 
   const BASE = import.meta.env.BASE_URL;
   window.__BLOG_BASE__ = BASE.endsWith('/') ? BASE : `${BASE}/`;
@@ -552,4 +551,6 @@
       this.form.tiempoLecturaMin = '';
     },
   }));
+
+  Alpine.start();
 </script>
