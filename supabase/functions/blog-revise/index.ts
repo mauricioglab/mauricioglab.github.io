@@ -72,12 +72,20 @@ async function deepseekJson<T>(system: string, user: string, maxTokens = 2048): 
   const raw = await res.text();
   if (!res.ok) throw new Error(`DeepSeek (${res.status}): ${raw.slice(0, 500)}`);
   let content = "";
+  let finishReason = "";
   try {
-    content = JSON.parse(raw)?.choices?.[0]?.message?.content ?? "";
+    const parsed = JSON.parse(raw);
+    content = parsed?.choices?.[0]?.message?.content ?? "";
+    finishReason = parsed?.choices?.[0]?.finish_reason ?? "";
   } catch {
     throw new Error(`Respuesta inválida de DeepSeek: ${raw.slice(0, 500)}`);
   }
   if (!content) throw new Error("DeepSeek respondió sin contenido.");
+  if (finishReason === "length") {
+    throw new Error(
+      "DeepSeek cortó la respuesta por límite de tokens. Probá con un tiempo de lectura menor o redactá de nuevo."
+    );
+  }
   const cleaned = content
     .replace(/^```(?:json)?\s*/i, "")
     .replace(/```\s*$/i, "")
@@ -180,7 +188,7 @@ Deno.serve(async (req: Request) => {
       `Borrador actual:\n${borrador.bodyMarkdown}`,
     ].join("\n");
 
-    const corregido = await deepseekJson<Borrador>(SYSTEM_REVISER, userPrompt, 3000);
+    const corregido = await deepseekJson<Borrador>(SYSTEM_REVISER, userPrompt, 8000);
     if (!corregido?.bodyMarkdown) {
       return jsonResponse({ error: "El revisor no devolvió un borrador válido" }, 502);
     }
