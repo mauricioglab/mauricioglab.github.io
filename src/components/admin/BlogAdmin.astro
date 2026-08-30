@@ -123,15 +123,42 @@
         <!-- Borrador -->
         <div x-show="borrador" class="bg-slate-800 rounded-xl p-5 space-y-3">
           <h2 class="text-base font-bold">3. Revisá y ajustá el borrador</h2>
-          <div x-show="editor" class="text-xs rounded-lg p-3" :class="editor && editor.aprobado ? 'bg-green-600/15 border border-green-500/30 text-green-200' : 'bg-yellow-600/15 border border-yellow-500/30 text-yellow-200'">
-            <p>
-              <span class="font-bold">Editor IA:</span>
-              <span x-text="editor ? (editor.aprobado ? '✓ aprobado' : '✗ necesita ajustes') : ''"></span>
-              <span x-show="editor && editor.nota != null" class="ml-2 opacity-80">
-                Nota <span x-text="editor ? editor.nota : ''"></span>/10
-              </span>
-            </p>
-            <p x-show="editor && editor.feedback" class="mt-1 whitespace-pre-wrap" x-text="editor ? editor.feedback : ''"></p>
+          <div class="flex flex-wrap items-center gap-3">
+            <button @click="revisar()" :disabled="busy" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-50 text-sm font-bold rounded-lg">
+              <span x-text="busy ? 'Revisando...' : (review ? 'Volver a revisar' : '🔍 Revisar con IA')"></span>
+            </button>
+            <span x-show="iteracion > 0" class="text-xs text-slate-500">Correcciones aplicadas: <span x-text="iteracion"></span>/2</span>
+          </div>
+          <div x-show="review" class="rounded-lg border p-4 space-y-3"
+               :class="review && review.aprobado ? 'bg-green-600/10 border-green-500/30' : 'bg-amber-600/10 border-amber-500/30'">
+            <div class="flex items-center justify-between gap-2">
+              <p class="text-sm font-bold" :class="review && review.aprobado ? 'text-green-300' : 'text-amber-300'">
+                <span x-text="review && review.aprobado ? '✓ Aprobado por el crítico' : '✗ Necesita ajustes'"></span>
+              </p>
+              <span x-show="review && review.nota != null" class="text-xs opacity-80">Nota <span x-text="review ? review.nota : ''"></span>/10</span>
+            </div>
+            <p x-show="review && review.resumen" class="text-xs text-slate-300" x-text="review ? review.resumen : ''"></p>
+            <div x-show="review && review.problemas && review.problemas.length" class="space-y-1.5">
+              <p class="text-xs font-bold text-slate-300">Problemas a corregir:</p>
+              <template x-for="(prob, i) in review.problemas" :key="i">
+                <div class="text-xs bg-slate-900 rounded-lg p-2">
+                  <p>
+                    <span class="font-bold text-indigo-300" x-text="prob.tipo"></span>
+                    <span x-show="prob.donde" class="text-slate-500" x-text="' · ' + prob.donde"></span>
+                  </p>
+                  <p x-show="prob.fixSugerido" class="text-slate-300 mt-0.5" x-text="prob.fixSugerido"></p>
+                </div>
+              </template>
+            </div>
+            <div class="flex flex-wrap items-center gap-3">
+              <button x-show="review && !review.aprobado && iteracion < 2" @click="aplicarCorrecciones()" :disabled="busy"
+                      class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-50 text-sm font-bold rounded-lg">
+                <span x-text="busy ? 'Corrigiendo...' : 'Aplicar correcciones'"></span>
+              </button>
+              <p x-show="review && !review.aprobado && iteracion >= 2" class="text-xs text-amber-300">
+                Tope de revisiones alcanzado. Editá a mano o publicá el borrador.
+              </p>
+            </div>
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-300 mb-1">Título</label>
@@ -213,6 +240,7 @@
 
         <div class="bg-slate-800 rounded-xl p-5 text-xs text-slate-400 space-y-2">
           <h3 class="text-sm font-bold text-slate-200">Notas</h3>
+          <p>Redactá con el actor, revisá con el crítico IA (hook, precisión, tono y extensión) y aplicá correcciones hasta 2 rondas. Siempre podés editar a mano o publicar.</p>
           <p>Al publicar, el post se guarda en la base y aparece en <span class="text-slate-200">/blog</span> tras el próximo build (el deploy corre cada 12 hs o manual desde GitHub).</p>
           <p>Las llaves de IA viven como secrets de Supabase: nunca viajan al navegador.</p>
         </div>
@@ -333,7 +361,8 @@
     propuestas: [] as any[],
     propuestaIndex: -1,
     borrador: null as any,
-    editor: null as any,
+    review: null as any,
+    iteracion: 0,
     categoriesText: '',
     coverPrompt: '',
     coverUrl: '',
@@ -428,12 +457,73 @@
         });
         if (error) throw new Error(error.context?.error || error.message);
         this.borrador = data.borrador;
-        this.editor = data.editor || null;
+        this.review = null;
+        this.iteracion = 0;
         this.categoriesText = (data.borrador.categories || []).join(', ');
         this.coverUrl = '';
         this.coverPrompt = '';
         this.showPreview = false;
         this.status = 'Borrador listo. Revisalo, ajustá y publicá.';
+      } catch (e) {
+        this.status = (e as Error).message;
+      } finally {
+        this.busy = false;
+      }
+    },
+
+    async revisar() {
+      if (!this.borrador) { this.status = 'Primero redactá el post.'; return; }
+      this.busy = true;
+      this.status = 'Revisando con el crítico IA...';
+      try {
+        const { data, error } = await supabase.functions.invoke('blog-review', {
+          body: {
+            borrador: {
+              title: this.borrador.title,
+              categories: this.borrador.categories || [],
+              description: this.borrador.description,
+              bodyMarkdown: this.borrador.bodyMarkdown,
+            },
+            tiempoLecturaMin: Number(this.form.tiempoLecturaMin) || null,
+          },
+        });
+        if (error) throw new Error(error.context?.error || error.message);
+        this.review = data.review || null;
+        this.status = this.review?.aprobado
+          ? 'El crítico aprobó el borrador. Listo para publicar.'
+          : 'El crítico marcó problemas. Podés aplicar correcciones o editarlas a mano.';
+      } catch (e) {
+        this.status = (e as Error).message;
+      } finally {
+        this.busy = false;
+      }
+    },
+
+    async aplicarCorrecciones() {
+      if (!this.borrador || !this.review) return;
+      if (this.iteracion >= 2) { this.status = 'Tope de revisiones alcanzado.'; return; }
+      this.busy = true;
+      this.status = 'Aplicando correcciones del crítico...';
+      try {
+        const { data, error } = await supabase.functions.invoke('blog-revise', {
+          body: {
+            borrador: {
+              title: this.borrador.title,
+              categories: this.borrador.categories || [],
+              description: this.borrador.description,
+              bodyMarkdown: this.borrador.bodyMarkdown,
+            },
+            problemas: this.review.problemas || [],
+            tiempoLecturaMin: Number(this.form.tiempoLecturaMin) || null,
+          },
+        });
+        if (error) throw new Error(error.context?.error || error.message);
+        this.borrador = data.borrador;
+        this.categoriesText = (data.borrador.categories || []).join(', ');
+        this.iteracion++;
+        this.review = null;
+        this.showPreview = false;
+        this.status = `Correcciones aplicadas (iteración ${this.iteracion}/2). Revisá de nuevo.`;
       } catch (e) {
         this.status = (e as Error).message;
       } finally {
@@ -536,6 +626,8 @@
         bodyMarkdown: p.body_markdown,
         categories: p.categories || [],
       };
+      this.review = null;
+      this.iteracion = 0;
       this.categoriesText = (p.categories || []).join(', ');
       this.coverUrl = p.cover_url || '';
       this.coverPrompt = '';
@@ -551,7 +643,8 @@
     nuevoPost() {
       this.editingId = null;
       this.borrador = null;
-      this.editor = null;
+      this.review = null;
+      this.iteracion = 0;
       this.coverUrl = '';
       this.coverPrompt = '';
       this.propuestas = [];

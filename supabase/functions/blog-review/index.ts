@@ -60,7 +60,7 @@ async function deepseekJson<T>(system: string, user: string, maxTokens = 2048): 
     },
     body: JSON.stringify({
       model,
-      temperature: 0.7,
+      temperature: 0.3,
       max_tokens: maxTokens,
       response_format: { type: "json_object" },
       messages: [
@@ -89,50 +89,58 @@ async function deepseekJson<T>(system: string, user: string, maxTokens = 2048): 
   }
 }
 
-const SYSTEM_BLOGGER = `
-Sos un redactor de blog técnico en español rioplatense. Escribís posts con hook al
-principio (no contexto primero), párrafos cortos de 3-4 líneas, un detalle concreto o
-ejemplo por sección, y voz activa. El cuerpo va en markdown (##, listas, código con
-\`\`\` si corresponde).
+const SYSTEM_CRITIC = `
+Sos el crítico de un blog técnico. Evaluás un borrador y devolvés problemas accionables.
 
-Precisión ante todo: si no estás seguro de un dato verificable puntual (fecha de
-lanzamiento, número de versión, cifra exacta), no lo afirmes con precisión falsa —
-hablá en términos generales en vez de inventar un dato específico que puede estar
-mal. Si incluís código, que haga realmente lo que el texto dice que hace; si es una
-simplificación con fines ilustrativos, decilo explícitamente.
+Criterios:
+- hook: la primera línea engancha y va al grano, sin contexto previo innecesario
+- precision: no hay fechas, versiones ni cifras inventadas; el código hace lo que dice
+- tono: consistente, español rioplatense, párrafos cortos
+- estructura: secciones claras con ##, sin relleno ni repeticiones
+- relleno: nada de frases genéricas ni muletillas
 
-Devolvé ÚNICAMENTE un objeto JSON (sin texto adicional, sin bloques de código markdown
-que envuelvan TODO el JSON — el markdown va sólo adentro del campo "bodyMarkdown") con
-esta forma exacta:
+Devolvé ÚNICAMENTE un objeto JSON (sin texto adicional, sin bloques de código markdown) con esta forma exacta:
 {
-  "title": string,
-  "categories": string[],
-  "description": string,
-  "bodyMarkdown": string
+  "aprobado": boolean,
+  "nota": number,
+  "problemas": [{"tipo": "hook|precision|tono|relleno|estructura", "donde": string, "fixSugerido": string}],
+  "resumen": string
 }
+"nota" es de 0 a 10. "aprobado" debe ser true SOLO si el borrador está listo para publicar.
+"problemas" puede ser un array vacío si no hay nada que corregir. Cada "fixSugerido" debe ser concreto y accionable (qué cambiar, no "mejorar la redacción").
 `;
 
-interface Borrador {
-  title: string;
-  categories: string[];
-  description: string;
-  bodyMarkdown: string;
+interface Problema {
+  tipo: string;
+  donde: string;
+  fixSugerido: string;
 }
 
-function buildUserBlogger(body: any, propuesta: any): string {
-  const lines: string[] = [];
-  lines.push(`Tema: ${body.tema}`);
-  lines.push(`Ángulo elegido: ${propuesta?.angulo ?? ""}`);
-  lines.push(`Título sugerido (podés ajustarlo): ${propuesta?.tituloSugerido ?? ""}`);
-  lines.push(`Resumen del ángulo: ${propuesta?.resumen ?? ""}`);
-  if (body?.tono) lines.push(`Tono: ${body.tono}`);
-  if (body?.tiempoLecturaMin) {
-    const m = Number(body.tiempoLecturaMin);
-    lines.push(
-      `Tiempo de lectura objetivo: ~${m} minutos (a 200 palabras/minuto, ~${m * 200} palabras).`
-    );
-  }
-  return lines.join("\n");
+function countWords(md: string): number {
+  const text = (md || "")
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/[#>*`\-\[\]()!]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return text ? text.split(" ").length : 0;
+}
+
+function lengthProblem(bodyMarkdown: string, tiempoLecturaMin: number | null): Problema | null {
+  if (!tiempoLecturaMin || tiempoLecturaMin < 1) return null;
+  const target = tiempoLecturaMin * 200;
+  const actual = countWords(bodyMarkdown);
+  const diff = Math.abs(actual - target) / target;
+  if (diff <= 0.15) return null;
+  const falta = target - actual;
+  return {
+    tipo: "extension",
+    donde: "cuerpo",
+    fixSugerido: `El post tiene ~${actual} palabras y el target es ~${target} (${tiempoLecturaMin} min de lectura). ${
+      falta > 0
+        ? `Expandí ~${Math.abs(falta)} palabras`
+        : `Recortá ~${Math.abs(falta)} palabras`
+    } para acercarte al target.`,
+  };
 }
 
 Deno.serve(async (req: Request) => {
@@ -144,22 +152,43 @@ Deno.serve(async (req: Request) => {
 
   try {
     const body = await req.json();
-    const tema = (body?.tema ?? "").toString().trim();
-    if (!tema) return jsonResponse({ error: "Falta el tema" }, 400);
-    if (!body?.propuesta) {
-      return jsonResponse({ error: "Falta la propuesta elegida" }, 400);
+    const borrador = body?.borrador;
+    if (!borrador?.bodyMarkdown) {
+      return jsonResponse({ error: "Falta el borrador" }, 400);
     }
 
-    const borrador = await deepseekJson<Borrador>(
-      SYSTEM_BLOGGER,
-      buildUserBlogger(body, body.propuesta),
-      3000
-    );
-    if (!borrador?.title || !borrador?.bodyMarkdown) {
-      return jsonResponse({ error: "DeepSeek no devolvió un borrador válido" }, 502);
-    }
+    const tiempoLecturaMin = body?.tiempoLecturaMin ? Number(body.tiempoLecturaMin) : null;
+    const wordCount = countWords(borrador.bodyMarkdown);
 
-    return jsonResponse({ borrador });
+    const userPrompt = [
+      `Título: ${borrador.title || ""}`,
+      `Descripción: ${borrador.description || ""}`,
+      `Categorías: ${(borrador.categories || []).join(", ")}`,
+      `Extensión actual: ~${wordCount} palabras${tiempoLecturaMin ? ` (target ~${tiempoLecturaMin * 200} palabras)` : ""}`,
+      ``,
+      `Borrador:\n${(borrador.bodyMarkdown || "").slice(0, 8000)}`,
+    ].join("\n");
+
+    const critic = await deepseekJson<{
+      aprobado: boolean;
+      nota: number;
+      problemas: Problema[];
+      resumen: string;
+    }>(SYSTEM_CRITIC, userPrompt, 800);
+
+    const problemas: Problema[] = [];
+    const lp = lengthProblem(borrador.bodyMarkdown, tiempoLecturaMin);
+    if (lp) problemas.push(lp);
+    if (Array.isArray(critic?.problemas)) problemas.push(...critic.problemas);
+
+    const review = {
+      aprobado: !!critic?.aprobado && problemas.length === 0,
+      nota: critic?.nota ?? null,
+      problemas,
+      resumen: critic?.resumen ?? "",
+    };
+
+    return jsonResponse({ review });
   } catch (e) {
     return jsonResponse({ error: (e as Error).message }, 500);
   }

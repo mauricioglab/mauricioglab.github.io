@@ -60,7 +60,7 @@ async function deepseekJson<T>(system: string, user: string, maxTokens = 2048): 
     },
     body: JSON.stringify({
       model,
-      temperature: 0.7,
+      temperature: 0.5,
       max_tokens: maxTokens,
       response_format: { type: "json_object" },
       messages: [
@@ -89,21 +89,19 @@ async function deepseekJson<T>(system: string, user: string, maxTokens = 2048): 
   }
 }
 
-const SYSTEM_BLOGGER = `
-Sos un redactor de blog técnico en español rioplatense. Escribís posts con hook al
-principio (no contexto primero), párrafos cortos de 3-4 líneas, un detalle concreto o
-ejemplo por sección, y voz activa. El cuerpo va en markdown (##, listas, código con
-\`\`\` si corresponde).
+const SYSTEM_REVISER = `
+Sos el revisor de un blog técnico en español rioplatense. Recibís un borrador y una
+lista de problemas que señaló el crítico.
 
-Precisión ante todo: si no estás seguro de un dato verificable puntual (fecha de
-lanzamiento, número de versión, cifra exacta), no lo afirmes con precisión falsa —
-hablá en términos generales en vez de inventar un dato específico que puede estar
-mal. Si incluís código, que haga realmente lo que el texto dice que hace; si es una
-simplificación con fines ilustrativos, decilo explícitamente.
+Aplicá SOLO esos problemas: cambiá puntualmente lo que indican, preservando el resto
+del contenido tal cual salvo que el problema indique lo contrario.
+Si hay un problema de extensión, ajustá la longitud del post al target de palabras
+indicado (expandí con contenido útil y on-topic, o recortá lo redundante).
+Respetá el estilo: hook al inicio, párrafos cortos, voz activa, markdown con ## y
+código con \`\`\` si corresponde. No inventes fechas, versiones ni cifras.
 
-Devolvé ÚNICAMENTE un objeto JSON (sin texto adicional, sin bloques de código markdown
-que envuelvan TODO el JSON — el markdown va sólo adentro del campo "bodyMarkdown") con
-esta forma exacta:
+Devolvé ÚNICAMENTE un objeto JSON (sin texto adicional, sin bloques de código markdown)
+con esta forma exacta:
 {
   "title": string,
   "categories": string[],
@@ -119,20 +117,19 @@ interface Borrador {
   bodyMarkdown: string;
 }
 
-function buildUserBlogger(body: any, propuesta: any): string {
-  const lines: string[] = [];
-  lines.push(`Tema: ${body.tema}`);
-  lines.push(`Ángulo elegido: ${propuesta?.angulo ?? ""}`);
-  lines.push(`Título sugerido (podés ajustarlo): ${propuesta?.tituloSugerido ?? ""}`);
-  lines.push(`Resumen del ángulo: ${propuesta?.resumen ?? ""}`);
-  if (body?.tono) lines.push(`Tono: ${body.tono}`);
-  if (body?.tiempoLecturaMin) {
-    const m = Number(body.tiempoLecturaMin);
-    lines.push(
-      `Tiempo de lectura objetivo: ~${m} minutos (a 200 palabras/minuto, ~${m * 200} palabras).`
-    );
-  }
-  return lines.join("\n");
+interface Problema {
+  tipo: string;
+  donde: string;
+  fixSugerido: string;
+}
+
+function countWords(md: string): number {
+  const text = (md || "")
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/[#>*`\-\[\]()!]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return text ? text.split(" ").length : 0;
 }
 
 Deno.serve(async (req: Request) => {
@@ -144,22 +141,42 @@ Deno.serve(async (req: Request) => {
 
   try {
     const body = await req.json();
-    const tema = (body?.tema ?? "").toString().trim();
-    if (!tema) return jsonResponse({ error: "Falta el tema" }, 400);
-    if (!body?.propuesta) {
-      return jsonResponse({ error: "Falta la propuesta elegida" }, 400);
+    const borrador = body?.borrador;
+    if (!borrador?.bodyMarkdown) {
+      return jsonResponse({ error: "Falta el borrador" }, 400);
     }
 
-    const borrador = await deepseekJson<Borrador>(
-      SYSTEM_BLOGGER,
-      buildUserBlogger(body, body.propuesta),
-      3000
+    const problemas: Problema[] = (body?.problemas || []).filter(
+      (p: Problema) => p && p.fixSugerido
     );
-    if (!borrador?.title || !borrador?.bodyMarkdown) {
-      return jsonResponse({ error: "DeepSeek no devolvió un borrador válido" }, 502);
+    const tiempoLecturaMin = body?.tiempoLecturaMin ? Number(body.tiempoLecturaMin) : null;
+    const target = tiempoLecturaMin ? tiempoLecturaMin * 200 : null;
+    const actual = countWords(borrador.bodyMarkdown);
+
+    const userPrompt = [
+      `Título: ${borrador.title || ""}`,
+      `Descripción: ${borrador.description || ""}`,
+      `Categorías: ${(borrador.categories || []).join(", ")}`,
+      target
+        ? `Target de extensión: ~${target} palabras (${tiempoLecturaMin} min de lectura). Actual: ~${actual}.`
+        : "",
+      ``,
+      `Problemas del crítico:`,
+      ...(problemas.length
+        ? problemas.map(
+            (p, i) => `${i + 1}. [${p.tipo}]${p.donde ? ` (${p.donde})` : ""} ${p.fixSugerido}`
+          )
+        : ["(sin problemas puntuales)"]),
+      ``,
+      `Borrador actual:\n${borrador.bodyMarkdown}`,
+    ].join("\n");
+
+    const corregido = await deepseekJson<Borrador>(SYSTEM_REVISER, userPrompt, 3000);
+    if (!corregido?.bodyMarkdown) {
+      return jsonResponse({ error: "El revisor no devolvió un borrador válido" }, 502);
     }
 
-    return jsonResponse({ borrador });
+    return jsonResponse({ borrador: corregido });
   } catch (e) {
     return jsonResponse({ error: (e as Error).message }, 500);
   }
