@@ -88,51 +88,64 @@ async function deepseekJson<T>(system: string, user: string): Promise<T> {
   }
 }
 
-async function generateImage(
+async function generateImageViaOpenRouter(
   prompt: string
 ): Promise<{ base64: string; mimeType: string }> {
-  const apiKey = Deno.env.get("GEMINI_API_KEY");
-  if (!apiKey) throw new Error("Falta GEMINI_API_KEY");
-  const model = Deno.env.get("GEMINI_IMAGE_MODEL") ?? "gemini-2.5-flash-image";
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": apiKey,
-      },
-      body: JSON.stringify({
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: {
-          responseModalities: ["TEXT", "IMAGE"],
-          imageConfig: { aspectRatio: "16:9" },
-        },
-      }),
-    }
-  );
+  const apiKey = Deno.env.get("OPENROUTER_API_KEY");
+  if (!apiKey) throw new Error("Falta OPENROUTER_API_KEY");
+  const model =
+    Deno.env.get("OPENROUTER_IMAGE_MODEL") ?? "google/gemini-3.1-flash-lite-image";
+
+  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+      "HTTP-Referer": "https://mauricioglab.github.io",
+      "X-Title": "MG Lab Blog Admin",
+    },
+    body: JSON.stringify({
+      model,
+      modalities: ["image", "text"],
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+
   const raw = await res.text();
-  if (!res.ok) throw new Error(`Gemini (${res.status}): ${raw.slice(0, 500)}`);
+  if (!res.ok) throw new Error(`OpenRouter (${res.status}): ${raw.slice(0, 500)}`);
+
   let data: any;
   try {
     data = JSON.parse(raw);
   } catch {
-    throw new Error(`Respuesta inválida de Gemini: ${raw.slice(0, 500)}`);
+    throw new Error(`Respuesta inválida de OpenRouter: ${raw.slice(0, 500)}`);
   }
-  const parts = data?.candidates?.[0]?.content?.parts ?? [];
-  const img = parts.find((p: any) => p?.inlineData?.data);
-  if (!img?.inlineData?.data) {
-    const blockReason = data?.promptFeedback?.blockReason;
+
+  const images = data?.choices?.[0]?.message?.images;
+  if (!Array.isArray(images) || images.length === 0) {
+    const text = data?.choices?.[0]?.message?.content;
     throw new Error(
-      blockReason
-        ? `Gemini bloqueó la imagen (${blockReason}).`
-        : "Gemini no devolvió una imagen."
+      `OpenRouter no devolvió imagen.${
+        text ? ` Texto: ${String(text).slice(0, 200)}` : ""
+      }`
     );
   }
-  return {
-    base64: img.inlineData.data,
-    mimeType: img.inlineData.mimeType ?? "image/png",
-  };
+
+  const url = images[0]?.image_url?.url;
+  if (!url) throw new Error("OpenRouter devolvió imagen sin URL.");
+
+  const m = /^data:([^;]+);base64,(.*)$/s.exec(url);
+  if (m) {
+    return { mimeType: m[1], base64: m[2] };
+  }
+
+  const imgRes = await fetch(url);
+  if (!imgRes.ok) throw new Error(`No se pudo descargar la imagen (${imgRes.status})`);
+  const buf = new Uint8Array(await imgRes.arrayBuffer());
+  let bin = "";
+  for (let i = 0; i < buf.length; i++) bin += String.fromCharCode(buf[i]);
+  const mimeType = imgRes.headers.get("content-type") ?? "image/png";
+  return { mimeType, base64: btoa(bin) };
 }
 
 function slugify(text: string): string {
@@ -184,7 +197,7 @@ Deno.serve(async (req: Request) => {
       if (!prompt) return jsonResponse({ error: "DeepSeek no generó un prompt" }, 502);
     }
 
-    const { base64, mimeType } = await generateImage(prompt);
+    const { base64, mimeType } = await generateImageViaOpenRouter(prompt);
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
