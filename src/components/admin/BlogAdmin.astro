@@ -121,8 +121,9 @@
         </div>
 
         <!-- Borrador -->
-        <div x-show="borrador" class="bg-slate-800 rounded-xl p-5 space-y-3">
-          <h2 class="text-base font-bold">3. Revisá y ajustá el borrador</h2>
+        <template x-if="borrador">
+          <div class="bg-slate-800 rounded-xl p-5 space-y-3">
+            <h2 class="text-base font-bold">3. Revisá y ajustá el borrador</h2>
           <div class="flex flex-wrap items-center gap-3">
             <button @click="revisar()" :disabled="busy" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-50 text-sm font-bold rounded-lg">
               <span x-text="busy ? 'Revisando...' : (review ? 'Volver a revisar' : '🔍 Revisar con IA')"></span>
@@ -223,7 +224,8 @@
             <button @click="publicar(true)" :disabled="busy" class="px-5 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-sm font-bold rounded-lg">Guardar borrador</button>
             <button @click="nuevoPost()" class="px-5 py-2 border border-slate-600 hover:border-slate-500 text-sm font-bold rounded-lg">Nuevo post</button>
           </div>
-        </div>
+          </div>
+        </template>
       </section>
 
       <!-- ===== Lista de posts ===== -->
