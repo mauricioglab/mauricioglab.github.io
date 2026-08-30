@@ -48,7 +48,7 @@ async function requireAdmin(req: Request): Promise<{ userId: string } | Response
   return { userId: user.id };
 }
 
-async function deepseekJson<T>(system: string, user: string): Promise<T> {
+async function deepseekJson<T>(system: string, user: string, maxTokens = 2048): Promise<T> {
   const apiKey = Deno.env.get("DEEPSEEK_API_KEY");
   if (!apiKey) throw new Error("Falta DEEPSEEK_API_KEY");
   const model = Deno.env.get("DEEPSEEK_MODEL") ?? "deepseek-v4-flash";
@@ -61,6 +61,7 @@ async function deepseekJson<T>(system: string, user: string): Promise<T> {
     body: JSON.stringify({
       model,
       temperature: 0.7,
+      max_tokens: maxTokens,
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: system },
@@ -134,7 +135,13 @@ interface Borrador {
   bodyMarkdown: string;
 }
 
-function buildUserBlogger(body: any, propuesta: any, feedback?: string): string {
+interface Editor {
+  aprobado: boolean;
+  nota: number;
+  feedback: string;
+}
+
+function buildUserBlogger(body: any, propuesta: any): string {
   const lines: string[] = [];
   lines.push(`Tema: ${body.tema}`);
   lines.push(`Ángulo elegido: ${propuesta?.angulo ?? ""}`);
@@ -145,14 +152,6 @@ function buildUserBlogger(body: any, propuesta: any, feedback?: string): string 
     const m = Number(body.tiempoLecturaMin);
     lines.push(
       `Tiempo de lectura objetivo: ~${m} minutos (a 200 palabras/minuto, ~${m * 200} palabras).`
-    );
-  }
-  if (feedback) {
-    lines.push("");
-    lines.push("El editor rechazó la versión anterior con este feedback:");
-    lines.push(feedback);
-    lines.push(
-      "Corregí puntualmente lo que señala el feedback. Preservá el resto del contenido tal cual salvo que el feedback indique lo contrario."
     );
   }
   return lines.join("\n");
@@ -173,31 +172,25 @@ Deno.serve(async (req: Request) => {
       return jsonResponse({ error: "Falta la propuesta elegida" }, 400);
     }
 
-    let borrador = await deepseekJson<Borrador>(
+    const borrador = await deepseekJson<Borrador>(
       SYSTEM_BLOGGER,
-      buildUserBlogger(body, body.propuesta)
+      buildUserBlogger(body, body.propuesta),
+      3000
     );
     if (!borrador?.title || !borrador?.bodyMarkdown) {
       return jsonResponse({ error: "DeepSeek no devolvió un borrador válido" }, 502);
     }
 
-    const editor = await deepseekJson<{
-      aprobado: boolean;
-      nota: number;
-      feedback: string;
-    }>(
+    const bodyForEditor = (borrador.bodyMarkdown ?? "").length > 3000
+      ? `${borrador.bodyMarkdown.slice(0, 3000)}\n... (recortado)`
+      : borrador.bodyMarkdown;
+    const editor = await deepseekJson<Editor>(
       SYSTEM_EDITOR,
-      `Título: ${borrador.title}\nDescripción: ${borrador.description}\n\n${borrador.bodyMarkdown}`
+      `Título: ${borrador.title}\nDescripción: ${borrador.description}\n\n${bodyForEditor}`,
+      400
     );
 
-    if (editor && editor.aprobado === false) {
-      borrador = await deepseekJson<Borrador>(
-        SYSTEM_BLOGGER,
-        buildUserBlogger(body, body.propuesta, editor.feedback ?? "")
-      );
-    }
-
-    return jsonResponse({ borrador });
+    return jsonResponse({ borrador, editor });
   } catch (e) {
     return jsonResponse({ error: (e as Error).message }, 500);
   }

@@ -123,6 +123,16 @@
         <!-- Borrador -->
         <div x-show="borrador" class="bg-slate-800 rounded-xl p-5 space-y-3">
           <h2 class="text-base font-bold">3. Revisá y ajustá el borrador</h2>
+          <div x-show="editor" class="text-xs rounded-lg p-3" :class="editor && editor.aprobado ? 'bg-green-600/15 border border-green-500/30 text-green-200' : 'bg-yellow-600/15 border border-yellow-500/30 text-yellow-200'">
+            <p>
+              <span class="font-bold">Editor IA:</span>
+              <span x-text="editor ? (editor.aprobado ? '✓ aprobado' : '✗ necesita ajustes') : ''"></span>
+              <span x-show="editor && editor.nota != null" class="ml-2 opacity-80">
+                Nota <span x-text="editor ? editor.nota : ''"></span>/10
+              </span>
+            </p>
+            <p x-show="editor && editor.feedback" class="mt-1 whitespace-pre-wrap" x-text="editor ? editor.feedback : ''"></p>
+          </div>
           <div>
             <label class="block text-xs font-bold text-slate-300 mb-1">Título</label>
             <input x-model="borrador.title" type="text" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
@@ -323,6 +333,7 @@
     propuestas: [] as any[],
     propuestaIndex: -1,
     borrador: null as any,
+    editor: null as any,
     categoriesText: '',
     coverPrompt: '',
     coverUrl: '',
@@ -417,6 +428,7 @@
         });
         if (error) throw new Error(error.context?.error || error.message);
         this.borrador = data.borrador;
+        this.editor = data.editor || null;
         this.categoriesText = (data.borrador.categories || []).join(', ');
         this.coverUrl = '';
         this.coverPrompt = '';
@@ -539,6 +551,7 @@
     nuevoPost() {
       this.editingId = null;
       this.borrador = null;
+      this.editor = null;
       this.coverUrl = '';
       this.coverPrompt = '';
       this.propuestas = [];
