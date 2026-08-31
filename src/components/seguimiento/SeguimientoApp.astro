@@ -873,6 +873,7 @@
                     <span class="text-sm text-gray-900 font-bold" x-text="int.nombre"></span>
                     <span class="text-xs text-gray-600 font-medium" x-text="int.rol"></span>
                     <span x-show="int.obs" class="text-xs text-amber-600 font-bold" x-text="'('+int.obs+')'"></span>
+                    <span x-show="int.aniosAnt" class="inline-flex items-center px-1.5 py-0.5 rounded-md bg-orange-100 text-orange-700 text-[10px] font-bold" title="Alumno de años anteriores">⏳ Años anteriores</span>
                   </div>
                   <template x-for="tag in (int.tags || [])" :key="tag">
                     <span class="inline-flex items-center px-1.5 py-0.5 mt-0.5 mr-1 rounded-md bg-indigo-50 text-indigo-700 text-[10px] font-bold" x-text="tag"></span>
@@ -1553,7 +1554,7 @@
             <label class="text-xs font-bold text-gray-700">Integrantes</label>
             <button 
               type="button"
-              @click="newGrupo.integrantes.push({nombre:'',rol:'',observacion:'', tagEstado:'cursando', dbId:null})"
+              @click="newGrupo.integrantes.push({nombre:'',rol:'',observacion:'', aniosAnt:false, tagEstado:'cursando', dbId:null})"
               class="px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded font-bold hover:bg-indigo-200"
             >
               + Agregar
@@ -1587,7 +1588,7 @@
                     placeholder="Observación (opcional)"
                     class="w-full px-2 py-1 text-xs border border-gray-300 rounded text-gray-900 focus:outline-none focus:ring-1 focus:ring-indigo-600"
                   >
-                  <select 
+                  <select
                     x-model="int.tagEstado"
                     class="w-full px-2 py-1 text-xs border border-gray-300 rounded text-gray-900 focus:outline-none focus:ring-1 focus:ring-indigo-600 bg-white"
                     :title="`Estado en ${newGrupo.practica} (tag)`"
@@ -1596,6 +1597,14 @@
                     <option value="regular">Estado: Regularizado</option>
                     <option value="rendida">Estado: Rendido</option>
                   </select>
+                  <label class="flex items-center gap-1.5 text-xs text-gray-700 font-bold cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      x-model="int.aniosAnt"
+                      class="w-3.5 h-3.5 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                    >
+                    <span>Alumno de años anteriores</span>
+                  </label>
                 </div>
                 <button 
                   type="button"
@@ -1852,7 +1861,7 @@
       comision: '',
       practica: 'P2',
       carrera_id: 'analista-sistemas',
-      integrantes: [{nombre:'',rol:'',observacion:'', tagEstado:'cursando', dbId:null}]
+      integrantes: [{nombre:'',rol:'',observacion:'', aniosAnt:false, tagEstado:'cursando', dbId:null}]
     },
 
     newComision: {
@@ -2049,7 +2058,7 @@
         // Integrantes
         const { data: intData, error: intErr } = await supabase
           .from('integrantes')
-          .select('id, grupo_id, nombre, rol, observacion, tags');
+          .select('*');
         if (intErr) throw intErr;
 
         const integrantesByGrupo = {};
@@ -2061,6 +2070,7 @@
             nombre: i.nombre,
             rol: i.rol || '',
             obs: i.observacion || '',
+            aniosAnt: i.anios_anteriores || false,
             tags: i.tags || []
           });
         });
@@ -3480,7 +3490,7 @@
         comision: '',
         practica: this.practicasDeCarrera(carreraId)[0]?.codigo || 'P1',
         carrera_id: carreraId,
-        integrantes: [{nombre:'',rol:'',observacion:'', tagEstado:'cursando', dbId:null}]
+        integrantes: [{nombre:'',rol:'',observacion:'', aniosAnt:false, tagEstado:'cursando', dbId:null}]
       };
       this.addGrupoError = '';
       this.showAddGrupo = true;
@@ -3506,6 +3516,7 @@
           nombre: i.nombre,
           rol: i.rol || '',
           observacion: i.obs || '',
+          aniosAnt: !!i.aniosAnt,
           tagEstado: this.tagEstadoDesdeTags(i.tags || [], g.practica),
           dbId: i.id || null
         }))
@@ -3660,6 +3671,7 @@
                 nombre: int.nombre.trim(),
                 rol: int.rol.trim(),
                 observacion: int.observacion.trim(),
+                anios_anteriores: !!int.aniosAnt,
                 tags: this.tagsParaIntegrante(this.newGrupo.practica, int.tagEstado)
               }).eq('id', int.dbId);
               if (error) throw error;
@@ -3670,6 +3682,7 @@
                 nombre: int.nombre.trim(),
                 rol: int.rol.trim(),
                 observacion: int.observacion.trim(),
+                anios_anteriores: !!int.aniosAnt,
                 tags: this.tagsParaIntegrante(this.newGrupo.practica, int.tagEstado)
               }).select('id').single();
               if (error) throw error;
@@ -3698,6 +3711,7 @@
                 nombre: i.nombre.trim(),
                 rol: i.rol.trim(),
                 obs: i.observacion.trim(),
+                aniosAnt: !!i.aniosAnt,
                 tags: this.tagsParaIntegrante(this.newGrupo.practica, i.tagEstado)
               }))
             };
@@ -3730,6 +3744,7 @@
             nombre: i.nombre.trim(),
             rol: i.rol.trim(),
             observacion: i.observacion.trim(),
+            anios_anteriores: !!i.aniosAnt,
             tags: this.tagsParaIntegrante(this.newGrupo.practica, i.tagEstado)
           }));
           const { error: intErr } = await supabase.from('integrantes').insert(intRows);
@@ -3747,6 +3762,7 @@
               nombre: i.nombre.trim(),
               rol: i.rol.trim(),
               obs: i.observacion.trim(),
+              aniosAnt: !!i.aniosAnt,
               tags: this.tagsParaIntegrante(this.newGrupo.practica, i.tagEstado)
             }))
           });
@@ -3759,7 +3775,7 @@
           comision: '',
           practica: this.practicasDeCarrera(carreraReset)[0]?.codigo || 'P1',
           carrera_id: carreraReset,
-          integrantes: [{nombre:'',rol:'',observacion:'', tagEstado:'cursando', dbId:null}]
+          integrantes: [{nombre:'',rol:'',observacion:'', aniosAnt:false, tagEstado:'cursando', dbId:null}]
         };
         this.editingGrupoId = null;
         this.showAddGrupo = false;
