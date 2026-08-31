@@ -1,0 +1,108 @@
+---
+// vsagenda — agenda PWA estilo VS Code Dark+
+// Wrapper minimal para que la UI fullscreen del PWA no choque con BaseTailwind.
+
+export const prerender = true;
+
+const baseUrl = import.meta.env.BASE_URL;
+const vsagendaBase = baseUrl.endsWith('/') ? `${baseUrl}vsagenda/` : `${baseUrl}/vsagenda/`;
+---
+
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+	<meta name="theme-color" content="#1e1e1e" />
+	<meta name="description" content="vsagenda — agenda retro estilo VS Code" />
+	<title>vsagenda</title>
+
+	<link rel="manifest" href={`${vsagendaBase}manifest.webmanifest`} />
+	<link rel="icon" type="image/svg+xml" href={`${vsagendaBase}icons/icon.svg`} />
+	<link rel="apple-touch-icon" href={`${vsagendaBase}icons/icon-192.png`} />
+
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Cascadia+Code:wght@400;600&display=swap" />
+	<link rel="stylesheet" href={`${vsagendaBase}style.css`} />
+</head>
+<body>
+	<div class="app">
+		<header class="titlebar">
+			<div class="titlebar-left">
+				<span class="title">vsagenda</span>
+				<span class="title-sep">·</span>
+				<span class="subtitle" id="todayFullDate"></span>
+			</div>
+			<nav class="menubar" role="menubar">
+				<button class="menu-item" data-action="archive" title="Archivo">Archivo</button>
+				<button class="menu-item" data-action="edit"     title="Edición">Edición</button>
+				<button class="menu-item" data-action="view"     title="Ver">Ver</button>
+				<button class="menu-item" data-action="go"       title="Ir">Ir</button>
+				<button class="menu-item" data-action="help"     title="Ayuda">Ayuda</button>
+			</nav>
+			<div class="titlebar-right">
+				<select id="locale" class="locale-select" title="Idioma / locale" aria-label="Idioma">
+					<option value="es-AR">es-AR</option>
+					<option value="es-ES">es-ES</option>
+					<option value="en-US">en-US</option>
+					<option value="pt-BR">pt-BR</option>
+					<option value="fr-FR">fr-FR</option>
+				</select>
+				<button id="exportBtn" class="iconbtn" title="Exportar JSON (backup)">⬇</button>
+				<button id="importBtn" class="iconbtn" title="Importar JSON (restaurar)">⬆</button>
+				<button id="installBtn" class="iconbtn" title="Instalar app" hidden>⊕</button>
+			</div>
+		</header>
+
+		<aside class="activitybar" role="navigation" aria-label="Vistas">
+			<button class="activity-item active" title="Agenda (explorador)" data-view="agenda">⌹</button>
+			<button class="activity-item" title="Calendario (próximamente)" data-view="calendar" disabled>▤</button>
+			<button class="activity-item" title="Búsqueda (próximamente)"  data-view="search"    disabled>⌕</button>
+			<button class="activity-item" title="Ajustes (próximamente)"   data-view="settings"  disabled>⚙</button>
+		</aside>
+
+		<main class="daylist" id="daylist" role="list"></main>
+
+		<footer class="statusbar">
+			<div class="status-left">
+				<span id="statusDay" class="status-day">HOY</span>
+				<span class="status-sep">|</span>
+				<span id="statusItems">0 ítems</span>
+				<span class="status-sep">|</span>
+				<span id="statusCursor">Ln 1, Col 1</span>
+			</div>
+			<div class="status-right">
+				<span id="statusSave" class="status-save saved" title="guardado">●</span>
+				<span class="status-sep">|</span>
+				<span class="status-hint">Alt↑↓ · Ctrl↑↓ · Ctrl+Shift↑↓ · Tab</span>
+			</div>
+		</footer>
+	</div>
+
+	<input type="file" id="importFile" accept="application/json,.json" hidden />
+
+	<div id="palette" class="palette" hidden>
+		<div class="palette-backdrop" id="paletteBackdrop"></div>
+		<div class="palette-box" role="dialog" aria-label="Paleta de comandos">
+			<input id="paletteInput" class="palette-input" type="text"
+					 placeholder="Escribí un comando o buscá (ej: «ir a», «tema», «snippet», «buscar»)…"
+					 autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+			<ul id="paletteResults" class="palette-results"></ul>
+		</div>
+	</div>
+
+	<aside id="searchPanel" class="search-panel" hidden>
+		<div class="search-header">
+			<span class="search-title">Buscar en días</span>
+			<button id="searchClose" class="iconbtn" title="Cerrar (Esc)" aria-label="Cerrar">×</button>
+		</div>
+		<input id="searchInput" class="search-input" type="text"
+				 placeholder="Texto a buscar…"
+				 autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+		<div id="searchResults" class="search-results"></div>
+	</aside>
+
+	<script src={`${vsagendaBase}app.js`}></script>
+</body>
+</html>

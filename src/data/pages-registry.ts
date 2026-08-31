@@ -55,6 +55,7 @@ export const pagesRegistry: PageEntry[] = [
   { id: 'movilidad', name: 'Movilidad', url: '/movilidad/', category: 'tool', icon: '🧘' },
   { id: 'pausas-activas', name: 'Pausas Activas', url: '/pausas-activas/', category: 'tool', icon: '☀️' },
   { id: 'workspace-mapper', name: 'Workspace Mapper', url: '/workspace-mapper/', category: 'tool', icon: '🖥️' },
+  { id: 'vsagenda', name: 'vsagenda', url: '/vsagenda/', category: 'tool', icon: '🗓️' },
   { id: 'admin-blog', name: 'Admin Blog', url: '/admin/blog/', category: 'tool', icon: '📝' },
 
   // =====================
