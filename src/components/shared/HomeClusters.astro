@@ -1,0 +1,115 @@
+---
+const base = import.meta.env.BASE_URL;
+const b = base.endsWith("/") ? base : `${base}/`;
+
+const resolveUrl = (url: string) => url.startsWith('/') ? `${b}${url.slice(1)}` : url;
+
+const clusters = [
+  {
+    label: "Profesional",
+    primary: true,
+    links: [
+      { id: 'cv', label: 'CV', url: resolveUrl('/es/cv/'), hint: 'Perfil completo' },
+      { id: 'servicios', label: 'Servicios', url: resolveUrl('/es/servicios/'), hint: 'Consultoría, desarrollo, IA' },
+      { id: 'portfolio', label: 'Portfolio', url: resolveUrl('/es/portfolio/'), hint: 'Proyectos y casos' },
+    ],
+  },
+  {
+    label: "Blog",
+    primary: false,
+    links: [
+      { id: 'blog', label: 'Blog', url: resolveUrl('/blog/'), hint: 'Artículos y pensamientos' },
+    ],
+  },
+  {
+    label: "Recursos",
+    primary: false,
+    links: [
+      { id: 'noticias', label: 'Noticias IA', url: resolveUrl('/noticias/'), hint: 'OpenAI · Gemini · Reddit' },
+      { id: 'urls', label: 'URLs útiles', url: resolveUrl('/urls/'), hint: 'Dev tools y apps' },
+    ],
+  },
+  {
+    label: "Apps",
+    primary: false,
+    links: [
+      { id: 'prompt', label: 'Teleprompter', url: resolveUrl('/prompt/'), hint: 'Ingeniería de prompts' },
+      { id: 'videos', label: 'Video Organizer', url: resolveUrl('/videos/'), hint: 'YouTube + Udemy' },
+      { id: 'extensions', label: 'Extensiones', url: resolveUrl('/extensions/'), hint: 'Chrome / Firefox' },
+      { id: 'vsagenda', label: 'vsagenda', url: resolveUrl('/vsagenda/'), hint: 'Agenda PWA estilo VS Code' },
+      { id: 'seguimiento', label: 'Panel Seguimiento', url: resolveUrl('/seguimiento/'), hint: 'Tutorías y prácticas' },
+    ],
+  },
+  {
+    label: "Retro",
+    primary: false,
+    links: [
+      { id: 'main', label: 'Main (Retro)', url: resolveUrl('/main/'), hint: 'El MG Lab Depot original' },
+    ],
+  },
+];
+---
+
+<nav aria-label="Secciones principales" class="border-t border-[#e4e8f0]">
+  {clusters.map((cluster) => (
+    <section class="py-5 border-b border-[#e4e8f0]">
+      <div class="flex items-baseline justify-between gap-4 mb-3">
+        <h2
+          class:list={[
+            'uppercase tracking-[0.14em] text-[#1e40af] font-bold',
+            cluster.primary ? 'text-sm' : 'text-xs',
+          ]}
+        >
+          {cluster.label}
+        </h2>
+        {!cluster.primary && (
+          <span class="text-xs text-[#5c6785]">
+            {cluster.links.length} {cluster.links.length === 1 ? 'página' : 'páginas'}
+          </span>
+        )}
+      </div>
+      <ul
+        class:list={[
+          cluster.primary ? 'grid sm:grid-cols-3 gap-2' : 'divide-y divide-[#e4e8f0]',
+        ]}
+      >
+        {cluster.links.map((link) =>
+          cluster.primary ? (
+            <li>
+              <a
+                href={link.url}
+                class="group block px-3.5 py-3.5 rounded-lg bg-white border border-[#e4e8f0] shadow-sm hover:border-[#1e40af] hover:shadow-md transition-all"
+              >
+                <span class="block font-semibold text-[#141a2e] text-[15px] group-hover:text-[#1e40af] transition-colors">
+                  {link.label}
+                </span>
+                {link.hint && (
+                  <span class="block mt-1 text-xs text-[#5c6785] group-hover:text-[#1d4ed8] transition-colors">
+                    {link.hint}
+                  </span>
+                )}
+              </a>
+            </li>
+          ) : (
+            <li class="py-3">
+              <a
+                href={link.url}
+                class="group flex items-baseline justify-between gap-3 transition-colors duration-200 text-[#141a2e] hover:text-[#1e40af]"
+              >
+                <span class="flex items-baseline gap-2 min-w-0">
+                  <span class="text-[15px] font-medium truncate">{link.label}</span>
+                  {link.hint && (
+                    <span class="hidden sm:inline text-xs text-[#5c6785] group-hover:text-[#1d4ed8] transition-colors truncate">
+                      {link.hint}
+                    </span>
+                  )}
+                </span>
+                <span aria-hidden="true" class="text-[#5c6785] group-hover:text-[#1e40af] transition-colors text-base shrink-0">→</span>
+              </a>
+            </li>
+          ),
+        )}
+      </ul>
+    </section>
+  ))}
+</nav>

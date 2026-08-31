@@ -6,9 +6,6 @@ export const prerender = true;
 
 const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
 const currentUrl = `${Astro.site}${normalizedBase}blog/about/`;
-
-const startDate = new Date('2021-07-01');
-const years = Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
 ---
 
 <BlogLayout
@@ -27,55 +24,29 @@ const years = Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 
     </header>
 
     <div class="entry-content">
-      <p>Hola, soy <strong>Mauricio González</strong>. De formación soy <strong>profesor de Filosofía</strong> y de oficio <strong>técnico analista en computación</strong>. Parece una mezcla rara, pero a mí me resulta natural: la filosofía me enseñó a hacer buenas preguntas y la tecnología me dio las herramientas para responderlas. Hace {years}+ años que camino entre el aula y el código, y los dos mundos se alimentan entre sí.</p>
+      <p>Hola, soy <strong>Mauricio González</strong>.</p>
 
-      <h3>Qué hago</h3>
+      <p>Soy profesor de Filosofía y Técnico Analista en Computación. Pueden parecer dos caminos bastante distintos, pero para mí siempre tuvieron algo en común: la filosofía me enseñó a hacer buenas preguntas y la tecnología me dio herramientas para intentar responderlas.</p>
 
-      <p>Doy clases en el <strong>Instituto Cervantes</strong>, en las carreras de Analista de Sistemas, Desarrollo Web y Ciencia de Datos e IA. Preparo cada clase como si fuera un proyecto real: ejemplos concretos, errores de verdad y mucha práctica. Creo que la tecnología se aprende haciendo, equivocándose y volviendo a intentar.</p>
+      <p>Hace más de cinco años que trabajo entre el aula y el desarrollo de software. Ambos mundos se fueron mezclando naturalmente: lo que aprendo desarrollando cambia mi forma de enseñar, y muchas preguntas que aparecen en el aula me hacen repensar lo que hago como desarrollador.</p>
 
-      <p>En paralelo trabajo como desarrollador y referente técnico en proyectos gubernamentales y empresariales. Ahí llevé a producción una solución de validación biométrica con IA (AWS Rekognition + RENAPER) y trabajo con arquitecturas como DDD, CQRS y microservicios en AWS. Ese costado no es otra carrera: es lo que me permite bajar al aula casos que pasan de verdad, no ejercicios inventados.</p>
+      <h2>Qué hago</h2>
 
-      <p>También construyo modelos predictivos propios con Python: uno para el Mundial 2026 y otro para predecir el abandono estudiantil. Este último lo pienso con la mirada del profe que no quiere que sus alumnos se vayan.</p>
+      <p>Soy <strong>docente en carreras vinculadas con tecnología</strong>, donde enseño programación, desarrollo web, proyectos y temas relacionados con datos e inteligencia artificial.</p>
 
-      <h3>Un poco sobre mí</h3>
+      <p>También trabajo como <strong>desarrollador y referente técnico</strong>, participando en proyectos donde además de programar hay que entender problemas, evaluar alternativas y tomar decisiones.</p>
 
-      <p>Fuera del aula y del código, soy un lector constante: mitología, teología, Santo Tomás de Aquino, Baltasar y, por supuesto, <em>El Señor de los Anillos</em>. Mucho de lo que leo termina apareciendo en este blog.</p>
+      <p>Me interesa especialmente aprender haciendo. Muchas veces eso significa probar algo, equivocarme, descubrir por qué no funcionó y volver a intentarlo. Algunas de esas experiencias terminan convirtiéndose en proyectos y otras simplemente en aprendizaje.</p>
 
-      <h3>Stack técnico</h3>
+      <h2>Sobre este blog</h2>
 
-      <ul>
-        <li><strong>Backend:</strong> .NET Core, C#, Node.js, NestJS</li>
-        <li><strong>Frontend:</strong> Angular, TypeScript, JavaScript</li>
-        <li><strong>IA y Datos:</strong> Python, Pandas, scikit-learn, SQL, AWS Rekognition</li>
-        <li><strong>Cloud & DevOps:</strong> AWS, Docker, CI/CD</li>
-        <li><strong>Arquitectura:</strong> DDD, CQRS, Microservicios</li>
-      </ul>
+      <p>Este espacio nace de esa misma idea.</p>
 
-      <h3>Formación</h3>
+      <p>Acá comparto cosas que estoy aprendiendo, haciendo o pensando. No como respuestas definitivas, sino como una forma de ordenar ideas, dejar registro del proceso y, con suerte, que algo de eso también le sirva a alguien más.</p>
 
-      <ul>
-        <li>Profesor de Filosofía</li>
-        <li>Técnico Analista en Computación - Instituto Cervantes</li>
-        <li>Diplomatura en Ciencias de Datos e IA - UTN</li>
-        <li>Diplomatura en Python - UTN</li>
-      </ul>
+      <h2>Contacto</h2>
 
-      <h3>Sobre este blog</h3>
-
-      <p>Este espacio está dedicado a compartir conocimientos, experiencias y reflexiones, sin vueltas. Acá escribo sobre lo que hago todos los días:</p>
-
-      <ul>
-        <li>Desarrollo web y arquitectura de software</li>
-        <li>IA aplicada y automatización</li>
-        <li>Cloud computing y DevOps</li>
-        <li>Experiencias en la docencia tecnológica</li>
-      </ul>
-
-      <h3>Contacto</h3>
-
-      <p>¿Tenés dudas sobre una clase, una carrera o un proyecto? Me gusta responder y charlar. Podés escribirme a <a href="mailto:mauriciogcode@gmail.com">mauriciogcode@gmail.com</a> o encontrarme en <a href="https://www.linkedin.com/in/mauricioglab/" target="_blank" rel="noopener">LinkedIn</a>.</p>
-
-      <p>Gracias por visitar el blog.</p>
+      <p>Si querés escribirme, podés hacerlo en <a href="mailto:mauriciogcode@gmail.com">mauriciogcode@gmail.com</a> o encontrarme en <a href="https://www.linkedin.com/in/mauricioglab/" target="_blank" rel="noopener">LinkedIn</a>.</p>
     </div>
   </article>
 </BlogLayout>
