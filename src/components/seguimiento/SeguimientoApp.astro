@@ -948,6 +948,58 @@
           ></span>
           <span class="text-xs text-gray-400" x-text="calcPctStr(promedioEncuentros(selectedGrupo))"></span>
         </div>
+
+        <!-- Histórico de prácticas anteriores -->
+        <div
+          class="mt-3 pt-3 border-t border-gray-200"
+          x-data="{ histOpen: false }"
+          x-show="historicoEncuentro(activeE, selectedGrupo)"
+          x-cloak
+        >
+          <button
+            @click="histOpen = !histOpen"
+            class="flex items-center gap-1.5 text-xs font-bold text-indigo-700 hover:text-indigo-900 transition"
+          >
+            <span class="text-[10px]" x-text="histOpen ? '▾' : '▸'"></span>
+            <span x-text="`⏱ Ver histórico de ${activeE} (${Object.keys(historicoEncuentro(activeE, selectedGrupo) || {}).map(p => practicaCorta(p)).join(', ')})`"></span>
+          </button>
+          <div x-show="histOpen" x-transition class="mt-2 space-y-2">
+            <template x-for="[prac, h] in Object.entries(historicoEncuentro(activeE, selectedGrupo) || {})" :key="prac">
+              <div class="p-3 rounded-lg bg-amber-50 border border-amber-200">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold text-amber-800" x-text="practicaCorta(prac)"></span>
+                  <span
+                    class="inline-flex items-center justify-center min-w-[2.5rem] h-6 rounded-md text-xs font-bold"
+                    :class="notaBadgeClass(calcNota(calcPct(h)))"
+                    x-text="calcNota(calcPct(h))"
+                  ></span>
+                </div>
+                <div class="flex flex-wrap gap-3 mb-2">
+                  <template x-for="dim in ['FN','DEV','SM']" :key="dim">
+                    <span class="text-xs text-gray-700 font-bold">
+                      <span x-text="dim"></span>: <span x-text="h[dim] ?? '—'"></span>
+                    </span>
+                  </template>
+                </div>
+                <div class="space-y-1">
+                  <template x-for="dim in ['FN','DEV','SM']" :key="'fb-' + dim">
+                    <p x-show="h.fb?.[dim]" class="text-xs text-gray-700 font-medium">
+                      <span class="font-bold" x-text="dim + ':'"></span> <span x-text="h.fb[dim]"></span>
+                    </p>
+                  </template>
+                </div>
+                <div x-show="h.asistencia && Object.keys(h.asistencia).length > 0" class="mt-2 pt-2 border-t border-amber-200 flex flex-wrap gap-1.5">
+                  <template x-for="[nombre, estado] in Object.entries(h.asistencia || {})" :key="'as-' + prac + nombre">
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-white border border-amber-200 text-[10px] font-bold text-gray-700">
+                      <span x-text="nombre"></span>
+                      <span :class="asistTextClass(estado)" x-text="estado"></span>
+                    </span>
+                  </template>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -3468,6 +3520,16 @@
       return Object.values(this.data).some(enc =>
         enc[gid]?._historico && Object.keys(enc[gid]._historico).length > 0
       );
+    },
+
+    historicoEncuentro(encId, gid) {
+      const h = this.data?.[encId]?.[gid]?._historico;
+      return (h && typeof h === 'object') ? h : null;
+    },
+
+    practicaCorta(codigo) {
+      const map = { P1: 'PP1', P2: 'PP2', P3: 'PP3', TutoriasPost: 'Tutorías Post' };
+      return map[codigo] || codigo;
     },
 
     abrirTraslado(g) {
