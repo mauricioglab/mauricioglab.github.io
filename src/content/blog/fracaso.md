@@ -2,7 +2,7 @@
 title: "Historia vs. Pesimismo: ¿Por Qué la Innovación Siempre Gana?"
 pubDate: 2025-02-03
 author: "MG Lab"
-categories: ["IA", "Reflexiones", "Tecnología"]
+categories: ["Inteligencia Artificial", "Reflexiones", "Tecnología"]
 description: "Exploremos cómo la historia ha desmentido predicciones pesimistas sobre recursos y sociedad, y cómo la IA podría seguir esta trayectoria de superación."
 image: "../../assets/blog/fracaso.png"
 draft: false

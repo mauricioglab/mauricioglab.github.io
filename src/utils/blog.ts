@@ -1,6 +1,7 @@
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import { supabase } from '../lib/supabase';
+import { normalizeCategories } from '../data/blog-categories';
 
 /**
  * Forma unificada de un post de blog: puede venir de un archivo markdown local
@@ -33,7 +34,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
         title: post.data.title,
         pubDate: post.data.pubDate,
         author: post.data.author,
-        categories: post.data.categories,
+        categories: normalizeCategories(post.data.categories),
         description: post.data.description,
         body: post.body,
         localImage: post.data.image,
@@ -60,7 +61,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
           title: row.title,
           pubDate: new Date(`${row.pub_date}T00:00:00`),
           author: row.author,
-          categories: Array.isArray(row.categories) ? row.categories : [],
+          categories: normalizeCategories(Array.isArray(row.categories) ? row.categories : []),
           description: row.description ?? '',
           body: row.body_markdown ?? '',
           coverUrl: row.cover_url ?? undefined,

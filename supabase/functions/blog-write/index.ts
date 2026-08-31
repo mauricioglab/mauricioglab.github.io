@@ -109,6 +109,15 @@ hablá en términos generales en vez de inventar un dato específico que puede e
 mal. Si incluís código, que haga realmente lo que el texto dice que hace; si es una
 simplificación con fines ilustrativos, decilo explícitamente.
 
+Categorías: elegí SIEMPRE de esta lista EXACTA (1 a 3), sin inventar ni renombrar:
+- Inteligencia Artificial
+- Tecnología
+- Productividad
+- Filosofía
+- Mitología
+- Libros
+- Reflexiones
+
 Devolvé ÚNICAMENTE un objeto JSON (sin texto adicional, sin bloques de código markdown
 que envuelvan TODO el JSON — el markdown va sólo adentro del campo "bodyMarkdown") con
 esta forma exacta:

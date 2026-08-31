@@ -62,13 +62,13 @@
             <div class="flex items-center justify-between gap-3">
               <div class="flex items-center gap-2 text-sm font-bold text-indigo-200">
                 <span class="spinner spinner-sm"></span>
-                <span x-text="op.label"></span>
+                <span x-text="op?.label"></span>
               </div>
-              <span class="text-xs font-mono text-slate-400">⏱ <span x-text="op.elapsed"></span></span>
+              <span class="text-xs font-mono text-slate-400">⏱ <span x-text="op?.elapsed"></span></span>
             </div>
-            <p class="text-xs text-indigo-300" x-text="op.messages[op.msgIndex]"></p>
+            <p class="text-xs text-indigo-300" x-text="op?.messages?.[op?.msgIndex]"></p>
             <div class="space-y-1.5">
-              <template x-for="(step, i) in op.steps" :key="i">
+              <template x-for="(step, i) in (op?.steps ?? [])" :key="i">
                 <div class="flex items-center gap-2 text-xs">
                   <span x-show="step.status === 'active'" class="spinner spinner-xs"></span>
                   <span x-show="step.status === 'done'" class="text-green-400 font-bold">✓</span>
@@ -268,8 +268,23 @@
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-bold text-slate-300 mb-1">Categorías (separadas por coma)</label>
-              <input x-model="categoriesText" type="text" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+              <label class="block text-xs font-bold text-slate-300 mb-1">Categorías</label>
+              <div class="flex flex-col gap-2">
+                <select x-model="selectedCategory" @change="addCategory()" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                  <option value="">Elegí una categoría…</option>
+                  <template x-for="cat in availableCategories" :key="cat">
+                    <option :value="cat" x-text="cat"></option>
+                  </template>
+                </select>
+                <div class="flex flex-wrap gap-2" x-show="selectedCategories.length">
+                  <template x-for="(cat, i) in selectedCategories" :key="i">
+                    <span class="inline-flex items-center gap-1.5 bg-slate-700 rounded-full px-3 py-1 text-xs font-bold text-slate-100">
+                      <span x-text="cat"></span>
+                      <button type="button" @click="removeCategory(i)" class="text-slate-300 hover:text-red-400 font-bold leading-none" title="Quitar categoría">✕</button>
+                    </span>
+                  </template>
+                </div>
+              </div>
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-300 mb-1">Descripción (SEO)</label>
@@ -395,6 +410,7 @@
     clearSessionStart,
     scheduleSessionEnd,
   } from '../../lib/supabase';
+  import { BLOG_CATEGORIES, normalizeCategories } from '../../data/blog-categories';
 
   window.Alpine = Alpine;
 
@@ -505,6 +521,8 @@
     iteracion: 0,
     correccionPrompt: '',
     categoriesText: '',
+    selectedCategory: '',
+    selectedCategories: [] as string[],
     temasHistory: [] as any[],
     coverPrompt: '',
     coverUrl: '',
@@ -619,6 +637,33 @@
     deleteTemaEntry(id: string) {
       this.temasHistory = this.temasHistory.filter((e: any) => e.id !== id);
       this.persistTemasHistory();
+    },
+
+    get availableCategories() {
+      return BLOG_CATEGORIES.filter((c) => !this.selectedCategories.includes(c));
+    },
+
+    addCategory() {
+      const cat = this.selectedCategory;
+      if (cat && !this.selectedCategories.includes(cat)) {
+        this.selectedCategories = [...this.selectedCategories, cat];
+      }
+      this.selectedCategory = '';
+      this.syncCategoriesText();
+    },
+
+    removeCategory(index: number) {
+      this.selectedCategories = this.selectedCategories.filter((_, i) => i !== index);
+      this.syncCategoriesText();
+    },
+
+    setCategories(list: string[]) {
+      this.selectedCategories = normalizeCategories(list || []);
+      this.syncCategoriesText();
+    },
+
+    syncCategoriesText() {
+      this.categoriesText = this.selectedCategories.join(', ');
     },
 
     useTemaEntry(id: string) {
@@ -773,7 +818,7 @@
         this.review = null;
         this.iteracion = 0;
         this.correccionPrompt = '';
-        this.categoriesText = (data.borrador.categories || []).join(', ');
+        this.setCategories(data.borrador.categories || []);
         this.coverUrl = '';
         this.coverPrompt = '';
         this.showPreview = false;
@@ -835,7 +880,7 @@
         });
         if (error) throw new Error(error.context?.error || error.message);
         this.borrador = data.borrador;
-        this.categoriesText = (data.borrador.categories || []).join(', ');
+        this.setCategories(data.borrador.categories || []);
         this.iteracion++;
         this.review = null;
         this.correccionPrompt = '';
@@ -887,7 +932,7 @@
           title: this.borrador.title,
           pub_date: new Date().toISOString().slice(0, 10),
           author: 'Mauricio Gonzalez',
-          categories: this.categoriesText.split(',').map((s) => s.trim()).filter(Boolean),
+          categories: normalizeCategories(this.selectedCategories),
           description: this.borrador.description,
           body_markdown: this.borrador.bodyMarkdown,
           cover_url: this.coverUrl || null,
@@ -936,7 +981,8 @@
         bodyMarkdown: p.body_markdown,
         categories: p.categories || [],
       };
-this.review = null;
+      this.setCategories(p.categories || []);
+      this.review = null;
       this.iteracion = 0;
       this.correccionPrompt = '';
       this.coverUrl = p.cover_url || '';
@@ -967,6 +1013,9 @@ this.review = null;
       this.form.fraseClave = '';
       this.form.tiempoLecturaMin = '5';
       this.urlRef = '';
+      this.selectedCategory = '';
+      this.selectedCategories = [];
+      this.categoriesText = '';
     },
   }));
 

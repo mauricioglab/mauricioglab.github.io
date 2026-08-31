@@ -108,6 +108,7 @@ Si hay un problema de extensión, ajustá la longitud del post al target de pala
 indicado (expandí con contenido útil y on-topic, o recortá lo redundante).
 Respetá el estilo: hook al inicio, párrafos cortos, voz activa, markdown con ## y
 código con \`\`\` si corresponde. No inventes fechas, versiones ni cifras.
+Categorías: mantené EXACTAMENTE las mismas que vienen, sin agregar ni renombrar.
 
 Devolvé ÚNICAMENTE un objeto JSON (sin texto adicional, sin bloques de código markdown)
 con esta forma exacta:

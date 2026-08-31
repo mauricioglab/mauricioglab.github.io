@@ -2,7 +2,7 @@
 title: "De Marte a lo Humano"
 pubDate: 2026-01-27
 author: "MG Lab"
-categories: ["Libros", "IA", "Reflexiones"]
+categories: ["Libros", "Inteligencia Artificial", "Reflexiones"]
 description: "Reflexiones sobre The Martian, el poder de las palabras y cómo la ciencia ordena el caos."
 image: "../../assets/blog/the-martian.png"
 draft: false
