@@ -410,6 +410,16 @@
             <option :value="enc.id" x-text="enc.id"></option>
           </template>
         </select>
+
+        <label class="flex items-center gap-1.5 ml-2 text-xs font-bold text-gray-700 cursor-pointer select-none" title="Incluir grupos inactivos en todos los conteos">
+          <input
+            type="checkbox"
+            x-model="statsIncluirInactivos"
+            @change="renderStats()"
+            class="w-3.5 h-3.5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+          >
+          <span>Incluir inactivos</span>
+        </label>
       </div>
       
       <!-- Métricas resumen KPIs -->
@@ -503,8 +513,8 @@
         </div>
       </div>
 
-      <!-- Alumnos: cantidad, actividad y años anteriores -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+      <!-- Alumnos: cantidad y años anteriores -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
         <!-- Alumnos en la materia -->
         <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
           <div class="flex items-start justify-between mb-2">
@@ -519,28 +529,6 @@
           <div class="flex justify-between text-[10px] font-bold">
             <span class="text-gray-500" x-text="`${statsAlumnos.totalGrupos} grupo(s)`"></span>
             <span class="text-gray-400" x-text="`prom. ${statsAlumnos.totalGrupos > 0 ? (statsAlumnos.totalAlumnos / statsAlumnos.totalGrupos).toFixed(1) : '—'} alumnos/grupo`"></span>
-          </div>
-        </div>
-
-        <!-- Activos vs Inactivos -->
-        <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-          <div class="flex items-start justify-between mb-2">
-            <div>
-              <div class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Activos vs Inactivos</div>
-              <div class="text-3xl font-extrabold text-gray-900 leading-tight" x-text="`${statsAlumnos.alumnosActivos}`"></div>
-            </div>
-            <div class="text-right">
-              <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Inactivos</div>
-              <div class="text-xl font-extrabold text-gray-400 leading-tight" x-text="statsAlumnos.alumnosInactivos"></div>
-            </div>
-          </div>
-          <div class="mb-1 flex h-1.5 w-full rounded-full overflow-hidden bg-gray-100">
-            <div class="bg-sky-600 h-1.5 transition-all duration-500" :style="`width: ${statsAlumnos.totalAlumnos > 0 ? Math.round((statsAlumnos.alumnosActivos / statsAlumnos.totalAlumnos) * 100) : 0}%`"></div>
-            <div class="bg-gray-300 h-1.5 transition-all duration-500" :style="`width: ${statsAlumnos.totalAlumnos > 0 ? Math.round((statsAlumnos.alumnosInactivos / statsAlumnos.totalAlumnos) * 100) : 0}%`"></div>
-          </div>
-          <div class="flex justify-between text-[10px] font-bold">
-            <span class="text-sky-700" x-text="`${statsAlumnos.totalAlumnos > 0 ? Math.round((statsAlumnos.alumnosActivos / statsAlumnos.totalAlumnos) * 100) : 0}% activos`"></span>
-            <span class="text-gray-400" x-text="`${statsAlumnos.totalAlumnos > 0 ? Math.round((statsAlumnos.alumnosInactivos / statsAlumnos.totalAlumnos) * 100) : 0}% inactivos`"></span>
           </div>
         </div>
 
@@ -1906,6 +1894,7 @@
     statsEncuentroFilter: '',
     statsResumen: { evaluados: 0, promocionados: 0, regulares: 0, libres: 0 },
     statsAlumnos: { totalAlumnos: 0, alumnosActivos: 0, alumnosInactivos: 0, totalGrupos: 0, aniosAntPorPP: [] },
+    statsIncluirInactivos: true,
 
     planilla: {},
     planillaEditorCarrera: 'analista-sistemas',
@@ -2055,6 +2044,18 @@
 
     // --- LIFECYCLE ---
     async init() {
+      // restaurar selección de carrera y práctica de esta pestaña
+      try {
+        const carr = sessionStorage.getItem('seg_carrera');
+        if (carr) this.carreraFilter = carr;
+        const prac = sessionStorage.getItem('seg_practica');
+        if (prac && (prac === 'Todas' || ['P1','P2','P3','TutoriasPost'].includes(prac))) {
+          this.practicaFilter = prac;
+        }
+      } catch (e) { /* sessionStorage no disponible */ }
+      this.$watch('carreraFilter', v => { try { sessionStorage.setItem('seg_carrera', v); } catch (e) {} });
+      this.$watch('practicaFilter', v => { try { sessionStorage.setItem('seg_practica', v); } catch (e) {} });
+
       this.loadFallbackData();
       await this.loadFromSupabase();
       await this.checkSession();
@@ -2946,7 +2947,7 @@
 
     // --- STATS HELPERS ---
     gruposStatsFiltrados() {
-      let list = this.grupos.filter(g => g.proyecto && (this.mostrarInactivos || g.activo !== false));
+      let list = this.grupos.filter(g => g.proyecto && (this.statsIncluirInactivos || g.activo !== false));
       if (this.carreraFilter && this.carreraFilter !== 'Todas') {
         list = list.filter(g => (g.carrera_id || 'analista-sistemas') === this.carreraFilter);
       }
@@ -2987,8 +2988,9 @@
       
       this.statsResumen = { evaluados, promocionados, regulares, libres, total, sinEvaluar: total - evaluados, pctProm, pctReg, pctLib, pctEval };
 
-      // conteos de alumnos (sin excluir inactivos, para poder compararlos)
+      // conteos de alumnos (respetan el filtro de inactivos)
       const gruposAlumnos = this.grupos.filter(g => g.proyecto
+        && (this.statsIncluirInactivos || g.activo !== false)
         && (this.carreraFilter && this.carreraFilter !== 'Todas' ? (g.carrera_id || 'analista-sistemas') === this.carreraFilter : true)
         && (this.statsComisionFilter ? g.comision === this.statsComisionFilter : true)
         && (this.statsPracticaFilter ? g.practica === this.statsPracticaFilter : true));
