@@ -948,57 +948,68 @@
           ></span>
           <span class="text-xs text-gray-400" x-text="calcPctStr(promedioEncuentros(selectedGrupo))"></span>
         </div>
+      </div>
 
-        <!-- Histórico de prácticas anteriores -->
-        <div
-          class="mt-3 pt-3 border-t border-gray-200"
-          x-data="{ histOpen: false }"
-          x-show="historicoEncuentro(activeE, selectedGrupo)"
-          x-cloak
+      <!-- Histórico de prácticas anteriores: todas las prácticas ya cursadas, por encuentro -->
+      <div
+        class="bg-white rounded-xl border border-gray-200 shadow-sm mt-3"
+        x-data="{ histOpen: false }"
+        x-show="practicasAnteriores(grupoActual).length > 0"
+        x-cloak
+      >
+        <button
+          @click="histOpen = !histOpen"
+          class="w-full flex items-center justify-between gap-2 p-4 text-left hover:bg-gray-50 rounded-t-xl transition"
         >
-          <button
-            @click="histOpen = !histOpen"
-            class="flex items-center gap-1.5 text-xs font-bold text-indigo-700 hover:text-indigo-900 transition"
-          >
-            <span class="text-[10px]" x-text="histOpen ? '▾' : '▸'"></span>
-            <span x-text="`⏱ Ver histórico de ${activeE} (${Object.keys(historicoEncuentro(activeE, selectedGrupo) || {}).map(p => practicaCorta(p)).join(', ')})`"></span>
-          </button>
-          <div x-show="histOpen" x-transition class="mt-2 space-y-2">
-            <template x-for="[prac, h] in Object.entries(historicoEncuentro(activeE, selectedGrupo) || {})" :key="prac">
-              <div class="p-3 rounded-lg bg-amber-50 border border-amber-200">
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-xs font-bold text-amber-800" x-text="practicaCorta(prac)"></span>
-                  <span
-                    class="inline-flex items-center justify-center min-w-[2.5rem] h-6 rounded-md text-xs font-bold"
-                    :class="notaBadgeClass(calcNota(calcPct(h)))"
-                    x-text="calcNota(calcPct(h))"
-                  ></span>
-                </div>
-                <div class="flex flex-wrap gap-3 mb-2">
-                  <template x-for="dim in ['FN','DEV','SM']" :key="dim">
-                    <span class="text-xs text-gray-700 font-bold">
-                      <span x-text="dim"></span>: <span x-text="h[dim] ?? '—'"></span>
-                    </span>
-                  </template>
-                </div>
-                <div class="space-y-1">
-                  <template x-for="dim in ['FN','DEV','SM']" :key="'fb-' + dim">
-                    <p x-show="h.fb?.[dim]" class="text-xs text-gray-700 font-medium">
-                      <span class="font-bold" x-text="dim + ':'"></span> <span x-text="h.fb[dim]"></span>
-                    </p>
-                  </template>
-                </div>
-                <div x-show="h.asistencia && Object.keys(h.asistencia).length > 0" class="mt-2 pt-2 border-t border-amber-200 flex flex-wrap gap-1.5">
-                  <template x-for="[nombre, estado] in Object.entries(h.asistencia || {})" :key="'as-' + prac + nombre">
-                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-white border border-amber-200 text-[10px] font-bold text-gray-700">
-                      <span x-text="nombre"></span>
-                      <span :class="asistTextClass(estado)" x-text="estado"></span>
-                    </span>
-                  </template>
-                </div>
+          <span class="font-bold text-sm text-indigo-700" x-text="`⏱ Histórico (${practicasAnteriores(grupoActual).map(p => practicaCorta(p)).join(' → ')})`"></span>
+          <span class="text-xs text-gray-400 font-bold" x-text="histOpen ? '▴ ocultar' : '▾ ver'"></span>
+        </button>
+        <div x-show="histOpen" x-transition class="p-4 pt-0 space-y-3">
+          <template x-for="prac in practicasAnteriores(grupoActual)" :key="prac">
+            <div class="rounded-lg border border-amber-200 bg-amber-50 overflow-hidden">
+              <div class="flex items-center justify-between px-3 py-2 bg-amber-100/60">
+                <span class="text-xs font-extrabold text-amber-800" x-text="practicaCorta(prac)"></span>
+                <span class="text-[10px] text-amber-700 font-bold">Evaluaciones de esa práctica</span>
               </div>
-            </template>
-          </div>
+              <div class="divide-y divide-amber-100">
+                <template x-for="row in historicoPracticaEncuentros(selectedGrupo, prac)" :key="prac + row.encId">
+                  <div class="px-3 py-2" :class="row.h ? '' : 'opacity-50'">
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="text-xs font-bold text-gray-800" x-text="row.nombre || row.encId"></span>
+                      <span
+                        class="inline-flex items-center justify-center min-w-[2.5rem] h-6 rounded-md text-xs font-bold"
+                        :class="notaBadgeClass(row.h ? calcNota(calcPct(row.h)) : '—')"
+                        x-text="row.h ? calcNota(calcPct(row.h)) : '—'"
+                      ></span>
+                    </div>
+                    <div class="flex flex-wrap gap-3 mt-1">
+                      <template x-for="dim in ['FN','DEV','SM']" :key="prac + row.encId + dim">
+                        <span class="text-xs text-gray-700 font-bold">
+                          <span x-text="dim"></span>: <span x-text="row.h ? (row.h[dim] ?? '—') : '—'"></span>
+                        </span>
+                      </template>
+                    </div>
+                    <div class="mt-1 space-y-0.5" x-show="row.h">
+                      <template x-for="dim in ['FN','DEV','SM']" :key="'fb-' + prac + row.encId + dim">
+                        <p x-show="row.h?.fb?.[dim]" class="text-xs text-gray-700 font-medium">
+                          <span class="font-bold" x-text="dim + ':'"></span> <span x-text="row.h?.fb?.[dim]"></span>
+                        </p>
+                      </template>
+                    </div>
+                    <div x-show="row.h?.asistencia && Object.keys(row.h.asistencia).length > 0" class="mt-1.5 flex flex-wrap gap-1.5">
+                      <template x-for="[nombre, estado] in Object.entries(row.h?.asistencia || {})" :key="'as-' + prac + row.encId + nombre">
+                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-white border border-amber-200 text-[10px] font-bold text-gray-700">
+                          <span x-text="nombre"></span>
+                          <span :class="asistTextClass(estado)" x-text="estado"></span>
+                        </span>
+                      </template>
+                    </div>
+                    <p x-show="!row.h" class="text-[10px] text-gray-400 font-medium mt-0.5">Sin evaluaciones cargadas en esta práctica</p>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -3530,6 +3541,24 @@
     practicaCorta(codigo) {
       const map = { P1: 'PP1', P2: 'PP2', P3: 'PP3', TutoriasPost: 'Tutorías Post' };
       return map[codigo] || codigo;
+    },
+
+    // prácticas que el grupo ya cursó (en orden de la carrera), aunque no tenga evaluaciones
+    practicasAnteriores(g) {
+      const lista = this.practicasDeCarrera(g?.carrera_id || 'analista-sistemas').map(p => p.codigo);
+      const idx = lista.indexOf(g?.practica);
+      if (idx === -1) return [];
+      return lista.slice(0, idx).filter(c => c !== 'TutoriasPost');
+    },
+
+    // todos los encuentros de una práctica anterior con su histórico (o null si no hay nada cargado)
+    historicoPracticaEncuentros(gid, practica) {
+      const g = this.grupos.find(x => x.id === gid);
+      const meta = this.planillaPara(g?.carrera_id || 'analista-sistemas', practica) || [];
+      return meta.map(e => {
+        const h = this.historicoEncuentro(e.id, gid);
+        return { encId: e.id, nombre: e.nombre, h: (h && h[practica]) || null };
+      });
     },
 
     abrirTraslado(g) {
