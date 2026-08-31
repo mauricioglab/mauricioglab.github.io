@@ -502,6 +502,73 @@
           </div>
         </div>
       </div>
+
+      <!-- Alumnos: cantidad, actividad y años anteriores -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+        <!-- Alumnos en la materia -->
+        <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+          <div class="flex items-start justify-between mb-2">
+            <div>
+              <div class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Alumnos en la materia</div>
+              <div class="text-3xl font-extrabold text-gray-900 leading-tight" x-text="statsAlumnos.totalAlumnos"></div>
+            </div>
+            <div class="w-9 h-9 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
+            </div>
+          </div>
+          <div class="flex justify-between text-[10px] font-bold">
+            <span class="text-gray-500" x-text="`${statsAlumnos.totalGrupos} grupo(s)`"></span>
+            <span class="text-gray-400" x-text="`prom. ${statsAlumnos.totalGrupos > 0 ? (statsAlumnos.totalAlumnos / statsAlumnos.totalGrupos).toFixed(1) : '—'} alumnos/grupo`"></span>
+          </div>
+        </div>
+
+        <!-- Activos vs Inactivos -->
+        <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+          <div class="flex items-start justify-between mb-2">
+            <div>
+              <div class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Activos vs Inactivos</div>
+              <div class="text-3xl font-extrabold text-gray-900 leading-tight" x-text="`${statsAlumnos.alumnosActivos}`"></div>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Inactivos</div>
+              <div class="text-xl font-extrabold text-gray-400 leading-tight" x-text="statsAlumnos.alumnosInactivos"></div>
+            </div>
+          </div>
+          <div class="mb-1 flex h-1.5 w-full rounded-full overflow-hidden bg-gray-100">
+            <div class="bg-sky-600 h-1.5 transition-all duration-500" :style="`width: ${statsAlumnos.totalAlumnos > 0 ? Math.round((statsAlumnos.alumnosActivos / statsAlumnos.totalAlumnos) * 100) : 0}%`"></div>
+            <div class="bg-gray-300 h-1.5 transition-all duration-500" :style="`width: ${statsAlumnos.totalAlumnos > 0 ? Math.round((statsAlumnos.alumnosInactivos / statsAlumnos.totalAlumnos) * 100) : 0}%`"></div>
+          </div>
+          <div class="flex justify-between text-[10px] font-bold">
+            <span class="text-sky-700" x-text="`${statsAlumnos.totalAlumnos > 0 ? Math.round((statsAlumnos.alumnosActivos / statsAlumnos.totalAlumnos) * 100) : 0}% activos`"></span>
+            <span class="text-gray-400" x-text="`${statsAlumnos.totalAlumnos > 0 ? Math.round((statsAlumnos.alumnosInactivos / statsAlumnos.totalAlumnos) * 100) : 0}% inactivos`"></span>
+          </div>
+        </div>
+
+        <!-- Alumnos de años anteriores por práctica -->
+        <div class="bg-white rounded-xl p-4 border border-orange-200 shadow-sm">
+          <div class="flex items-start justify-between mb-2">
+            <div>
+              <div class="text-[10px] text-orange-700 font-bold uppercase tracking-wider">⏳ Años anteriores por práctica</div>
+              <div class="text-3xl font-extrabold text-orange-700 leading-tight" x-text="statsAlumnos.aniosAntPorPP.reduce((a, p) => a + p.aniosAnt, 0)"></div>
+            </div>
+            <div class="w-9 h-9 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+          </div>
+          <div class="space-y-1">
+            <template x-for="p in statsAlumnos.aniosAntPorPP" :key="p.codigo">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-gray-600 w-8" x-text="practicaCorta(p.codigo)"></span>
+                <div class="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div class="bg-orange-500 h-1.5 rounded-full transition-all duration-500" :style="`width: ${p.total > 0 ? Math.round((p.aniosAnt / p.total) * 100) : 0}%`"></div>
+                </div>
+                <span class="text-[10px] font-bold text-gray-600" x-text="`${p.aniosAnt}/${p.total}`"></span>
+              </div>
+            </template>
+            <p x-show="statsAlumnos.aniosAntPorPP.length === 0" class="text-[10px] text-gray-400 font-bold">Sin grupos en el filtro actual</p>
+          </div>
+        </div>
+      </div>
       
       <!-- Gráficos Plotly -->
       <div class="bg-white rounded-xl p-4 mb-3 border border-gray-200 shadow-sm">
@@ -1838,6 +1905,7 @@
     statsPracticaFilter: '',
     statsEncuentroFilter: '',
     statsResumen: { evaluados: 0, promocionados: 0, regulares: 0, libres: 0 },
+    statsAlumnos: { totalAlumnos: 0, alumnosActivos: 0, alumnosInactivos: 0, totalGrupos: 0, aniosAntPorPP: [] },
 
     planilla: {},
     planillaEditorCarrera: 'analista-sistemas',
@@ -2918,6 +2986,30 @@
       const pctEval = total > 0 ? Math.round((evaluados / total) * 100) : 0;
       
       this.statsResumen = { evaluados, promocionados, regulares, libres, total, sinEvaluar: total - evaluados, pctProm, pctReg, pctLib, pctEval };
+
+      // conteos de alumnos (sin excluir inactivos, para poder compararlos)
+      const gruposAlumnos = this.grupos.filter(g => g.proyecto
+        && (this.carreraFilter && this.carreraFilter !== 'Todas' ? (g.carrera_id || 'analista-sistemas') === this.carreraFilter : true)
+        && (this.statsComisionFilter ? g.comision === this.statsComisionFilter : true)
+        && (this.statsPracticaFilter ? g.practica === this.statsPracticaFilter : true));
+      let totalAlumnos = 0, alumnosActivos = 0, alumnosInactivos = 0;
+      const porPP = {};
+      gruposAlumnos.forEach(g => {
+        const ints = g.integrantes || [];
+        totalAlumnos += ints.length;
+        if (g.activo === false) alumnosInactivos += ints.length;
+        else alumnosActivos += ints.length;
+        const pp = g.practica || 'P2';
+        if (!porPP[pp]) porPP[pp] = { total: 0, aniosAnt: 0 };
+        porPP[pp].total += ints.length;
+        porPP[pp].aniosAnt += ints.filter(i => i.aniosAnt).length;
+      });
+      const carreraStats = this.carreraFilter && this.carreraFilter !== 'Todas' ? this.carreraFilter : 'analista-sistemas';
+      const aniosAntPorPP = this.practicasDeCarrera(carreraStats)
+        .map(p => p.codigo)
+        .filter(c => porPP[c])
+        .map(c => ({ codigo: c, total: porPP[c].total, aniosAnt: porPP[c].aniosAnt }));
+      this.statsAlumnos = { totalAlumnos, alumnosActivos, alumnosInactivos, totalGrupos: gruposAlumnos.length, aniosAntPorPP };
     },
 
     getEvolucionData() {
