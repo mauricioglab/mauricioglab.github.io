@@ -1939,6 +1939,13 @@
 
     async loadFromSupabase() {
       try {
+        // los datos hardcodeados del fallback son de una PP vieja: nunca deben
+        // mezclarse con lo que viene de la base (los encuentros en blanco de la
+        // práctica actual heredarían notas PP2 por el merge con ?? en la carga)
+        this.data = {};
+        this.evalMeta = {};
+        this.localData = {};
+        this.localAsist = {};
         // Comisiones
         const { data: comData, error: comErr } = await supabase
           .from('comisiones')
@@ -2070,10 +2077,21 @@
           if (!evRow) return;
           const encId = evRow.encuentro_meta_id;
           const gid = evRow.grupo_id;
+          const gp = practicaMap[gid];
           if (!this.data[encId]) this.data[encId] = {};
           if (!this.data[encId][gid]) this.data[encId][gid] = {};
-          if (!this.data[encId][gid].asistencia) this.data[encId][gid].asistencia = {};
-          this.data[encId][gid].asistencia[a.integrante_nombre] = a.estado;
+          const entry = this.data[encId][gid];
+          if (evRow.practica_origen && evRow.practica_origen !== gp) {
+            // asistencia de una práctica anterior: va al histórico, no a la vista actual
+            if (!entry._historico) entry._historico = {};
+            if (!entry._historico[evRow.practica_origen]) entry._historico[evRow.practica_origen] = {};
+            if (!entry._historico[evRow.practica_origen].asistencia) entry._historico[evRow.practica_origen].asistencia = {};
+            entry._historico[evRow.practica_origen].asistencia[a.integrante_nombre] = a.estado;
+            return;
+          }
+          if (evRow.practica !== gp) return;
+          if (!entry.asistencia) entry.asistencia = {};
+          entry.asistencia[a.integrante_nombre] = a.estado;
         });
 
         // Alumnos seguimiento (para promoción/transferencia)
@@ -2113,6 +2131,7 @@
       } catch (e) {
         console.warn('Error loading from Supabase:', e);
         this.grupos = GRUPOS_INICIALES;
+        this.loadFallbackData();
       }
     },
 
@@ -2446,9 +2465,24 @@
             if (k.endsWith(gidSufix)) delete this.evalMeta[k];
           }
           for (const encId of Object.keys(this.data)) {
-            if (this.data[encId] && this.data[encId][g.id]) {
-              this.data[encId][g.id]._historico = practicaAnterior;
+            const entry = this.data[encId]?.[g.id];
+            if (!entry) continue;
+            // lo actual pasa a histórico y la nueva práctica inicia vacía
+            if (entry.FN != null || entry.DEV != null || entry.SM != null || (entry.fb && Object.values(entry.fb).some(Boolean)) || entry.asistencia) {
+              if (typeof entry._historico !== 'object' || entry._historico === null) entry._historico = {};
+              entry._historico[practicaAnterior] = {
+                FN: entry.FN,
+                DEV: entry.DEV,
+                SM: entry.SM,
+                fb: { ...(entry.fb || {}) },
+                asistencia: { ...(entry.asistencia || {}) }
+              };
             }
+            entry.FN = undefined;
+            entry.DEV = undefined;
+            entry.SM = undefined;
+            entry.fb = {};
+            entry.asistencia = {};
           }
 
           const encuentrosDestino = this.planillaPara(g.carrera_id || 'analista-sistemas', destino) || [];
@@ -3322,7 +3356,8 @@
         const existingEvalId = this.evalMeta[key]?.id;
         let evalId = existingEvalId;
         if (evalId) {
-          const { error } = await supabase.from('evaluaciones').update(evalPayload).eq('id', evalId);
+          const { practica: _p, ...updatePayload } = evalPayload;
+          const { error } = await supabase.from('evaluaciones').update(updatePayload).eq('id', evalId);
           if (error) throw error;
         } else {
           const { data: newEval, error } = await supabase
@@ -3455,6 +3490,24 @@
           .update({ practica: nuevaPractica, practica_origen: nuevoOrigen })
           .eq('id', g.id);
         if (error) throw error;
+        if (esDevolucion) {
+          // volver de Tutorías: las evaluaciones de la práctica original dejan de ser históricas
+          const { error: devErr } = await supabase
+            .from('evaluaciones')
+            .update({ practica_origen: null })
+            .eq('grupo_id', g.id)
+            .eq('practica', nuevaPractica)
+            .eq('practica_origen', 'TutoriasPost');
+          if (devErr) throw devErr;
+        } else {
+          // trasladar a Tutorías: las evaluaciones de la práctica actual pasan a histórico
+          const { error: histErr } = await supabase
+            .from('evaluaciones')
+            .update({ practica_origen: 'TutoriasPost' })
+            .eq('grupo_id', g.id)
+            .is('practica_origen', null);
+          if (histErr) throw histErr;
+        }
         const idx = this.grupos.findIndex(x => x.id === g.id);
         if (idx >= 0) {
           this.grupos[idx] = { ...this.grupos[idx], practica: nuevaPractica, practica_origen: nuevoOrigen };
