@@ -29,7 +29,7 @@ const SNIPPETS = [
   { trigger: '//fixme', expansion: '› [FIXME] ',   description: 'Pendiente de fix',        category: 'Snippet' },
   { trigger: '//idea',  expansion: '› [IDEA] ',    description: 'Nota mental / idea',      category: 'Snippet' },
   { trigger: '//todo',  expansion: '› [TODO] ',    description: 'Tarea por hacer',         category: 'Snippet' },
-  { trigger: '//wait',  expansion: '› [WAITING] ', description: 'Esperando respuesta',     category: 'Snippet' },
+  { trigger: '//wait',  expansion: '›> ',           description: 'Esperando respuesta (GTD waiting for)', category: 'Snippet' },
   { trigger: '//done',  expansion: '✓ ',           description: 'Marcar como hecho',       category: 'Snippet' },
   { trigger: '//meet',  expansion: '› [REUNIÓN] ', description: 'Reunión / meeting',       category: 'Snippet' },
   { trigger: '//call',  expansion: '› [LLAMADA] ', description: 'Llamar a alguien',        category: 'Snippet' },
@@ -43,10 +43,11 @@ const PRIO_HIGH_RE = /^›\s*!/;
 const PRIO_MID_RE  = /^›\s*\?/;
 const PRIO_DONE_RE = /^✓/;
 
-/* Item line grammar: [indent] (› | ✓) [~!?*]... [( › )+ subtareas] [~!?*]... text
-   ~ = en progreso, ! = urgente, ? = dudosa, * = importante (combinables, ej: ›~!* )
+/* Item line grammar: [indent] (› | ✓) [~!?*>@2]... [( › )+ subtareas] [~!?*>@2]... text
+   @ = siguiente acción, 2 = regla de 2 minutos, ~ = en progreso, > = esperando,
+   ? = algún día / quizás, ! = urgente, * = importante. Sin flags = bandeja de entrada.
    Cada « › » extra luego del marker es un nivel de subtarea (ej: › › sub) */
-const ITEM_LINE_RE = /^(✓|›)((?:\s*[!~?*])*)((?:\s+›)+)?((?:\s*[!~?*])*)\s*(.*)$/;
+const ITEM_LINE_RE = /^(✓|›)((?:\s*[!~?*>@2])*)((?:\s+›)+)?((?:\s*[!~?*>@2])*)\s*(.*)$/;
 
 const state = {
   days: {},
@@ -359,7 +360,7 @@ function refreshCardDecorations(card, content) {
   if (hasPrio) {
     const bits = [];
     if (prio.high) bits.push(`<span class="prio-badge" data-prio="high" title="líneas urgentes">!${prio.high}</span>`);
-    if (prio.mid)  bits.push(`<span class="prio-badge" data-prio="mid"  title="líneas dudosas">?${prio.mid}</span>`);
+    if (prio.mid)  bits.push(`<span class="prio-badge" data-prio="mid"  title="líneas algún día / quizás">?${prio.mid}</span>`);
     if (prio.done) bits.push(`<span class="prio-badge" data-prio="done" title="líneas hechas">✓${prio.done}</span>`);
     parts.push(bits.join(''));
   }
@@ -566,12 +567,16 @@ function onKeyDown(e, iso, ta) {
   }
 
   /* ------ Alt+1..5 (estado kanban / flags de la línea actual) ------ */
-  if (e.altKey && !e.ctrlKey && !e.shiftKey && ['1', '2', '3', '4', '5'].includes(key)) {
+  if (e.altKey && !e.ctrlKey && !e.shiftKey && ['1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(key)) {
     e.preventDefault();
-    if (key === '1') setFocusedLineState('todo');
-    else if (key === '2') setFocusedLineState('wip');
-    else if (key === '3') setFocusedLineState('done');
-    else if (key === '4') toggleFocusedLineFlag('important');
+    if (key === '1') setFocusedLineState('inbox');
+    else if (key === '2') setFocusedLineState('quick');
+    else if (key === '3') setFocusedLineState('next');
+    else if (key === '4') setFocusedLineState('wip');
+    else if (key === '5') setFocusedLineState('waiting');
+    else if (key === '6') setFocusedLineState('someday');
+    else if (key === '7') setFocusedLineState('done');
+    else if (key === '8') toggleFocusedLineFlag('important');
     else toggleFocusedLineFlag('urgent');
     return;
   }
@@ -777,18 +782,23 @@ function applyToFocusedLine(fn) {
 }
 
 function setFocusedLineState(newState) {
-  const labels = { todo: 'pendiente', wip: 'en progreso', done: 'hecha' };
+  const labels = { inbox: 'bandeja de entrada', quick: '⚡ menos de 2 min', next: 'siguiente acción', wip: 'en progreso', waiting: 'esperando', someday: 'algún día / quizás', done: 'hecho' };
   applyToFocusedLine((item) => {
     if (itemState(item) === newState) return false;
-    item.done = newState === 'done';
-    item.wip  = newState === 'wip';
+    const inFlow = newState !== 'done';
+    item.done    = !inFlow;
+    item.wip     = newState === 'wip';
+    item.waiting = newState === 'waiting';
+    item.doubt   = newState === 'someday';
+    item.next    = newState === 'next';
+    item.quick   = newState === 'quick';
     flashStatusHint(`estado: ${labels[newState]}`);
     return true;
   });
 }
 
 function toggleFocusedLineFlag(flag) {
-  const labels = { important: 'importante', urgent: 'urgente', doubt: 'dudosa' };
+  const labels = { important: 'importante', urgent: 'urgente', doubt: 'algún día', waiting: 'esperando' };
   applyToFocusedLine((item) => {
     item[flag] = !item[flag];
     flashStatusHint(`${labels[flag]}: ${item[flag] ? 'sí' : 'no'}`);
@@ -876,7 +886,7 @@ function buildActions() {
   registerAction({ id: 'day:mark-all-done', category: 'Editar', label: 'Marcar todo como hecho (día actual)', keywords: ['marcar', 'hecho', 'done'], handler: markCurrentDayDone });
   registerAction({ id: 'day:clear',          category: 'Editar', label: 'Limpiar día actual',                keywords: ['limpiar', 'borrar', 'clear'], handler: clearCurrentDay });
   registerAction({ id: 'item:prio-high',     category: 'Editar', label: 'Marcar línea actual como urgente (!)', keywords: ['urgente', 'prioridad'], handler: () => toggleLinePriority('high') });
-  registerAction({ id: 'item:prio-mid',      category: 'Editar', label: 'Marcar línea actual como dudosa (?)',   keywords: ['dudosa', 'prioridad'],  handler: () => toggleLinePriority('mid') });
+  registerAction({ id: 'item:prio-mid',      category: 'Editar', label: 'Marcar línea actual como algún día / quizás (?)', keywords: ['dudosa', 'someday', 'prioridad'], handler: () => toggleLinePriority('mid') });
   registerAction({ id: 'item:prio-done',     category: 'Editar', label: 'Marcar línea actual como hecha (✓)',    keywords: ['hecha', 'completada'],  handler: () => toggleLinePriority('done') });
 
   registerAction({ id: 'pwa:install', category: 'App', label: 'Instalar aplicación', keywords: ['instalar', 'pwa'], handler: handleInstall });
@@ -1067,23 +1077,30 @@ function parseItemLine(line) {
     depth:     1 + ((m[3] || '').match(/›/g) || []).length,
     done:      m[1] === '✓',
     wip:       flags.has('~'),
-    urgent:    flags.has('!'),
+    waiting:   flags.has('>'),
     doubt:     flags.has('?'),
+    urgent:    flags.has('!'),
     important: flags.has('*'),
+    next:      flags.has('@'),
+    quick:     flags.has('2'),
     text:      m[5]
   };
 }
 
 function itemState(item) {
   if (!item) return null;
-  if (item.done) return 'done';
-  if (item.wip)  return 'wip';
-  return 'todo';
+  if (item.done)    return 'done';
+  if (item.wip)     return 'wip';
+  if (item.waiting) return 'waiting';
+  if (item.doubt)   return 'someday';
+  if (item.next)    return 'next';
+  if (item.quick)   return 'quick';
+  return 'inbox';
 }
 
 function buildItemLine(item) {
   const marker = item.done ? '✓' : '›';
-  const flags = (item.wip ? '~' : '') + (item.urgent ? '!' : '') + (item.doubt ? '?' : '') + (item.important ? '*' : '');
+  const flags = (item.wip ? '~' : '') + (item.waiting ? '>' : '') + (item.urgent ? '!' : '') + (item.doubt ? '?' : '') + (item.important ? '*' : '') + (item.next ? '@' : '') + (item.quick ? '2' : '');
   const nesting = item.depth > 1 ? ' ›'.repeat(item.depth - 1) : '';
   return `${item.indent}${marker}${nesting}${flags ? flags + ' ' : ' '}${item.text}`;
 }
@@ -1093,9 +1110,13 @@ function buildItemLine(item) {
    ============================================================ */
 
 const KANBAN_COLUMNS = [
-  { id: 'todo', label: 'Pendiente',   prefix: '› '  },
-  { id: 'wip',  label: 'En progreso', prefix: '›~ ' },
-  { id: 'done', label: 'Hecha',       prefix: '✓ '  }
+  { id: 'inbox',   label: 'Bandeja de entrada', prefix: '› '   },
+  { id: 'quick',   label: '⚡ Menos de 2 min',  prefix: '›2 '  },
+  { id: 'next',    label: 'Siguiente acción',   prefix: '›@ '  },
+  { id: 'wip',     label: 'En progreso',        prefix: '›~ '  },
+  { id: 'waiting', label: 'Esperando',          prefix: '›> '  },
+  { id: 'someday', label: 'Algún día / quizás', prefix: '›? '  },
+  { id: 'done',    label: 'Hecho',              prefix: '✓ '   }
 ];
 
 let draggedCard = null;
@@ -1195,9 +1216,12 @@ function buildItemCard(it) {
 
   const flags = [];
   if (it.item.urgent)    flags.push('<span class="prio-badge" data-prio="high" title="urgente">!</span>');
-  if (it.item.doubt)     flags.push('<span class="prio-badge" data-prio="mid"  title="dudosa">?</span>');
+  if (it.item.doubt)     flags.push('<span class="prio-badge" data-prio="mid"  title="algún día / quizás">?</span>');
+  if (it.item.waiting)   flags.push('<span class="prio-badge" data-prio="wait" title="esperando">&gt;</span>');
   if (it.item.wip)       flags.push('<span class="prio-badge" data-prio="wip"  title="en progreso">~</span>');
   if (it.item.important) flags.push('<span class="prio-badge" data-prio="imp"  title="importante">*</span>');
+  if (it.item.next)      flags.push('<span class="prio-badge" data-prio="next" title="siguiente acción">@</span>');
+  if (it.item.quick)     flags.push('<span class="prio-badge" data-prio="quick" title="menos de 2 minutos">2</span>');
 
   const tagChips = extractTags(it.item.text).map((t) => {
     const color = TAG_COLOR_MAP[t] || 'blue';
@@ -1343,9 +1367,13 @@ function setKanbanItemState(iso, lineIndex, targetState) {
   if (!item) return;
   if (itemState(item) === targetState) return;
 
-  if (targetState === 'todo')     item.wip = false;
-  if (targetState === 'wip')    { item.wip = true;  item.done = false; }
-  if (targetState === 'done')   { item.done = true; item.wip = false; }
+  const inFlow = targetState !== 'done';
+  item.done = !inFlow;
+  item.wip     = targetState === 'wip';
+  item.waiting = targetState === 'waiting';
+  item.doubt   = targetState === 'someday';
+  item.next    = targetState === 'next';
+  item.quick   = targetState === 'quick';
 
   lines[lineIndex] = buildItemLine(item);
   state.days[iso] = lines.join('\n');
@@ -1415,10 +1443,10 @@ function switchView(view) {
    ============================================================ */
 
 const MATRIX_QUADRANTS = [
-  { id: 'q1', label: 'Hacer ya',         hint: 'urgente + importante',      urgent: true,  important: true  },
-  { id: 'q2', label: 'Planificar',       hint: 'importante, no urgente',    urgent: false, important: true  },
-  { id: 'q3', label: 'Delegar / rápido', hint: 'urgente, no importante',    urgent: true,  important: false },
-  { id: 'q4', label: 'Después',          hint: 'ni urgente ni importante',  urgent: false, important: false }
+  { id: 'q1', label: 'Hacer ya',    hint: 'urgente + importante',     urgent: true,  important: true  },
+  { id: 'q2', label: 'Planificar',  hint: 'importante, no urgente',   urgent: false, important: true  },
+  { id: 'q3', label: 'Delegar',     hint: 'urgente, no importante',   urgent: true,  important: false },
+  { id: 'q4', label: 'Eliminar',    hint: 'ni urgente ni importante', urgent: false, important: false }
 ];
 
 function quadrantOf(item) {
@@ -1430,6 +1458,24 @@ function renderMatrix() {
   if (!els.matrix) return;
   els.matrix.innerHTML = '';
   const items = parseKanbanItems().filter((it) => it.state !== 'done');
+
+  const corner = document.createElement('div');
+  corner.className = 'matrix-corner';
+  els.matrix.appendChild(corner);
+  ['Urgente', 'No urgente'].forEach((t) => {
+    const h = document.createElement('div');
+    h.className = 'matrix-axis-col';
+    h.textContent = t;
+    els.matrix.appendChild(h);
+  });
+  ['Importante', 'No importante'].forEach((t, i) => {
+    const h = document.createElement('div');
+    h.className = 'matrix-axis-row';
+    h.textContent = t;
+    h.style.gridRow = String(i + 2);
+    h.style.gridColumn = '1';
+    els.matrix.appendChild(h);
+  });
 
   MATRIX_QUADRANTS.forEach((q) => {
     const qItems = items.filter((it) => quadrantOf(it.item) === q.id);
@@ -1769,8 +1815,8 @@ function handleMenuAction(action) {
         '',
         'Línea:',
         '  Alt+↑/↓         mover línea',
-        '  Alt+1/2/3       estado: pendiente / en progreso / hecha',
-        '  Alt+4/5         importante (*) / urgente (!)',
+        '  Alt+1..7        estado GTD: bandeja / 2 min / siguiente / en progreso / esperando / algún día / hecho',
+        '  Alt+8/9         importante (*) / urgente (!)',
         '  Shift+Alt+↑/↓   duplicar línea',
         '  Tab / Shift+Tab indentar',
         '  Ctrl+Shift+K    borrar línea',
@@ -1788,7 +1834,7 @@ function handleMenuAction(action) {
         '',
         'Tags y prioridades:',
         '  #tag            en cualquier línea (color por categoría)',
-        '  ›!  ›?  ›~  ✓   urgente / dudosa / en progreso / hecha',
+        '  ›  ›2  ›@  ›~  ›>  ›?  ✓   bandeja / 2 min / siguiente / en progreso / esperando / algún día / hecho',
         '  ›*              importante (matriz eisenhower, ej: ›!* )',
         '  Ícono ▦         vista kanban (arrastrá tarjetas entre columnas)',
         '  Ícono ⊞         matriz eisenhower (arrastrá entre cuadrantes)',

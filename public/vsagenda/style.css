@@ -1007,3 +1007,60 @@ html, body {
   padding: 2px 5px;
 }
 .kanban-card-edit:focus { outline: none; }
+
+/* ========== Estados GTD ========== */
+.kanban-column { min-width: 200px; }
+.kanban-card[data-state="waiting"] { border-left-color: #cca700; }
+.kanban-card[data-state="someday"] { border-left-color: #c586c0; }
+
+.prio-badge[data-prio="wait"] { color: #cca700; background: rgba(204, 167, 0, 0.10); border: 1px solid rgba(204, 167, 0, 0.45); }
+
+@media (max-width: 900px) {
+  .kanban-column { min-width: 180px; }
+}
+
+/* ========== GTD: bandeja, 2 minutos, siguiente acción ========== */
+.kanban-column { min-width: 170px; }
+.kanban-card[data-state="inbox"] { border-left-style: dashed; opacity: 0.85; }
+.kanban-card[data-state="quick"] { border-left-color: #4ec9b0; }
+
+.prio-badge[data-prio="next"]  { color: #9cdcfe; background: rgba(156, 220, 254, 0.10); border: 1px solid rgba(156, 220, 254, 0.45); }
+.prio-badge[data-prio="quick"] { color: #4ec9b0; background: rgba(78, 201, 176, 0.10); border: 1px solid rgba(78, 201, 176, 0.45); }
+
+/* ========== Matriz Eisenhower con ejes ========== */
+.matrix {
+  grid-template-columns: 26px 1fr 1fr;
+  grid-template-rows: 24px 1fr 1fr;
+  gap: 8px;
+}
+.matrix-corner { grid-row: 1; grid-column: 1; }
+.matrix-axis-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--fg-muted);
+  user-select: none;
+}
+.matrix-axis-col:nth-of-type(2) { color: #f48771; }
+.matrix-axis-row {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--fg-muted);
+  user-select: none;
+}
+.matrix-axis-row:nth-of-type(4) { color: var(--accent-hover); }
+
+@media (max-width: 900px) {
+  .kanban-column { min-width: 160px; }
+}
