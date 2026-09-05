@@ -232,17 +232,6 @@ function applyDayLayout() {
   const visibleCount = 8 - hidden.length;
   const rows = Math.ceil(visibleCount / 2);
   els.daylist.style.gridTemplateRows = `repeat(${rows}, minmax(60px, 1fr))`;
-
-  const ghost = els.daylist.querySelector('.day-card-ghost');
-  if (ghost) {
-    ghost.hidden = !hidden.length;
-    const next = [...hidden].sort((a, b) => a - b)[0];
-    const lbl = ghost.querySelector('.day-card-ghost-label');
-    if (lbl && next != null) {
-      const d = dateForOffset(next);
-      lbl.textContent = `+ agregar ${TAB_LABELS[next]} (${formatWeekdayShort(d)} ${formatDateShort(d)})`;
-    }
-  }
 }
 
 function loadLocale() {
@@ -427,14 +416,6 @@ function renderDayList() {
 
     refreshCardDecorations(card, content);
   });
-
-  const ghost = document.createElement('button');
-  ghost.className = 'day-card-ghost';
-  ghost.hidden = true;
-  ghost.innerHTML = `<span class="day-card-ghost-label"></span>`;
-  ghost.title = 'Volver a mostrar el día';
-  ghost.addEventListener('click', () => addDayBack());
-  els.daylist.appendChild(ghost);
 
   applyDayLayout();
 }
