@@ -1064,3 +1064,18 @@ html, body {
 @media (max-width: 900px) {
   .kanban-column { min-width: 160px; }
 }
+
+/* ========== Chip de proyecto en tarjetas ========== */
+.kanban-card-project {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--fg-muted);
+  background: rgba(128, 128, 128, 0.12);
+  border-radius: 2px;
+  padding: 1px 5px;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+}

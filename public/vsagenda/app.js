@@ -1,6 +1,7 @@
 'use strict';
 
-const STORAGE_KEY    = 'vsagenda:v1';
+const STORAGE_KEY    = 'vsagenda:v2';
+const STORAGE_KEY_V1 = 'vsagenda:v1';
 const LOCALE_KEY     = 'vsagenda:locale';
 const VIEW_KEY       = 'vsagenda:view';
 const OFFSETS        = [0, 1, 2, 3, 4, 5, 6, 7];
@@ -25,29 +26,32 @@ const TAG_COLOR_MAP = {
 };
 
 const SNIPPETS = [
-  { trigger: '//bug',   expansion: '› [BUG] ',     description: 'Marcar como bug',         category: 'Snippet' },
-  { trigger: '//fixme', expansion: '› [FIXME] ',   description: 'Pendiente de fix',        category: 'Snippet' },
-  { trigger: '//idea',  expansion: '› [IDEA] ',    description: 'Nota mental / idea',      category: 'Snippet' },
-  { trigger: '//todo',  expansion: '› [TODO] ',    description: 'Tarea por hacer',         category: 'Snippet' },
-  { trigger: '//wait',  expansion: '›> ',           description: 'Esperando respuesta (GTD waiting for)', category: 'Snippet' },
+  { trigger: '//bug',   expansion: '[BUG] ',     description: 'Marcar como bug',         category: 'Snippet' },
+  { trigger: '//fixme', expansion: '[FIXME] ',   description: 'Pendiente de fix',        category: 'Snippet' },
+  { trigger: '//idea',  expansion: '[IDEA] ',    description: 'Nota mental / idea',      category: 'Snippet' },
+  { trigger: '//todo',  expansion: '[TODO] ',     description: 'Tarea por hacer',         category: 'Snippet' },
+  { trigger: '//next',  expansion: '@ ',           description: 'Siguiente accion (GTD)',  category: 'Snippet' },
+  { trigger: '//2min',  expansion: '2 ',           description: 'Regla de 2 minutos',      category: 'Snippet' },
+  { trigger: '//wait',  expansion: '> ',           description: 'Esperando respuesta (GTD waiting for)', category: 'Snippet' },
   { trigger: '//done',  expansion: '✓ ',           description: 'Marcar como hecho',       category: 'Snippet' },
-  { trigger: '//meet',  expansion: '› [REUNIÓN] ', description: 'Reunión / meeting',       category: 'Snippet' },
-  { trigger: '//call',  expansion: '› [LLAMADA] ', description: 'Llamar a alguien',        category: 'Snippet' },
-  { trigger: '//buy',   expansion: '› [COMPRAR] ', description: 'Comprar',                 category: 'Snippet' },
-  { trigger: '//mail',  expansion: '› [MAIL] ',    description: 'Email / correo',          category: 'Snippet' },
-  { trigger: '//pay',   expansion: '› [PAGAR] ',   description: 'Pagar cuenta / servicio', category: 'Snippet' },
-  { trigger: '//read',  expansion: '› [LEER] ',    description: 'Leer (artículo, libro)',  category: 'Snippet' },
+  { trigger: '//meet',  expansion: '[REUNIÓN] ', description: 'Reunión / meeting',       category: 'Snippet' },
+  { trigger: '//call',  expansion: '[LLAMADA] ', description: 'Llamar a alguien',        category: 'Snippet' },
+  { trigger: '//buy',   expansion: '[COMPRAR] ', description: 'Comprar',                 category: 'Snippet' },
+  { trigger: '//mail',  expansion: '[MAIL] ',    description: 'Email / correo',          category: 'Snippet' },
+  { trigger: '//pay',   expansion: '[PAGAR] ',   description: 'Pagar cuenta / servicio', category: 'Snippet' },
+  { trigger: '//read',  expansion: '[LEER] ',    description: 'Leer (artículo, libro)',  category: 'Snippet' },
 ];
 
 const PRIO_HIGH_RE = /^›\s*!/;
 const PRIO_MID_RE  = /^›\s*\?/;
 const PRIO_DONE_RE = /^✓/;
 
-/* Item line grammar: [indent] (› | ✓) [~!?*>@2]... [( › )+ subtareas] [~!?*>@2]... text
+/* Item line grammar: [indent] [✓] [› ...] [~!?*>@2]... text
+   Una línea pelada es una tarea en la bandeja de entrada. Los flags van primero:
    @ = siguiente acción, 2 = regla de 2 minutos, ~ = en progreso, > = esperando,
-   ? = algún día / quizás, ! = urgente, * = importante. Sin flags = bandeja de entrada.
-   Cada « › » extra luego del marker es un nivel de subtarea (ej: › › sub) */
-const ITEM_LINE_RE = /^(✓|›)((?:\s*[!~?*>@2])*)((?:\s+›)+)?((?:\s*[!~?*>@2])*)\s*(.*)$/;
+   ? = algún día / quizás, ! = urgente, * = importante.
+   Cada «›» al inicio agrega un nivel de subtarea (ej: › sub) */
+const ITEM_LINE_RE = /^(✓?)((?:›\s*)*)([!~?*>@2]*)\s*(.*)$/;
 
 const state = {
   days: {},
@@ -123,12 +127,28 @@ function formatWeekdayLong(d) {
    Persistence
    ============================================================ */
 
+function migrateV1Days(days) {
+  const out = {};
+  for (const iso of Object.keys(days)) {
+    out[iso] = (days[iso] || '').split('\n').map((line) => {
+      if (/^\s*✓/.test(line)) return line; /* los hechos no cambian */
+      const m = line.match(/^(\s*)›\s?/);
+      return m ? line.slice(0, m[1].length) + line.slice(m[0].length) : line;
+    }).join('\n');
+  }
+  return out;
+}
+
 function loadState() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    let raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) raw = localStorage.getItem(STORAGE_KEY_V1);
     if (raw) {
       const parsed = JSON.parse(raw);
       state.days = parsed.days && typeof parsed.days === 'object' ? parsed.days : {};
+      if (!localStorage.getItem(STORAGE_KEY) && localStorage.getItem(STORAGE_KEY_V1)) {
+        state.days = migrateV1Days(state.days); /* v1: quitar el › inicial */
+      }
       state.lastVisit = parsed.lastVisit || null;
     }
   } catch (e) {
@@ -617,25 +637,35 @@ function replaceRange(ta, from, to, replacement) {
 
 function moveLineWithin(ta, dir, lineStart, lineEndPos) {
   const value = ta.value;
-  const currentLine = value.substring(lineStart, lineEndPos);
+  const lines = value.split('\n');
+  const idx = value.substring(0, lineStart).split('\n').length - 1;
+  const { start, end } = getBlockRange(lines, idx);
+
+  let newCursorLine = -1;
   if (dir === -1) {
-    if (lineStart === 0) return;
-    const prevEnd = lineStart;
-    const prevStart = value.lastIndexOf('\n', lineStart - 2) + 1;
-    const prevLine = value.substring(prevStart, prevEnd - 1);
-    ta.value = value.substring(0, prevStart) + currentLine + '\n' + prevLine + value.substring(lineEndPos);
-    const p = prevStart + currentLine.length;
-    ta.setSelectionRange(p, p);
+    if (start === 0) return;
+    let pStart = start - 1;
+    const depthAt = (n) => {
+      const p = n >= 0 && n < lines.length ? parseItemLine(lines[n]) : null;
+      return p ? p.depth : null;
+    };
+    /* sube hasta el tope del bloque que contiene la línea anterior:
+       mientras la línea sea una subtarea (depth > 1), el bloque arranca más arriba */
+    while (pStart > 0 && depthAt(pStart) != null && depthAt(pStart) > 1) pStart--;
+    const block = lines.splice(start, end - start);
+    lines.splice(pStart, 0, ...block);
+    newCursorLine = pStart;
   } else {
-    if (lineEndPos >= value.length) return;
-    const nextStart = lineEndPos + 1;
-    const nextEndIdx = value.indexOf('\n', nextStart);
-    const nextEnd = nextEndIdx === -1 ? value.length : nextEndIdx;
-    const nextLine = value.substring(nextStart, nextEnd);
-    ta.value = value.substring(0, lineStart) + nextLine + '\n' + currentLine + value.substring(nextEnd);
-    const p = lineStart + nextLine.length + 1;
-    ta.setSelectionRange(p, p);
+    if (end >= lines.length) return;
+    const next = getBlockRange(lines, end);
+    const block = lines.splice(next.start, next.end - next.start);
+    lines.splice(start, 0, ...block);
+    newCursorLine = start + (next.end - next.start);
   }
+
+  ta.value = lines.join('\n');
+  const pos = lines.slice(0, newCursorLine).join('\n').length + (newCursorLine > 0 ? 1 : 0);
+  ta.setSelectionRange(pos, pos);
 }
 
 function duplicateLineWithin(ta, dir, lineStart, lineEndPos) {
@@ -654,36 +684,41 @@ function duplicateLineWithin(ta, dir, lineStart, lineEndPos) {
 
 function deleteLine(ta, lineStart, lineEndPos) {
   const value = ta.value;
-  let from = lineStart;
-  let to = lineEndPos;
-  if (to < value.length) to++;
-  else if (from > 0) from--;
-  ta.value = value.substring(0, from) + value.substring(to);
-  ta.setSelectionRange(from, from);
+  const lines = value.split('\n');
+  const idx = value.substring(0, lineStart).split('\n').length - 1;
+  const { start, end } = getBlockRange(lines, idx);
+  const count = end - start;
+  lines.splice(start, count);
+  const newSource = lines.join('\n');
+  ta.value = newSource;
+  const pos = Math.min(lineStart, newSource.length);
+  ta.setSelectionRange(pos, pos);
+  if (count > 1) flashStatusHint(`proyecto + ${count - 1} subtarea${count > 2 ? 's' : ''} borrada${count > 2 ? 's' : ''}`);
 }
 
 function moveLineToDay(ta, fromIso, targetOffset, lineStart, lineEndPos) {
   const value = ta.value;
-  const currentLine = value.substring(lineStart, lineEndPos);
-  let from = lineStart;
-  let to = lineEndPos;
-  if (to < value.length) to++;
-  else if (from > 0) from--;
-  const newSource = value.substring(0, from) + value.substring(to);
+  const lines = value.split('\n');
+  const idx = value.substring(0, lineStart).split('\n').length - 1;
+  const { start, end } = getBlockRange(lines, idx);
+  const block = lines.splice(start, end - start);
+  const newSource = lines.join('\n');
   ta.value = newSource;
-  ta.setSelectionRange(from, from);
+  const srcPos = Math.min(lineStart, newSource.length);
+  ta.setSelectionRange(srcPos, srcPos);
   state.days[fromIso] = newSource;
 
   const targetIso = toIsoDate(dateForOffset(targetOffset));
   const targetTa = document.getElementById(`ta-${targetIso}`);
   const targetContent = state.days[targetIso] || '';
   const needsNewline = targetContent.length > 0 && !targetContent.endsWith('\n');
-  const newTarget = targetContent + (needsNewline ? '\n' : '') + currentLine + '\n';
+  const blockText = block.join('\n');
+  const newTarget = targetContent + (needsNewline ? '\n' : '') + blockText + '\n';
   state.days[targetIso] = newTarget;
   if (targetTa) {
     targetTa.value = newTarget;
     targetTa.focus();
-    const pos = newTarget.length - currentLine.length - 1;
+    const pos = newTarget.length - blockText.length - 1;
     targetTa.setSelectionRange(Math.max(0, pos), Math.max(0, pos));
     onFocus(targetIso, targetTa);
   }
@@ -691,6 +726,7 @@ function moveLineToDay(ta, fromIso, targetOffset, lineStart, lineEndPos) {
   saveState();
   updateCardBadge(fromIso);
   updateCardBadge(targetIso);
+  if (block.length > 1) flashStatusHint(`proyecto movido con ${block.length - 1} subtarea${block.length > 2 ? 's' : ''}`);
 }
 
 function flashStatusHint(text) {
@@ -1068,13 +1104,15 @@ function highlightMatch(text, q) {
 function parseItemLine(line) {
   if (!line || !line.trim()) return null;
   const indent = (line.match(/^\s*/) || [''])[0];
-  const m = line.slice(indent.length).match(ITEM_LINE_RE);
+  const body = line.slice(indent.length);
+  if (/^---/.test(body)) return null;           /* separador de bloque vencido */
+  if (/^!\s*vencido/.test(body)) return null; /* encabezado de bloque vencido */
+  const m = body.match(ITEM_LINE_RE);
   if (!m) return null;
-  const flagChars = ((m[2] || '') + (m[4] || '')).split('');
-  const flags = new Set(flagChars);
+  const flags = new Set((m[3] || '').split(''));
   return {
     indent,
-    depth:     1 + ((m[3] || '').match(/›/g) || []).length,
+    depth:     1 + ((m[2].match(/›/g) || []).length),
     done:      m[1] === '✓',
     wip:       flags.has('~'),
     waiting:   flags.has('>'),
@@ -1083,7 +1121,7 @@ function parseItemLine(line) {
     important: flags.has('*'),
     next:      flags.has('@'),
     quick:     flags.has('2'),
-    text:      m[5]
+    text:      m[4]
   };
 }
 
@@ -1099,10 +1137,9 @@ function itemState(item) {
 }
 
 function buildItemLine(item) {
-  const marker = item.done ? '✓' : '›';
   const flags = (item.wip ? '~' : '') + (item.waiting ? '>' : '') + (item.urgent ? '!' : '') + (item.doubt ? '?' : '') + (item.important ? '*' : '') + (item.next ? '@' : '') + (item.quick ? '2' : '');
-  const nesting = item.depth > 1 ? ' ›'.repeat(item.depth - 1) : '';
-  return `${item.indent}${marker}${nesting}${flags ? flags + ' ' : ' '}${item.text}`;
+  const nesting = '›'.repeat(Math.max(0, item.depth - 1));
+  return `${item.indent}${item.done ? '✓' : ''}${nesting}${flags}${flags ? ' ' : ''}${item.text}`;
 }
 
 /* ============================================================
@@ -1125,15 +1162,55 @@ function dayLabelForOffset(offset) {
   return TAB_LABELS[offset] || `+${offset}`;
 }
 
+/* Bloque = la línea i más sus subtareas (líneas siguientes con mayor profundidad).
+   Un ítem con bloque de más de una línea es un proyecto. */
+function getBlockRange(lines, i) {
+  const depthAt = (n) => {
+    const p = n >= 0 && n < lines.length ? parseItemLine(lines[n]) : null;
+    return p ? p.depth : null;
+  };
+  const base = depthAt(i);
+  if (base == null) return { start: i, end: i + 1 };
+  let end = i + 1;
+  while (end < lines.length) {
+    const d = depthAt(end);
+    if (d == null || d <= base) break;
+    end++;
+  }
+  return { start: i, end };
+}
+
+function projectTitleFor(lines, i) {
+  const self = parseItemLine(lines[i]);
+  if (!self || self.depth <= 1) return '';
+  for (let j = i - 1; j >= 0; j--) {
+    const p = parseItemLine(lines[j]);
+    if (!p) continue;
+    if (p.depth < self.depth) return p.text;
+  }
+  return '';
+}
+
 function parseKanbanItems() {
   const items = [];
   OFFSETS.forEach((offset) => {
     const iso = toIsoDate(dateForOffset(offset));
     const content = state.days[iso] || '';
-    content.split('\n').forEach((line, lineIndex) => {
+    const lines = content.split('\n');
+    lines.forEach((line, lineIndex) => {
       const item = parseItemLine(line);
       if (!item || !item.text.trim()) return;
-      items.push({ iso, offset, lineIndex, item, state: itemState(item) });
+      const { start, end } = getBlockRange(lines, lineIndex);
+      items.push({
+        iso,
+        offset,
+        lineIndex,
+        item,
+        state: itemState(item),
+        blockSize: end - start,
+        isProject: end - start > 1,
+        projectTitle: projectTitleFor(lines, lineIndex)
+      });
     });
   });
   return items;
@@ -1161,7 +1238,7 @@ function bindDropZone(el, onDropItem) {
 function renderKanban() {
   if (!els.kanban) return;
   els.kanban.innerHTML = '';
-  const items = parseKanbanItems();
+  const items = parseKanbanItems().filter((it) => !it.isProject); /* los proyectos solo viven en la agenda */
 
   KANBAN_COLUMNS.forEach((col) => {
     const colItems = items.filter((it) => it.state === col.id);
@@ -1234,6 +1311,7 @@ function buildItemCard(it) {
   }).join('');
 
   card.innerHTML = `
+    ${it.projectTitle ? `<div class="kanban-card-project" title="Proyecto">▸ ${escapeHtml(it.projectTitle)}</div>` : ''}
     <div class="kanban-card-top">
       <select class="kanban-card-day" title="Día" draggable="false">${dayOptions}</select>
       <span class="kanban-card-flags">${flags.join('')}</span>
@@ -1457,7 +1535,7 @@ function quadrantOf(item) {
 function renderMatrix() {
   if (!els.matrix) return;
   els.matrix.innerHTML = '';
-  const items = parseKanbanItems().filter((it) => it.state !== 'done');
+  const items = parseKanbanItems().filter((it) => it.state !== 'done' && !it.isProject); /* los proyectos solo viven en la agenda */
 
   const corner = document.createElement('div');
   corner.className = 'matrix-corner';
@@ -1834,7 +1912,8 @@ function handleMenuAction(action) {
         '',
         'Tags y prioridades:',
         '  #tag            en cualquier línea (color por categoría)',
-        '  ›  ›2  ›@  ›~  ›>  ›?  ✓   bandeja / 2 min / siguiente / en progreso / esperando / algún día / hecho',
+        '  La línea pelada es la tarea (bandeja); › adelante = subtarea',
+        '  @ 2 ~ > ? ✓   siguiente / 2 min / en progreso / esperando / algún día / hecho',
         '  ›*              importante (matriz eisenhower, ej: ›!* )',
         '  Ícono ▦         vista kanban (arrastrá tarjetas entre columnas)',
         '  Ícono ⊞         matriz eisenhower (arrastrá entre cuadrantes)',
