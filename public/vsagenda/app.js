@@ -2,6 +2,7 @@
 
 const STORAGE_KEY    = 'vsagenda:v1';
 const LOCALE_KEY     = 'vsagenda:locale';
+const VIEW_KEY       = 'vsagenda:view';
 const OFFSETS        = [0, 1, 2, 3, 4, 5, 6, 7];
 const TAB_LABELS     = ['HOY', '+1', '+2', '+3', '+4', '+5', '+6', '+7'];
 const VENCIDO_PREFIX = '! vencido ';
@@ -41,6 +42,10 @@ const SNIPPETS = [
 const PRIO_HIGH_RE = /^›\s*!/;
 const PRIO_MID_RE  = /^›\s*\?/;
 const PRIO_DONE_RE = /^✓/;
+
+/* Item line grammar: [indent] (› | ✓) [~!?]... text
+   ~ = en progreso, ! = urgente, ? = dudosa (combinables, ej: ›~! ) */
+const ITEM_LINE_RE = /^(✓|›)\s*([!~?])?\s*([!~?])?\s*(.*)$/;
 
 const state = {
   days: {},
@@ -376,12 +381,12 @@ function parsePriorities(text) {
   const result = { high: 0, mid: 0, done: 0, total: 0 };
   if (!text) return result;
   for (const line of text.split('\n')) {
-    const t = line.trim();
-    if (!t) continue;
+    const item = parseItemLine(line);
+    if (!item) continue;
     result.total++;
-    if (PRIO_DONE_RE.test(t))      result.done++;
-    else if (PRIO_HIGH_RE.test(t)) result.high++;
-    else if (PRIO_MID_RE.test(t))  result.mid++;
+    if (item.done)           result.done++;
+    else if (item.urgent)    result.high++;
+    else if (item.doubt)     result.mid++;
   }
   return result;
 }
@@ -840,6 +845,8 @@ function buildActions() {
 
   registerAction({ id: 'palette:open', category: 'Ver', label: 'Paleta de comandos', shortcut: 'Ctrl+Shift+P', keywords: ['palette', 'comando'], handler: openPalette });
   registerAction({ id: 'search:open',  category: 'Ver', label: 'Buscar en todos los días', shortcut: 'Ctrl+Shift+F', keywords: ['buscar', 'search', 'encontrar'], handler: openSearchPanel });
+  registerAction({ id: 'view:kanban',  category: 'Ver', label: 'Ver tablero kanban', keywords: ['kanban', 'tablero', 'trello', 'board'], handler: () => switchView('kanban') });
+  registerAction({ id: 'view:agenda',  category: 'Ver', label: 'Ver agenda (días)', keywords: ['agenda', 'dias', 'lista'], handler: () => switchView('agenda') });
 
   registerAction({ id: 'export:json', category: 'Archivo', label: 'Exportar a JSON', keywords: ['exportar', 'descargar', 'backup'], handler: exportData });
   registerAction({ id: 'import:json', category: 'Archivo', label: 'Importar desde JSON', keywords: ['importar', 'restaurar'], handler: () => els.importFile.click() });
@@ -1020,6 +1027,261 @@ function highlightMatch(text, q) {
   const i = safe.toLowerCase().indexOf(q.toLowerCase());
   if (i < 0) return safe;
   return safe.slice(0, i) + '<mark>' + safe.slice(i, i + q.length) + '</mark>' + safe.slice(i + q.length);
+}
+
+/* ============================================================
+   Item line parse / build
+   ============================================================ */
+
+function parseItemLine(line) {
+  if (!line || !line.trim()) return null;
+  const indent = (line.match(/^\s*/) || [''])[0];
+  const m = line.slice(indent.length).match(ITEM_LINE_RE);
+  if (!m) return null;
+  const flags = new Set([m[2], m[3]].filter(Boolean));
+  return {
+    indent,
+    done:   m[1] === '✓',
+    wip:    flags.has('~'),
+    urgent: flags.has('!'),
+    doubt:  flags.has('?'),
+    text:   m[4]
+  };
+}
+
+function itemState(item) {
+  if (!item) return null;
+  if (item.done) return 'done';
+  if (item.wip)  return 'wip';
+  return 'todo';
+}
+
+function buildItemLine(item) {
+  const marker = item.done ? '✓' : '›';
+  const flags = (item.wip ? '~' : '') + (item.urgent ? '!' : '') + (item.doubt ? '?' : '');
+  return `${item.indent}${marker}${flags ? flags + ' ' : ' '}${item.text}`;
+}
+
+/* ============================================================
+   Kanban view
+   ============================================================ */
+
+const KANBAN_COLUMNS = [
+  { id: 'todo', label: 'Pendiente',   prefix: '› '  },
+  { id: 'wip',  label: 'En progreso', prefix: '›~ ' },
+  { id: 'done', label: 'Hecha',       prefix: '✓ '  }
+];
+
+let draggedCard = null;
+
+function dayLabelForOffset(offset) {
+  return TAB_LABELS[offset] || `+${offset}`;
+}
+
+function parseKanbanItems() {
+  const items = [];
+  OFFSETS.forEach((offset) => {
+    const iso = toIsoDate(dateForOffset(offset));
+    const content = state.days[iso] || '';
+    content.split('\n').forEach((line, lineIndex) => {
+      const item = parseItemLine(line);
+      if (!item || !item.text.trim()) return;
+      items.push({ iso, offset, lineIndex, item, state: itemState(item) });
+    });
+  });
+  return items;
+}
+
+function renderKanban() {
+  if (!els.kanban) return;
+  els.kanban.innerHTML = '';
+  const items = parseKanbanItems();
+
+  KANBAN_COLUMNS.forEach((col) => {
+    const colItems = items.filter((it) => it.state === col.id);
+    const column = document.createElement('section');
+    column.className = 'kanban-column';
+    column.dataset.state = col.id;
+
+    const header = document.createElement('header');
+    header.className = 'kanban-column-header';
+    header.innerHTML = `
+      <span class="kanban-column-title">${escapeHtml(col.label)}</span>
+      <span class="kanban-column-count">${colItems.length}</span>
+    `;
+    column.appendChild(header);
+
+    const cards = document.createElement('div');
+    cards.className = 'kanban-cards';
+    colItems.forEach((it) => cards.appendChild(buildKanbanCard(it)));
+    column.appendChild(cards);
+
+    const adder = document.createElement('div');
+    adder.className = 'kanban-add';
+    adder.innerHTML = `
+      <input type="text" class="kanban-add-input" placeholder="+ agregar a ${escapeHtml(col.label.toLowerCase())}…"
+             autocomplete="off" spellcheck="false" />
+    `;
+    const input = adder.querySelector('input');
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && input.value.trim()) {
+        addKanbanItem(col, input.value.trim());
+        input.value = '';
+      } else if (e.key === 'Escape') {
+        input.value = '';
+        input.blur();
+      }
+    });
+    column.appendChild(adder);
+
+    column.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      column.classList.add('drag-over');
+    });
+    column.addEventListener('dragleave', (e) => {
+      if (!column.contains(e.relatedTarget)) column.classList.remove('drag-over');
+    });
+    column.addEventListener('drop', (e) => {
+      e.preventDefault();
+      column.classList.remove('drag-over');
+      if (!draggedCard) return;
+      const { iso, lineIndex } = draggedCard.dataset;
+      setKanbanItemState(iso, Number(lineIndex), col.id);
+      draggedCard = null;
+    });
+
+    els.kanban.appendChild(column);
+  });
+}
+
+function buildKanbanCard(it) {
+  const card = document.createElement('article');
+  card.className = 'kanban-card';
+  card.draggable = true;
+  card.dataset.iso = it.iso;
+  card.dataset.lineIndex = it.lineIndex;
+  card.dataset.state = it.state;
+
+  const flags = [];
+  if (it.item.urgent) flags.push('<span class="prio-badge" data-prio="high" title="urgente">!</span>');
+  if (it.item.doubt)  flags.push('<span class="prio-badge" data-prio="mid"  title="dudosa">?</span>');
+  if (it.item.wip)    flags.push('<span class="prio-badge" data-prio="wip"  title="en progreso">~</span>');
+
+  const tagChips = extractTags(it.item.text).map((t) => {
+    const color = TAG_COLOR_MAP[t] || 'blue';
+    return `<span class="tag-chip" data-color="${color}">#${escapeHtml(t)}</span>`;
+  }).join('');
+
+  card.innerHTML = `
+    <div class="kanban-card-top">
+      <span class="kanban-card-day" title="${escapeHtml(formatDateLong(isoToDate(it.iso)))}">${escapeHtml(dayLabelForOffset(it.offset))}</span>
+      <span class="kanban-card-flags">${flags.join('')}</span>
+      <button class="kanban-card-del" title="Borrar ítem" aria-label="Borrar ítem">×</button>
+    </div>
+    <div class="kanban-card-text">${escapeHtml(it.item.text)}</div>
+    ${tagChips ? `<div class="kanban-card-tags">${tagChips}</div>` : ''}
+  `;
+
+  card.addEventListener('dragstart', (e) => {
+    draggedCard = card;
+    card.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', `${it.iso}:${it.lineIndex}`);
+  });
+  card.addEventListener('dragend', () => {
+    card.classList.remove('dragging');
+    draggedCard = null;
+  });
+
+  card.querySelector('.kanban-card-del').addEventListener('click', (e) => {
+    e.stopPropagation();
+    deleteKanbanItem(it.iso, it.lineIndex, it.item.text);
+  });
+
+  card.addEventListener('click', () => openCardInAgenda(it.iso, it.lineIndex));
+
+  return card;
+}
+
+function syncDayContent(iso) {
+  const ta = document.getElementById(`ta-${iso}`);
+  if (ta) ta.value = state.days[iso] || '';
+  updateCardBadge(iso);
+}
+
+function setKanbanItemState(iso, lineIndex, targetState) {
+  const content = state.days[iso];
+  if (content == null) return;
+  const lines = content.split('\n');
+  const item = parseItemLine(lines[lineIndex]);
+  if (!item) return;
+  if (itemState(item) === targetState) return;
+
+  if (targetState === 'todo')     item.wip = false;
+  if (targetState === 'wip')    { item.wip = true;  item.done = false; }
+  if (targetState === 'done')   { item.done = true; item.wip = false; }
+
+  lines[lineIndex] = buildItemLine(item);
+  state.days[iso] = lines.join('\n');
+  saveState();
+  syncDayContent(iso);
+  renderKanban();
+}
+
+function deleteKanbanItem(iso, lineIndex, preview) {
+  confirmAction(`¿Borrar este ítem?\n\n${preview.slice(0, 120)}`, { okLabel: 'Borrar', danger: true })
+    .then((ok) => {
+      if (!ok) return;
+      const content = state.days[iso];
+      if (content == null) return;
+      const lines = content.split('\n');
+      lines.splice(lineIndex, 1);
+      state.days[iso] = lines.join('\n');
+      saveState();
+      syncDayContent(iso);
+      renderKanban();
+    });
+}
+
+function addKanbanItem(col, text) {
+  const iso = toIsoDate(dateForOffset(0));
+  const content = state.days[iso] || '';
+  const needsNewline = content.length > 0 && !content.endsWith('\n');
+  state.days[iso] = content + (needsNewline ? '\n' : '') + col.prefix + text + '\n';
+  saveState();
+  syncDayContent(iso);
+  renderKanban();
+  flashStatusHint(`agregado a ${col.label.toLowerCase()}`);
+}
+
+function openCardInAgenda(iso, lineIndex) {
+  switchView('agenda');
+  const ta = document.getElementById(`ta-${iso}`);
+  if (!ta) return;
+  ta.focus();
+  const lines = ta.value.split('\n');
+  const lineStart = lines.slice(0, lineIndex).join('\n').length + (lineIndex > 0 ? 1 : 0);
+  const lineEnd = lineStart + (lines[lineIndex] || '').length;
+  ta.setSelectionRange(lineStart, lineEnd);
+  const lineHeight = parseFloat(getComputedStyle(ta).lineHeight) || 20;
+  ta.scrollTop = Math.max(0, lineIndex * lineHeight - ta.clientHeight / 2);
+  onFocus(iso, ta);
+}
+
+function switchView(view) {
+  const isKanban = view === 'kanban';
+  if (els.daylist) els.daylist.hidden = isKanban;
+  if (els.kanban)  els.kanban.hidden = !isKanban;
+  document.querySelectorAll('.activity-item[data-view]').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.view === view);
+  });
+  try { localStorage.setItem(VIEW_KEY, view); } catch {}
+  if (isKanban) renderKanban();
+  if (!isKanban && state.focusedDay) {
+    const ta = document.getElementById(`ta-${state.focusedDay}`);
+    if (ta) onFocus(state.focusedDay, ta);
+  }
 }
 
 /* ============================================================
@@ -1208,6 +1470,7 @@ function registerSW() {
 
 function cacheEls() {
   els.daylist = document.getElementById('daylist');
+  els.kanban = document.getElementById('kanban');
   els.todayFullDate = document.getElementById('todayFullDate');
   els.statusSave = document.getElementById('statusSave');
   els.statusItems = document.getElementById('statusItems');
@@ -1247,8 +1510,7 @@ function bindUI() {
   document.querySelectorAll('.activity-item').forEach((btn) => {
     if (btn.disabled) return;
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.activity-item').forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
+      if (btn.dataset.view) switchView(btn.dataset.view);
     });
   });
 
@@ -1333,7 +1595,8 @@ function handleMenuAction(action) {
         '',
         'Tags y prioridades:',
         '  #tag            en cualquier línea (color por categoría)',
-        '  ›!  ›?  ✓       prioridad alta / dudosa / hecha',
+        '  ›!  ›?  ›~  ✓   urgente / dudosa / en progreso / hecha',
+        '  Ícono ▦         vista kanban (arrastrá tarjetas entre columnas)',
         '',
         'Datos:',
         '  ⬇ exportar JSON   ⬆ importar JSON'
@@ -1362,8 +1625,12 @@ function init() {
   renderDayList();
   updateTitleBar();
 
+  let savedView = 'agenda';
+  try { savedView = localStorage.getItem(VIEW_KEY) || 'agenda'; } catch {}
+  switchView(savedView === 'kanban' ? 'kanban' : 'agenda');
+
   const todayTa = document.getElementById(`ta-${todayIso}`);
-  if (todayTa) { todayTa.focus(); onFocus(todayIso, todayTa); }
+  if (todayTa && savedView !== 'kanban') { todayTa.focus(); onFocus(todayIso, todayTa); }
 
   bindUI();
   registerSW();

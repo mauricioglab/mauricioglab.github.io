@@ -57,12 +57,15 @@ const vsagendaBase = baseUrl.endsWith('/') ? `${baseUrl}vsagenda/` : `${baseUrl}
 
 		<aside class="activitybar" role="navigation" aria-label="Vistas">
 			<button class="activity-item active" title="Agenda (explorador)" data-view="agenda">⌹</button>
+			<button class="activity-item" title="Kanban (tablero)" data-view="kanban">▦</button>
 			<button class="activity-item" title="Calendario (próximamente)" data-view="calendar" disabled>▤</button>
 			<button class="activity-item" title="Búsqueda (próximamente)"  data-view="search"    disabled>⌕</button>
 			<button class="activity-item" title="Ajustes (próximamente)"   data-view="settings"  disabled>⚙</button>
 		</aside>
 
 		<main class="daylist" id="daylist" role="list"></main>
+
+		<main class="kanban" id="kanban" hidden></main>
 
 		<footer class="statusbar">
 			<div class="status-left">
