@@ -1,4 +1,4 @@
-const CACHE = 'vsagenda-v3';
+const CACHE = 'vsagenda-v4';
 const ASSETS = [
   './',
   './index.html',

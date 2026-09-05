@@ -43,9 +43,10 @@ const PRIO_HIGH_RE = /^›\s*!/;
 const PRIO_MID_RE  = /^›\s*\?/;
 const PRIO_DONE_RE = /^✓/;
 
-/* Item line grammar: [indent] (› | ✓) [~!?*]... text
-   ~ = en progreso, ! = urgente, ? = dudosa, * = importante (combinables, ej: ›~!* ) */
-const ITEM_LINE_RE = /^(✓|›)\s*([!~?*])?\s*([!~?*])?\s*(.*)$/;
+/* Item line grammar: [indent] (› | ✓) [~!?*]... [( › )+ subtareas] [~!?*]... text
+   ~ = en progreso, ! = urgente, ? = dudosa, * = importante (combinables, ej: ›~!* )
+   Cada « › » extra luego del marker es un nivel de subtarea (ej: › › sub) */
+const ITEM_LINE_RE = /^(✓|›)((?:\s*[!~?*])*)((?:\s+›)+)?((?:\s*[!~?*])*)\s*(.*)$/;
 
 const state = {
   days: {},
@@ -564,6 +565,17 @@ function onKeyDown(e, iso, ta) {
     return;
   }
 
+  /* ------ Alt+1..5 (estado kanban / flags de la línea actual) ------ */
+  if (e.altKey && !e.ctrlKey && !e.shiftKey && ['1', '2', '3', '4', '5'].includes(key)) {
+    e.preventDefault();
+    if (key === '1') setFocusedLineState('todo');
+    else if (key === '2') setFocusedLineState('wip');
+    else if (key === '3') setFocusedLineState('done');
+    else if (key === '4') toggleFocusedLineFlag('important');
+    else toggleFocusedLineFlag('urgent');
+    return;
+  }
+
   /* ------ Ctrl+ArrowUp / Ctrl+ArrowDown (navigate between panels) ------ */
   if (e.ctrlKey && !e.shiftKey && !e.altKey && (key === 'ArrowUp' || key === 'ArrowDown')) {
     e.preventDefault();
@@ -749,39 +761,50 @@ function insertSnippet(snip) {
    Line-level priority toggle
    ============================================================ */
 
-function toggleLinePriority(level) {
+function applyToFocusedLine(fn) {
   const ta = getFocusedTa();
   if (!ta) { flashStatusHint('enfocá un día primero'); return; }
   const value = ta.value;
-  const start = ta.selectionStart;
-  const end   = ta.selectionEnd;
-  const { lineStart, lineEndPos } = getLineBounds(value, start, end);
-  const currentLine = value.substring(lineStart, lineEndPos);
+  const { lineStart, lineEndPos } = getLineBounds(value, ta.selectionStart, ta.selectionEnd);
+  const item = parseItemLine(value.substring(lineStart, lineEndPos));
+  if (!item) { flashStatusHint('la línea no es un ítem'); return; }
+  if (!fn(item)) return;
+  const newLine = buildItemLine(item);
+  ta.value = value.substring(0, lineStart) + newLine + value.substring(lineEndPos);
+  const p = lineStart + newLine.length;
+  ta.setSelectionRange(p, p);
+  onInput(ta.dataset.day, ta);
+}
 
-  let newLine = currentLine;
-  if (level === 'high') {
-    if (PRIO_HIGH_RE.test(currentLine))      newLine = currentLine.replace(PRIO_HIGH_RE, '› ');
-    else if (/^›/.test(currentLine))         newLine = currentLine.replace(/^›\s?/, '›! ');
-    else if (PRIO_DONE_RE.test(currentLine)) newLine = currentLine.replace(PRIO_DONE_RE, '›! ');
-    else                                     newLine = '›! ' + currentLine;
-  } else if (level === 'mid') {
-    if (PRIO_MID_RE.test(currentLine))       newLine = currentLine.replace(PRIO_MID_RE, '› ');
-    else if (/^›/.test(currentLine))         newLine = currentLine.replace(/^›\s?/, '›? ');
-    else if (PRIO_DONE_RE.test(currentLine)) newLine = currentLine.replace(PRIO_DONE_RE, '›? ');
-    else                                     newLine = '›? ' + currentLine;
-  } else if (level === 'done') {
-    if (PRIO_DONE_RE.test(currentLine)) {
-      const stripped = currentLine.replace(/^✓\s?/, '› ');
-      newLine = stripped === currentLine ? currentLine.replace(/^/, '› ') : stripped;
-    } else if (/^›/.test(currentLine))       newLine = currentLine.replace(/^›\s?/, '✓ ');
-    else                                     newLine = '✓ ' + currentLine;
-  }
+function setFocusedLineState(newState) {
+  const labels = { todo: 'pendiente', wip: 'en progreso', done: 'hecha' };
+  applyToFocusedLine((item) => {
+    if (itemState(item) === newState) return false;
+    item.done = newState === 'done';
+    item.wip  = newState === 'wip';
+    flashStatusHint(`estado: ${labels[newState]}`);
+    return true;
+  });
+}
 
-  if (newLine !== currentLine) {
-    ta.value = value.substring(0, lineStart) + newLine + value.substring(lineEndPos);
-    const p = lineStart + newLine.length;
-    ta.setSelectionRange(p, p);
-    onInput(ta.dataset.day, ta);
+function toggleFocusedLineFlag(flag) {
+  const labels = { important: 'importante', urgent: 'urgente', doubt: 'dudosa' };
+  applyToFocusedLine((item) => {
+    item[flag] = !item[flag];
+    flashStatusHint(`${labels[flag]}: ${item[flag] ? 'sí' : 'no'}`);
+    return true;
+  });
+}
+
+function toggleLinePriority(level) {
+  if (level === 'high')        toggleFocusedLineFlag('urgent');
+  else if (level === 'mid')    toggleFocusedLineFlag('doubt');
+  else if (level === 'done') {
+    applyToFocusedLine((item) => {
+      item.done = !item.done;
+      if (item.done) item.wip = false;
+      return true;
+    });
   }
 }
 
@@ -791,14 +814,12 @@ function markCurrentDayDone() {
   const lines = ta.value.split('\n');
   let changed = 0;
   const newLines = lines.map((line) => {
-    const t = line.trim();
-    if (!t) return line;
-    if (PRIO_DONE_RE.test(t)) return line;
-    if (/^›/.test(t)) {
-      changed++;
-      return line.replace(/^›\s?/, '✓ ');
-    }
-    return line;
+    const item = parseItemLine(line);
+    if (!item || item.done) return line;
+    changed++;
+    item.done = true;
+    item.wip = false;
+    return buildItemLine(item);
   });
   if (!changed) { flashStatusHint('nada que marcar'); return; }
   ta.value = newLines.join('\n');
@@ -1039,15 +1060,17 @@ function parseItemLine(line) {
   const indent = (line.match(/^\s*/) || [''])[0];
   const m = line.slice(indent.length).match(ITEM_LINE_RE);
   if (!m) return null;
-  const flags = new Set([m[2], m[3]].filter(Boolean));
+  const flagChars = ((m[2] || '') + (m[4] || '')).split('');
+  const flags = new Set(flagChars);
   return {
     indent,
+    depth:     1 + ((m[3] || '').match(/›/g) || []).length,
     done:      m[1] === '✓',
     wip:       flags.has('~'),
     urgent:    flags.has('!'),
     doubt:     flags.has('?'),
     important: flags.has('*'),
-    text:      m[4]
+    text:      m[5]
   };
 }
 
@@ -1061,7 +1084,8 @@ function itemState(item) {
 function buildItemLine(item) {
   const marker = item.done ? '✓' : '›';
   const flags = (item.wip ? '~' : '') + (item.urgent ? '!' : '') + (item.doubt ? '?' : '') + (item.important ? '*' : '');
-  return `${item.indent}${marker}${flags ? flags + ' ' : ' '}${item.text}`;
+  const nesting = item.depth > 1 ? ' ›'.repeat(item.depth - 1) : '';
+  return `${item.indent}${marker}${nesting}${flags ? flags + ' ' : ' '}${item.text}`;
 }
 
 /* ============================================================
@@ -1163,7 +1187,7 @@ function renderKanban() {
 
 function buildItemCard(it) {
   const card = document.createElement('article');
-  card.className = 'kanban-card';
+  card.className = 'kanban-card' + (it.item.depth > 1 ? ' is-subtask' : '');
   card.draggable = true;
   card.dataset.iso = it.iso;
   card.dataset.lineIndex = it.lineIndex;
@@ -1180,13 +1204,18 @@ function buildItemCard(it) {
     return `<span class="tag-chip" data-color="${color}">#${escapeHtml(t)}</span>`;
   }).join('');
 
+  const dayOptions = OFFSETS.map((off) => {
+    const iso = toIsoDate(dateForOffset(off));
+    return `<option value="${off}" ${iso === it.iso ? 'selected' : ''}>${escapeHtml(dayLabelForOffset(off))}</option>`;
+  }).join('');
+
   card.innerHTML = `
     <div class="kanban-card-top">
-      <span class="kanban-card-day" title="${escapeHtml(formatDateLong(isoToDate(it.iso)))}">${escapeHtml(dayLabelForOffset(it.offset))}</span>
+      <select class="kanban-card-day" title="Día" draggable="false">${dayOptions}</select>
       <span class="kanban-card-flags">${flags.join('')}</span>
       <button class="kanban-card-del" title="Borrar ítem" aria-label="Borrar ítem">×</button>
     </div>
-    <div class="kanban-card-text">${escapeHtml(it.item.text)}</div>
+    <div class="kanban-card-text" title="Doble click para editar">${escapeHtml(it.item.text)}</div>
     ${tagChips ? `<div class="kanban-card-tags">${tagChips}</div>` : ''}
   `;
 
@@ -1206,9 +1235,98 @@ function buildItemCard(it) {
     deleteKanbanItem(it.iso, it.lineIndex, it.item.text);
   });
 
-  card.addEventListener('click', () => openCardInAgenda(it.iso, it.lineIndex));
+  card.querySelector('.kanban-card-day').addEventListener('change', (e) => {
+    moveItemToDay(it.iso, it.lineIndex, Number(e.target.value));
+  });
+  card.querySelector('.kanban-card-day').addEventListener('click', (e) => e.stopPropagation());
+
+  card.querySelector('.kanban-card-text').addEventListener('dblclick', () => {
+    editItemCardText(card, it);
+  });
+
+  card.addEventListener('click', (e) => {
+    if (e.target.closest('select, input, button')) return;
+    openCardInAgenda(it.iso, it.lineIndex);
+  });
 
   return card;
+}
+
+function editItemCardText(card, it) {
+  const textEl = card.querySelector('.kanban-card-text');
+  if (textEl.querySelector('input')) return;
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'kanban-card-edit';
+  input.value = it.item.text;
+  input.spellcheck = false;
+  textEl.innerHTML = '';
+  textEl.appendChild(input);
+  input.focus();
+  input.select();
+
+  let closed = false;
+  const close = (save) => {
+    if (closed) return;
+    closed = true;
+    if (save) {
+      const val = input.value.trim();
+      if (val && val !== it.item.text) {
+        setItemText(it.iso, it.lineIndex, val);
+        return;
+      }
+    }
+    textEl.textContent = it.item.text;
+  };
+  input.addEventListener('keydown', (e) => {
+    e.stopPropagation();
+    if (e.key === 'Enter')      { e.preventDefault(); close(true); }
+    else if (e.key === 'Escape'){ e.preventDefault(); close(false); }
+  });
+  input.addEventListener('blur', () => close(true));
+  input.addEventListener('click', (e) => e.stopPropagation());
+}
+
+function setItemText(iso, lineIndex, newText) {
+  const content = state.days[iso];
+  if (content == null) return;
+  const lines = content.split('\n');
+  const item = parseItemLine(lines[lineIndex]);
+  if (!item) return;
+  item.text = newText;
+  lines[lineIndex] = buildItemLine(item);
+  state.days[iso] = lines.join('\n');
+  saveState();
+  syncDayContent(iso);
+  rerenderItemViews();
+}
+
+function moveItemToDay(fromIso, lineIndex, targetOffset) {
+  const fromContent = state.days[fromIso];
+  if (fromContent == null) return;
+  const clamped = Math.max(0, Math.min(7, targetOffset));
+  const targetIso = toIsoDate(dateForOffset(clamped));
+  if (targetIso === fromIso) { rerenderItemViews(); return; }
+
+  const lines = fromContent.split('\n');
+  const line = lines.splice(lineIndex, 1)[0];
+  if (line == null) return;
+  state.days[fromIso] = lines.join('\n');
+
+  const targetContent = state.days[targetIso] || '';
+  const needsNewline = targetContent.length > 0 && !targetContent.endsWith('\n');
+  state.days[targetIso] = targetContent + (needsNewline ? '\n' : '') + line + '\n';
+
+  saveState();
+  syncDayContent(fromIso);
+  syncDayContent(targetIso);
+  rerenderItemViews();
+  flashStatusHint(`movido a ${dayLabelForOffset(clamped)}`);
+}
+
+function rerenderItemViews() {
+  if (els.kanban && !els.kanban.hidden) renderKanban();
+  if (els.matrix && !els.matrix.hidden) renderMatrix();
 }
 
 function syncDayContent(iso) {
@@ -1233,7 +1351,7 @@ function setKanbanItemState(iso, lineIndex, targetState) {
   state.days[iso] = lines.join('\n');
   saveState();
   syncDayContent(iso);
-  renderKanban();
+  rerenderItemViews();
 }
 
 function deleteKanbanItem(iso, lineIndex, preview) {
@@ -1247,7 +1365,7 @@ function deleteKanbanItem(iso, lineIndex, preview) {
       state.days[iso] = lines.join('\n');
       saveState();
       syncDayContent(iso);
-      renderKanban();
+      rerenderItemViews();
     });
 }
 
@@ -1258,7 +1376,7 @@ function addKanbanItem(col, text) {
   state.days[iso] = content + (needsNewline ? '\n' : '') + col.prefix + text + '\n';
   saveState();
   syncDayContent(iso);
-  renderKanban();
+  rerenderItemViews();
   flashStatusHint(`agregado a ${col.label.toLowerCase()}`);
 }
 
@@ -1353,7 +1471,7 @@ function setMatrixQuadrant(iso, lineIndex, q) {
   state.days[iso] = lines.join('\n');
   saveState();
   syncDayContent(iso);
-  renderMatrix();
+  rerenderItemViews();
 }
 
 /* ============================================================
@@ -1651,6 +1769,8 @@ function handleMenuAction(action) {
         '',
         'Línea:',
         '  Alt+↑/↓         mover línea',
+        '  Alt+1/2/3       estado: pendiente / en progreso / hecha',
+        '  Alt+4/5         importante (*) / urgente (!)',
         '  Shift+Alt+↑/↓   duplicar línea',
         '  Tab / Shift+Tab indentar',
         '  Ctrl+Shift+K    borrar línea',
@@ -1672,6 +1792,7 @@ function handleMenuAction(action) {
         '  ›*              importante (matriz eisenhower, ej: ›!* )',
         '  Ícono ▦         vista kanban (arrastrá tarjetas entre columnas)',
         '  Ícono ⊞         matriz eisenhower (arrastrá entre cuadrantes)',
+        '  En kanban/matriz: doble click edita, selector cambia el día',
         '',
         'Datos:',
         '  ⬇ exportar JSON   ⬆ importar JSON'

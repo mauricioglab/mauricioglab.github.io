@@ -963,3 +963,44 @@ html, body {
   .matrix { grid-template-columns: 1fr; grid-template-rows: none; overflow-y: auto; }
   .matrix-quad { max-height: 60vh; }
 }
+
+/* ========== Subtareas y edición inline en tarjetas ========== */
+.kanban-card.is-subtask {
+  margin-left: 16px;
+  border-left-style: dashed;
+  opacity: 0.92;
+}
+.kanban-card.is-subtask::before {
+  content: '↳';
+  color: var(--fg-muted);
+  font-size: 10px;
+  margin-right: 4px;
+}
+.kanban-card.is-subtask .kanban-card-text { font-size: 12px; color: var(--fg-secondary); }
+
+.kanban-card-day {
+  background: var(--accent-dark);
+  color: var(--fg-on-statusbar);
+  border: none;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 3px;
+  cursor: pointer;
+}
+.kanban-card-day:hover { background: var(--accent); }
+.kanban-card-day:focus { outline: 1px solid var(--focus-outline); }
+.kanban-card-day option { background: var(--bg-sidebar); color: var(--fg-primary); font-weight: 400; }
+
+.kanban-card-edit {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--focus-outline);
+  border-radius: 2px;
+  color: var(--fg-primary);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  padding: 2px 5px;
+}
+.kanban-card-edit:focus { outline: none; }
