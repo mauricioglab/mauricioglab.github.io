@@ -43,9 +43,9 @@ const PRIO_HIGH_RE = /^›\s*!/;
 const PRIO_MID_RE  = /^›\s*\?/;
 const PRIO_DONE_RE = /^✓/;
 
-/* Item line grammar: [indent] (› | ✓) [~!?]... text
-   ~ = en progreso, ! = urgente, ? = dudosa (combinables, ej: ›~! ) */
-const ITEM_LINE_RE = /^(✓|›)\s*([!~?])?\s*([!~?])?\s*(.*)$/;
+/* Item line grammar: [indent] (› | ✓) [~!?*]... text
+   ~ = en progreso, ! = urgente, ? = dudosa, * = importante (combinables, ej: ›~!* ) */
+const ITEM_LINE_RE = /^(✓|›)\s*([!~?*])?\s*([!~?*])?\s*(.*)$/;
 
 const state = {
   days: {},
@@ -846,6 +846,7 @@ function buildActions() {
   registerAction({ id: 'palette:open', category: 'Ver', label: 'Paleta de comandos', shortcut: 'Ctrl+Shift+P', keywords: ['palette', 'comando'], handler: openPalette });
   registerAction({ id: 'search:open',  category: 'Ver', label: 'Buscar en todos los días', shortcut: 'Ctrl+Shift+F', keywords: ['buscar', 'search', 'encontrar'], handler: openSearchPanel });
   registerAction({ id: 'view:kanban',  category: 'Ver', label: 'Ver tablero kanban', keywords: ['kanban', 'tablero', 'trello', 'board'], handler: () => switchView('kanban') });
+  registerAction({ id: 'view:matriz',  category: 'Ver', label: 'Ver matriz eisenhower', keywords: ['matriz', 'eisenhower', 'prioridad', 'cuadrantes'], handler: () => switchView('matriz') });
   registerAction({ id: 'view:agenda',  category: 'Ver', label: 'Ver agenda (días)', keywords: ['agenda', 'dias', 'lista'], handler: () => switchView('agenda') });
 
   registerAction({ id: 'export:json', category: 'Archivo', label: 'Exportar a JSON', keywords: ['exportar', 'descargar', 'backup'], handler: exportData });
@@ -1041,11 +1042,12 @@ function parseItemLine(line) {
   const flags = new Set([m[2], m[3]].filter(Boolean));
   return {
     indent,
-    done:   m[1] === '✓',
-    wip:    flags.has('~'),
-    urgent: flags.has('!'),
-    doubt:  flags.has('?'),
-    text:   m[4]
+    done:      m[1] === '✓',
+    wip:       flags.has('~'),
+    urgent:    flags.has('!'),
+    doubt:     flags.has('?'),
+    important: flags.has('*'),
+    text:      m[4]
   };
 }
 
@@ -1058,7 +1060,7 @@ function itemState(item) {
 
 function buildItemLine(item) {
   const marker = item.done ? '✓' : '›';
-  const flags = (item.wip ? '~' : '') + (item.urgent ? '!' : '') + (item.doubt ? '?' : '');
+  const flags = (item.wip ? '~' : '') + (item.urgent ? '!' : '') + (item.doubt ? '?' : '') + (item.important ? '*' : '');
   return `${item.indent}${marker}${flags ? flags + ' ' : ' '}${item.text}`;
 }
 
@@ -1092,6 +1094,25 @@ function parseKanbanItems() {
   return items;
 }
 
+function bindDropZone(el, onDropItem) {
+  el.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    el.classList.add('drag-over');
+  });
+  el.addEventListener('dragleave', (e) => {
+    if (!el.contains(e.relatedTarget)) el.classList.remove('drag-over');
+  });
+  el.addEventListener('drop', (e) => {
+    e.preventDefault();
+    el.classList.remove('drag-over');
+    if (!draggedCard) return;
+    const { iso, lineIndex } = draggedCard.dataset;
+    onDropItem(iso, Number(lineIndex));
+    draggedCard = null;
+  });
+}
+
 function renderKanban() {
   if (!els.kanban) return;
   els.kanban.innerHTML = '';
@@ -1113,7 +1134,7 @@ function renderKanban() {
 
     const cards = document.createElement('div');
     cards.className = 'kanban-cards';
-    colItems.forEach((it) => cards.appendChild(buildKanbanCard(it)));
+    colItems.forEach((it) => cards.appendChild(buildItemCard(it)));
     column.appendChild(cards);
 
     const adder = document.createElement('div');
@@ -1134,28 +1155,13 @@ function renderKanban() {
     });
     column.appendChild(adder);
 
-    column.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
-      column.classList.add('drag-over');
-    });
-    column.addEventListener('dragleave', (e) => {
-      if (!column.contains(e.relatedTarget)) column.classList.remove('drag-over');
-    });
-    column.addEventListener('drop', (e) => {
-      e.preventDefault();
-      column.classList.remove('drag-over');
-      if (!draggedCard) return;
-      const { iso, lineIndex } = draggedCard.dataset;
-      setKanbanItemState(iso, Number(lineIndex), col.id);
-      draggedCard = null;
-    });
+    bindDropZone(column, (iso, lineIndex) => setKanbanItemState(iso, lineIndex, col.id));
 
     els.kanban.appendChild(column);
   });
 }
 
-function buildKanbanCard(it) {
+function buildItemCard(it) {
   const card = document.createElement('article');
   card.className = 'kanban-card';
   card.draggable = true;
@@ -1164,9 +1170,10 @@ function buildKanbanCard(it) {
   card.dataset.state = it.state;
 
   const flags = [];
-  if (it.item.urgent) flags.push('<span class="prio-badge" data-prio="high" title="urgente">!</span>');
-  if (it.item.doubt)  flags.push('<span class="prio-badge" data-prio="mid"  title="dudosa">?</span>');
-  if (it.item.wip)    flags.push('<span class="prio-badge" data-prio="wip"  title="en progreso">~</span>');
+  if (it.item.urgent)    flags.push('<span class="prio-badge" data-prio="high" title="urgente">!</span>');
+  if (it.item.doubt)     flags.push('<span class="prio-badge" data-prio="mid"  title="dudosa">?</span>');
+  if (it.item.wip)       flags.push('<span class="prio-badge" data-prio="wip"  title="en progreso">~</span>');
+  if (it.item.important) flags.push('<span class="prio-badge" data-prio="imp"  title="importante">*</span>');
 
   const tagChips = extractTags(it.item.text).map((t) => {
     const color = TAG_COLOR_MAP[t] || 'blue';
@@ -1270,18 +1277,83 @@ function openCardInAgenda(iso, lineIndex) {
 }
 
 function switchView(view) {
-  const isKanban = view === 'kanban';
-  if (els.daylist) els.daylist.hidden = isKanban;
-  if (els.kanban)  els.kanban.hidden = !isKanban;
+  if (els.daylist) els.daylist.hidden = view !== 'agenda';
+  if (els.kanban)  els.kanban.hidden  = view !== 'kanban';
+  if (els.matrix)  els.matrix.hidden  = view !== 'matriz';
   document.querySelectorAll('.activity-item[data-view]').forEach((btn) => {
     btn.classList.toggle('active', btn.dataset.view === view);
   });
   try { localStorage.setItem(VIEW_KEY, view); } catch {}
-  if (isKanban) renderKanban();
-  if (!isKanban && state.focusedDay) {
+  if (view === 'kanban') renderKanban();
+  if (view === 'matriz') renderMatrix();
+  if (view === 'agenda' && state.focusedDay) {
     const ta = document.getElementById(`ta-${state.focusedDay}`);
     if (ta) onFocus(state.focusedDay, ta);
   }
+}
+
+/* ============================================================
+   Eisenhower matrix view
+   ============================================================ */
+
+const MATRIX_QUADRANTS = [
+  { id: 'q1', label: 'Hacer ya',         hint: 'urgente + importante',      urgent: true,  important: true  },
+  { id: 'q2', label: 'Planificar',       hint: 'importante, no urgente',    urgent: false, important: true  },
+  { id: 'q3', label: 'Delegar / rápido', hint: 'urgente, no importante',    urgent: true,  important: false },
+  { id: 'q4', label: 'Después',          hint: 'ni urgente ni importante',  urgent: false, important: false }
+];
+
+function quadrantOf(item) {
+  if (item.urgent) return item.important ? 'q1' : 'q3';
+  return item.important ? 'q2' : 'q4';
+}
+
+function renderMatrix() {
+  if (!els.matrix) return;
+  els.matrix.innerHTML = '';
+  const items = parseKanbanItems().filter((it) => it.state !== 'done');
+
+  MATRIX_QUADRANTS.forEach((q) => {
+    const qItems = items.filter((it) => quadrantOf(it.item) === q.id);
+    const quad = document.createElement('section');
+    quad.className = 'matrix-quad';
+    quad.dataset.quad = q.id;
+
+    const header = document.createElement('header');
+    header.className = 'matrix-quad-header';
+    header.innerHTML = `
+      <span class="matrix-quad-title">${escapeHtml(q.label)}</span>
+      <span class="matrix-quad-count">${qItems.length}</span>
+      <span class="matrix-quad-hint">${escapeHtml(q.hint)}</span>
+    `;
+    quad.appendChild(header);
+
+    const cards = document.createElement('div');
+    cards.className = 'matrix-quad-cards';
+    qItems.forEach((it) => cards.appendChild(buildItemCard(it)));
+    quad.appendChild(cards);
+
+    bindDropZone(quad, (iso, lineIndex) => setMatrixQuadrant(iso, lineIndex, q));
+
+    els.matrix.appendChild(quad);
+  });
+}
+
+function setMatrixQuadrant(iso, lineIndex, q) {
+  const content = state.days[iso];
+  if (content == null) return;
+  const lines = content.split('\n');
+  const item = parseItemLine(lines[lineIndex]);
+  if (!item || item.done) return;
+  if (quadrantOf(item) === q.id) return;
+
+  item.urgent = q.urgent;
+  item.important = q.important;
+  lines[lineIndex] = buildItemLine(item);
+  state.days[iso] = lines.join('\n');
+  saveState();
+  syncDayContent(iso);
+  renderMatrix();
 }
 
 /* ============================================================
@@ -1471,6 +1543,7 @@ function registerSW() {
 function cacheEls() {
   els.daylist = document.getElementById('daylist');
   els.kanban = document.getElementById('kanban');
+  els.matrix = document.getElementById('matrix');
   els.todayFullDate = document.getElementById('todayFullDate');
   els.statusSave = document.getElementById('statusSave');
   els.statusItems = document.getElementById('statusItems');
@@ -1596,7 +1669,9 @@ function handleMenuAction(action) {
         'Tags y prioridades:',
         '  #tag            en cualquier línea (color por categoría)',
         '  ›!  ›?  ›~  ✓   urgente / dudosa / en progreso / hecha',
+        '  ›*              importante (matriz eisenhower, ej: ›!* )',
         '  Ícono ▦         vista kanban (arrastrá tarjetas entre columnas)',
+        '  Ícono ⊞         matriz eisenhower (arrastrá entre cuadrantes)',
         '',
         'Datos:',
         '  ⬇ exportar JSON   ⬆ importar JSON'
@@ -1627,10 +1702,10 @@ function init() {
 
   let savedView = 'agenda';
   try { savedView = localStorage.getItem(VIEW_KEY) || 'agenda'; } catch {}
-  switchView(savedView === 'kanban' ? 'kanban' : 'agenda');
+  switchView(['agenda', 'kanban', 'matriz'].includes(savedView) ? savedView : 'agenda');
 
   const todayTa = document.getElementById(`ta-${todayIso}`);
-  if (todayTa && savedView !== 'kanban') { todayTa.focus(); onFocus(todayIso, todayTa); }
+  if (todayTa && savedView === 'agenda') { todayTa.focus(); onFocus(todayIso, todayTa); }
 
   bindUI();
   registerSW();

@@ -883,3 +883,83 @@ html, body {
   .kanban { flex-direction: column; overflow-y: auto; overflow-x: hidden; }
   .kanban-column { min-width: 0; max-width: none; max-height: 70vh; }
 }
+
+/* ========== Eisenhower matrix view ========== */
+.matrix {
+  grid-area: daylist;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+  padding: 12px;
+  min-height: 0;
+}
+.matrix-quad {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-soft);
+  border-top: 3px solid var(--border-strong);
+  border-radius: 4px;
+  min-height: 0;
+  overflow: hidden;
+}
+.matrix-quad[data-quad="q1"] { border-top-color: #f48771; }
+.matrix-quad[data-quad="q2"] { border-top-color: var(--accent); }
+.matrix-quad[data-quad="q3"] { border-top-color: var(--warning); }
+.matrix-quad[data-quad="q4"] { border-top-color: var(--fg-inactive); }
+.matrix-quad.drag-over {
+  border-color: var(--accent);
+  background: rgba(0, 122, 204, 0.08);
+}
+.matrix-quad-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 10px 5px;
+  border-bottom: 1px solid var(--border-soft);
+  user-select: none;
+}
+.matrix-quad-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--fg-secondary);
+}
+.matrix-quad[data-quad="q1"] .matrix-quad-title { color: #f48771; }
+.matrix-quad[data-quad="q2"] .matrix-quad-title { color: var(--accent-hover); }
+.matrix-quad[data-quad="q3"] .matrix-quad-title { color: var(--warning); }
+.matrix-quad-count {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--fg-muted);
+  background: var(--bg-input);
+  border-radius: 8px;
+  padding: 0 7px;
+  line-height: 16px;
+}
+.matrix-quad-hint {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--fg-inactive);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.matrix-quad-cards {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 40px;
+}
+
+.prio-badge[data-prio="imp"] { color: #c586c0; background: rgba(197, 134, 192, 0.10); border: 1px solid rgba(197, 134, 192, 0.45); }
+
+@media (max-width: 640px) {
+  .matrix { grid-template-columns: 1fr; grid-template-rows: none; overflow-y: auto; }
+  .matrix-quad { max-height: 60vh; }
+}
