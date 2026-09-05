@@ -47,6 +47,9 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* El atributo hidden debe ganarle a cualquier display de autor (daylist, kanban, matrix…) */
+[hidden] { display: none !important; }
+
 html, body {
   height: 100%;
   background: var(--bg-editor);

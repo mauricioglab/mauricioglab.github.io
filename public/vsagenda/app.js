@@ -1245,7 +1245,7 @@ function buildItemCard(it) {
   });
 
   card.addEventListener('click', (e) => {
-    if (e.target.closest('select, input, button')) return;
+    if (e.target.closest('select, input, button, .kanban-card-text')) return;
     openCardInAgenda(it.iso, it.lineIndex);
   });
 
