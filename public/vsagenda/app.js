@@ -58,7 +58,9 @@ const state = {
   lastVisit: null,
   focusedDay: null,
   locale: 'es-AR',
-  hiddenDays: []
+  hiddenDays: [],
+  kanbanCols: 7,
+  view: 'agenda'
 };
 
 const els = {};
@@ -165,12 +167,30 @@ function loadState() {
     }
     if (hidden.length >= 8) hidden = hidden.slice(0, 7); /* siempre queda al menos un día */
     state.hiddenDays = hidden;
+    const kc = parseInt(localStorage.getItem(KANBAN_COLS_KEY), 10);
+    state.kanbanCols = Number.isFinite(kc) ? Math.min(7, Math.max(1, kc)) : 7;
   } catch (e) {
     console.warn('load error', e);
   }
 }
 
 const DAYS_KEY = 'vsagenda:hidden';
+const KANBAN_COLS_KEY = 'vsagenda:kanbancols';
+
+function setKanbanCols(n) {
+  state.kanbanCols = Math.min(7, Math.max(1, Number(n) || 7));
+  try { localStorage.setItem(KANBAN_COLS_KEY, String(state.kanbanCols)); } catch {}
+  applyKanbanLayout();
+  syncDaysPicker();
+}
+
+/* oculta columnas del kanban desde la última hacia adelante; las visibles estiran */
+function applyKanbanLayout() {
+  if (!els.kanban) return;
+  els.kanban.querySelectorAll('.kanban-column').forEach((col, i) => {
+    col.hidden = i >= state.kanbanCols;
+  });
+}
 
 function persistHiddenDays() {
   try { localStorage.setItem(DAYS_KEY, JSON.stringify(state.hiddenDays)); } catch {}
@@ -181,8 +201,16 @@ function visibleOffsets() {
 }
 
 function syncDaysPicker() {
-  const n = visibleOffsets().length;
-  if (els.daysLabel) els.daysLabel.textContent = `${n} día${n === 1 ? '' : 's'}`;
+  if (!els.daysLabel) return;
+  if (state.view === 'kanban') {
+    const n = state.kanbanCols;
+    els.daysLabel.textContent = `${n} col${n === 1 ? '' : 's'}`;
+  } else {
+    const n = visibleOffsets().length;
+    els.daysLabel.textContent = `${n} día${n === 1 ? '' : 's'}`;
+  }
+  const picker = document.querySelector('.days-picker');
+  if (picker) picker.hidden = state.view === 'matriz';
 }
 
 function setVisibleDays(n) {
@@ -1382,6 +1410,7 @@ function renderKanban() {
 
     els.kanban.appendChild(column);
   });
+  applyKanbanLayout();
 }
 
 function buildItemCard(it) {
@@ -1609,6 +1638,8 @@ function switchView(view) {
     btn.classList.toggle('active', btn.dataset.view === view);
   });
   try { localStorage.setItem(VIEW_KEY, view); } catch {}
+  state.view = view;
+  syncDaysPicker();
   if (view === 'kanban') renderKanban();
   if (view === 'matriz') renderMatrix();
   if (view === 'agenda' && state.focusedDay) {
@@ -1921,8 +1952,16 @@ function bindUI() {
     e.target.value = '';
   });
   if (els.installBtn) els.installBtn.addEventListener('click', handleInstall);
-  if (els.daysMinus) els.daysMinus.addEventListener('click', hideLastDay);
-  if (els.daysPlus)  els.daysPlus.addEventListener('click', addDayBack);
+  const onPickerMinus = () => {
+    if (state.view === 'kanban') setKanbanCols(state.kanbanCols - 1);
+    else hideLastDay();
+  };
+  const onPickerPlus = () => {
+    if (state.view === 'kanban') setKanbanCols(state.kanbanCols + 1);
+    else addDayBack();
+  };
+  if (els.daysMinus) els.daysMinus.addEventListener('click', onPickerMinus);
+  if (els.daysPlus)  els.daysPlus.addEventListener('click', onPickerPlus);
 
   document.querySelectorAll('.menu-item').forEach((btn) => {
     btn.addEventListener('click', () => handleMenuAction(btn.dataset.action));
