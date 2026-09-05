@@ -1079,3 +1079,30 @@ html, body {
   text-overflow: ellipsis;
   user-select: none;
 }
+
+/* ========== Selector de días visibles (statusbar) ========== */
+.days-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+}
+.days-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: var(--fg-on-statusbar);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  width: 16px;
+  height: 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.days-btn:hover { background: rgba(255, 255, 255, 0.25); }
+.days-btn:active { background: rgba(255, 255, 255, 0.4); }

@@ -77,6 +77,12 @@ const vsagendaBase = baseUrl.endsWith('/') ? `${baseUrl}vsagenda/` : `${baseUrl}
 				<span id="statusItems">0 ítems</span>
 				<span class="status-sep">|</span>
 				<span id="statusCursor">Ln 1, Col 1</span>
+				<span class="status-sep">|</span>
+				<span class="days-picker" title="Días visibles en la agenda">
+					<button id="daysMinus" class="days-btn" aria-label="Menos días">−</button>
+					<span id="daysLabel">8 días</span>
+					<button id="daysPlus" class="days-btn" aria-label="Más días">+</button>
+				</span>
 			</div>
 			<div class="status-right">
 				<span id="statusSave" class="status-save saved" title="guardado">●</span>

@@ -57,7 +57,8 @@ const state = {
   days: {},
   lastVisit: null,
   focusedDay: null,
-  locale: 'es-AR'
+  locale: 'es-AR',
+  visibleDays: 8
 };
 
 const els = {};
@@ -151,9 +152,31 @@ function loadState() {
       }
       state.lastVisit = parsed.lastVisit || null;
     }
+    const vd = parseInt(localStorage.getItem(DAYS_KEY), 10);
+    state.visibleDays = Number.isFinite(vd) ? Math.min(8, Math.max(1, vd)) : 8;
   } catch (e) {
     console.warn('load error', e);
   }
+}
+
+const DAYS_KEY = 'vsagenda:days';
+
+function setVisibleDays(n) {
+  state.visibleDays = Math.min(8, Math.max(1, Number(n) || 8));
+  try { localStorage.setItem(DAYS_KEY, String(state.visibleDays)); } catch {}
+  applyDayLayout();
+  if (els.daysLabel) els.daysLabel.textContent = `${state.visibleDays} día${state.visibleDays === 1 ? '' : 's'}`;
+}
+
+/* Los cuadros que quedan crecen: filas = ceil(días / 2 columnas) */
+function applyDayLayout() {
+  if (!els.daylist) return;
+  const n = state.visibleDays;
+  els.daylist.querySelectorAll('.day-card').forEach((card) => {
+    card.hidden = Number(card.dataset.offset) >= n;
+  });
+  const rows = Math.ceil(n / 2);
+  els.daylist.style.gridTemplateRows = `repeat(${rows}, minmax(60px, 1fr))`;
 }
 
 function loadLocale() {
@@ -327,6 +350,7 @@ function renderDayList() {
 
     refreshCardDecorations(card, content);
   });
+  applyDayLayout();
 }
 
 function refreshCardDecorations(card, content) {
@@ -441,7 +465,7 @@ function getFocusedTa() {
 }
 
 function navigatePanel(dir) {
-  const cards = Array.from(els.daylist.querySelectorAll('.day-card'));
+  const cards = Array.from(els.daylist.querySelectorAll('.day-card')).filter((c) => !c.hidden);
   if (!cards.length) return;
   const currentIdx = cards.findIndex((c) => c.dataset.day === state.focusedDay);
   const targetIdx = (currentIdx < 0 ? 0 : currentIdx) + dir;
@@ -924,6 +948,16 @@ function buildActions() {
   registerAction({ id: 'item:prio-high',     category: 'Editar', label: 'Marcar línea actual como urgente (!)', keywords: ['urgente', 'prioridad'], handler: () => toggleLinePriority('high') });
   registerAction({ id: 'item:prio-mid',      category: 'Editar', label: 'Marcar línea actual como algún día / quizás (?)', keywords: ['dudosa', 'someday', 'prioridad'], handler: () => toggleLinePriority('mid') });
   registerAction({ id: 'item:prio-done',     category: 'Editar', label: 'Marcar línea actual como hecha (✓)',    keywords: ['hecha', 'completada'],  handler: () => toggleLinePriority('done') });
+
+  for (let n = 1; n <= 8; n++) {
+    registerAction({
+      id: `view:days-${n}`,
+      category: 'Ver',
+      label: `Mostrar ${n} día${n === 1 ? '' : 's'} en la agenda`,
+      keywords: ['dias', 'agenda', 'ver', 'mostrar'],
+      handler: () => setVisibleDays(n)
+    });
+  }
 
   registerAction({ id: 'pwa:install', category: 'App', label: 'Instalar aplicación', keywords: ['instalar', 'pwa'], handler: handleInstall });
 
@@ -1792,6 +1826,9 @@ function cacheEls() {
   els.statusCursor = document.getElementById('statusCursor');
   els.statusDay = document.getElementById('statusDay');
   els.statusHint = document.querySelector('.status-hint');
+  els.daysMinus = document.getElementById('daysMinus');
+  els.daysPlus = document.getElementById('daysPlus');
+  els.daysLabel = document.getElementById('daysLabel');
   els.locale = document.getElementById('locale');
   els.exportBtn = document.getElementById('exportBtn');
   els.importBtn = document.getElementById('importBtn');
@@ -1817,6 +1854,8 @@ function bindUI() {
     e.target.value = '';
   });
   if (els.installBtn) els.installBtn.addEventListener('click', handleInstall);
+  if (els.daysMinus) els.daysMinus.addEventListener('click', () => setVisibleDays(state.visibleDays - 1));
+  if (els.daysPlus)  els.daysPlus.addEventListener('click', () => setVisibleDays(state.visibleDays + 1));
 
   document.querySelectorAll('.menu-item').forEach((btn) => {
     btn.addEventListener('click', () => handleMenuAction(btn.dataset.action));
@@ -1941,6 +1980,7 @@ function init() {
 
   els.locale.value = state.locale;
   document.documentElement.lang = state.locale;
+  if (els.daysLabel) els.daysLabel.textContent = `${state.visibleDays} día${state.visibleDays === 1 ? '' : 's'}`;
 
   buildActions();
   renderDayList();
