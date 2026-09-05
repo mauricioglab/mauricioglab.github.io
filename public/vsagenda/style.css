@@ -1106,3 +1106,42 @@ html, body {
 }
 .days-btn:hover { background: rgba(255, 255, 255, 0.25); }
 .days-btn:active { background: rgba(255, 255, 255, 0.4); }
+
+/* ========== Quitar / agregar paneles ========== */
+.day-card-hide {
+  background: rgba(128, 128, 128, 0.25);
+  border: none;
+  color: var(--fg-muted);
+  font-size: 12px;
+  line-height: 1;
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  cursor: pointer;
+  padding: 0;
+  visibility: hidden;
+}
+.day-card:hover .day-card-hide,
+.day-card.focused .day-card-hide { visibility: visible; }
+.day-card-hide:hover { color: #f48771; background: rgba(244, 135, 113, 0.15); }
+
+.day-card-ghost {
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+.day-card-ghost:hover {
+  border-color: var(--accent);
+  color: var(--fg-primary);
+  background: var(--bg-list-hover);
+}
+.day-card-ghost[hidden] { display: none !important; }

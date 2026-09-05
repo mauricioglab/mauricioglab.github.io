@@ -58,7 +58,7 @@ const state = {
   lastVisit: null,
   focusedDay: null,
   locale: 'es-AR',
-  visibleDays: 8
+  hiddenDays: []
 };
 
 const els = {};
@@ -152,31 +152,97 @@ function loadState() {
       }
       state.lastVisit = parsed.lastVisit || null;
     }
-    const vd = parseInt(localStorage.getItem(DAYS_KEY), 10);
-    state.visibleDays = Number.isFinite(vd) ? Math.min(8, Math.max(1, vd)) : 8;
+    let hidden = [];
+    const rawHidden = localStorage.getItem(DAYS_KEY);
+    if (rawHidden) {
+      try {
+        const arr = JSON.parse(rawHidden);
+        if (Array.isArray(arr)) hidden = arr.filter((n) => Number.isInteger(n) && n >= 0 && n <= 7);
+      } catch {}
+    } else {
+      const vd = parseInt(rawHidden, 10);
+      if (Number.isFinite(vd) && vd >= 0 && vd < 8) hidden = OFFSETS.slice(vd); /* compat: conteo viejo */
+    }
+    if (hidden.length >= 8) hidden = hidden.slice(0, 7); /* siempre queda al menos un día */
+    state.hiddenDays = hidden;
   } catch (e) {
     console.warn('load error', e);
   }
 }
 
-const DAYS_KEY = 'vsagenda:days';
+const DAYS_KEY = 'vsagenda:hidden';
+
+function persistHiddenDays() {
+  try { localStorage.setItem(DAYS_KEY, JSON.stringify(state.hiddenDays)); } catch {}
+}
+
+function visibleOffsets() {
+  return OFFSETS.filter((o) => !state.hiddenDays.includes(o));
+}
+
+function syncDaysPicker() {
+  const n = visibleOffsets().length;
+  if (els.daysLabel) els.daysLabel.textContent = `${n} día${n === 1 ? '' : 's'}`;
+}
 
 function setVisibleDays(n) {
-  state.visibleDays = Math.min(8, Math.max(1, Number(n) || 8));
-  try { localStorage.setItem(DAYS_KEY, String(state.visibleDays)); } catch {}
+  const k = Math.min(8, Math.max(1, Number(n) || 8));
+  state.hiddenDays = OFFSETS.slice(k);
+  persistHiddenDays();
   applyDayLayout();
-  if (els.daysLabel) els.daysLabel.textContent = `${state.visibleDays} día${state.visibleDays === 1 ? '' : 's'}`;
+  syncDaysPicker();
+}
+
+/* oculta el último día visible */
+function hideLastDay() {
+  const visible = visibleOffsets();
+  if (visible.length <= 1) return;
+  state.hiddenDays.push(visible[visible.length - 1]);
+  persistHiddenDays();
+  applyDayLayout();
+  syncDaysPicker();
+}
+
+/* vuelve a mostrar el día oculto más temprano */
+function addDayBack() {
+  if (!state.hiddenDays.length) return;
+  state.hiddenDays.sort((a, b) => a - b);
+  state.hiddenDays.shift();
+  persistHiddenDays();
+  applyDayLayout();
+  syncDaysPicker();
+}
+
+function hideDay(offset) {
+  const visible = visibleOffsets();
+  if (visible.length <= 1 || !visible.includes(offset)) return;
+  state.hiddenDays.push(offset);
+  persistHiddenDays();
+  applyDayLayout();
+  syncDaysPicker();
 }
 
 /* Los cuadros que quedan crecen: filas = ceil(días / 2 columnas) */
 function applyDayLayout() {
   if (!els.daylist) return;
-  const n = state.visibleDays;
+  const hidden = state.hiddenDays;
   els.daylist.querySelectorAll('.day-card').forEach((card) => {
-    card.hidden = Number(card.dataset.offset) >= n;
+    card.hidden = hidden.includes(Number(card.dataset.offset));
   });
-  const rows = Math.ceil(n / 2);
+  const visibleCount = 8 - hidden.length;
+  const rows = Math.ceil(visibleCount / 2);
   els.daylist.style.gridTemplateRows = `repeat(${rows}, minmax(60px, 1fr))`;
+
+  const ghost = els.daylist.querySelector('.day-card-ghost');
+  if (ghost) {
+    ghost.hidden = !hidden.length;
+    const next = [...hidden].sort((a, b) => a - b)[0];
+    const lbl = ghost.querySelector('.day-card-ghost-label');
+    if (lbl && next != null) {
+      const d = dateForOffset(next);
+      lbl.textContent = `+ agregar ${TAB_LABELS[next]} (${formatWeekdayShort(d)} ${formatDateShort(d)})`;
+    }
+  }
 }
 
 function loadLocale() {
@@ -312,6 +378,17 @@ function renderDayList() {
       header.appendChild(badge);
     }
 
+    const hideBtn = document.createElement('button');
+    hideBtn.className = 'day-card-hide';
+    hideBtn.title = 'Quitar panel';
+    hideBtn.setAttribute('aria-label', `Quitar panel ${TAB_LABELS[idx]}`);
+    hideBtn.textContent = '×';
+    hideBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      hideDay(offset);
+    });
+    header.appendChild(hideBtn);
+
     const meta = document.createElement('div');
     meta.className = 'day-card-meta';
     meta.dataset.role = 'meta';
@@ -350,6 +427,15 @@ function renderDayList() {
 
     refreshCardDecorations(card, content);
   });
+
+  const ghost = document.createElement('button');
+  ghost.className = 'day-card-ghost';
+  ghost.hidden = true;
+  ghost.innerHTML = `<span class="day-card-ghost-label"></span>`;
+  ghost.title = 'Volver a mostrar el día';
+  ghost.addEventListener('click', () => addDayBack());
+  els.daylist.appendChild(ghost);
+
   applyDayLayout();
 }
 
@@ -1854,8 +1940,8 @@ function bindUI() {
     e.target.value = '';
   });
   if (els.installBtn) els.installBtn.addEventListener('click', handleInstall);
-  if (els.daysMinus) els.daysMinus.addEventListener('click', () => setVisibleDays(state.visibleDays - 1));
-  if (els.daysPlus)  els.daysPlus.addEventListener('click', () => setVisibleDays(state.visibleDays + 1));
+  if (els.daysMinus) els.daysMinus.addEventListener('click', hideLastDay);
+  if (els.daysPlus)  els.daysPlus.addEventListener('click', addDayBack);
 
   document.querySelectorAll('.menu-item').forEach((btn) => {
     btn.addEventListener('click', () => handleMenuAction(btn.dataset.action));
@@ -1980,7 +2066,7 @@ function init() {
 
   els.locale.value = state.locale;
   document.documentElement.lang = state.locale;
-  if (els.daysLabel) els.daysLabel.textContent = `${state.visibleDays} día${state.visibleDays === 1 ? '' : 's'}`;
+  syncDaysPicker();
 
   buildActions();
   renderDayList();
