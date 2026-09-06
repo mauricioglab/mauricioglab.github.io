@@ -1126,3 +1126,11 @@ html, body {
 .day-card.focused .day-card-hide { visibility: visible; }
 .day-card-hide:hover { color: #f48771; background: rgba(244, 135, 113, 0.15); }
 
+
+/* ========== Color de proyecto en tarjetas ========== */
+.kanban-card.has-project { border-top: 2px solid var(--proj-color, var(--border)); }
+.kanban-card-project {
+  background: var(--proj-color, var(--bg-input));
+  color: #1e1e1e;
+  font-weight: 700;
+}

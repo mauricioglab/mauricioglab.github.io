@@ -177,6 +177,14 @@ function loadState() {
 const DAYS_KEY = 'vsagenda:hidden';
 const KANBAN_COLS_KEY = 'vsagenda:kanbancols';
 
+/* Colores de proyecto — paleta VS Code Dark+ */
+const PROJECT_COLORS = ['#569cd6', '#4ec9b0', '#c586c0', '#cca700', '#ce9178', '#4fc1ff', '#d7ba7d', '#6a9955', '#f48771', '#9cdcfe'];
+function projectColor(title) {
+  let h = 0;
+  for (let i = 0; i < title.length; i++) h = (h * 31 + title.charCodeAt(i)) >>> 0;
+  return PROJECT_COLORS[h % PROJECT_COLORS.length];
+}
+
 function setKanbanCols(n) {
   state.kanbanCols = Math.min(7, Math.max(1, Number(n) || 7));
   try { localStorage.setItem(KANBAN_COLS_KEY, String(state.kanbanCols)); } catch {}
@@ -1416,6 +1424,10 @@ function renderKanban() {
 function buildItemCard(it) {
   const card = document.createElement('article');
   card.className = 'kanban-card' + (it.item.depth > 1 ? ' is-subtask' : '');
+  if (it.projectTitle) {
+    card.classList.add('has-project');
+    card.style.setProperty('--proj-color', projectColor(it.projectTitle));
+  }
   card.draggable = true;
   card.dataset.iso = it.iso;
   card.dataset.lineIndex = it.lineIndex;
@@ -1441,7 +1453,7 @@ function buildItemCard(it) {
   }).join('');
 
   card.innerHTML = `
-    ${it.projectTitle ? `<div class="kanban-card-project" title="Proyecto">▸ ${escapeHtml(it.projectTitle)}</div>` : ''}
+    ${it.projectTitle ? `<div class="kanban-card-project" title="Proyecto" style="background: var(--proj-color)">▸ ${escapeHtml(it.projectTitle)}</div>` : ''}
     <div class="kanban-card-top">
       <select class="kanban-card-day" title="Día" draggable="false">${dayOptions}</select>
       <span class="kanban-card-flags">${flags.join('')}</span>
