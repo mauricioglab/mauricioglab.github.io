@@ -196,7 +196,8 @@ function setKanbanCols(n) {
 function applyKanbanLayout() {
   if (!els.kanban) return;
   els.kanban.querySelectorAll('.kanban-column').forEach((col, i) => {
-    col.hidden = i >= state.kanbanCols;
+    col.classList.toggle('secondary', i >= state.kanbanCols);
+    col.hidden = false;
   });
 }
 
@@ -266,8 +267,9 @@ function applyDayLayout() {
     card.hidden = hidden.includes(Number(card.dataset.offset));
   });
   const visibleCount = 8 - hidden.length;
-  const rows = Math.ceil(visibleCount / 2);
-  els.daylist.style.gridTemplateRows = `repeat(${rows}, minmax(60px, 1fr))`;
+  els.daylist.style.gridTemplateRows = '1fr';
+  els.daylist.style.gridTemplateColumns = `repeat(${visibleCount}, minmax(0, 1fr))`;
+  updateAllDayDecors();
 }
 
 function loadLocale() {
@@ -419,6 +421,12 @@ function renderDayList() {
     meta.dataset.role = 'meta';
     meta.hidden = true;
 
+    const body = document.createElement('div');
+    body.className = 'day-card-body';
+
+    const decor = document.createElement('div');
+    decor.className = 'day-decor';
+
     const ta = document.createElement('textarea');
     ta.id = `ta-${iso}`;
     ta.className = 'day-card-textarea';
@@ -447,13 +455,61 @@ function renderDayList() {
 
     card.appendChild(header);
     card.appendChild(meta);
-    card.appendChild(ta);
+    body.appendChild(decor);
+    body.appendChild(ta);
+    card.appendChild(body);
     els.daylist.appendChild(card);
 
     refreshCardDecorations(card, content);
+    ta.addEventListener('scroll', () => syncDecorScroll(ta), { passive: true });
   });
 
   applyDayLayout();
+}
+
+/* franjas de color por proyecto detrás de las líneas del textarea */
+function updateAllDayDecors() {
+  document.querySelectorAll('.day-card-textarea').forEach((ta) => updateDayDecor(ta));
+}
+
+function updateDayDecor(ta) {
+  const card = ta.closest('.day-card');
+  const decor = card && card.querySelector('.day-decor');
+  if (!decor) return;
+  const lines = ta.value.split('\n');
+  const style = getComputedStyle(ta);
+  const lh = parseFloat(style.lineHeight) || 20;
+  const padTop = parseFloat(style.paddingTop) || 0;
+  const stripes = [];
+  for (let i = 0; i < lines.length; i++) {
+    const item = parseItemLine(lines[i]);
+    if (!item) continue;
+    let title = '';
+    if (item.depth > 1) {
+      title = projectTitleFor(lines, i);
+    } else if (getBlockRange(lines, i).end - getBlockRange(lines, i).start > 1) {
+      title = item.text;
+    }
+    if (!title) continue;
+    const color = projectColor(title);
+    const isProject = item.depth === 1;
+    stripes.push(
+      `<div class="day-decor-band" style="top:${padTop + i * lh}px;height:${lh}px;` +
+      `background:${color}${isProject ? '55' : '2a'};` +
+      (isProject ? `box-shadow:inset 3px 0 0 ${color};` : '') +
+      `"></div>`
+    );
+  }
+  decor.innerHTML = stripes.join('');
+  decor.style.paddingTop = '';
+  syncDecorScroll(ta);
+}
+
+function syncDecorScroll(ta) {
+  const card = ta.closest('.day-card');
+  const decor = card && card.querySelector('.day-decor');
+  if (!decor) return;
+  decor.style.transform = `translateY(${-ta.scrollTop}px)`;
 }
 
 function refreshCardDecorations(card, content) {
@@ -602,6 +658,7 @@ function onInput(iso, ta) {
   }
   saveState();
   updateCardBadge(iso);
+  updateDayDecor(ta);
   updateItemCount();
   updateCursorStatus(ta);
 }
