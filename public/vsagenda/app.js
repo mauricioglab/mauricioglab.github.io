@@ -195,7 +195,9 @@ function setKanbanCols(n) {
 /* oculta columnas del kanban desde la última hacia adelante; las visibles estiran */
 function applyKanbanLayout() {
   if (!els.kanban) return;
+  els.kanban.style.setProperty('--kcols', String(state.kanbanCols));
   els.kanban.querySelectorAll('.kanban-column').forEach((col, i) => {
+    col.classList.toggle('primary', i < state.kanbanCols);
     col.classList.toggle('secondary', i >= state.kanbanCols);
     col.hidden = false;
   });
@@ -267,8 +269,17 @@ function applyDayLayout() {
     card.hidden = hidden.includes(Number(card.dataset.offset));
   });
   const visibleCount = 8 - hidden.length;
-  els.daylist.style.gridTemplateRows = '1fr';
-  els.daylist.style.gridTemplateColumns = `repeat(${visibleCount}, minmax(0, 1fr))`;
+  if (visibleCount > 4) {
+    /* modo cuadricula: 2 columnas x N filas (CSS base) */
+    els.daylist.style.gridTemplateRows = '';
+    els.daylist.style.gridTemplateColumns = '';
+    els.daylist.style.gridAutoFlow = '';
+  } else {
+    /* filas horizontales: paneles apilados de ancho completo */
+    els.daylist.style.gridTemplateColumns = '1fr';
+    els.daylist.style.gridTemplateRows = `repeat(${visibleCount}, minmax(0, 1fr))`;
+    els.daylist.style.gridAutoFlow = 'row';
+  }
   updateAllDayDecors();
 }
 

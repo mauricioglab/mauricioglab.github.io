@@ -251,9 +251,9 @@ html, body {
   background: var(--bg-editor);
   padding: 8px;
   display: grid;
-  grid-template-rows: 1fr;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-rows: repeat(4, minmax(60px, 1fr));
   grid-auto-flow: column;
+  grid-auto-columns: 1fr;
   gap: 8px;
   overflow: hidden;
   align-content: stretch;
@@ -754,7 +754,7 @@ html, body {
 }
 .kanban-column {
   flex: 1 1 0;
-  min-width: 0;
+  min-width: 230px;
   max-width: none;
   display: flex;
   flex-direction: column;
@@ -1020,7 +1020,6 @@ html, body {
 }
 
 /* ========== GTD: bandeja, 2 minutos, siguiente acción ========== */
-.kanban-column { min-width: 170px; }
 .kanban-card[data-state="inbox"] { border-left-style: dashed; opacity: 0.85; }
 .kanban-card[data-state="quick"] { border-left-color: #4ec9b0; }
 
@@ -1160,7 +1159,12 @@ html, body {
   right: 0;
 }
 
-/* ========== Columnas kanban secundarias (accesibles por scroll) ========== */
+/* ========== Columnas kanban: primarias llenan la pantalla, secundarias fuera (scroll) ========== */
+.kanban { --kcols: 7; }
+.kanban-column.primary {
+  flex: 0 0 calc((100% - (var(--kcols) - 1) * 10px) / var(--kcols));
+  min-width: 0;
+}
 .kanban-column.secondary {
   flex: 0 0 230px;
   min-width: 230px;
