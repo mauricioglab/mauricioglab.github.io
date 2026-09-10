@@ -21,6 +21,8 @@ export interface Disertacion {
   certificateUrl?: string;
   /** URLs de las diapositivas (galería). */
   slidesUrls: string[];
+  /** Fotos adicionales del álbum (se usan si no hay certificado). */
+  galleryUrls: string[];
   draft: boolean;
 }
 
@@ -31,7 +33,7 @@ export async function getDisertaciones(): Promise<Disertacion[]> {
     const { data, error } = await supabase
       .from('disertaciones')
       .select(
-        'id, slug, title, event_date, event_name, author, categories, description, bullets, cover_url, certificate_url, slides_urls, draft'
+        'id, slug, title, event_date, event_name, author, categories, description, bullets, cover_url, certificate_url, slides_urls, gallery_urls, draft'
       )
       .eq('draft', false)
       .order('event_date', { ascending: false });
@@ -51,6 +53,7 @@ export async function getDisertaciones(): Promise<Disertacion[]> {
           coverUrl: row.cover_url ?? undefined,
           certificateUrl: row.certificate_url ?? undefined,
           slidesUrls: Array.isArray(row.slides_urls) ? row.slides_urls : [],
+          galleryUrls: Array.isArray(row.gallery_urls) ? row.gallery_urls : [],
           draft: row.draft ?? false,
         });
       }

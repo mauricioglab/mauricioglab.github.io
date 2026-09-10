@@ -12,6 +12,7 @@ export const DISERTACION_CATEGORIES = [
   'Clase magistral',
   'Defensa',
   'Panel',
+  'Moderador',
   'Webinar',
 ] as const;
 

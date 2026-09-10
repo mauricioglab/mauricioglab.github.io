@@ -8,7 +8,13 @@ interface Props {
 
 const { disertacion } = Astro.props;
 const cover = disertacion.coverUrl || disertacion.slidesUrls[0];
-const extraSlides = disertacion.slidesUrls.filter((s) => s !== cover).slice(0, 2);
+const secondary: string[] = [];
+if (disertacion.certificateUrl) secondary.push(disertacion.certificateUrl);
+else secondary.push(...disertacion.galleryUrls);
+secondary.push(...disertacion.slidesUrls.filter((s) => s !== cover));
+const shown = secondary.filter(Boolean).slice(0, 2);
+const certPhoto = shown[0];
+const slidePhoto = shown[1];
 const date = formatEventDate(disertacion.eventDate);
 ---
 
@@ -20,11 +26,11 @@ const date = formatEventDate(disertacion.eventDate);
   <div class="tl-card" itemscope itemprop="event">
     <div class="tl-photos" aria-hidden="true">
       {cover && <img src={cover} class="tl-photo main" alt="" loading="lazy" itemprop="image" />}
-      {disertacion.certificateUrl && (
-        <img src={disertacion.certificateUrl} class="tl-photo cert" alt="" loading="lazy" />
+      {certPhoto && (
+        <img src={certPhoto} class="tl-photo cert" alt="" loading="lazy" />
       )}
-      {extraSlides[0] && (
-        <img src={extraSlides[0]} class="tl-photo slide" alt="" loading="lazy" />
+      {slidePhoto && (
+        <img src={slidePhoto} class="tl-photo slide" alt="" loading="lazy" />
       )}
     </div>
 

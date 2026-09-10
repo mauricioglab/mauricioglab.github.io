@@ -170,14 +170,15 @@ async function parsePptx(bytes: Uint8Array): Promise<ParseResult> {
 
 const SYSTEM_BULLETS = `
 Sos un asistente que ayuda a un profesional a documentar sus charlas. A partir del
-texto extraído de las diapositivas de una presentación (.pptx), resumís DE QUÉ TRATÓ
-la charla en bullets breves y concretos, en español.
+texto de una presentación o de las notas del autor, resumís DE QUÉ TRATÓ la charla en
+bullets breves y concretos, en español.
 
 Reglas:
 - 4 a 8 bullets. Cada uno de una sola idea, de 8 a 20 palabras.
 - Escribí en pasado ("Se presentó…", "Se analizó…", "Se comparó…").
-- No inventes contenido que no esté en las slides.
-- Si una slide no tiene texto útil, ignorala.
+- No inventes contenido que no esté en el material.
+- Si el texto es un borrador desordenado, ordenalo y quedate con lo esencial.
+- Si una parte no aporta, ignorala.
 - Detectá el tema y proponé un título corto de la charla si no se indica.
 
 Devolvé ÚNICAMENTE un objeto JSON con esta forma exacta:
@@ -189,7 +190,7 @@ Devolvé ÚNICAMENTE un objeto JSON con esta forma exacta:
 
 const SYSTEM_TITLE = `
 Sos un asistente que ayuda a un profesional a documentar sus charlas. A partir del
-texto extraído de las diapositivas de una presentación, proponé un título corto y
+texto de una presentación o de las notas del autor, proponé un título corto y
 atractivo para la charla (máx 10 palabras), en español, sin comillas.
 
 Devolvé ÚNICAMENTE un objeto JSON con esta forma exacta:
@@ -209,30 +210,40 @@ Deno.serve(async (req: Request) => {
     const fileName = (body?.fileName ?? "presentacion.pptx").toString();
     const titleHint = (body?.title ?? "").toString().trim();
     const eventName = (body?.eventName ?? "").toString().trim();
+    const textSource = (body?.text ?? "").toString().trim();
 
-    if (!fileBase64) return jsonResponse({ error: "Falta el archivo base64" }, 400);
-    if (!/\.pptx$/i.test(fileName)) {
-      return jsonResponse(
-        { error: "Solo se soporta formato .pptx (zip). Convertí el .ppt a .pptx y reintentá." },
-        400
-      );
+    let slides: SlideText[] = [];
+    let media: ParseResult["media"] = [];
+    let allText = "";
+
+    if (fileBase64) {
+      if (!/\.pptx$/i.test(fileName)) {
+        return jsonResponse(
+          { error: "Solo se soporta formato .pptx (zip). Convertí el .ppt a .pptx y reintentá." },
+          400
+        );
+      }
+
+      // Decodificar base64 → bytes
+      const bin = atob(fileBase64.replace(/\s/g, ""));
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+
+      ({ slides, media } = await parsePptx(bytes));
+      if (slides.length === 0) {
+        return jsonResponse({ error: "No se pudo extraer texto de las diapositivas." }, 422);
+      }
+
+      allText = slides
+        .map((s) => `[Slide ${s.index}]\n${s.text}`)
+        .join("\n\n")
+        .slice(0, 12000);
+    } else if (textSource) {
+      // Modo texto: sin archivo, la IA mejora/estructura el texto crudo del autor.
+      allText = textSource.slice(0, 12000);
+    } else {
+      return jsonResponse({ error: "Falta el archivo o el texto de la charla" }, 400);
     }
-
-    // Decodificar base64 → bytes
-    const bin = atob(fileBase64.replace(/\s/g, ""));
-    const bytes = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-
-    const { slides, media } = await parsePptx(bytes);
-    if (slides.length === 0) {
-      return jsonResponse({ error: "No se pudo extraer texto de las diapositivas." }, 422);
-    }
-
-    // Texto concatenado para alimentar a la IA (acotado)
-    const allText = slides
-      .map((s) => `[Slide ${s.index}]\n${s.text}`)
-      .join("\n\n")
-      .slice(0, 12000);
 
     // Título: si no viene, lo propone la IA
     let title = titleHint;
@@ -249,7 +260,7 @@ Deno.serve(async (req: Request) => {
     const userPrompt = [
       `Evento: ${eventName || "no indicado"}`,
       title ? `Título sugerido/propuesto: ${title}` : null,
-      `Texto de las diapositivas:\n${allText}`,
+      `Material de la charla:\n${allText}`,
     ]
       .filter(Boolean)
       .join("\n\n");

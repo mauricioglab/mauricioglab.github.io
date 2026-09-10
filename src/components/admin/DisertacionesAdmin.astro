@@ -161,6 +161,15 @@
             </button>
           </div>
 
+          <div class="border-t border-slate-700 pt-3 space-y-2">
+            <label class="block text-xs font-bold text-slate-300">¿No tenés el PPT? Escribí un resumen y la IA lo mejora</label>
+            <textarea x-model="textResumen" rows="5" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600" placeholder="Escribí con tus palabras de qué trató la charla: tema, puntos que tocaste, ejemplos, audiencia…"></textarea>
+            <button @click="mejorarTexto()" :disabled="busy || !textResumen" class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-60 text-sm font-bold rounded-lg inline-flex items-center gap-2 justify-center">
+              <span x-show="op && op.id === 'texto'" class="spinner spinner-xs"></span>
+              <span x-text="op && op.id === 'texto' ? 'Mejorando…' : '✨ Mejorar con IA'"></span>
+            </button>
+          </div>
+
           <div x-show="slideUrls.length" class="space-y-3">
             <p class="text-xs font-bold text-slate-300">Diapositivas extraídas (<span x-text="slideUrls.length"></span>):</p>
             <div class="grid grid-cols-3 sm:grid-cols-4 gap-2">
@@ -219,6 +228,24 @@
             </div>
             <div x-show="coverUrl" class="mt-2 rounded-lg overflow-hidden border border-slate-600 max-w-sm">
               <img :src="coverUrl" alt="Portada" class="w-full aspect-video object-cover">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Fotos adicionales <span class="font-normal text-slate-500">(2-3 para el álbum; se muestran si no hay certificado)</span></label>
+            <div class="flex items-center gap-3">
+              <input type="file" accept="image/*" multiple @change="onGalleryChange" class="flex-1 text-sm text-slate-300 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-slate-700 file:text-slate-200 file:text-sm file:font-bold hover:file:bg-slate-600">
+              <button @click="subirGaleria()" :disabled="busy || !galleryFiles.length" class="shrink-0 px-4 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-sm font-bold rounded-lg inline-flex items-center gap-2 justify-center">
+                <span x-text="galleryUrls.length ? 'Agregar' : 'Subir fotos'"></span>
+              </button>
+            </div>
+            <div x-show="galleryUrls.length" class="mt-2 grid grid-cols-3 gap-2 max-w-sm">
+              <template x-for="(g, i) in galleryUrls" :key="i">
+                <div class="relative rounded-lg overflow-hidden border border-slate-600 group">
+                  <img :src="g" alt="Foto del álbum" class="w-full aspect-video object-cover">
+                  <button @click="removeGallery(i)" type="button" class="absolute top-1 right-1 text-[10px] font-bold text-white bg-red-600 hover:bg-red-500 rounded px-1.5 py-0.5" title="Quitar foto">✕</button>
+                </div>
+              </template>
             </div>
           </div>
         </div>
@@ -326,10 +353,12 @@
 
   const OP_STEPS: Record<string, string[]> = {
     parse: ['Conectar', 'Descomprimir PPTX', 'Extraer texto e imágenes', 'Generar bullets con IA', 'Subir imágenes'],
+    texto: ['Conectar', 'Analizar el texto', 'Generar bullets con IA'],
     publicar: ['Guardar en la base'],
   };
   const OP_MSGS: Record<string, string[]> = {
     parse: ['Conectando…', 'Leyendo el .pptx…', 'Extrayendo diapositivas…', 'Generando resumen con IA…', 'Subiendo imágenes a storage…'],
+    texto: ['Conectando con DeepSeek…', 'Analizando tu resumen…', 'Armando bullets…'],
     publicar: ['Guardando en la base…'],
   };
 
@@ -353,10 +382,13 @@
     pptFile: null as File | null,
     certFile: null as File | null,
     coverFile: null as File | null,
+    textResumen: '',
     slideUrls: [] as string[],
     selectedCoverIndex: -1,
     coverUrl: '',
     certificateUrl: '',
+    galleryUrls: [] as string[],
+    galleryFiles: [] as File[],
     editingId: null as any,
     busy: false,
     status: '',
@@ -461,6 +493,33 @@
     onCoverChange(e: Event) {
       const input = e.target as HTMLInputElement;
       this.coverFile = input.files && input.files[0] ? input.files[0] : null;
+    },
+
+    onGalleryChange(e: Event) {
+      const input = e.target as HTMLInputElement;
+      this.galleryFiles = input.files ? Array.from(input.files) : [];
+    },
+
+    async subirGaleria() {
+      if (!this.galleryFiles.length) { this.status = 'Elegí una o más fotos.'; return; }
+      this.busy = true;
+      this.status = 'Subiendo fotos…';
+      try {
+        for (const f of this.galleryFiles) {
+          const url = await this.uploadImage(f, 'galeria');
+          this.galleryUrls = [...this.galleryUrls, url];
+        }
+        this.galleryFiles = [];
+        this.status = `Fotos subidas (${this.galleryUrls.length} en el álbum).`;
+      } catch (e) {
+        this.status = (e as Error).message;
+      } finally {
+        this.busy = false;
+      }
+    },
+
+    removeGallery(index: number) {
+      this.galleryUrls = this.galleryUrls.filter((_, i) => i !== index);
     },
 
     setCover(index: number) {
@@ -640,6 +699,7 @@
           cover_url: this.coverUrl || null,
           certificate_url: this.certificateUrl || null,
           slides_urls: this.slideUrls,
+          gallery_urls: this.galleryUrls,
           draft,
         };
         if (this.editingId) {
@@ -690,6 +750,8 @@
       this.slideUrls = Array.isArray(p.slides_urls) ? p.slides_urls : [];
       this.coverUrl = p.cover_url || '';
       this.certificateUrl = p.certificate_url || '';
+      this.galleryUrls = Array.isArray(p.gallery_urls) ? p.gallery_urls : [];
+      this.galleryFiles = [];
       const coverIdx = this.coverUrl ? this.slideUrls.indexOf(this.coverUrl) : -1;
       this.selectedCoverIndex = coverIdx;
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -704,9 +766,12 @@
       this.selectedCoverIndex = -1;
       this.coverUrl = '';
       this.certificateUrl = '';
+      this.galleryUrls = [];
+      this.galleryFiles = [];
       this.pptFile = null;
       this.certFile = null;
       this.coverFile = null;
+      this.textResumen = '';
     },
   }));
 
