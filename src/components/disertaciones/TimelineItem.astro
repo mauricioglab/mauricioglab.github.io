@@ -125,7 +125,10 @@ const date = formatEventDate(disertacion.eventDate);
   .tl-photo.main { width: 58%; aspect-ratio: 16/9; object-fit: cover; transform: rotate(-3deg); }
   .tl-photo.cert { width: 38%; object-fit: cover; transform: rotate(3.5deg) translateY(8px); z-index: 1; }
   .tl-photo.slide { width: 32%; aspect-ratio: 16/9; object-fit: cover; transform: rotate(-5deg) translateY(-2px); }
-  .tl-card:hover .tl-photo { transform: rotate(0deg) translateY(0) scale(1.03); box-shadow: 0 20px 40px -20px rgba(20,26,46,.55); }
+  .tl-card:hover .tl-photo { box-shadow: 0 22px 44px -20px rgba(20,26,46,.55); z-index: 2; }
+  .tl-card:hover .tl-photo.main { transform: rotate(-3deg) scale(1.07); }
+  .tl-card:hover .tl-photo.cert { transform: rotate(3.5deg) translateY(8px) scale(1.07); }
+  .tl-card:hover .tl-photo.slide { transform: rotate(-5deg) translateY(-2px) scale(1.07); }
 
   .tl-body { display: flex; flex-direction: column; gap: 12px; }
   .tl-meta {
