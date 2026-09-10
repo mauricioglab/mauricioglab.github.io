@@ -1,0 +1,16 @@
+---
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+import DisertacionesAdmin from '../../components/admin/DisertacionesAdmin.astro';
+
+export const prerender = true;
+---
+
+<BaseTailwind
+  title="Admin Disertaciones — MG Lab"
+  description="Editor de disertaciones con IA"
+  lang="es"
+  layoutType="admin"
+  showMateGame={false}
+>
+  <DisertacionesAdmin />
+</BaseTailwind>

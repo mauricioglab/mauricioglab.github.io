@@ -30,6 +30,7 @@ export const pagesRegistry: PageEntry[] = [
   // PÚBLICAS (aparecen en index y main)
   // =====================
   { id: 'blog', name: 'Blog', url: '/blog/', category: 'public', icon: '📝' },
+  { id: 'disertaciones', name: 'Disertaciones', url: '/disertaciones/', category: 'public', icon: '🎤' },
   { id: 'prompt', name: 'Prompts', url: '/prompt/', category: 'public', icon: '🤖' },
   { id: 'videos', name: 'Videos', url: '/videos/', category: 'public', icon: '🎬' },
   { id: 'extensions', name: 'Extensiones', url: '/extensions/', category: 'public', icon: '🧩' },
@@ -57,6 +58,7 @@ export const pagesRegistry: PageEntry[] = [
   { id: 'workspace-mapper', name: 'Workspace Mapper', url: '/workspace-mapper/', category: 'tool', icon: '🖥️' },
   { id: 'vsagenda', name: 'vsagenda', url: '/vsagenda/', category: 'tool', icon: '🗓️' },
   { id: 'admin-blog', name: 'Admin Blog', url: '/admin/blog/', category: 'tool', icon: '📝' },
+  { id: 'admin-disertaciones', name: 'Admin Disertaciones', url: '/admin/disertaciones/', category: 'tool', icon: '🎤' },
 
   // =====================
   // CASE STUDIES (solo en admin)

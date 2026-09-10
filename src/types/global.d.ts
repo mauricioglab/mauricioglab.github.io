@@ -44,6 +44,7 @@ declare global {
     // Alpine + utilidades de admin
     Alpine: any;
     __BLOG_BASE__: string;
+    __DISERT_BASE__: string;
 
     // PromptModal functions
     showPromptModal: (options?: PromptModalOptions) => Promise<string | null>;

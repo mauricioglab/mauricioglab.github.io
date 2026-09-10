@@ -1,0 +1,714 @@
+---
+---
+<div x-data="disertacionesAdmin" x-init="init()" class="min-h-screen bg-slate-900 text-white" x-cloak>
+  <!-- ============ LOGIN / GATE ============ -->
+  <div x-show="!user || userRole !== 'admin'" class="min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-sm">
+      <div class="bg-slate-800 rounded-xl p-6 shadow-xl">
+        <h1 class="text-xl font-bold mb-1">🎤 Admin Disertaciones</h1>
+        <p class="text-sm text-slate-400 mb-4">Acceso restringido al administrador.</p>
+
+        <div x-show="user && userRole && userRole !== 'admin'">
+          <p class="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-lg p-3 mb-4">
+            Tu usuario no tiene rol <strong>admin</strong>. Contactá al administrador.
+          </p>
+          <button @click="logout()" class="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-bold rounded-lg">
+            Cerrar sesión
+          </button>
+        </div>
+
+        <template x-if="!user">
+          <div>
+            <div x-show="loadingAuth" class="text-center text-sm text-slate-400 py-6">Cargando...</div>
+            <form x-show="!loadingAuth" @submit.prevent="login()">
+              <div class="mb-3">
+                <label class="block text-xs font-bold text-slate-300 mb-1">Usuario o Email</label>
+                <input x-model="loginEmail" type="text" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-600">
+              </div>
+              <div class="mb-4">
+                <label class="block text-xs font-bold text-slate-300 mb-1">Contraseña</label>
+                <input x-model="loginPassword" type="password" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-600" required>
+              </div>
+              <p x-show="loginError" class="text-xs text-red-400 mb-3 font-bold" x-text="loginError"></p>
+              <button type="submit" class="w-full py-2 bg-indigo-700 hover:bg-indigo-800 text-white text-sm font-bold rounded-lg" :disabled="loadingAuth">
+                <span x-text="loadingAuth ? '...' : 'Ingresar'"></span>
+              </button>
+            </form>
+            <a :href="`${window.__DISERT_BASE__}disertaciones/`" class="block w-full text-center text-xs text-slate-500 hover:text-slate-300 mt-3">← Volver a disertaciones</a>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ADMIN ============ -->
+  <div x-show="user && userRole === 'admin'" class="max-w-7xl mx-auto p-4 md:p-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-bold">🎤 Admin Disertaciones</h1>
+        <p class="text-sm text-slate-400" x-text="user ? user.email : ''"></p>
+      </div>
+      <div class="flex items-center gap-3">
+        <a :href="`${window.__DISERT_BASE__}disertaciones/`" class="text-sm text-slate-400 hover:text-white">Ver sitio</a>
+        <button @click="logout()" class="px-3 py-1.5 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600/30 text-sm">Salir</button>
+      </div>
+    </div>
+
+    <!-- Consola de actividad -->
+    <div class="mb-4 space-y-2">
+      <template x-if="op">
+        <div class="rounded-lg border border-indigo-500/40 bg-slate-800/90 overflow-hidden">
+          <div class="shimmer-bar h-1"></div>
+          <div class="p-4 space-y-3">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2 text-sm font-bold text-indigo-200">
+                <span class="spinner spinner-sm"></span>
+                <span x-text="op?.label"></span>
+              </div>
+              <span class="text-xs font-mono text-slate-400">⏱ <span x-text="op?.elapsed"></span></span>
+            </div>
+            <p class="text-xs text-indigo-300" x-text="op?.messages?.[op?.msgIndex]"></p>
+            <div class="space-y-1.5">
+              <template x-for="(step, i) in (op?.steps ?? [])" :key="i">
+                <div class="flex items-center gap-2 text-xs">
+                  <span x-show="step.status === 'active'" class="spinner spinner-xs"></span>
+                  <span x-show="step.status === 'done'" class="text-green-400 font-bold">✓</span>
+                  <span x-show="step.status === 'error'" class="text-red-400 font-bold">✗</span>
+                  <span x-show="step.status === 'pending'" class="w-2 h-2 rounded-full bg-slate-600"></span>
+                  <span :class="step.status === 'active' ? 'text-slate-100 font-bold' : step.status === 'done' ? 'text-green-300' : step.status === 'error' ? 'text-red-300' : 'text-slate-500'" x-text="step.label"></span>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </template>
+      <div x-show="!op && status" class="px-4 py-3 rounded-lg bg-indigo-600/15 border border-indigo-500/30 text-sm" x-text="status"></div>
+      <template x-if="opHistory.length">
+        <details class="group text-xs">
+          <summary class="text-slate-400 hover:text-slate-200 cursor-pointer select-none font-bold">
+            Actividad reciente (<span x-text="opHistory.length"></span>)
+          </summary>
+          <div class="mt-1.5 space-y-1">
+            <template x-for="h in opHistory" :key="h.ts">
+              <div class="flex items-start gap-2" :class="h.ok ? 'text-slate-400' : 'text-red-400'">
+                <span x-text="h.ok ? '✓' : '✗'"></span>
+                <span class="font-bold" x-text="h.label"></span>
+                <span class="font-mono" x-text="h.elapsed"></span>
+                <span class="truncate" x-text="h.result"></span>
+              </div>
+            </template>
+          </div>
+        </details>
+      </template>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- ===== Editor ===== -->
+      <section class="lg:col-span-2 space-y-6">
+        <!-- Datos de la charla -->
+        <div class="bg-slate-800 rounded-xl p-5 space-y-3">
+          <h2 class="text-base font-bold">1. Datos de la disertación</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="md:col-span-2">
+              <label class="block text-xs font-bold text-slate-300 mb-1">Título *</label>
+              <input x-model="form.title" type="text" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Fecha de la charla</label>
+              <input x-model="form.eventDate" type="date" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Evento / Institución</label>
+              <input x-model="form.eventName" type="text" placeholder="Ej: Congreso de Informática 2026" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-xs font-bold text-slate-300 mb-1">Descripción (SEO)</label>
+              <input x-model="form.description" type="text" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-xs font-bold text-slate-300 mb-1">Categorías</label>
+              <div class="flex flex-col gap-2">
+                <select x-model="selectedCategory" @change="addCategory()" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                  <option value="">Elegí una categoría…</option>
+                  <template x-for="cat in availableCategories" :key="cat">
+                    <option :value="cat" x-text="cat"></option>
+                  </template>
+                </select>
+                <div class="flex flex-wrap gap-2" x-show="selectedCategories.length">
+                  <template x-for="(cat, i) in selectedCategories" :key="i">
+                    <span class="inline-flex items-center gap-1.5 bg-slate-700 rounded-full px-3 py-1 text-xs font-bold text-slate-100">
+                      <span x-text="cat"></span>
+                      <button type="button" @click="removeCategory(i)" class="text-slate-300 hover:text-red-400 font-bold leading-none" title="Quitar categoría">✕</button>
+                    </span>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PPT / Bullets -->
+        <div class="bg-slate-800 rounded-xl p-5 space-y-3">
+          <h2 class="text-base font-bold">2. Subí el PPT (.pptx) para generar el resumen</h2>
+          <p class="text-xs text-slate-400">Se extraen el texto y las imágenes de las diapositivas, se genera un resumen en bullets con IA y se arma la galería. Se toma la slide 1 como portada y la 2 como primer item de la galería.</p>
+
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input type="file" accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation" @change="onFileChange" class="flex-1 text-sm text-slate-300 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-slate-700 file:text-slate-200 file:text-sm file:font-bold hover:file:bg-slate-600">
+            <button @click="procesarPpt()" :disabled="busy || !pptFile" class="shrink-0 px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-60 text-sm font-bold rounded-lg inline-flex items-center gap-2 justify-center">
+              <span x-show="op && op.id === 'parse'" class="spinner spinner-xs"></span>
+              <span x-text="op && op.id === 'parse' ? 'Procesando…' : '⚙️ Procesar PPT'"></span>
+            </button>
+          </div>
+
+          <div x-show="slideUrls.length" class="space-y-3">
+            <p class="text-xs font-bold text-slate-300">Diapositivas extraídas (<span x-text="slideUrls.length"></span>):</p>
+            <div class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+              <template x-for="(s, i) in slideUrls" :key="i">
+                <div class="relative group rounded-lg overflow-hidden border" :class="selectedCoverIndex === i ? 'border-indigo-400 ring-2 ring-indigo-500' : 'border-slate-600'">
+                  <img :src="s" class="w-full aspect-video object-cover" :alt="'Slide ' + (i + 1)">
+                  <div class="absolute inset-0 flex items-end justify-between bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition">
+                    <button @click="setCover(i)" type="button" class="text-[10px] font-bold text-white bg-indigo-600 hover:bg-indigo-500 m-1 px-2 py-1 rounded" title="Usar como portada">Portada</button>
+                    <button @click="setCover(i)" type="button" class="text-[10px] font-bold text-white bg-slate-700 hover:bg-slate-600 m-1 px-2 py-1 rounded" x-show="selectedCoverIndex === i" title="Es la portada actual">★</button>
+                  </div>
+                  <span x-show="selectedCoverIndex === i" class="absolute top-1 left-1 text-[10px] font-bold text-white bg-indigo-600 px-1.5 py-0.5 rounded">portada</span>
+                </div>
+              </template>
+            </div>
+            <p class="text-xs text-slate-400">Tip: la slide 1 suele ser la portada. Hacé clic en "Portada" sobre la que quieras.</p>
+          </div>
+
+          <div x-show="bullets.length" class="border-t border-slate-700 pt-3 space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold text-slate-300">Bullets "De qué trató la charla" (editables)</label>
+              <button @click="addBullet" type="button" class="text-xs text-indigo-400 hover:text-indigo-300 font-bold">+ agregar</button>
+            </div>
+            <template x-for="(b, i) in bullets" :key="i">
+              <div class="flex items-center gap-2">
+                <input x-model="bullets[i]" type="text" class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                <button @click="removeBullet(i)" type="button" class="text-red-400 hover:text-red-300 font-bold shrink-0" title="Quitar">✕</button>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Certificado + Portada -->
+        <div class="bg-slate-800 rounded-xl p-5 space-y-4">
+          <h2 class="text-base font-bold">3. Certificado y portada</h2>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Foto del certificado</label>
+            <div class="flex items-center gap-3">
+              <input type="file" accept="image/*" @change="onCertChange" class="flex-1 text-sm text-slate-300 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-slate-700 file:text-slate-200 file:text-sm file:font-bold hover:file:bg-slate-600">
+              <button @click="subirCertificado()" :disabled="busy || !certFile" class="shrink-0 px-4 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-sm font-bold rounded-lg inline-flex items-center gap-2 justify-center">
+                <span x-text="certificateUrl ? 'Reemplazar' : 'Subir'"></span>
+              </button>
+            </div>
+            <div x-show="certificateUrl" class="mt-2 rounded-lg overflow-hidden border border-slate-600 max-w-sm">
+              <img :src="certificateUrl" alt="Certificado" class="w-full object-cover">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Imagen de portada <span class="font-normal text-slate-500">(si no elegís una slide, se usa la 1ra)</span></label>
+            <div class="flex items-center gap-3">
+              <input type="file" accept="image/*" @change="onCoverChange" class="flex-1 text-sm text-slate-300 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-slate-700 file:text-slate-200 file:text-sm file:font-bold hover:file:bg-slate-600">
+              <button @click="subirPortada()" :disabled="busy || !coverFile" class="shrink-0 px-4 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-sm font-bold rounded-lg inline-flex items-center gap-2 justify-center">
+                <span x-text="coverUrl ? 'Reemplazar' : 'Subir'"></span>
+              </button>
+            </div>
+            <div x-show="coverUrl" class="mt-2 rounded-lg overflow-hidden border border-slate-600 max-w-sm">
+              <img :src="coverUrl" alt="Portada" class="w-full aspect-video object-cover">
+            </div>
+          </div>
+        </div>
+
+        <!-- Publicar -->
+        <div class="bg-slate-800 rounded-xl p-5 border-t border-slate-700 flex flex-wrap gap-3">
+          <button @click="publicar(false)" :disabled="busy" class="px-5 py-2 bg-green-700 hover:bg-green-800 disabled:opacity-60 text-sm font-bold rounded-lg inline-flex items-center gap-2 justify-center">
+            <span x-show="op && op.id === 'publicar'" class="spinner spinner-xs"></span>
+            <span x-text="op && op.id === 'publicar' ? 'Guardando…' : (editingId ? 'Actualizar y publicar' : 'Publicar')"></span>
+          </button>
+          <button @click="publicar(true)" :disabled="busy" class="px-5 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-sm font-bold rounded-lg inline-flex items-center gap-2 justify-center">
+            <span x-show="op && op.id === 'publicar'" class="spinner spinner-xs"></span>
+            <span x-text="op && op.id === 'publicar' ? 'Guardando…' : 'Guardar borrador'"></span>
+          </button>
+          <button @click="nuevaDisertacion()" class="px-5 py-2 border border-slate-600 hover:border-slate-500 text-sm font-bold rounded-lg">Nueva disertación</button>
+        </div>
+      </section>
+
+      <!-- ===== Lista ===== -->
+      <aside class="space-y-4">
+        <div class="bg-slate-800 rounded-xl p-5">
+          <h2 class="text-base font-bold mb-3">Disertaciones existentes</h2>
+          <div x-show="!disertaciones.length" class="text-sm text-slate-400">Sin disertaciones todavía.</div>
+          <div class="space-y-2">
+            <template x-for="p in disertaciones" :key="p.id">
+              <div class="bg-slate-900 border border-slate-700 rounded-lg p-3">
+                <div class="flex items-start justify-between gap-2">
+                  <p class="text-sm font-bold" x-text="p.title"></p>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full shrink-0" :class="p.draft ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400'" x-text="p.draft ? 'borrador' : 'publicado'"></span>
+                </div>
+                <p class="text-xs text-slate-400 mt-1" x-text="p.event_date + ' · ' + (p.event_name || '—')"></p>
+                <div class="flex gap-2 mt-2 text-xs">
+                  <button @click="cargarDisertacion(p)" class="text-indigo-400 hover:text-indigo-300 font-bold">Editar</button>
+                  <button @click="toggleDraft(p)" class="text-slate-400 hover:text-white font-bold" x-text="p.draft ? 'Publicar' : 'A borrador'"></button>
+                  <button @click="borrarDisertacion(p)" class="text-red-400 hover:text-red-300 font-bold">Eliminar</button>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <div class="bg-slate-800 rounded-xl p-5 text-xs text-slate-400 space-y-2">
+          <h3 class="text-sm font-bold text-slate-200">Notas</h3>
+          <p>Subí el .pptx, procesalo para generar los bullets y la galería, subí la foto del certificado y publicá.</p>
+          <p>Al publicar, la disertación se guarda en la base y aparece en <span class="text-slate-200">/disertaciones</span> tras el próximo build (el deploy corre cada 12 hs o manual desde GitHub).</p>
+          <p>Solo se soporta <strong>.pptx</strong>. Convertí el .ppt a .pptx antes de subirlo.</p>
+          <p>Las llaves de IA viven como secrets de Supabase: nunca viajan al navegador.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <style>
+    [x-cloak] { display: none !important; }
+    @keyframes mglab-spin { to { transform: rotate(360deg); } }
+    .spinner { display: inline-block; border-radius: 9999px; border: 2px solid rgba(255,255,255,.18); border-top-color: #818cf8; animation: mglab-spin .7s linear infinite; vertical-align: middle; }
+    .spinner-sm { width: 14px; height: 14px; }
+    .spinner-xs { width: 10px; height: 10px; border-width: 2px; }
+    @keyframes mglab-shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+    .shimmer-bar { position: relative; overflow: hidden; background: rgba(99,102,241,.18); }
+    .shimmer-bar::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(129,140,248,.8), transparent); animation: mglab-shimmer 1.1s infinite; }
+    .skeleton { position: relative; overflow: hidden; background: rgba(255,255,255,.06); border-radius: 8px; }
+    .skeleton::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 60%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent); transform: translateX(-100%); animation: mglab-shimmer 1.3s infinite; }
+  </style>
+</div>
+
+<script>
+  import Alpine from 'alpinejs';
+  import {
+    supabase,
+    resolveLoginUser,
+    markSessionStart,
+    clearSessionStart,
+    scheduleSessionEnd,
+  } from '../../lib/supabase';
+  import { DISERTACION_CATEGORIES } from '../../data/disertacion-categories';
+
+  window.Alpine = Alpine;
+
+  const BASE = import.meta.env.BASE_URL;
+  window.__DISERT_BASE__ = BASE.endsWith('/') ? BASE : `${BASE}/`;
+
+  function slugify(text: string) {
+    return (text || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 80) || 'disertacion';
+  }
+
+  function fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = String(reader.result || '');
+        const base64 = result.split(',')[1] || '';
+        resolve(base64);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  const OP_STEPS: Record<string, string[]> = {
+    parse: ['Conectar', 'Descomprimir PPTX', 'Extraer texto e imágenes', 'Generar bullets con IA', 'Subir imágenes'],
+    publicar: ['Guardar en la base'],
+  };
+  const OP_MSGS: Record<string, string[]> = {
+    parse: ['Conectando…', 'Leyendo el .pptx…', 'Extrayendo diapositivas…', 'Generando resumen con IA…', 'Subiendo imágenes a storage…'],
+    publicar: ['Guardando en la base…'],
+  };
+
+  Alpine.data('disertacionesAdmin', () => ({
+    loadingAuth: true,
+    user: null as any,
+    userRole: null as any,
+    loginEmail: 'cervantes',
+    loginPassword: '',
+    loginError: '',
+
+    form: {
+      title: '',
+      eventDate: '',
+      eventName: '',
+      description: '',
+    },
+    selectedCategory: '',
+    selectedCategories: [] as string[],
+    bullets: [] as string[],
+    pptFile: null as File | null,
+    certFile: null as File | null,
+    coverFile: null as File | null,
+    slideUrls: [] as string[],
+    selectedCoverIndex: -1,
+    coverUrl: '',
+    certificateUrl: '',
+    editingId: null as any,
+    busy: false,
+    status: '',
+    disertaciones: [] as any[],
+    op: null as any,
+    opHistory: [] as any[],
+
+    async init() {
+      const { data } = await supabase.auth.getSession();
+      if (data?.session?.user) {
+        this.user = data.session.user;
+        await this.loadProfile();
+        if (this.userRole === 'admin') this.loadDisertaciones();
+      }
+      this.loadingAuth = false;
+    },
+
+    async loadProfile() {
+      const { data } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', this.user.id)
+        .maybeSingle();
+      this.userRole = data?.role || null;
+    },
+
+    async login() {
+      this.loginError = '';
+      this.busy = true;
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: resolveLoginUser(this.loginEmail),
+          password: this.loginPassword,
+        });
+        if (error) throw error;
+        this.user = data.user;
+        this.loginPassword = '';
+        await this.loadProfile();
+        markSessionStart();
+        scheduleSessionEnd(() => this.logout(true));
+        if (this.userRole === 'admin') this.loadDisertaciones();
+      } catch (e) {
+        this.loginError = (e as Error).message || 'Error al iniciar sesión';
+      } finally {
+        this.busy = false;
+      }
+    },
+
+    async logout(auto = false) {
+      if (!auto) clearSessionStart();
+      this.clearOpInterval();
+      this.op = null;
+      this.busy = false;
+      await supabase.auth.signOut();
+      this.user = null;
+      this.userRole = null;
+      this.disertaciones = [];
+    },
+
+    async loadDisertaciones() {
+      const { data, error } = await supabase
+        .from('disertaciones')
+        .select('*')
+        .order('event_date', { ascending: false });
+      if (!error) this.disertaciones = data || [];
+    },
+
+    get availableCategories() {
+      return DISERTACION_CATEGORIES.filter((c) => !this.selectedCategories.includes(c));
+    },
+
+    addCategory() {
+      const cat = this.selectedCategory;
+      if (cat && !this.selectedCategories.includes(cat)) {
+        this.selectedCategories = [...this.selectedCategories, cat];
+      }
+      this.selectedCategory = '';
+    },
+
+    removeCategory(index: number) {
+      this.selectedCategories = this.selectedCategories.filter((_, i) => i !== index);
+    },
+
+    addBullet() {
+      this.bullets = [...this.bullets, ''];
+    },
+
+    removeBullet(index: number) {
+      this.bullets = this.bullets.filter((_, i) => i !== index);
+    },
+
+    onFileChange(e: Event) {
+      const input = e.target as HTMLInputElement;
+      this.pptFile = input.files && input.files[0] ? input.files[0] : null;
+    },
+
+    onCertChange(e: Event) {
+      const input = e.target as HTMLInputElement;
+      this.certFile = input.files && input.files[0] ? input.files[0] : null;
+    },
+
+    onCoverChange(e: Event) {
+      const input = e.target as HTMLInputElement;
+      this.coverFile = input.files && input.files[0] ? input.files[0] : null;
+    },
+
+    setCover(index: number) {
+      this.selectedCoverIndex = index;
+      this.coverUrl = this.slideUrls[index] || '';
+    },
+
+    startOp(id: string, label: string, steps: string[], messages: string[]) {
+      this.clearOpInterval();
+      const now = Date.now();
+      this.op = {
+        id, label, startedAt: now, elapsed: '0:00', messages, msgIndex: 0, stepIndex: 0,
+        steps: steps.map((s, i) => ({ label: s, status: i === 0 ? 'active' : 'pending', ts: i === 0 ? now : null })),
+        interval: null as any, msgInterval: null as any, finished: false,
+      };
+      this.busy = true;
+      this.status = messages[0] || '';
+      this.op.interval = setInterval(() => this.tickOp(), 1000);
+      this.op.msgInterval = setInterval(() => this.rotateOpMsg(), 3000);
+    },
+
+    clearOpInterval() {
+      if (this.op?.interval) { clearInterval(this.op.interval); this.op.interval = null; }
+      if (this.op?.msgInterval) { clearInterval(this.op.msgInterval); this.op.msgInterval = null; }
+    },
+
+    tickOp() {
+      if (!this.op || this.op.finished) return;
+      const now = Date.now();
+      const secs = Math.floor((now - this.op.startedAt) / 1000);
+      this.op.elapsed = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+      const cur = this.op.steps[this.op.stepIndex];
+      if (cur && cur.status === 'active' && cur.ts && now - cur.ts > 8000) {
+        cur.status = 'done';
+        const next = this.op.stepIndex + 1;
+        if (next < this.op.steps.length) {
+          this.op.steps[next].status = 'active';
+          this.op.steps[next].ts = now;
+          this.op.stepIndex = next;
+        }
+      }
+      this.op = { ...this.op };
+    },
+
+    rotateOpMsg() {
+      if (!this.op || this.op.finished) return;
+      const len = this.op.messages?.length || 1;
+      this.op.msgIndex = (this.op.msgIndex + 1) % len;
+      this.op = { ...this.op };
+    },
+
+    _opElapsed(): string {
+      const secs = Math.floor((Date.now() - (this.op?.startedAt || Date.now())) / 1000);
+      return `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+    },
+
+    finishOp(successMsg: string) {
+      if (!this.op) { this.busy = false; return; }
+      const o = this.op;
+      this.clearOpInterval();
+      o.steps.forEach((s: any) => { if (s.status !== 'error') s.status = 'done'; });
+      o.finished = true;
+      this.opHistory.unshift({ id: o.id, label: o.label, ok: true, result: successMsg, elapsed: this._opElapsed(), ts: Date.now() });
+      this.opHistory = this.opHistory.slice(0, 5);
+      this.status = successMsg;
+      this.busy = false;
+      this.op = null;
+    },
+
+    failOp(errorMsg: string) {
+      if (!this.op) { this.busy = false; return; }
+      const o = this.op;
+      this.clearOpInterval();
+      const cur = o.steps[o.stepIndex] || o.steps[o.steps.length - 1];
+      if (cur) cur.status = 'error';
+      o.finished = true;
+      this.opHistory.unshift({ id: o.id, label: o.label, ok: false, result: errorMsg, elapsed: this._opElapsed(), ts: Date.now() });
+      this.opHistory = this.opHistory.slice(0, 5);
+      this.status = errorMsg;
+      this.busy = false;
+      this.op = null;
+    },
+
+    async procesarPpt() {
+      if (!this.pptFile) { this.status = 'Elegí un archivo .pptx primero.'; return; }
+      this.startOp('parse', 'Procesar PPT', OP_STEPS.parse, OP_MSGS.parse);
+      try {
+        const fileBase64 = await fileToBase64(this.pptFile);
+        const { data, error } = await supabase.functions.invoke('disertacion-parse', {
+          body: {
+            file: fileBase64,
+            fileName: this.pptFile.name,
+            title: this.form.title || null,
+            eventName: this.form.eventName || null,
+          },
+        });
+        if (error) throw new Error(error.context?.error || error.message);
+        if (data.error) throw new Error(data.error);
+
+        if (data.bullets?.length) this.bullets = data.bullets;
+        if (data.title && !this.form.title) this.form.title = data.title;
+        this.slideUrls = data.slideUrls || [];
+
+        // Portada: prioridad a lo elegido, sino slide 1 (primer item). La slide 2 va de primer item de galería.
+        if (data.firstSlideUrl && !this.coverUrl) {
+          this.selectedCoverIndex = 0;
+          this.coverUrl = data.firstSlideUrl;
+        }
+        this.finishOp('PPT procesado. Revisá bullets, portada y galería, y subí el certificado.');
+      } catch (e) {
+        this.failOp((e as Error).message);
+      }
+    },
+
+    async uploadImage(file: File, prefix: string): Promise<string> {
+      const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+      const path = `${prefix}/${slugify(this.form.title || 'disertacion')}-${Date.now()}.${ext}`;
+      const { data, error } = await supabase.storage
+        .from('disertaciones-files')
+        .upload(path, file, { upsert: true });
+      if (error) throw new Error(error.message);
+      const supabaseUrl = (import.meta.env.PUBLIC_SUPABASE_URL as string).replace(/\/$/, '');
+      return `${supabaseUrl}/storage/v1/object/public/disertaciones-files/${data.path}`;
+    },
+
+    async subirCertificado() {
+      if (!this.certFile) { this.status = 'Elegí la foto del certificado.'; return; }
+      this.busy = true;
+      this.status = 'Subiendo certificado…';
+      try {
+        this.certificateUrl = await this.uploadImage(this.certFile, 'certificados');
+        this.status = 'Certificado subido.';
+      } catch (e) {
+        this.status = (e as Error).message;
+      } finally {
+        this.busy = false;
+      }
+    },
+
+    async subirPortada() {
+      if (!this.coverFile) { this.status = 'Elegí la imagen de portada.'; return; }
+      this.busy = true;
+      this.status = 'Subiendo portada…';
+      try {
+        this.coverUrl = await this.uploadImage(this.coverFile, 'portadas');
+        this.selectedCoverIndex = -1;
+        this.status = 'Portada subida.';
+      } catch (e) {
+        this.status = (e as Error).message;
+      } finally {
+        this.busy = false;
+      }
+    },
+
+    async uniqueSlug(base: string) {
+      const { data } = await supabase.from('disertaciones').select('slug');
+      const existing = new Set((data || []).map((r) => r.slug));
+      if (!existing.has(base)) return base;
+      let i = 2;
+      while (existing.has(`${base}-${i}`)) i++;
+      return `${base}-${i}`;
+    },
+
+    async publicar(draft: boolean) {
+      if (!this.form.title) { this.status = 'Falta el título.'; return; }
+      if (!draft && this.bullets.length === 0) { this.status = 'Generá o cargá al menos un bullet.'; return; }
+      this.startOp('publicar', draft ? 'Guardar borrador' : 'Publicar', OP_STEPS.publicar, OP_MSGS.publicar);
+      try {
+        const payload: any = {
+          title: this.form.title,
+          event_date: this.form.eventDate || new Date().toISOString().slice(0, 10),
+          event_name: this.form.eventName || '',
+          author: 'Mauricio Gonzalez',
+          categories: this.selectedCategories,
+          description: this.form.description,
+          bullets: this.bullets.filter((b) => b.trim()),
+          cover_url: this.coverUrl || null,
+          certificate_url: this.certificateUrl || null,
+          slides_urls: this.slideUrls,
+          draft,
+        };
+        if (this.editingId) {
+          payload.slug = slugify(this.form.title);
+          const res = await supabase.from('disertaciones').update(payload).eq('id', this.editingId);
+          if (res.error) throw new Error(res.error.message);
+        } else {
+          payload.slug = await this.uniqueSlug(slugify(this.form.title));
+          const res = await supabase.from('disertaciones').insert(payload);
+          if (res.error) throw new Error(res.error.message);
+        }
+        this.editingId = null;
+        await this.loadDisertaciones();
+        this.finishOp(
+          draft
+            ? 'Borrador guardado.'
+            : '¡Publicada! Aparece en /disertaciones tras el próximo build (cron 12 hs o deploy manual).'
+        );
+      } catch (e) {
+        this.failOp((e as Error).message);
+      }
+    },
+
+    async toggleDraft(p: any) {
+      const res = await supabase.from('disertaciones').update({ draft: !p.draft }).eq('id', p.id);
+      if (!res.error) this.loadDisertaciones();
+    },
+
+    async borrarDisertacion(p: any) {
+      if (!window.confirm(`¿Eliminar "${p.title}"? Esta acción no se puede deshacer.`)) return;
+      const res = await supabase.from('disertaciones').delete().eq('id', p.id);
+      if (!res.error) {
+        if (this.editingId === p.id) this.nuevaDisertacion();
+        this.loadDisertaciones();
+      }
+    },
+
+    cargarDisertacion(p: any) {
+      this.editingId = p.id;
+      this.form = {
+        title: p.title || '',
+        eventDate: p.event_date || '',
+        eventName: p.event_name || '',
+        description: p.description || '',
+      };
+      this.selectedCategories = Array.isArray(p.categories) ? p.categories : [];
+      this.bullets = Array.isArray(p.bullets) ? p.bullets : [];
+      this.slideUrls = Array.isArray(p.slides_urls) ? p.slides_urls : [];
+      this.coverUrl = p.cover_url || '';
+      this.certificateUrl = p.certificate_url || '';
+      const coverIdx = this.coverUrl ? this.slideUrls.indexOf(this.coverUrl) : -1;
+      this.selectedCoverIndex = coverIdx;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    nuevaDisertacion() {
+      this.editingId = null;
+      this.form = { title: '', eventDate: '', eventName: '', description: '' };
+      this.selectedCategories = [];
+      this.bullets = [];
+      this.slideUrls = [];
+      this.selectedCoverIndex = -1;
+      this.coverUrl = '';
+      this.certificateUrl = '';
+      this.pptFile = null;
+      this.certFile = null;
+      this.coverFile = null;
+    },
+  }));
+
+  Alpine.start();
+</script>

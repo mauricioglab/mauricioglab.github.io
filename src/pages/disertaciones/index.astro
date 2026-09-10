@@ -1,0 +1,149 @@
+---
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+import SeoHead from '@components/shared/SeoHead.astro';
+import DisertacionCard from '../../components/disertaciones/DisertacionCard.astro';
+import { getDisertaciones } from '../../utils/disertaciones';
+
+export const prerender = true;
+
+const disertaciones = await getDisertaciones();
+const canonical = new URL('/disertaciones/', Astro.site).toString();
+---
+
+<BaseTailwind
+  title="Disertaciones — MG Lab"
+  description="Charla, talleres y disertaciones dadas por Mauricio González, con su certificado."
+  lang="es"
+  layoutType="landing"
+>
+  <SeoHead slot="head" title="Disertaciones — MG Lab" description="Charla, talleres y disertaciones dadas por Mauricio González, con su certificado." lang="es" canonical={canonical} />
+
+  <style>
+    :root {
+      --accent: #1d4ed8;
+      --accent-deep: #1e40af;
+      --accent-soft: #eef2ff;
+      --ink: #141a2e;
+      --muted: #5c6785;
+      --faint: #8b94ab;
+      --line: #e4e8f0;
+      --panel: #f4f6fa;
+      --font-head: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--panel); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+    h1, h2, h3, h4 { font-family: var(--font-head); line-height: 1.15; margin: 0; letter-spacing: -0.02em; font-weight: 600; }
+    p { margin: 0; }
+    a { color: inherit; text-decoration: none; }
+
+    /* Header */
+    .dz-header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: saturate(1.4) blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .dz-header .row { max-width: 1100px; margin: 0 auto; padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .dz-brand { font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); letter-spacing: .02em; }
+    .dz-brand b { color: var(--accent); }
+    .dz-brand .sub { font-weight: 400; font-size: .8rem; color: var(--faint); margin-left: .5rem; }
+    .dz-nav { display: flex; align-items: center; gap: .75rem; }
+    .dz-nav a.link { color: var(--muted); font-size: .85rem; text-decoration: none; padding: 6px 10px; border-radius: 8px; transition: color .15s; }
+    .dz-nav a.link:hover { color: var(--ink); background: var(--panel); }
+
+    /* Hero */
+    .dz-hero {
+      position: relative; overflow: hidden;
+      padding: 88px 28px 64px; text-align: center;
+      background: #fff; border-bottom: 1px solid var(--line);
+    }
+    .dz-hero .wrap { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; }
+    .dz-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-head); font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--accent-deep); background: var(--accent-soft);
+      padding: 7px 16px; border-radius: 999px; margin-bottom: 22px;
+    }
+    .dz-hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 600; line-height: 1.06; color: var(--ink); letter-spacing: -0.03em; }
+    .dz-hero .sub { margin: 18px auto 0; max-width: 620px; color: var(--muted); font-size: 1.05rem; line-height: 1.7; }
+
+    /* Grid */
+    .dz-section { padding: 64px 28px; max-width: 1100px; margin: 0 auto; }
+    .dz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+    .dz-empty {
+      text-align: center; color: var(--muted); padding: 40px 0; font-size: .95rem;
+      border: 1px dashed var(--line); border-radius: 14px;
+    }
+
+    /* Reveal */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+    /* Footer */
+    .dz-footer { border-top: 1px solid var(--line); background: #fff; padding: 26px 28px; text-align: center; font-size: .82rem; color: var(--faint); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+    @media (max-width: 560px) {
+      .dz-hero { padding: 60px 20px 48px; }
+    }
+  </style>
+
+  <header class="dz-header">
+    <div class="row">
+      <div class="dz-brand">MG<b>.</b><span class="sub">| Disertaciones</span></div>
+      <div class="dz-nav">
+        <a class="link" href="/es/portfolio/">Portfolio</a>
+        <a class="link" href="/es/servicios/">Servicios</a>
+        <a class="link" href="/es/cv/">CV</a>
+        <a class="link" href="/blog/">Blog</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="dz-hero">
+      <div class="wrap">
+        <div class="dz-badge"><span>🎤</span> Charlas y disertaciones</div>
+        <h1>Disertaciones dadas, con certificado.</h1>
+        <p class="sub">Un portfolio de las charlas, talleres y exposiciones que di. Cada una con un resumen de qué se trató y el certificado de la presentación.</p>
+      </div>
+    </section>
+
+    <section class="dz-section">
+      {disertaciones.length === 0 ? (
+        <p class="dz-empty">Todavía no hay disertaciones publicadas.</p>
+      ) : (
+        <div class="dz-grid">
+          {disertaciones.map((d) => (
+            <DisertacionCard disertacion={d} />
+          ))}
+        </div>
+      )}
+    </section>
+  </main>
+
+  <footer class="dz-footer">
+    <p>© 2026 Mauricio González · Córdoba, Argentina</p>
+  </footer>
+
+  <script is:inline>
+    (function () {
+      if (!('IntersectionObserver' in window)) {
+        document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('is-visible'); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+    })();
+  </script>
+</BaseTailwind>

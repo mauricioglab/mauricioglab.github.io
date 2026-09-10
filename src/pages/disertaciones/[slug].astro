@@ -1,0 +1,212 @@
+---
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+import SeoHead from '@components/shared/SeoHead.astro';
+import { getDisertaciones, formatEventDate } from '../../utils/disertaciones';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const disertaciones = await getDisertaciones();
+  return disertaciones.map((d) => ({ params: { slug: d.slug }, props: { d } }));
+}
+
+const { d } = Astro.props;
+const cover = d.coverUrl || d.slidesUrls[0];
+const canonical = new URL(`/disertaciones/${d.slug}/`, Astro.site).toString();
+---
+
+<BaseTailwind title={`${d.title} — Disertación | MG Lab`} description={d.description} lang="es" layoutType="landing">
+  <SeoHead slot="head" title={`${d.title} — Disertación | MG Lab`} description={d.description} lang="es" canonical={canonical} />
+
+  <style>
+    :root {
+      --accent: #1d4ed8;
+      --accent-deep: #1e40af;
+      --accent-soft: #eef2ff;
+      --ink: #141a2e;
+      --muted: #5c6785;
+      --faint: #8b94ab;
+      --line: #e4e8f0;
+      --panel: #f4f6fa;
+      --font-head: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--panel); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+    h1, h2, h3, h4 { font-family: var(--font-head); line-height: 1.15; margin: 0; letter-spacing: -0.02em; font-weight: 600; }
+    p { margin: 0; }
+    a { color: inherit; text-decoration: none; }
+
+    .dz-header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,.92); backdrop-filter: saturate(1.4) blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .dz-header .row { max-width: 1000px; margin: 0 auto; padding: 14px 28px; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .dz-brand { font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); letter-spacing: .02em; }
+    .dz-brand b { color: var(--accent); }
+    .dz-nav { display: flex; align-items: center; gap: .9rem; }
+    .dz-nav a { color: var(--muted); font-size: .85rem; padding: 6px 10px; border-radius: 8px; transition: color .15s; }
+    .dz-nav a:hover { color: var(--ink); background: var(--panel); }
+
+    .dz-main { max-width: 860px; margin: 0 auto; padding: 56px 28px 72px; }
+
+    /* Portada */
+    .dz-cover { border-radius: 16px; overflow: hidden; border: 1px solid var(--line); margin-bottom: 34px; background: var(--accent-soft); }
+    .dz-cover img, .dz-cover-fallback { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+    .dz-cover-fallback { display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--accent); }
+
+    .dz-crumbs { font-family: var(--font-head); font-size: .78rem; font-weight: 600; color: var(--muted); margin-bottom: 14px; }
+    .dz-crumbs a:hover { color: var(--accent-deep); }
+
+    .dz-meta {
+      font-family: var(--font-head); font-size: .74rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+      color: var(--accent-deep); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;
+    }
+    .dz-event { color: var(--muted); background: var(--panel); border-radius: 999px; padding: 3px 12px; text-transform: none; letter-spacing: 0; }
+
+    .dz-title { font-size: clamp(1.9rem, 4.4vw, 2.7rem); font-weight: 600; line-height: 1.08; color: var(--ink); letter-spacing: -0.025em; margin-bottom: 18px; }
+    .dz-desc { font-size: 1.1rem; color: var(--muted); line-height: 1.7; margin-bottom: 40px; max-width: 720px; }
+
+    .dz-cats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+    .dz-cat {
+      font-size: .74rem; font-weight: 600; color: var(--accent-deep); background: var(--accent-soft);
+      border-radius: 999px; padding: 5px 13px;
+    }
+
+    /* Bloque de secciones */
+    .dz-block {
+      background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 34px 34px; margin-bottom: 28px;
+    }
+    .dz-block h2 {
+      font-size: 1.25rem; font-weight: 600; color: var(--ink); margin-bottom: 18px; letter-spacing: -.01em;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .dz-block h2 .num {
+      font-size: .8rem; color: #fff; background: var(--accent-deep); border-radius: 8px;
+      width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    /* Bullets */
+    .dz-bullets { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+    .dz-bullets li {
+      position: relative; padding-left: 30px; font-size: 1rem; color: var(--ink); line-height: 1.6;
+    }
+    .dz-bullets li::before {
+      content: ""; position: absolute; left: 0; top: .62em; width: 14px; height: 14px; border-radius: 50%;
+      background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+
+    /* Galería */
+    .dz-slides { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+    .dz-slide { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--panel); }
+    .dz-slide img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; cursor: zoom-in; }
+
+    /* Certificado */
+    .dz-cert { border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--panel); }
+    .dz-cert img { width: 100%; height: auto; display: block; cursor: zoom-in; }
+    .dz-cert-cap { padding: 12px 16px; font-size: .82rem; color: var(--muted); border-top: 1px solid var(--line); }
+
+    /* Lightbox */
+    .dz-lightbox {
+      position: fixed; inset: 0; z-index: 90; background: rgba(10,14,30,.88);
+      display: none; align-items: center; justify-content: center; padding: 32px; cursor: zoom-out;
+    }
+    .dz-lightbox.open { display: flex; }
+    .dz-lightbox img { max-width: 100%; max-height: 92vh; border-radius: 8px; }
+
+    .dz-footer { border-top: 1px solid var(--line); background: #fff; padding: 26px 28px; text-align: center; font-size: .82rem; color: var(--faint); }
+
+    @media (max-width: 560px) {
+      .dz-main { padding: 36px 20px 56px; }
+      .dz-block { padding: 24px 20px; }
+    }
+  </style>
+
+  <header class="dz-header">
+    <div class="row">
+      <div class="dz-brand">MG<b>.</b></div>
+      <div class="dz-nav">
+        <a href="/disertaciones/">← Disertaciones</a>
+        <a href="/es/portfolio/">Portfolio</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dz-main">
+    <div class="dz-crumbs"><a href="/disertaciones/">Disertaciones</a> <span>·</span> {d.title}</div>
+
+    <div class="dz-cover">
+      {cover ? (
+        <img src={cover} alt={`Portada de ${d.title}`} />
+      ) : (
+        <div class="dz-cover-fallback">🎤</div>
+      )}
+    </div>
+
+    <div class="dz-meta">
+      <time datetime={d.eventDate.toISOString()}>{formatEventDate(d.eventDate)}</time>
+      {d.eventName && <span class="dz-event">{d.eventName}</span>}
+      <span>· {d.author}</span>
+    </div>
+
+    <h1 class="dz-title">{d.title}</h1>
+    {d.description && <p class="dz-desc">{d.description}</p>}
+
+    {d.categories.length > 0 && (
+      <div class="dz-cats">
+        {d.categories.map((c) => <span class="dz-cat">{c}</span>)}
+      </div>
+    )}
+
+    {d.bullets.length > 0 && (
+      <section class="dz-block">
+        <h2><span class="num">1</span> De qué trató la charla</h2>
+        <ul class="dz-bullets">
+          {d.bullets.map((b) => <li>{b}</li>)}
+        </ul>
+      </section>
+    )}
+
+    {d.slidesUrls.length > 0 && (
+      <section class="dz-block">
+        <h2><span class="num">2</span> Diapositivas</h2>
+        <div class="dz-slides">
+          {d.slidesUrls.map((s) => <figure class="dz-slide"><img src={s} alt={`Diapositiva de ${d.title}`} data-lightbox /></figure>)}
+        </div>
+      </section>
+    )}
+
+    {d.certificateUrl && (
+      <section class="dz-block">
+        <h2><span class="num">3</span> Certificado</h2>
+        <figure class="dz-cert">
+          <img src={d.certificateUrl} alt={`Certificado de ${d.title}`} data-lightbox />
+          <figcaption class="dz-cert-cap">{d.eventName ? `Certificado · ${d.eventName}` : 'Certificado de la presentación'}</figcaption>
+        </figure>
+      </section>
+    )}
+  </main>
+
+  <div class="dz-lightbox" id="dzLightbox"><img id="dzLightboxImg" alt="" /></div>
+
+  <footer class="dz-footer">
+    <p>© 2026 Mauricio González · Córdoba, Argentina</p>
+  </footer>
+
+  <script is:inline>
+    (function () {
+      var box = document.getElementById('dzLightbox');
+      var boxImg = document.getElementById('dzLightboxImg');
+      if (!box) return;
+      document.querySelectorAll('[data-lightbox]').forEach(function (img) {
+        img.addEventListener('click', function () {
+          boxImg.src = img.src;
+          boxImg.alt = img.alt;
+          box.classList.add('open');
+        });
+      });
+      box.addEventListener('click', function () { box.classList.remove('open'); });
+    })();
+  </script>
+</BaseTailwind>

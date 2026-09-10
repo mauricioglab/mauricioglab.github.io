@@ -1,0 +1,108 @@
+---
+import type { Disertacion } from '../../utils/disertaciones';
+import { formatEventDate, normalizeBaseUrl } from '../../utils/disertaciones';
+
+interface Props {
+  disertacion: Disertacion;
+  baseUrl?: string;
+}
+
+const { disertacion, baseUrl = import.meta.env.BASE_URL } = Astro.props;
+const normalizedBase = normalizeBaseUrl(baseUrl);
+const url = `${normalizedBase}disertaciones/${disertacion.slug}/`;
+const cover = disertacion.coverUrl || disertacion.slidesUrls[0];
+---
+
+<article class="dc-card reveal" itemscope itemtype="https://schema.org/Event">
+  <a href={url} class="dc-media" itemprop="url" aria-label={disertacion.title}>
+    {cover ? (
+      <img src={cover} alt={`Portada de ${disertacion.title}`} loading="lazy" itemprop="image" />
+    ) : (
+      <div class="dc-media-fallback">
+        <span>🎤</span>
+      </div>
+    )}
+  </a>
+  <div class="dc-body">
+    <div class="dc-meta">
+      <time datetime={disertacion.eventDate.toISOString()} itemprop="startDate">
+        {formatEventDate(disertacion.eventDate)}
+      </time>
+      {disertacion.eventName && <span class="dc-event">{disertacion.eventName}</span>}
+    </div>
+    <h3 class="dc-title">
+      <a href={url} itemprop="name">{disertacion.title}</a>
+    </h3>
+    {disertacion.description && <p class="dc-desc" itemprop="description">{disertacion.description}</p>}
+    {disertacion.categories.length > 0 && (
+      <div class="dc-cats">
+        {disertacion.categories.slice(0, 3).map((c) => (
+          <span class="dc-cat">{c}</span>
+        ))}
+      </div>
+    )}
+    <a href={url} class="dc-link">Ver la charla →</a>
+  </div>
+</article>
+
+<style>
+  :global(:root) {
+    --accent: #1d4ed8;
+    --accent-deep: #1e40af;
+    --accent-soft: #eef2ff;
+    --ink: #141a2e;
+    --muted: #5c6785;
+    --faint: #8b94ab;
+    --line: #e4e8f0;
+    --panel: #f4f6fa;
+    --font-head: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+  }
+
+  .dc-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform .18s, box-shadow .18s, border-color .18s;
+  }
+  .dc-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 44px -24px rgba(29,78,216,.28);
+    border-color: #c7d2fe;
+  }
+
+  .dc-media { display: block; aspect-ratio: 16/9; overflow: hidden; background: var(--panel); }
+  .dc-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s ease; }
+  .dc-card:hover .dc-media img { transform: scale(1.04); }
+  .dc-media-fallback {
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; background: var(--accent-soft); color: var(--accent);
+  }
+
+  .dc-body { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .dc-meta {
+    font-family: var(--font-head); font-size: .72rem; font-weight: 600; letter-spacing: .04em;
+    text-transform: uppercase; color: var(--accent-deep); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .dc-event {
+    color: var(--muted); background: var(--panel); border-radius: 999px; padding: 2px 10px;
+    text-transform: none; letter-spacing: 0; font-weight: 600;
+  }
+  .dc-title { font-size: 1.15rem; font-weight: 600; color: var(--ink); line-height: 1.25; letter-spacing: -.01em; margin: 0; }
+  .dc-title a { color: inherit; }
+  .dc-title a:hover { color: var(--accent-deep); }
+  .dc-desc { font-size: .88rem; color: var(--muted); line-height: 1.6; margin: 0; }
+  .dc-cats { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; }
+  .dc-cat {
+    font-size: .68rem; font-weight: 600; color: var(--accent-deep); background: var(--accent-soft);
+    border-radius: 999px; padding: 3px 10px;
+  }
+  .dc-link {
+    font-family: var(--font-head); font-size: .82rem; font-weight: 600; color: var(--accent-deep);
+    margin-top: 4px;
+  }
+  .dc-link:hover { text-decoration: underline; }
+</style>
