@@ -1,0 +1,154 @@
+---
+import type { Disertacion } from '../../utils/disertaciones';
+import { formatEventDate } from '../../utils/disertaciones';
+
+interface Props {
+  disertacion: Disertacion;
+}
+
+const { disertacion } = Astro.props;
+const cover = disertacion.coverUrl || disertacion.slidesUrls[0];
+const extraSlides = disertacion.slidesUrls.filter((s) => s !== cover).slice(0, 2);
+const date = formatEventDate(disertacion.eventDate);
+---
+
+<article class="tl-item" itemscope itemtype="https://schema.org/Event">
+  <div class="tl-node" aria-hidden="true">
+    <span class="tl-year">{disertacion.eventDate.getFullYear()}</span>
+  </div>
+
+  <div class="tl-card" itemscope itemprop="event">
+    <div class="tl-photos" aria-hidden="true">
+      {cover && <img src={cover} class="tl-photo main" alt="" loading="lazy" itemprop="image" />}
+      {disertacion.certificateUrl && (
+        <img src={disertacion.certificateUrl} class="tl-photo cert" alt="" loading="lazy" />
+      )}
+      {extraSlides[0] && (
+        <img src={extraSlides[0]} class="tl-photo slide" alt="" loading="lazy" />
+      )}
+    </div>
+
+    <div class="tl-body">
+      <div class="tl-meta">
+        <time datetime={disertacion.eventDate.toISOString()} itemprop="startDate">{date}</time>
+        {disertacion.eventName && <span class="tl-event" itemprop="location">{disertacion.eventName}</span>}
+      </div>
+      <h3 class="tl-title" itemprop="name">{disertacion.title}</h3>
+      {disertacion.description && <p class="tl-desc" itemprop="description">{disertacion.description}</p>}
+      {disertacion.bullets.length > 0 && (
+        <ul class="tl-bullets">
+          {disertacion.bullets.map((b) => <li>{b}</li>)}
+        </ul>
+      )}
+      {disertacion.categories.length > 0 && (
+        <div class="tl-cats">
+          {disertacion.categories.slice(0, 3).map((c) => <span class="tl-cat">{c}</span>)}
+        </div>
+      )}
+    </div>
+  </div>
+</article>
+
+<style>
+  :global(:root) {
+    --accent: #1d4ed8;
+    --accent-deep: #1e40af;
+    --accent-soft: #eef2ff;
+    --ink: #141a2e;
+    --muted: #5c6785;
+    --faint: #8b94ab;
+    --line: #e4e8f0;
+    --panel: #f4f6fa;
+    --font-head: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+  }
+
+  .tl-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 64px;
+  }
+  .tl-item:last-child { margin-bottom: 0; }
+
+  /* Nodo de año sobre la línea */
+  .tl-node {
+    position: absolute; left: 50%; top: 0; z-index: 2;
+    transform: translateX(-50%);
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--accent-deep); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 20px -8px rgba(30,64,175,.6);
+    border: 3px solid var(--panel);
+  }
+  .tl-year {
+    font-family: var(--font-head); font-weight: 700; font-size: .78rem; letter-spacing: .02em;
+  }
+
+  .tl-card {
+    grid-column: 2;
+    background: #fff; border: 1px solid var(--line); border-radius: 16px;
+    padding: 26px 28px 30px; position: relative;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .tl-item:nth-child(even) .tl-card { grid-column: 1; }
+  .tl-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 24px 48px -28px rgba(29,78,216,.3);
+    border-color: #c7d2fe;
+  }
+
+  /* Fotos inclinadas, tipo álbum */
+  .tl-photos {
+    display: flex; align-items: flex-start; gap: 14px;
+    margin: -46px 0 22px; padding: 0 6px;
+  }
+  .tl-photo {
+    border-radius: 10px; border: 1px solid #fff; box-shadow: 0 14px 30px -18px rgba(20,26,46,.5);
+    transition: transform .35s cubic-bezier(.2,.7,.3,1.2), box-shadow .35s ease;
+    will-change: transform;
+  }
+  .tl-photo.main { width: 58%; aspect-ratio: 16/9; object-fit: cover; transform: rotate(-3deg); }
+  .tl-photo.cert { width: 38%; object-fit: cover; transform: rotate(3.5deg) translateY(8px); z-index: 1; }
+  .tl-photo.slide { width: 32%; aspect-ratio: 16/9; object-fit: cover; transform: rotate(-5deg) translateY(-2px); }
+  .tl-card:hover .tl-photo { transform: rotate(0deg) translateY(0) scale(1.03); box-shadow: 0 20px 40px -20px rgba(20,26,46,.55); }
+
+  .tl-body { display: flex; flex-direction: column; gap: 12px; }
+  .tl-meta {
+    font-family: var(--font-head); font-size: .72rem; font-weight: 600; letter-spacing: .05em;
+    text-transform: uppercase; color: var(--accent-deep); display: flex; align-items: center;
+    gap: 10px; flex-wrap: wrap;
+  }
+  .tl-event {
+    color: var(--muted); background: var(--panel); border-radius: 999px; padding: 3px 12px;
+    text-transform: none; letter-spacing: 0; font-weight: 600;
+  }
+  .tl-title { font-size: 1.3rem; font-weight: 600; color: var(--ink); line-height: 1.2; letter-spacing: -.01em; }
+  .tl-desc { font-size: .92rem; color: var(--muted); line-height: 1.65; }
+  .tl-bullets { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .tl-bullets li {
+    position: relative; padding-left: 22px; font-size: .88rem; color: var(--ink); line-height: 1.55;
+  }
+  .tl-bullets li::before {
+    content: ""; position: absolute; left: 0; top: .55em; width: 9px; height: 9px; border-radius: 50%;
+    background: var(--accent);
+  }
+  .tl-cats { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+  .tl-cat {
+    font-size: .68rem; font-weight: 600; color: var(--accent-deep); background: var(--accent-soft);
+    border-radius: 999px; padding: 3px 10px;
+  }
+
+  @media (max-width: 860px) {
+    .tl-item { grid-template-columns: 1fr; gap: 0; margin-bottom: 48px; padding-left: 44px; }
+    .tl-card, .tl-item:nth-child(even) .tl-card { grid-column: 1; }
+    .tl-node { left: 0; transform: none; width: 34px; height: 34px; }
+    .tl-year { font-size: .66rem; }
+    .tl-photos { margin-top: -18px; }
+  }
+  @media (max-width: 520px) {
+    .tl-photo.cert { display: none; }
+    .tl-photo.main { width: 70%; }
+  }
+</style>

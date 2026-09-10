@@ -1,7 +1,7 @@
 ---
 import BaseTailwind from '../../layouts/BaseTailwind.astro';
 import SeoHead from '@components/shared/SeoHead.astro';
-import DisertacionCard from '../../components/disertaciones/DisertacionCard.astro';
+import TimelineItem from '../../components/disertaciones/TimelineItem.astro';
 import { getDisertaciones } from '../../utils/disertaciones';
 
 export const prerender = true;
@@ -12,11 +12,11 @@ const canonical = new URL('/disertaciones/', Astro.site).toString();
 
 <BaseTailwind
   title="Disertaciones — MG Lab"
-  description="Charla, talleres y disertaciones dadas por Mauricio González, con su certificado."
+  description="Charlas, talleres y defensas que presenté, con su material."
   lang="es"
   layoutType="landing"
 >
-  <SeoHead slot="head" title="Disertaciones — MG Lab" description="Charla, talleres y disertaciones dadas por Mauricio González, con su certificado." lang="es" canonical={canonical} />
+  <SeoHead slot="head" title="Disertaciones — MG Lab" description="Charlas, talleres y defensas que presenté, con su material." lang="es" canonical={canonical} />
 
   <style>
     :root {
@@ -68,9 +68,18 @@ const canonical = new URL('/disertaciones/', Astro.site).toString();
     .dz-hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 600; line-height: 1.06; color: var(--ink); letter-spacing: -0.03em; }
     .dz-hero .sub { margin: 18px auto 0; max-width: 620px; color: var(--muted); font-size: 1.05rem; line-height: 1.7; }
 
-    /* Grid */
-    .dz-section { padding: 64px 28px; max-width: 1100px; margin: 0 auto; }
-    .dz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+    /* Timeline */
+    .dz-section { padding: 72px 28px 88px; max-width: 980px; margin: 0 auto; }
+    .tl-wrap { position: relative; }
+    .tl-line {
+      position: absolute; left: 50%; top: 0; bottom: 0; width: 2px;
+      transform: translateX(-1px);
+      background: linear-gradient(180deg, var(--line), var(--accent-soft) 20%, var(--line) 80%, transparent);
+    }
+    .tl-line::after {
+      content: ""; position: absolute; left: -3px; top: 0; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent);
+    }
     .dz-empty {
       text-align: center; color: var(--muted); padding: 40px 0; font-size: .95rem;
       border: 1px dashed var(--line); border-radius: 14px;
@@ -85,6 +94,9 @@ const canonical = new URL('/disertaciones/', Astro.site).toString();
 
     @media (prefers-reduced-motion: reduce) {
       .reveal { opacity: 1; transform: none; transition: none; }
+    }
+    @media (max-width: 860px) {
+      .tl-line { left: 20px; }
     }
     @media (max-width: 560px) {
       .dz-hero { padding: 60px 20px 48px; }
@@ -116,9 +128,12 @@ const canonical = new URL('/disertaciones/', Astro.site).toString();
       {disertaciones.length === 0 ? (
         <p class="dz-empty">Todavía no hay disertaciones publicadas.</p>
       ) : (
-        <div class="dz-grid">
+        <div class="tl-wrap">
+          <div class="tl-line" aria-hidden="true"></div>
           {disertaciones.map((d) => (
-            <DisertacionCard disertacion={d} />
+            <div class="reveal">
+              <TimelineItem disertacion={d} />
+            </div>
           ))}
         </div>
       )}
@@ -142,7 +157,7 @@ const canonical = new URL('/disertaciones/', Astro.site).toString();
             io.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.15 });
+      }, { threshold: 0.12 });
       document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
     })();
   </script>

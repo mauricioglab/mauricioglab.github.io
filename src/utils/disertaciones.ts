@@ -64,21 +64,10 @@ export async function getDisertaciones(): Promise<Disertacion[]> {
   return items.sort((a, b) => b.eventDate.getTime() - a.eventDate.getTime());
 }
 
-/**
- * Busca una disertación por slug dentro de una lista ya cargada.
- */
-export function findDisertacion(list: Disertacion[], slug: string): Disertacion | undefined {
-  return list.find((d) => d.slug === slug);
-}
-
 export function formatEventDate(date: Date): string {
   return new Intl.DateTimeFormat('es-ES', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   }).format(date);
-}
-
-export function normalizeBaseUrl(baseUrl: string): string {
-  return baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
 }
