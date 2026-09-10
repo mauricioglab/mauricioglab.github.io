@@ -60,7 +60,7 @@ const allCategories = Array.from(
         aria-label="Navegación principal"
       >
         <div class="wrap max-w-[1140px] mx-auto px-5 flex justify-center">
-          <ul class="menu flex flex-wrap justify-center list-none gap-0">
+          <ul class="menu flex flex-wrap justify-center items-center list-none gap-y-1 gap-x-0" aria-label="Ir al inicio">
             <li>
               <a
                 href={normalizedBase}
@@ -68,33 +68,53 @@ const allCategories = Array.from(
                 aria-label="Volver al inicio"><span>← Inicio</span></a
               >
             </li>
-            <li>
-              <a
-                href={`${normalizedBase}blog/about/`}
-                class="block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#5c6785] hover:text-[#1e40af]"
-                aria-label="Acerca del blog"><span>Acerca de</span></a
-              >
-            </li>
+          </ul>
+
+          <ul class="menu-divider" aria-hidden="true"></ul>
+
+          <ul class="menu flex flex-wrap justify-center items-center list-none gap-y-1 gap-x-0" aria-label="Sección principal">
             <li>
               <a
                 href={`${normalizedBase}blog/`}
-                class="block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#5c6785] hover:text-[#1e40af]"
-                aria-label="Lista de artículos"><span>Blog</span></a
+                class="menu-primary block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em]"
+                aria-label="Lista de artículos"
+                aria-current={Astro.url.pathname === `${normalizedBase}blog/` ? "page" : undefined}
+              ><span>Blog</span></a
               >
             </li>
+          </ul>
+
+          <ul class="menu-divider" aria-hidden="true"></ul>
+
+          <ul class="menu flex flex-wrap justify-center items-center list-none gap-y-1 gap-x-1" aria-label="Filtrar por etiqueta">
             {
               allCategories.map((category) => (
                 <li>
                   <a
                     href={`${normalizedBase}blog/category/${category.toLowerCase().replace(/\s+/g, "-")}/`}
-                    class="block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#5c6785] hover:text-[#1e40af]"
+                    class="menu-tag text-[11px] md:text-xs"
                     aria-label={`Artículos de la categoría ${category}`}
+                    aria-current={Astro.url.pathname === `${normalizedBase}blog/category/${category.toLowerCase().replace(/\s+/g, "-")}/` ? "page" : undefined}
                   >
-                    <span>{category}</span>
+                    {category}
                   </a>
                 </li>
               ))
             }
+          </ul>
+
+          <ul class="menu-divider" aria-hidden="true"></ul>
+
+          <ul class="menu flex flex-wrap justify-center items-center list-none gap-y-1 gap-x-0" aria-label="Sobre el blog">
+            <li>
+              <a
+                href={`${normalizedBase}blog/about/`}
+                class="menu-meta block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#5c6785] hover:text-[#1e40af]"
+                aria-label="Acerca del blog"
+                aria-current={Astro.url.pathname === `${normalizedBase}blog/about/` ? "page" : undefined}
+              ><span>Acerca de</span></a
+              >
+            </li>
           </ul>
         </div>
       </nav>
@@ -357,6 +377,68 @@ const allCategories = Array.from(
          ========================================== */
       .nav-primary .menu li a {
         transition: color 0.15s ease;
+      }
+
+      /* Primary: Blog */
+      .nav-primary .menu-primary {
+        color: #1e40af;
+        font-weight: 700;
+      }
+      .nav-primary .menu-primary:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+
+      /* Meta: Acerca de */
+      .nav-primary .menu-meta {
+        font-style: italic;
+        opacity: 0.85;
+      }
+
+      /* Tags: pill with # prefix */
+      .nav-primary .menu-tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 11px;
+        margin: 6px 0;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #5c6785;
+        background: #f4f6fa;
+        border: 1px solid #e4e8f0;
+        border-radius: 999px;
+        text-decoration: none;
+        transition: all 0.15s ease;
+      }
+      .nav-primary .menu-tag::before {
+        content: "#";
+        opacity: 0.55;
+        margin-right: 4px;
+      }
+      .nav-primary .menu-tag:hover {
+        background: #eef2ff;
+        border-color: #1e40af;
+        color: #1e40af;
+      }
+      .nav-primary .menu-tag[aria-current="page"] {
+        background: #eef2ff;
+        border-color: #1e40af;
+        color: #1e40af;
+      }
+
+      /* Divider between groups */
+      .nav-primary .menu-divider {
+        width: 1px;
+        align-self: stretch;
+        background: #e4e8f0;
+        margin: 12px 6px;
+        list-style: none;
+      }
+      @media (max-width: 640px) {
+        .nav-primary .menu-divider {
+          display: none;
+        }
       }
 
       /* ==========================================
