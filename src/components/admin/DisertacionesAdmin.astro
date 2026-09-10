@@ -634,6 +634,28 @@
       }
     },
 
+    async mejorarTexto() {
+      if (!this.textResumen) { this.status = 'Escribí un resumen de la charla primero.'; return; }
+      this.startOp('texto', 'Mejorar resumen con IA', OP_STEPS.texto, OP_MSGS.texto);
+      try {
+        const { data, error } = await supabase.functions.invoke('disertacion-parse', {
+          body: {
+            text: this.textResumen,
+            title: this.form.title || null,
+            eventName: this.form.eventName || null,
+          },
+        });
+        if (error) throw new Error(error.context?.error || error.message);
+        if (data.error) throw new Error(data.error);
+
+        if (data.bullets?.length) this.bullets = data.bullets;
+        if (data.title && !this.form.title) this.form.title = data.title;
+        this.finishOp('Resumen generado. Revisá los bullets y editalos si hace falta.');
+      } catch (e) {
+        this.failOp((e as Error).message);
+      }
+    },
+
     async uploadImage(file: File, prefix: string): Promise<string> {
       const ext = (file.name.split('.').pop() || 'png').toLowerCase();
       const path = `${prefix}/${slugify(this.form.title || 'disertacion')}-${Date.now()}.${ext}`;
