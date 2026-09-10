@@ -131,9 +131,7 @@ const canonical = new URL('/disertaciones/', Astro.site).toString();
         <div class="tl-wrap">
           <div class="tl-line" aria-hidden="true"></div>
           {disertaciones.map((d) => (
-            <div class="reveal">
-              <TimelineItem disertacion={d} />
-            </div>
+            <TimelineItem disertacion={d} />
           ))}
         </div>
       )}

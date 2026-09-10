@@ -12,7 +12,7 @@ const extraSlides = disertacion.slidesUrls.filter((s) => s !== cover).slice(0, 2
 const date = formatEventDate(disertacion.eventDate);
 ---
 
-<article class="tl-item" itemscope itemtype="https://schema.org/Event">
+<article class="tl-item reveal" itemscope itemtype="https://schema.org/Event">
   <div class="tl-node" aria-hidden="true">
     <span class="tl-year">{disertacion.eventDate.getFullYear()}</span>
   </div>
@@ -71,6 +71,13 @@ const date = formatEventDate(disertacion.eventDate);
     margin-bottom: 64px;
   }
   .tl-item:last-child { margin-bottom: 0; }
+
+  /* Reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
 
   /* Nodo de año sobre la línea */
   .tl-node {
