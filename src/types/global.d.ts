@@ -45,6 +45,7 @@ declare global {
     Alpine: any;
     __BLOG_BASE__: string;
     __DISERT_BASE__: string;
+    __RECURSOS_BASE__: string;
 
     // PromptModal functions
     showPromptModal: (options?: PromptModalOptions) => Promise<string | null>;

@@ -1,0 +1,132 @@
+---
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+import SeoHead from '@components/shared/SeoHead.astro';
+import RecursoCard from '../../components/recursos/RecursoCard.astro';
+import { getRecursos } from '../../utils/recursos';
+
+export const prerender = true;
+
+const recursos = await getRecursos();
+const canonical = new URL('/zona-lab/', Astro.site).toString();
+---
+
+<BaseTailwind
+  title="Zona Lab — MG Lab"
+  description="Recursos de estudio para alumnos: videos y reportes con su resumen."
+  lang="es"
+  layoutType="landing"
+>
+  <SeoHead slot="head" title="Zona Lab — MG Lab" description="Recursos de estudio para alumnos: videos y reportes con su resumen." lang="es" canonical={canonical} />
+
+  <style>
+    :root {
+      --accent: #1d4ed8;
+      --accent-deep: #1e40af;
+      --accent-soft: #eef2ff;
+      --ink: #141a2e;
+      --muted: #5c6785;
+      --faint: #8b94ab;
+      --line: #e4e8f0;
+      --panel: #f4f6fa;
+      --font-head: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--panel); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+    h1, h2, h3, h4 { font-family: var(--font-head); line-height: 1.15; margin: 0; letter-spacing: -0.02em; font-weight: 600; }
+    p { margin: 0; }
+    a { color: inherit; text-decoration: none; }
+
+    .zl-header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,.92); backdrop-filter: saturate(1.4) blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .zl-header .row { max-width: 1100px; margin: 0 auto; padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .zl-brand { font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); letter-spacing: .02em; }
+    .zl-brand b { color: var(--accent); }
+    .zl-brand .sub { font-weight: 400; font-size: .8rem; color: var(--faint); margin-left: .5rem; }
+    .zl-nav { display: flex; align-items: center; gap: .75rem; }
+    .zl-nav a.link { color: var(--muted); font-size: .85rem; text-decoration: none; padding: 6px 10px; border-radius: 8px; transition: color .15s; }
+    .zl-nav a.link:hover { color: var(--ink); background: var(--panel); }
+
+    .zl-hero {
+      position: relative; overflow: hidden;
+      padding: 88px 28px 64px; text-align: center;
+      background: #fff; border-bottom: 1px solid var(--line);
+    }
+    .zl-hero .wrap { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; }
+    .zl-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-head); font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--accent-deep); background: var(--accent-soft);
+      padding: 7px 16px; border-radius: 999px; margin-bottom: 22px;
+    }
+    .zl-hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 600; line-height: 1.06; color: var(--ink); letter-spacing: -0.03em; }
+    .zl-hero .sub { margin: 18px auto 0; max-width: 620px; color: var(--muted); font-size: 1.05rem; line-height: 1.7; }
+
+    .zl-section { padding: 64px 28px; max-width: 1100px; margin: 0 auto; }
+    .zl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+    .zl-empty { text-align: center; color: var(--muted); padding: 40px 0; font-size: .95rem; border: 1px dashed var(--line); border-radius: 14px; }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+    .zl-footer { border-top: 1px solid var(--line); background: #fff; padding: 26px 28px; text-align: center; font-size: .82rem; color: var(--faint); }
+
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+    @media (max-width: 560px) { .zl-hero { padding: 60px 20px 48px; } }
+  </style>
+
+  <header class="zl-header">
+    <div class="row">
+      <div class="zl-brand">MG<b>.</b><span class="sub">| Zona Lab</span></div>
+      <div class="zl-nav">
+        <a class="link" href="/disertaciones/">Disertaciones</a>
+        <a class="link" href="/es/portfolio/">Portfolio</a>
+        <a class="link" href="/blog/">Blog</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="zl-hero">
+      <div class="wrap">
+        <div class="zl-badge"><span>📚</span> Recursos para alumnos</div>
+        <h1>Zona Lab</h1>
+        <p class="sub">Material seleccionado para estudiar: videos y reportes, con un resumen de lo que hay que saber.</p>
+      </div>
+    </section>
+
+    <section class="zl-section">
+      {recursos.length === 0 ? (
+        <p class="zl-empty">Todavía no hay recursos publicados.</p>
+      ) : (
+        <div class="zl-grid">
+          {recursos.map((r) => (
+            <RecursoCard recurso={r} />
+          ))}
+        </div>
+      )}
+    </section>
+  </main>
+
+  <footer class="zl-footer">
+    <p>© 2026 Mauricio González · Córdoba, Argentina</p>
+  </footer>
+
+  <script is:inline>
+    (function () {
+      if (!('IntersectionObserver' in window)) {
+        document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('is-visible'); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) { entry.target.classList.add('is-visible'); io.unobserve(entry.target); }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+    })();
+  </script>
+</BaseTailwind>

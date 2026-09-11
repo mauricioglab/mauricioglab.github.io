@@ -1,0 +1,16 @@
+---
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+import RecursosAdmin from '../../components/admin/RecursosAdmin.astro';
+
+export const prerender = true;
+---
+
+<BaseTailwind
+  title="Admin Zona Lab — MG Lab"
+  description="Editor de recursos para alumnos"
+  lang="es"
+  layoutType="admin"
+  showMateGame={false}
+>
+  <RecursosAdmin />
+</BaseTailwind>

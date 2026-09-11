@@ -1,0 +1,83 @@
+---
+import type { Recurso } from '../../utils/recursos';
+import { formatFecha } from '../../utils/recursos';
+
+interface Props {
+  recurso: Recurso;
+  baseUrl?: string;
+}
+
+const { recurso, baseUrl = import.meta.env.BASE_URL } = Astro.props;
+const base = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+const url = `${base}zona-lab/${recurso.slug}/`;
+const isVideo = recurso.sourceType === 'youtube';
+---
+
+<article class="rc-card reveal">
+  <a href={url} class="rc-media">
+    {recurso.coverUrl ? (
+      <img src={recurso.coverUrl} alt={`Portada de ${recurso.title}`} loading="lazy" />
+    ) : (
+      <div class="rc-fallback">{isVideo ? '🎬' : '🌐'}</div>
+    )}
+    <span class="rc-type" :class={isVideo ? 'rc-type--video' : 'rc-type--web'}>
+      {isVideo ? '🎬 Video' : '📄 Reporte'}
+    </span>
+  </a>
+  <div class="rc-body">
+    <div class="rc-meta">
+      <time datetime={recurso.createdAt.toISOString()}>{formatFecha(recurso.createdAt)}</time>
+    </div>
+    <h3 class="rc-title"><a href={url}>{recurso.title}</a></h3>
+    {recurso.description && <p class="rc-desc">{recurso.description}</p>}
+    {recurso.categories.length > 0 && (
+      <div class="rc-cats">
+        {recurso.categories.slice(0, 3).map((c) => <span class="rc-cat">{c}</span>)}
+      </div>
+    )}
+    <a href={url} class="rc-link">Abrir recurso →</a>
+  </div>
+</article>
+
+<style>
+  :global(:root) {
+    --accent: #1d4ed8;
+    --accent-deep: #1e40af;
+    --accent-soft: #eef2ff;
+    --ink: #141a2e;
+    --muted: #5c6785;
+    --faint: #8b94ab;
+    --line: #e4e8f0;
+    --panel: #f4f6fa;
+    --font-head: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+  }
+
+  .rc-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: transform .18s, box-shadow .18s, border-color .18s;
+  }
+  .rc-card:hover { transform: translateY(-3px); box-shadow: 0 20px 44px -24px rgba(29,78,216,.28); border-color: #c7d2fe; }
+
+  .rc-media { position: relative; display: block; aspect-ratio: 16/9; overflow: hidden; background: var(--panel); }
+  .rc-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s ease; }
+  .rc-card:hover .rc-media img { transform: scale(1.04); }
+  .rc-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem; background: var(--accent-soft); color: var(--accent); }
+  .rc-type {
+    position: absolute; top: 10px; left: 10px;
+    font-family: var(--font-head); font-size: .66rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 999px; color: #fff; background: rgba(20,26,46,.72); backdrop-filter: blur(4px);
+  }
+
+  .rc-body { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .rc-meta { font-family: var(--font-head); font-size: .7rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--faint); }
+  .rc-title { font-size: 1.12rem; font-weight: 600; color: var(--ink); line-height: 1.25; letter-spacing: -.01em; margin: 0; }
+  .rc-title a { color: inherit; }
+  .rc-title a:hover { color: var(--accent-deep); }
+  .rc-desc { font-size: .88rem; color: var(--muted); line-height: 1.6; margin: 0; }
+  .rc-cats { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; }
+  .rc-cat { font-size: .68rem; font-weight: 600; color: var(--accent-deep); background: var(--accent-soft); border-radius: 999px; padding: 3px 10px; }
+  .rc-link { font-family: var(--font-head); font-size: .82rem; font-weight: 600; color: var(--accent-deep); margin-top: 4px; }
+  .rc-link:hover { text-decoration: underline; }
+</style>
