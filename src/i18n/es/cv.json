@@ -10,7 +10,8 @@
     "back": "← Volver",
     "langLabel": "EN",
     "portfolio": "Portfolio",
-    "servicios": "Servicios"
+    "servicios": "Servicios",
+    "disertaciones": "Disertaciones"
   },
   "masthead": {
     "eyebrow": "// perfil técnico",
@@ -182,7 +183,8 @@
     "when": "08/2024 — Presente",
     "description": "Docente en las carreras de Analista de Sistemas, Desarrollo Web y Ciencia de Datos e IA. Incluye Proyecto Integrador y Procesamiento de Datos (Power BI) en la carrera de Ciencia de Datos. 5 de 20 estudiantes consiguieron empleo como Jr Developer en el último ciclo.",
     "materiasLabel": "Materias",
-    "materias": "Programación 1 (Python) · Laboratorio 1 y 2 · Desarrollo Web 2 (React) · Apps Móviles (React Native/Expo) · Administración de Proyecto · Práctica Profesionalizante 2 y 3 · Proyecto Integrador (Ciencia de Datos) · Procesamiento de Datos (Power BI)"
+    "materias": "Programación 1 (Python) · Laboratorio 1 y 2 · Desarrollo Web 2 (React) · Apps Móviles (React Native/Expo) · Administración de Proyecto · Práctica Profesionalizante 2 y 3 · Proyecto Integrador (Ciencia de Datos) · Procesamiento de Datos (Power BI)",
+    "verDisertaciones": "Ver mis disertaciones"
   },
   "closing": {
     "title": "¿Trabajamos juntos?",

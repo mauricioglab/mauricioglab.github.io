@@ -12,6 +12,7 @@ const clusters = [
       { id: 'cv', label: 'CV', url: resolveUrl('/es/cv/'), hint: 'Perfil completo' },
       { id: 'servicios', label: 'Servicios', url: resolveUrl('/es/servicios/'), hint: 'Consultoría, desarrollo, IA' },
       { id: 'portfolio', label: 'Portfolio', url: resolveUrl('/es/portfolio/'), hint: 'Proyectos y casos' },
+      { id: 'disertaciones', label: 'Disertaciones', url: resolveUrl('/disertaciones/'), hint: 'Charlas y workshops con material' },
     ],
   },
   {
@@ -70,7 +71,7 @@ const clusters = [
       </div>
       <ul
         class:list={[
-          cluster.primary ? 'grid sm:grid-cols-3 gap-2' : 'divide-y divide-[#e4e8f0]',
+          cluster.primary ? 'grid sm:grid-cols-2 gap-2' : 'divide-y divide-[#e4e8f0]',
         ]}
       >
         {cluster.links.map((link) =>

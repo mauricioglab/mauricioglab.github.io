@@ -10,7 +10,8 @@
     "back": "← Back",
     "langLabel": "ES",
     "portfolio": "Portfolio",
-    "servicios": "Services"
+    "servicios": "Services",
+    "disertaciones": "Talks"
   },
   "masthead": {
     "eyebrow": "// technical profile",
@@ -182,7 +183,8 @@
     "when": "08/2024 — Present",
     "description": "Instructor across the Systems Analyst, Web Development and Data Science & AI programs. Includes the Capstone Project and Data Processing (Power BI) course in the Data Science program. 5 of 20 students landed Jr Developer jobs in the last cycle.",
     "materiasLabel": "Courses",
-    "materias": "Programming 1 (Python) · Lab 1 & 2 · Web Development 2 (React) · Mobile Apps (React Native/Expo) · Project Management · Capstone Practicum 2 & 3 · Capstone Project (Data Science) · Data Processing (Power BI)"
+    "materias": "Programming 1 (Python) · Lab 1 & 2 · Web Development 2 (React) · Mobile Apps (React Native/Expo) · Project Management · Capstone Practicum 2 & 3 · Capstone Project (Data Science) · Data Processing (Power BI)",
+    "seeTalks": "See my talks"
   },
   "closing": {
     "title": "Let's work together?",

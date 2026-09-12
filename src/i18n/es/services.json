@@ -9,7 +9,8 @@
   },
   "nav": {
     "portfolio": "Portfolio",
-    "cv": "CV"
+    "cv": "CV",
+    "disertaciones": "Disertaciones"
   },
   "hero": {
     "badge": "Software Engineer · IA & Automatización",
@@ -36,7 +37,8 @@
     "title": "Speaker",
     "text": "Doy charlas y workshops sobre IA aplicada y automatización, siempre anclados en proyectos reales, no en teoría.",
     "credential": "Docente en 3 carreras de tecnología · 5 de 20 alumnos consiguieron empleo como Jr Dev",
-    "cta": "Quiero a Mauricio en mi evento"
+    "cta": "Quiero a Mauricio en mi evento",
+    "seeTalks": "Ver mis disertaciones"
   },
   "services": [
     {

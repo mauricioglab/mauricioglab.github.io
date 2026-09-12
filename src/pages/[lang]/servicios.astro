@@ -235,6 +235,12 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
       color: #fff; background: var(--accent-deep); padding: 13px 26px; border-radius: 12px; border: none; cursor: pointer; transition: transform .15s, opacity .15s;
     }
     .sv-speaking .sp-cta:hover { transform: translateY(-1px); opacity: .92; }
+    .sv-speaking .sp-link {
+      display: inline-block; margin-left: 12px; font-family: var(--font-head); font-weight: 600; font-size: .92rem;
+      color: var(--accent-deep); padding: 12px 24px; border-radius: 12px; border: 1.5px solid var(--accent-deep); text-decoration: none; transition: background .15s, color .15s;
+    }
+    .sv-speaking .sp-link:hover { background: var(--accent-deep); color: #fff; }
+    .sv-speaking .sp-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 6px; }
 
     /* ---------- CTA final ---------- */
     .sv-final { padding: 72px 28px; }
@@ -282,6 +288,7 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
       <div class="sv-nav">
         <a class="link" href={`/${lang}/portfolio`}>{content.nav.portfolio}</a>
         <a class="link" href={`/${lang}/cv`}>{content.nav.cv}</a>
+        <a class="link" href="/disertaciones/">{content.nav.disertaciones}</a>
         <a class="sv-toggle" href={altPath}>{altLang.toUpperCase()}</a>
         <button class="sv-cta" data-contact-trigger>{lang === 'es' ? 'Contactar' : 'Contact'}</button>
       </div>
@@ -429,7 +436,10 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
         <div class="k">{content.speaking.title}</div>
         <h2 set:html={content.speaking.text}></h2>
         <p>{content.speaking.credential}</p>
-        <a class="sp-cta" href={speakingMailto}>{content.speaking.cta}</a>
+        <div class="sp-actions">
+          <a class="sp-cta" href={speakingMailto}>{content.speaking.cta}</a>
+          <a class="sp-link" href="/disertaciones/">{content.speaking.seeTalks}</a>
+        </div>
       </div>
     </section>
 

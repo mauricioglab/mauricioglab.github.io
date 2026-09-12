@@ -475,6 +475,9 @@ const years = Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 
             .doc p { margin-top: 0.85rem; color: var(--ink-soft); max-width: 62ch; }
             .doc .materias { margin-top: 1rem; color: var(--ink-faint); font-size: 0.88rem; }
             .doc .materias b { color: var(--sand-deep); font-family: var(--font-head); font-weight: 600; }
+            .doc .ver-talks { margin-top: 1.1rem; font-size: 0.95rem; }
+            .doc .ver-talks a { color: var(--teal-deep); font-weight: 600; border-bottom: 1px solid transparent; transition: border-color 0.15s ease; }
+            .doc .ver-talks a:hover { border-bottom-color: var(--teal-deep); }
 
             /* ---------- Cierre ---------- */
             .closing { padding: 3rem 0 2.5rem; }
@@ -535,6 +538,7 @@ const years = Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 
                 <div class="site-actions">
                     <a class="back-link" href={`/${lang}/portfolio`}>{content.header.portfolio}</a>
                     <a class="back-link" href={`/${lang}/servicios`}>{content.header.servicios}</a>
+                    <a class="back-link" href="/disertaciones/">{content.header.disertaciones}</a>
                     <a class="lang-toggle" href={altUrl}>{content.header.langLabel}</a>
                     <button class="btn-print" onclick="window.print()">{content.header.print}</button>
                 </div>
@@ -708,6 +712,7 @@ const years = Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 
                     <p class="materias">
                         <b>{content.docencia.materiasLabel}</b> · {content.docencia.materias}
                     </p>
+                    <p class="ver-talks"><a href="/disertaciones/">{content.docencia.verDisertaciones || content.docencia.seeTalks}</a></p>
                 </div>
             </section>
 

@@ -175,7 +175,8 @@ bullets breves y concretos, en español.
 
 Reglas:
 - 4 a 8 bullets. Cada uno de una sola idea, de 8 a 20 palabras.
-- Escribí en pasado ("Se presentó…", "Se analizó…", "Se comparó…").
+- Escribí en pasado y en primera persona ("Presenté…", "Expliqué…", "Comparé…").
+- No describas la organización del evento; enfocate en lo que el autor hizo o dijo.
 - No inventes contenido que no esté en el material.
 - Si el texto es un borrador desordenado, ordenalo y quedate con lo esencial.
 - Si una parte no aporta, ignorala.

@@ -14,6 +14,7 @@
   "nav": {
     "portfolio": "Portfolio",
     "servicios": "Services",
-    "cv": "CV"
+    "cv": "CV",
+    "disertaciones": "Talks"
   }
 }

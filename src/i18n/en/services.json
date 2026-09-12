@@ -9,7 +9,8 @@
   },
   "nav": {
     "portfolio": "Portfolio",
-    "cv": "CV"
+    "cv": "CV",
+    "disertaciones": "Talks"
   },
   "hero": {
     "badge": "Software Engineer · AI & Automation",
@@ -36,7 +37,8 @@
     "title": "Speaker",
     "text": "I give talks and workshops on applied AI and automation, always grounded in real projects, not theory.",
     "credential": "Instructor across 3 tech programs · 5 of 20 students landed Jr Dev jobs",
-    "cta": "I want Mauricio at my event"
+    "cta": "I want Mauricio at my event",
+    "seeTalks": "See my talks"
   },
   "services": [
     {
