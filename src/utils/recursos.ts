@@ -28,10 +28,10 @@ export async function getRecursos(): Promise<Recurso[]> {
     const { data, error } = await supabase
       .from('recursos')
       .select(
-        'id, slug, title, source_url, source_type, source_title, video_id, description, body_markdown, categories, topicos, cover_url, created_at, draft'
+        'id, slug, title, source_url, source_type, source_title, video_id, description, body_markdown, categories, topicos, cover_url, created, draft'
       )
       .eq('draft', false)
-      .order('created_at', { ascending: false });
+      .order('created', { ascending: false });
 
     if (!error && data) {
       for (const row of data) {
@@ -48,7 +48,7 @@ export async function getRecursos(): Promise<Recurso[]> {
           categories: Array.isArray(row.categories) ? row.categories : [],
           topicos: Array.isArray(row.topicos) ? row.topicos : undefined,
           coverUrl: row.cover_url ?? undefined,
-          createdAt: new Date(row.created_at),
+          createdAt: new Date(row.created),
           draft: row.draft ?? false,
         });
       }

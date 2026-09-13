@@ -44,7 +44,7 @@ export async function getDisertaciones(): Promise<Disertacion[]> {
           id: row.id,
           slug: row.slug,
           title: row.title,
-          eventDate: new Date(`${row.event_date}T00:00:00`),
+          eventDate: /^\d{4}-\d{2}-\d{2}$/.test(row.event_date) ? new Date(`${row.event_date}T00:00:00`) : new Date(row.event_date),
           eventName: row.event_name ?? '',
           author: row.author ?? 'Mauricio Gonzalez',
           categories: Array.isArray(row.categories) ? row.categories : [],

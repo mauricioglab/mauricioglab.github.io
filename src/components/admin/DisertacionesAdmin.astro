@@ -663,8 +663,8 @@
         .from('disertaciones-files')
         .upload(path, file, { upsert: true });
       if (error) throw new Error(error.message);
-      const supabaseUrl = (import.meta.env.PUBLIC_SUPABASE_URL as string).replace(/\/$/, '');
-      return `${supabaseUrl}/storage/v1/object/public/disertaciones-files/${data.path}`;
+      const pbUrl = (import.meta.env.PUBLIC_POCKETBASE_URL as string || 'https://spa-depot.46-225-2-192.nip.io').replace(/\/$/, '');
+      return `${pbUrl}/storage/disertaciones-files/${data.path}`;
     },
 
     async subirCertificado() {

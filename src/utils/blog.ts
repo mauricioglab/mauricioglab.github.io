@@ -62,7 +62,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
         posts.push({
           slug: row.slug,
           title: row.title,
-          pubDate: new Date(`${row.pub_date}T00:00:00`),
+          pubDate: /^\d{4}-\d{2}-\d{2}$/.test(row.pub_date) ? new Date(`${row.pub_date}T00:00:00`) : new Date(row.pub_date),
           author: row.author,
           categories: normalizeCategories(Array.isArray(row.categories) ? row.categories : []),
           topicos: Array.isArray(row.topicos) ? row.topicos : undefined,
