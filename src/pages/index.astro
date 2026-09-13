@@ -3,11 +3,6 @@ import BaseTailwind from '../layouts/BaseTailwind.astro';
 import HomeClusters from '../components/shared/HomeClusters.astro';
 
 export const prerender = true;
-
-const base = import.meta.env.BASE_URL;
-const b = base.endsWith("/") ? base : `${base}/`;
-
-const resolveUrl = (url: string) => url.startsWith('/') ? `${b}${url.slice(1)}` : url;
 ---
 
 <BaseTailwind
@@ -48,20 +43,6 @@ const resolveUrl = (url: string) => url.startsWith('/') ? `${b}${url.slice(1)}` 
           <p class="text-sm text-[#8b94ab]">
             CV, proyectos, blog y herramientas para aprender y construir.
           </p>
-          <div class="flex flex-wrap justify-center gap-3 pt-2">
-            <a
-              href={resolveUrl('/es/cv/')}
-              class="px-6 py-3 rounded-lg bg-[#1e40af] text-white text-sm font-semibold shadow-sm hover:bg-[#1d4ed8] transition-colors"
-            >
-              Ver mi CV
-            </a>
-            <a
-              href={resolveUrl('/blog/')}
-              class="px-6 py-3 rounded-lg bg-white text-[#1e40af] border border-[#c7d4f0] text-sm font-semibold hover:bg-[#eef2ff] transition-colors"
-            >
-              Leer el blog
-            </a>
-          </div>
         </div>
       </section>
     </div>
