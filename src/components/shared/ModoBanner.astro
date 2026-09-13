@@ -1,0 +1,136 @@
+---
+import { normalizeBaseUrl } from '../../utils/blog';
+
+interface LinkItem {
+  title: string;
+  description?: string;
+  url: string;
+}
+
+interface Props {
+  /** Dirección del puente: desde un post del blog hacia la Zona Lab, o al revés. */
+  direccion: 'blog-a-lab' | 'lab-a-blog';
+  /** Ítems contextuales del mismo tema (match por topicos). */
+  relacionados: LinkItem[];
+  /** Mini-feed de lo último del otro lado (puerta extra). */
+  ultimos?: LinkItem[];
+  /** Cuántos contextuales y del feed se muestran. */
+  cant?: number;
+}
+
+const { direccion, relacionados, ultimos = [], cant = 3 } = Astro.props;
+const base = normalizeBaseUrl(import.meta.env.BASE_URL);
+
+const esBlogALab = direccion === 'blog-a-lab';
+const contextuales = relacionados.slice(0, cant);
+const feed = ultimos.slice(0, cant);
+
+const textos = esBlogALab
+  ? {
+      badge: '📚',
+      titulo: 'Pasá al modo estudio',
+      subtitulo:
+        'Este hilo también vive en la Zona Lab: el mismo tema, en profundidad de estudio.',
+      cta: 'Ir a la Zona Lab',
+      ctaUrl: `${base}zona-lab/`,
+      feedLabel: 'Últimos en la Zona Lab',
+      vacio: 'Aún no hay recursos publicados en la Zona Lab.',
+    }
+  : {
+      badge: '💭',
+      titulo: 'Pasá al modo reflexión',
+      subtitulo:
+        'Este hilo también vive en el Blog: el mismo tema, en modo pensamiento.',
+      cta: 'Ir al Blog',
+      ctaUrl: `${base}blog/`,
+      feedLabel: 'Últimos en el Blog',
+      vacio: 'Aún no hay posts publicados en el Blog.',
+    };
+---
+
+<aside class="modo-banner rounded-2xl border border-[#e4e8f0] bg-white shadow-sm overflow-hidden">
+  <div
+    class="flex items-start gap-3 px-6 py-4 bg-gradient-to-r from-[#eef2ff] to-white border-b border-[#e4e8f0]"
+  >
+    <span class="text-2xl leading-none" aria-hidden="true">{textos.badge}</span>
+    <div>
+      <p class="font-semibold text-[#1e40af] text-lg leading-tight">
+        {textos.titulo}
+      </p>
+      <p class="text-sm text-[#5c6785] leading-snug mt-0.5">
+        {textos.subtitulo}
+      </p>
+    </div>
+  </div>
+
+  {
+    contextuales.length > 0 ? (
+      <ul class="divide-y divide-[#e4e8f0]">
+        {contextuales.map((item) => (
+          <li>
+            <a
+              href={item.url}
+              class="group block px-6 py-3"
+            >
+              <span
+                class="block font-medium text-[#141a2e] group-hover:text-[#1e40af] text-[15px] leading-snug"
+              >
+                {item.title}
+              </span>
+              {item.description && (
+                <span
+                  class="block text-xs text-[#5c6785] mt-0.5 line-clamp-2"
+                >
+                  {item.description}
+                </span>
+              )}
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="px-6 py-4 text-sm text-[#5c6785]">{textos.vacio}</p>
+    )
+  }
+
+  {
+    feed.length > 0 && (
+      <div
+        class="px-6 py-4 border-t border-dashed border-[#e4e8f0] bg-[#fafbfe]"
+      >
+        <p
+          class="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#8b94ab] mb-2"
+        >
+          {textos.feedLabel}
+        </p>
+        <ul class="flex flex-wrap gap-x-5 gap-y-1">
+          {feed.map((item) => (
+            <li>
+              <a
+                href={item.url}
+                class="text-[13px] text-[#5c6785] hover:text-[#1e40af] underline underline-offset-2"
+              >
+                {item.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  <div class="px-6 py-4 border-t border-[#e4e8f0]">
+    <a
+      href={textos.ctaUrl}
+      class="inline-flex items-center gap-2 rounded-lg bg-[#1e40af] hover:bg-[#1d4ed8] text-white text-sm font-semibold px-4 py-2 transition-colors"
+    >
+      {textos.cta} <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</aside>
+
+<style>
+  .modo-banner {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+</style>

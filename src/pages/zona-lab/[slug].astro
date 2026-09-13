@@ -1,7 +1,9 @@
 ---
 import BaseTailwind from '../../layouts/BaseTailwind.astro';
 import SeoHead from '@components/shared/SeoHead.astro';
+import ModoBanner from '../../components/shared/ModoBanner.astro';
 import { getRecursos, formatFecha } from '../../utils/recursos';
+import { getRelacionadosPosts, getUltimosPosts } from '../../utils/relacionados';
 import { createMarkdownProcessor } from '@astrojs/markdown-remark';
 
 export const prerender = true;
@@ -19,6 +21,18 @@ const markdownProcessor = await createMarkdownProcessor({
 const { code: contentHtml } = await markdownProcessor.render(r.body);
 const canonical = new URL(`/zona-lab/${r.slug}/`, Astro.site).toString();
 const isVideo = r.sourceType === 'youtube';
+
+const relacionadosPosts = await getRelacionadosPosts(r, 3);
+const ultimosPosts = await getUltimosPosts(3, relacionadosPosts);
+const bannerRelacionados = relacionadosPosts.map((p) => ({
+  title: p.title,
+  description: p.description,
+  url: `${import.meta.env.BASE_URL}blog/${p.slug}/`,
+}));
+const bannerUltimos = ultimosPosts.map((p) => ({
+  title: p.title,
+  url: `${import.meta.env.BASE_URL}blog/${p.slug}/`,
+}));
 ---
 
 <BaseTailwind title={`${r.title} — Zona Lab | MG Lab`} description={r.description} lang="es" layoutType="landing">
@@ -150,6 +164,10 @@ const isVideo = r.sourceType === 'youtube';
     {r.sourceUrl && (
       <p class="zl-source">Fuente: <a href={r.sourceUrl} target="_blank" rel="noopener noreferrer">{r.sourceUrl}</a></p>
     )}
+
+    <div style="margin-top: 36px">
+      <ModoBanner direccion="lab-a-blog" relacionados={bannerRelacionados} ultimos={bannerUltimos} />
+    </div>
   </main>
 
   <footer class="zl-footer">

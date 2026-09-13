@@ -199,6 +199,19 @@ const RECURSOS_CATEGORIES = [
   "Podcast",
 ];
 
+const RECURSOS_TEMAS = [
+  "IA",
+  "Tecnología",
+  "Ciencia",
+  "Productividad",
+  "Filosofía",
+  "Libros",
+  "Estudio",
+  "Salud",
+  "Sociedad",
+  "Creatividad",
+];
+
 const SYSTEM_ZONALAB = `
 Sos un docente que prepara un recurso de estudio para sus alumnos. A partir de una
 FRASE del profesor (semilla) y del MATERIAL de una fuente (video o reporte), escribís
@@ -214,11 +227,17 @@ Reglas:
 - El título debe ser claro y atractivo para un alumno (máx 10 palabras).
 - Categorías: elegí SIEMPRE de esta lista EXACTA (1 a 2), sin inventar ni renombrar:
   Video, Artículo, Reporte, Tutorial, Curso, Libro, Podcast
+- Topicos: elegí SIEMPRE 1 a 3 de esta lista EXACTA de temas compartidos, sin inventar
+  ni renombrar. Los topicos son el puente con el Blog: matchean este recurso con los
+  posts del mismo tema, así que elegí los que mejor describan de qué trata el material
+  (no el formato):
+  IA, Tecnología, Ciencia, Productividad, Filosofía, Libros, Estudio, Salud, Sociedad, Creatividad
 
 Devolvé ÚNICAMENTE un objeto JSON (sin texto adicional) con esta forma exacta:
 {
   "title": string,
   "categories": string[],
+  "topicos": string[],
   "description": string,
   "bodyMarkdown": string
 }
@@ -288,6 +307,7 @@ Deno.serve(async (req: Request) => {
     const parsed = await deepseekJson<{
       title: string;
       categories: string[];
+      topicos: string[];
       description: string;
       bodyMarkdown: string;
     }>(SYSTEM_ZONALAB, userPrompt, 3000);
@@ -300,9 +320,14 @@ Deno.serve(async (req: Request) => {
       ? parsed.categories.filter((c) => RECURSOS_CATEGORIES.includes(c)).slice(0, 2)
       : [];
 
+    const topicos = Array.isArray(parsed.topicos)
+      ? [...new Set(parsed.topicos.filter((t) => RECURSOS_TEMAS.includes(t)))].slice(0, 3)
+      : [];
+
     return jsonResponse({
       title: parsed.title,
       categories,
+      topicos,
       description: parsed.description ?? "",
       bodyMarkdown: parsed.bodyMarkdown,
       sourceUrl: url,

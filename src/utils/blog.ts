@@ -13,6 +13,8 @@ export interface BlogPost {
   pubDate: Date;
   author: string;
   categories: string[];
+  /** Temas compartidos con la Zona Lab (puente de similitud). */
+  topicos?: string[];
   description: string;
   body: string;
   /** URL de la tapa cuando el post vive en la BD (Storage de Supabase). */
@@ -35,6 +37,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
         pubDate: post.data.pubDate,
         author: post.data.author,
         categories: normalizeCategories(post.data.categories),
+        topicos: Array.isArray(post.data.topicos) ? post.data.topicos : undefined,
         description: post.data.description,
         body: post.body,
         localImage: post.data.image,
@@ -50,7 +53,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
     const { data, error } = await supabase
       .from('blogs')
       .select(
-        'slug, title, pub_date, author, categories, description, body_markdown, cover_url'
+        'slug, title, pub_date, author, categories, topicos, description, body_markdown, cover_url'
       )
       .eq('draft', false);
 
@@ -62,6 +65,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
           pubDate: new Date(`${row.pub_date}T00:00:00`),
           author: row.author,
           categories: normalizeCategories(Array.isArray(row.categories) ? row.categories : []),
+          topicos: Array.isArray(row.topicos) ? row.topicos : undefined,
           description: row.description ?? '',
           body: row.body_markdown ?? '',
           coverUrl: row.cover_url ?? undefined,

@@ -3,11 +3,16 @@ import BaseTailwind from '../../layouts/BaseTailwind.astro';
 import SeoHead from '@components/shared/SeoHead.astro';
 import RecursoCard from '../../components/recursos/RecursoCard.astro';
 import { getRecursos } from '../../utils/recursos';
+import { getUltimosPosts } from '../../utils/relacionados';
 
 export const prerender = true;
 
 const recursos = await getRecursos();
+const ultimosPosts = await getUltimosPosts(4);
 const canonical = new URL('/zona-lab/', Astro.site).toString();
+const blogBase = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 ---
 
 <BaseTailwind
@@ -69,6 +74,18 @@ const canonical = new URL('/zona-lab/', Astro.site).toString();
     .zl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
     .zl-empty { text-align: center; color: var(--muted); padding: 40px 0; font-size: .95rem; border: 1px dashed var(--line); border-radius: 14px; }
 
+    .zl-widget-title { font-family: var(--font-head); font-size: 1.25rem; font-weight: 600; color: var(--ink); letter-spacing: -.01em; }
+    .zl-widget-link { font-family: var(--font-head); font-size: .85rem; font-weight: 600; color: var(--accent-deep); }
+    .zl-widget-link:hover { text-decoration: underline; }
+    .zl-widget-sub { color: var(--muted); font-size: .9rem; margin-bottom: 22px; }
+    .zl-widget-list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 14px; background: #fff; overflow: hidden; }
+    .zl-widget-item { display: block; padding: 16px 22px; border-bottom: 1px solid var(--line); transition: background .15s; }
+    .zl-widget-item:last-child { border-bottom: 0; }
+    .zl-widget-item:hover { background: var(--accent-soft); }
+    .zl-widget-item-title { display: block; font-weight: 600; color: var(--ink); font-size: .98rem; line-height: 1.4; }
+    .zl-widget-item:hover .zl-widget-item-title { color: var(--accent-deep); }
+    .zl-widget-item-desc { display: block; color: var(--muted); font-size: .85rem; line-height: 1.55; margin-top: 3px; }
+
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.is-visible { opacity: 1; transform: translateY(0); }
 
@@ -109,6 +126,33 @@ const canonical = new URL('/zona-lab/', Astro.site).toString();
         </div>
       )}
     </section>
+
+    {ultimosPosts.length > 0 && (
+      <section class="zl-section" style="padding-top: 0">
+        <div class="flex items-baseline justify-between gap-4 mb-5">
+          <h2 class="zl-widget-title">💭 Últimos del Blog</h2>
+          <a href={`${blogBase}blog/`} class="zl-widget-link">Ver todos →</a>
+        </div>
+        <p class="zl-widget-sub">
+          El mismo hilo, en modo pensamiento: artículos y reflexiones.
+        </p>
+        <ul class="zl-widget-list">
+          {ultimosPosts.map((p) => (
+            <li>
+              <a
+                href={`${blogBase}blog/${p.slug}/`}
+                class="zl-widget-item"
+              >
+                <span class="zl-widget-item-title">{p.title}</span>
+                {p.description && (
+                  <span class="zl-widget-item-desc">{p.description}</span>
+                )}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
   </main>
 
   <footer class="zl-footer">

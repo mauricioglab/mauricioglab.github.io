@@ -162,6 +162,27 @@
             </div>
 
             <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Temas (puente con el Blog)</label>
+              <div class="flex flex-col gap-2">
+                <select x-model="selectedTema" @change="addTema()" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                  <option value="">Elegí un tema…</option>
+                  <template x-for="tema in availableTemas" :key="tema">
+                    <option :value="tema" x-text="tema"></option>
+                  </template>
+                </select>
+                <div class="flex flex-wrap gap-2" x-show="selectedTemas.length">
+                  <template x-for="(tema, i) in selectedTemas" :key="i">
+                    <span class="inline-flex items-center gap-1.5 bg-indigo-600/30 border border-indigo-500/40 rounded-full px-3 py-1 text-xs font-bold text-indigo-200">
+                      <span x-text="tema"></span>
+                      <button type="button" @click="removeTema(i)" class="text-indigo-300 hover:text-red-400 font-bold leading-none" title="Quitar tema">✕</button>
+                    </span>
+                  </template>
+                </div>
+                <p class="text-[10px] text-slate-500">Estos temas matchean este recurso con los posts del Blog.</p>
+              </div>
+            </div>
+
+            <div>
               <label class="block text-xs font-bold text-slate-300 mb-1">Descripción (SEO)</label>
               <input x-model="borrador.description" type="text" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
             </div>
@@ -270,6 +291,7 @@
     scheduleSessionEnd,
   } from '../../lib/supabase';
   import { RECURSOS_CATEGORIES } from '../../data/recursos-categories';
+  import { TEMAS, normalizeTemas } from '../../data/temas';
 
   window.Alpine = Alpine;
 
@@ -365,6 +387,8 @@
     borrador: null as any,
     selectedCategory: '',
     selectedCategories: [] as string[],
+    selectedTema: '',
+    selectedTemas: [] as string[],
     coverUrl: '',
     sourceUrl: '',
     sourceType: 'web',
@@ -454,6 +478,26 @@
 
     removeCategory(index: number) {
       this.selectedCategories = this.selectedCategories.filter((_, i) => i !== index);
+    },
+
+    get availableTemas() {
+      return TEMAS.filter((t) => !this.selectedTemas.includes(t));
+    },
+
+    addTema() {
+      const t = this.selectedTema;
+      if (t && !this.selectedTemas.includes(t)) {
+        this.selectedTemas = [...this.selectedTemas, t];
+      }
+      this.selectedTema = '';
+    },
+
+    removeTema(index: number) {
+      this.selectedTemas = this.selectedTemas.filter((_, i) => i !== index);
+    },
+
+    setTemas(list: string[]) {
+      this.selectedTemas = normalizeTemas(list || []);
     },
 
     startOp(id: string, label: string, steps: string[], messages: string[]) {
@@ -548,6 +592,7 @@
           bodyMarkdown: data.bodyMarkdown || '',
         };
         this.setCategories(data.categories || []);
+        this.setTemas(data.topicos || []);
         this.coverUrl = data.coverUrl || '';
         this.sourceUrl = data.sourceUrl || this.url.trim();
         this.sourceType = data.sourceType || 'web';
@@ -598,6 +643,7 @@
           description: this.borrador.description,
           body_markdown: this.borrador.bodyMarkdown,
           categories: this.selectedCategories,
+          topicos: normalizeTemas(this.selectedTemas),
           cover_url: this.coverUrl || null,
           draft,
         };
@@ -644,6 +690,7 @@
         bodyMarkdown: p.body_markdown,
       };
       this.setCategories(p.categories || []);
+      this.setTemas(p.topicos || []);
       this.coverUrl = p.cover_url || '';
       this.sourceUrl = p.source_url || '';
       this.sourceType = p.source_type || 'web';
@@ -663,6 +710,8 @@
       this.frase = '';
       this.selectedCategory = '';
       this.selectedCategories = [];
+      this.selectedTema = '';
+      this.selectedTemas = [];
       this.coverUrl = '';
       this.sourceUrl = '';
       this.sourceType = 'web';

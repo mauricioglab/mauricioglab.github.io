@@ -14,6 +14,8 @@ export interface Recurso {
   description: string;
   body: string;
   categories: string[];
+  /** Temas compartidos con el Blog (puente de similitud). */
+  topicos?: string[];
   coverUrl?: string;
   createdAt: Date;
   draft: boolean;
@@ -26,7 +28,7 @@ export async function getRecursos(): Promise<Recurso[]> {
     const { data, error } = await supabase
       .from('recursos')
       .select(
-        'id, slug, title, source_url, source_type, source_title, video_id, description, body_markdown, categories, cover_url, created_at, draft'
+        'id, slug, title, source_url, source_type, source_title, video_id, description, body_markdown, categories, topicos, cover_url, created_at, draft'
       )
       .eq('draft', false)
       .order('created_at', { ascending: false });
@@ -44,6 +46,7 @@ export async function getRecursos(): Promise<Recurso[]> {
           description: row.description ?? '',
           body: row.body_markdown ?? '',
           categories: Array.isArray(row.categories) ? row.categories : [],
+          topicos: Array.isArray(row.topicos) ? row.topicos : undefined,
           coverUrl: row.cover_url ?? undefined,
           createdAt: new Date(row.created_at),
           draft: row.draft ?? false,

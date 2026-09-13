@@ -1,7 +1,9 @@
 ---
 import BlogLayout from "../../layouts/BlogLayout.astro";
 import ShareButtons from "../../components/blog/ShareButtons.astro";
+import ModoBanner from "../../components/shared/ModoBanner.astro";
 import { calculateReadingTime, getBlogPosts, normalizeBaseUrl, type BlogPost } from "../../utils/blog";
+import { getRelacionadosRecursos, getUltimosRecursos } from "../../utils/relacionados";
 import { createMarkdownProcessor } from "@astrojs/markdown-remark";
 import { Image } from "astro:assets";
 
@@ -27,6 +29,18 @@ const markdownProcessor = await createMarkdownProcessor({
 });
 const { code: contentHtml } = await markdownProcessor.render(post.body);
 const readingTime = calculateReadingTime(post.body);
+
+const relacionadosRecursos = await getRelacionadosRecursos(post, 3);
+const ultimosRecursos = await getUltimosRecursos(3, relacionadosRecursos);
+const bannerRelacionados = relacionadosRecursos.map((r) => ({
+  title: r.title,
+  description: r.description,
+  url: `${normalizedBase}zona-lab/${r.slug}/`,
+}));
+const bannerUltimos = ultimosRecursos.map((r) => ({
+  title: r.title,
+  url: `${normalizedBase}zona-lab/${r.slug}/`,
+}));
 ---
 
 <BlogLayout
@@ -116,4 +130,8 @@ const readingTime = calculateReadingTime(post.body);
 
     <ShareButtons title={post.title} url={fullUrl} />
   </article>
+
+  <div class="mt-6">
+    <ModoBanner direccion="blog-a-lab" relacionados={bannerRelacionados} ultimos={bannerUltimos} />
+  </div>
 </BlogLayout>

@@ -118,12 +118,28 @@ Categorías: elegí SIEMPRE de esta lista EXACTA (1 a 3), sin inventar ni renomb
 - Libros
 - Reflexiones
 
+Topicos: elegí SIEMPRE 1 a 3 de esta lista EXACTA de temas compartidos, sin inventar
+ni renombrar. Los topicos son el puente con la Zona Lab: matchean este post con los
+recursos de estudio del mismo tema, así que elegí los que mejor describan de qué
+trata la idea (no el formato):
+- IA
+- Tecnología
+- Ciencia
+- Productividad
+- Filosofía
+- Libros
+- Estudio
+- Salud
+- Sociedad
+- Creatividad
+
 Devolvé ÚNICAMENTE un objeto JSON (sin texto adicional, sin bloques de código markdown
 que envuelvan TODO el JSON — el markdown va sólo adentro del campo "bodyMarkdown") con
 esta forma exacta:
 {
   "title": string,
   "categories": string[],
+  "topicos": string[],
   "description": string,
   "bodyMarkdown": string
 }
@@ -132,6 +148,7 @@ esta forma exacta:
 interface Borrador {
   title: string;
   categories: string[];
+  topicos: string[];
   description: string;
   bodyMarkdown: string;
 }
@@ -183,6 +200,10 @@ Deno.serve(async (req: Request) => {
     if (!borrador?.title || !borrador?.bodyMarkdown) {
       return jsonResponse({ error: "DeepSeek no devolvió un borrador válido" }, 502);
     }
+
+    borrador.topicos = Array.isArray(borrador.topicos)
+      ? [...new Set(borrador.topicos.filter((t) => typeof t === 'string' && t.trim()).map((t) => t.trim()))].slice(0, 3)
+      : [];
 
     return jsonResponse({ borrador });
   } catch (e) {
