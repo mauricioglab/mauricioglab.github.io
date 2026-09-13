@@ -6,6 +6,11 @@ export default defineConfig({
   base: "/",
   trailingSlash: "ignore",
   output: "static",
+  redirects: {
+    "/pausas-activas": "/movimiento/?modo=pausas",
+    "/movilidad": "/movimiento/?modo=movilidad",
+    "/entrenamiento": "/movimiento/?modo=entrenamiento",
+  },
   server: { open: "/" },
   integrations: [tailwind()],
   i18n: {

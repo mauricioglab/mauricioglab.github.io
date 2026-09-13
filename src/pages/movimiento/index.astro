@@ -1,0 +1,195 @@
+---
+import BaseTailwind from '@layouts/BaseTailwind.astro';
+import WorkoutEngine from '@components/movimiento/WorkoutEngine.astro';
+import { getModalidades } from '@utils/movimiento';
+import type { ModalidadId } from '@data/movimiento';
+
+export const prerender = true;
+
+const title = 'Movimiento';
+const modalidades = await getModalidades();
+const activaInicial: ModalidadId = 'pausas';
+
+// Acento oscuro por modalidad (el motor calcula su variante clara); los tabs usan light-dark()
+const ACCENTOS_CLAROS: Record<string, string> = {
+  pausas: '#c2410c',
+  movilidad: '#2563eb',
+  entrenamiento: '#4d7c0f',
+  remo: '#b45309',
+  thruster: '#a16207',
+};
+---
+
+<BaseTailwind title={title} description="Movimiento · Pausas activas, movilidad, entrenamiento, remo y thruster" lang="es" layoutType="tool" showPromptModal={false}>
+  <link slot="head" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style is:global>
+    .mv-page {
+      color-scheme: light dark;
+      --mv-text: CanvasText;
+      --mv-muted: color-mix(in oklch, CanvasText 55%, Canvas);
+      --mv-border: color-mix(in oklch, CanvasText 15%, Canvas);
+      --mv-surface: color-mix(in oklch, CanvasText 5%, Canvas);
+      font-family: 'Syne',sans-serif;
+      color: var(--mv-text);
+      background: Canvas;
+      min-height: 100vh;
+    }
+    .mv-title { font-family: 'Bebas Neue',sans-serif; font-size: 2.8rem; line-height: 1; letter-spacing: 2px; color: var(--mv-text); }
+    .mv-subtitle { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 4px; color: var(--mv-muted); }
+    .mv-login-chip { border-radius: 9999px; border: 1px solid var(--mv-border); background: var(--mv-surface); padding: .375rem 1rem; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: var(--mv-muted); }
+    .mv-tabs { margin-bottom: 2.5rem; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .75rem; }
+    @media (max-width: 640px) { .mv-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .mv-tab { display: flex; flex-direction: column; align-items: center; gap: .375rem; border-radius: 1rem; border: 1px solid var(--mv-border); background: var(--mv-surface); padding: 1rem .5rem; cursor: pointer; transition: all .2s; }
+    .mv-tab:hover { border-color: var(--tab-acc); }
+    .mv-tab-icon { font-size: 1.6rem; line-height: 1; }
+    .mv-tab-name { font-family: 'Bebas Neue',sans-serif; font-size: 1rem; letter-spacing: 1px; color: var(--mv-muted); }
+    .mv-tab.mvw-active { border-color: var(--tab-acc); background: color-mix(in oklch, var(--tab-acc) 8%, Canvas); box-shadow: 0 0 16px color-mix(in oklch, var(--tab-acc) 25%, transparent); }
+    .mv-tab.mvw-active .mv-tab-name { color: var(--tab-acc); }
+  </style>
+  <div class="mv-page relative overflow-x-hidden">
+    <header class="relative z-10 flex items-center max-sm:items-start max-sm:flex-col gap-6 max-sm:gap-4 border-b px-10 max-sm:px-6 py-8 max-sm:py-6" style="border-color: var(--mv-border)">
+      <div class="flex flex-col">
+        <span class="mv-title">MOVIMIENTO</span>
+        <span class="mv-subtitle">Pausas · Movilidad · Entrenamiento · Remo · Thruster</span>
+      </div>
+      <div id="mv-login-chip" class="mv-login-chip ml-auto max-sm:ml-0 hidden"></div>
+    </header>
+
+    <main class="relative z-10 mx-auto max-w-[1100px] px-8 max-sm:px-5 py-10 max-sm:py-6">
+      <!-- Tabs de modalidad -->
+      <div id="mv-tabs" class="mv-tabs">
+        {modalidades.map((m) => (
+          <button
+            data-modalidad={m.id}
+            class={`mv-tab ${m.id === activaInicial ? 'mvw-active' : ''}`}
+            style={`--tab-acc:light-dark(${ACCENTOS_CLAROS[m.id] ?? m.acento}, ${m.acento});`}
+          >
+            <span class="mv-tab-icon">{m.icono}</span>
+            <span class="mv-tab-name">{m.nombre.toUpperCase()}</span>
+          </button>
+        ))}
+      </div>
+
+      <!-- Motores (uno por modalidad, solo el activo es visible) -->
+      {modalidades.map((m) => (
+        <WorkoutEngine modalidad={m} activa={m.id === activaInicial} />
+      ))}
+    </main>
+  </div>
+
+  <script>
+    import { supabase } from '../../lib/supabase';
+
+    const LS_KEY = 'movimiento-historial-local';
+    const tabs = document.querySelectorAll<HTMLButtonElement>('.mv-tab');
+
+    function activar(id: string, actualizarUrl = true) {
+      tabs.forEach((t) => t.classList.toggle('mvw-active', t.dataset.modalidad === id));
+      document.querySelectorAll<HTMLElement>('.mvw').forEach((e) => {
+        const on = e.dataset.modalidad === id;
+        e.classList.toggle('mvw-active', on);
+        e.classList.toggle('hidden', !on);
+      });
+      if (actualizarUrl) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('modo', id);
+        history.replaceState(null, '', url);
+      }
+      window.dispatchEvent(new Event('movimiento:activar-' + id));
+    }
+
+    tabs.forEach((t) => t.addEventListener('click', () => activar(t.dataset.modalidad!)));
+
+    // ── Historial: localStorage siempre + Supabase si hay sesión ──
+    interface Sesion { modalidad: string; selector: string; nombre: string; nota?: string; fecha: string; fuente: 'local' | 'db'; }
+
+    function leerLocal(): Sesion[] {
+      try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch { return []; }
+    }
+    function guardarLocal(s: Sesion) {
+      const arr = leerLocal();
+      arr.unshift(s);
+      try { localStorage.setItem(LS_KEY, JSON.stringify(arr.slice(0, 200))); } catch { /* ignore */ }
+    }
+    function fechaHoy(): string {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    let cacheDb: Sesion[] | null = null;
+
+    async function cargarDb(): Promise<Sesion[]> {
+      if (cacheDb) return cacheDb;
+      try {
+        const { data, error } = await supabase
+          .from('movimiento_historial')
+          .select('modalidad, selector, programa_nombre, nota, fecha')
+          .order('fecha', { ascending: false })
+          .limit(50);
+        if (!error && data) {
+          cacheDb = data.map((r: any) => ({
+            modalidad: r.modalidad, selector: r.selector || '',
+            nombre: r.programa_nombre || '', nota: r.nota || '',
+            fecha: String(r.fecha), fuente: 'db' as const,
+          }));
+          return cacheDb!;
+        }
+      } catch { /* sin sesión o sin DB */ }
+      return [];
+    }
+
+    function publicar(sesiones: Sesion[]) {
+      const vistos = new Set<string>();
+      const unicos = sesiones
+        .sort((a, b) => (a.fecha < b.fecha ? 1 : -1))
+        .filter((s) => {
+          const k = `${s.modalidad}|${s.fecha}|${s.nombre}`;
+          if (vistos.has(k)) return false;
+          vistos.add(k);
+          return true;
+        });
+      window.dispatchEvent(new CustomEvent('movimiento:historial', { detail: unicos }));
+    }
+
+    async function refrescar() {
+      const { data: { session } } = await supabase.auth.getSession();
+      const chip = document.getElementById('mv-login-chip');
+      if (session) {
+        chip?.classList.remove('hidden');
+        if (chip) chip.textContent = `Historial sincronizado · ${session.user.email?.split('@')[0]}`;
+        publicar([...(await cargarDb()), ...leerLocal()]);
+      } else {
+        chip?.classList.add('hidden');
+        publicar(leerLocal());
+      }
+    }
+
+    window.addEventListener('movimiento:guardar', (e) => {
+      const { modalidad, selector, nombre, nota, cb } = (e as CustomEvent).detail;
+      const sesion: Sesion = { modalidad, selector: selector || '', nombre, nota: nota || '', fecha: fechaHoy(), fuente: 'local' };
+      guardarLocal(sesion);
+      (async () => {
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session) {
+            const { error } = await supabase.from('movimiento_historial').insert({
+              modalidad, selector: selector || '', programa_nombre: nombre, nota: nota || '',
+              fecha: fechaHoy(), completada: true,
+            });
+            if (error) { cb?.('Guardado local (error de sync)'); }
+            else { sesion.fuente = 'db'; cb?.('Sesión guardada en tu historial'); }
+          } else {
+            cb?.('Guardado en este dispositivo · iniciá sesión para sincronizar');
+          }
+        } catch { cb?.('Guardado en este dispositivo'); }
+        await refrescar();
+      })();
+    });
+
+    // ?modo= para redirects de las URLs viejas
+    const modo = new URLSearchParams(window.location.search).get('modo');
+    const validos = [...tabs].map((t) => t.dataset.modalidad!);
+    activar(modo && validos.includes(modo) ? modo : 'pausas', false);
+    refrescar();
+  </script>
+</BaseTailwind>

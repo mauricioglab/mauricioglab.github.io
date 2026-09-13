@@ -1,0 +1,812 @@
+---
+/**
+ * WorkoutEngine - motor de entrenamiento unificado para las 5 modalidades.
+ * Combina las ventajas de las implementaciones originales:
+ * - circuito por vueltas con descanso (pausas/movilidad/entrenamiento)
+ * - máquina de fases por repetición con última serie infinita (thruster/remo)
+ * - selector genérico con auto-selección de "hoy" (fecha) y sub-selector de semana
+ * - referencia por GIF con preload o link YouTube/Drive
+ * - timer SVG circular para ejercicios por tiempo
+ * - beep Web Audio, pause/resume, anterior/siguiente
+ * - historial: emite `movimiento:guardar` (persistencia en la página) y
+ *   escucha `movimiento:historial` para mostrar sesiones y racha.
+ *
+ * Paleta agnóstica: usa Canvas/CanvasText + light-dark(), sigue el esquema
+ * del sistema sin toggle. Cada modalidad define acento para oscuro (brillante)
+ * y para claro (oscuro); el contraste sobre acento resulta light-dark(white, black).
+ */
+import type { ModalidadDef } from '../../data/movimiento';
+
+interface Props {
+  modalidad: ModalidadDef;
+  activa?: boolean;
+}
+
+const { modalidad, activa = false } = Astro.props;
+const p = modalidad.id;
+const programa = modalidad.programas[0];
+const gifBase = modalidad.gifBase ? `${import.meta.env.BASE_URL}${modalidad.gifBase}`.replace(/\/{2,}/g, '/') : '';
+
+// Acento por esquema: en oscuro va el color brillante, en claro una versión oscura legible
+const ACCENTOS_CLAROS: Record<string, string> = {
+  pausas: '#c2410c',
+  movilidad: '#2563eb',
+  entrenamiento: '#4d7c0f',
+  remo: '#b45309',
+  thruster: '#a16207',
+};
+const acentoOscuro = modalidad.acento;
+const acentoClaro = ACCENTOS_CLAROS[p] ?? acentoOscuro;
+---
+
+<div id={`${p}-engine`} class={`mvw ${activa ? 'mvw-active' : 'hidden'}`} style={`--acc:light-dark(${acentoClaro}, ${acentoOscuro}); --acc-contrast:light-dark(#fff, #0f0f14);`} data-modalidad={p}>
+  <div data-role="selectors"></div>
+
+  <div class="mvw-section-head">
+    <div class="mvw-summary" data-role="summary"></div>
+  </div>
+
+  <div class={`mvw-grid ${p === 'entrenamiento' ? 'mvw-grid-3' : p === 'pausas' ? 'mvw-grid-4' : 'mvw-grid-list'}`} data-role="grid"></div>
+
+  <div class="mvw-start-wrap">
+    <button class="mvw-start" data-role="start-btn">
+      <svg viewBox="0 0 24 24" fill="currentColor" class="mvw-start-icon"><path d="M8 5v14l11-7z"/></svg>
+      INICIAR {modalidad.nombre.toUpperCase()}
+    </button>
+  </div>
+
+  <div class="mvw-history" data-role="history"></div>
+
+  <!-- ── Overlay ── -->
+  <div class="mvw-overlay" data-role="overlay">
+    <div class="mvw-progress"><div class="mvw-progress-fill" data-role="progress-fill"></div></div>
+    <div class="mvw-ov-head">
+      <div class="mvw-ov-head-left">
+        <div class="mvw-ov-stat">
+          <span class="mvw-muted" data-role="serie-label">Serie</span>
+          <span class="mvw-ov-stat-value" data-role="ov-serie">—</span>
+        </div>
+        <div class="mvw-ov-dots-wrap max-sm:hidden">
+          <span class="mvw-muted mvw-tiny">Series completadas</span>
+          <div class="mvw-dots" data-role="series-dots"></div>
+        </div>
+        <div class="mvw-ov-dots-wrap max-sm:hidden">
+          <span class="mvw-muted mvw-tiny">Ejercicios</span>
+          <div class="mvw-exdots" data-role="ex-dots"></div>
+        </div>
+      </div>
+      <div class="mvw-ov-head-right">
+        <button class="mvw-icon-btn" data-role="pause-btn" title="Pausar">⏸</button>
+        <button class="mvw-icon-btn" data-role="close-btn">✕</button>
+      </div>
+    </div>
+    <div class="mvw-ov-content" data-role="ov-content">
+      <div class="mvw-ref-col">
+        <div class="mvw-ref-frame" data-role="ref-frame">
+          <div class="mvw-ex-number hidden" data-role="ex-number">1</div>
+          <a class="mvw-ref-link hidden" data-role="ref-link" href="#" target="_blank" rel="noopener noreferrer">
+            Ver referencia
+          </a>
+          <div class="mvw-rest-icon hidden" data-role="rest-icon">⏸</div>
+          <div class="mvw-phase-label hidden" data-role="phase-label">BAJA</div>
+        </div>
+        <button class="mvw-nav-btn" data-role="prev-btn">← ANTERIOR</button>
+      </div>
+      <div class="mvw-info-col">
+        <div class="mvw-chip" data-role="ov-chip">Ejercicio</div>
+        <div class="mvw-name-col">
+          <div class="mvw-exname" data-role="ov-exname">—</div>
+          <div class="mvw-exnote" data-role="ov-exnote"></div>
+        </div>
+        <div class="mvw-reps-display" data-role="reps-display">
+          <div class="mvw-reps-val" data-role="ov-reps-val">—</div>
+          <div class="mvw-muted mvw-reps-unit" data-role="ov-reps-unit">REPS</div>
+        </div>
+        <div class="mvw-timer-display hidden" data-role="timer-display">
+          <svg width="120" height="120" viewBox="0 0 120 120" class="mvw-timer-svg">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="var(--mv-border)" stroke-width="6"/>
+            <circle class="mvw-timer-arc" data-role="timer-arc" cx="60" cy="60" r="52" fill="none" stroke="var(--acc)" stroke-width="6" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+            <text x="60" y="68" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="32" fill="var(--mv-text)" data-role="timer-text">0</text>
+          </svg>
+          <div class="mvw-muted mvw-timer-label" data-role="timer-label">SEGUNDOS</div>
+        </div>
+        <div class="mvw-cue" data-role="cue-box"></div>
+        <button class="mvw-action" data-role="action-btn">✓ LISTO</button>
+      </div>
+    </div>
+    <div class="mvw-done hidden" data-role="done-screen">
+      <div class="mvw-done-emoji" data-role="done-emoji">{modalidad.icono}</div>
+      <div class="mvw-done-title">¡COMPLETADO!</div>
+      <div class="mvw-done-sub" data-role="done-sub"></div>
+      <input class="mvw-nota" data-role="nota-input" type="text" maxlength="120" placeholder="Nota opcional · peso, sensaciones..." />
+      <div class="mvw-done-actions">
+        <button class="mvw-done-btn" data-role="guardar-btn">✓ GUARDAR SESIÓN</button>
+        <button class="mvw-done-skip" data-role="done-close-btn">VOLVER AL INICIO</button>
+      </div>
+      <div class="mvw-muted mvw-save-status" data-role="save-status"></div>
+    </div>
+    <div class="mvw-countdown hidden" data-role="countdown-screen">
+      <div class="mvw-cd-number" data-role="cd-number">3</div>
+      <div class="mvw-muted mvw-cd-label">Prepárate</div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .mvw {
+    --mv-text: CanvasText;
+    --mv-muted: color-mix(in oklch, CanvasText 55%, Canvas);
+    --mv-border: color-mix(in oklch, CanvasText 15%, Canvas);
+    --mv-surface: color-mix(in oklch, CanvasText 5%, Canvas);
+    --mv-rest: light-dark(#b45309, #facc15);
+    font-family: 'Syne',sans-serif;
+    color: var(--mv-text);
+  }
+  .mvw.hidden { display: none; }
+  .mvw-muted { color: var(--mv-muted); }
+  .mvw-tiny { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; }
+
+  .mvw-section-head { margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
+  .mvw-summary { font-family: 'Bebas Neue',sans-serif; font-size: 1.1rem; letter-spacing: 2px; color: var(--acc); }
+  .mvw-summary:empty { display: none; }
+
+  .mvw-selectors { margin-bottom: 2rem; display: flex; flex-direction: column; gap: .9rem; }
+  .mvw-sel-row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+  .mvw-sel-label { width: 100%; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: var(--mv-muted); }
+  .mvw-sel-btn { display: inline-flex; align-items: center; gap: .35rem; border-radius: .75rem; border: 1px solid var(--mv-border); background: var(--mv-surface); padding: .5rem .9rem; font-family: 'Bebas Neue',sans-serif; font-size: 1rem; letter-spacing: 1px; color: var(--mv-muted); cursor: pointer; transition: all .2s; }
+  .mvw-sel-btn:hover { border-color: var(--acc); color: var(--mv-text); }
+  .mvw-sel-btn.mvw-sel-active { border-color: var(--acc); background: color-mix(in oklch, var(--acc) 12%, Canvas); color: var(--acc); box-shadow: 0 0 16px color-mix(in oklch, var(--acc) 25%, transparent); }
+  .mvw-sel-today { font-size: .55rem; font-family: 'Syne',sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: .7; }
+
+  .mvw-grid { margin-bottom: 2.5rem; display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mvw-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .mvw-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .mvw-grid-list { grid-template-columns: 1fr; }
+  .mvw-grid.mvw-grid-hidden { display: none; }
+  @media (max-width: 640px) { .mvw-grid-4, .mvw-grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .mvw-card { overflow: hidden; border-radius: 1rem; border: 1px solid var(--mv-border); background: var(--mv-surface); transition: all .2s; }
+  .mvw-card:hover { transform: translateY(-4px); border-color: color-mix(in oklch, var(--acc) 40%, Canvas); }
+  .mvw-card-media { position: relative; aspect-ratio: 1; width: 100%; overflow: hidden; background: color-mix(in oklch, CanvasText 6%, Canvas); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .mvw-card-media img { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; }
+  .mvw-card-num-badge { position: absolute; left: .5rem; top: .5rem; display: flex; height: 1.75rem; width: 1.75rem; align-items: center; justify-content: center; border-radius: .375rem; border: 1px solid var(--mv-border); background: color-mix(in oklch, Canvas 60%, transparent); font-family: 'Bebas Neue',sans-serif; font-size: 1.2rem; color: var(--acc); }
+  .mvw-card-body { padding: 1rem; }
+  .mvw-card-name { margin-bottom: .6rem; min-height: 2.4em; font-size: .85rem; font-weight: 700; line-height: 1.35; color: var(--mv-text); }
+  .mvw-card-val { display: flex; align-items: center; gap: .5rem; font-family: 'Bebas Neue',sans-serif; font-size: 1.6rem; letter-spacing: 1px; color: var(--acc); }
+  .mvw-card-unit { align-self: flex-end; margin-bottom: -4px; font-family: 'Syne',sans-serif; font-size: .6rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--mv-muted); }
+  .mvw-card-note { margin-top: .25rem; font-size: .65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--mv-muted); }
+
+  .mvw-start-wrap { display: flex; flex-direction: column; align-items: center; }
+  .mvw-start { display: flex; width: 100%; max-width: 400px; align-items: center; justify-content: center; gap: 1rem; border: 0; border-radius: 1rem; background: var(--acc); color: var(--acc-contrast); padding: 1rem 3.5rem; font-family: 'Bebas Neue',sans-serif; font-size: 1.5rem; letter-spacing: 3px; cursor: pointer; box-shadow: 0 0 30px color-mix(in oklch, var(--acc) 25%, transparent); transition: all .2s; }
+  .mvw-start:hover:not(:disabled) { transform: scale(1.04); box-shadow: 0 0 50px color-mix(in oklch, var(--acc) 45%, transparent); }
+  .mvw-start:disabled { opacity: .5; cursor: wait; }
+  .mvw-start-icon { height: 22px; width: 22px; }
+
+  .mvw-history { margin-top: 2rem; border-radius: 1rem; border: 1px solid var(--mv-border); background: var(--mv-surface); padding: 1rem 1.25rem; }
+  .mvw-history:empty { display: none; }
+  .mvw-history-title { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: var(--mv-muted); margin-bottom: .5rem; }
+  .mvw-history-streak { color: var(--acc); }
+  .mvw-history-row { display: flex; align-items: baseline; gap: .6rem; padding: .3rem 0; font-size: .8rem; border-top: 1px solid var(--mv-border); }
+  .mvw-history-row:first-of-type { border-top: 0; }
+  .mvw-history-fecha { font-family: 'Bebas Neue',sans-serif; font-size: 1rem; letter-spacing: 1px; color: var(--acc); min-width: 3.5em; }
+  .mvw-history-sesiones { color: var(--mv-muted); }
+
+  /* ── Overlay ── */
+  .mvw-overlay { position: fixed; inset: 0; z-index: 200; display: none; flex-direction: column; overflow: hidden; background: Canvas; }
+  .mvw-overlay.mvw-open { display: flex; }
+  .mvw-progress { position: relative; z-index: 10; height: 4px; width: 100%; background: var(--mv-border); }
+  .mvw-progress-fill { height: 100%; width: 0%; background: var(--acc); transition: width .5s; }
+  .mvw-ov-head { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--mv-border); padding: 1.25rem 2rem; }
+  @media (max-width: 640px) { .mvw-ov-head { padding: .75rem 1rem; } }
+  .mvw-ov-head-left { display: flex; flex-wrap: wrap; align-items: center; gap: 2rem; }
+  .mvw-ov-stat { display: flex; flex-direction: column; gap: 2px; }
+  .mvw-ov-stat-value { font-family: 'Bebas Neue',sans-serif; font-size: 1.4rem; letter-spacing: 1px; color: var(--mv-text); }
+  .mvw-ov-dots-wrap { display: flex; flex-direction: column; gap: .375rem; }
+  .mvw-dots { display: flex; align-items: center; gap: .375rem; }
+  .mvw-dot { height: 8px; width: 8px; border-radius: 9999px; border: 1px solid var(--mv-border); background: var(--mv-border); transition: all .3s; }
+  .mvw-dot.mvw-dot-done { background: color-mix(in oklch, var(--acc) 45%, Canvas); border-color: transparent; }
+  .mvw-dot.mvw-dot-current { background: var(--acc); box-shadow: 0 0 8px color-mix(in oklch, var(--acc) 55%, transparent); }
+  .mvw-exdots { display: flex; align-items: center; gap: .375rem; }
+  .mvw-exdot { height: 4px; width: 28px; border-radius: 2px; background: var(--mv-border); transition: background .3s; }
+  .mvw-exdot.mvw-dot-done { background: color-mix(in oklch, var(--acc) 45%, Canvas); }
+  .mvw-exdot.mvw-dot-current { background: var(--acc); }
+  .mvw-ov-head-right { display: flex; gap: .5rem; }
+  .mvw-icon-btn { display: flex; height: 40px; width: 40px; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid var(--mv-border); background: var(--mv-surface); font-size: 1.1rem; color: var(--mv-muted); cursor: pointer; transition: all .2s; }
+  .mvw-icon-btn:hover { border-color: var(--mv-text); color: var(--mv-text); }
+  @media (max-width: 640px) { .mvw-icon-btn { height: 32px; width: 32px; font-size: 1rem; } }
+
+  .mvw-ov-content { position: relative; z-index: 10; display: flex; flex: 1; width: 100%; align-items: center; justify-content: center; gap: 3rem; padding: 1.5rem 2rem; overflow-y: auto; }
+  @media (max-width: 640px) { .mvw-ov-content { flex-direction: column; justify-content: flex-start; gap: 1rem; padding: 1rem; } }
+  .mvw-ref-col { display: flex; flex-direction: column; align-items: center; gap: 1rem; flex: 0 0 280px; }
+  @media (max-width: 640px) { .mvw-ref-col { flex-basis: auto; } }
+  .mvw-ref-frame { position: relative; display: flex; height: 260px; width: 260px; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; overflow: hidden; border-radius: 20px; border: 2px solid color-mix(in oklch, var(--acc) 25%, Canvas); background: color-mix(in oklch, CanvasText 6%, Canvas); transition: border-color .3s; }
+  @media (max-width: 640px) { .mvw-ref-frame { height: 200px; width: 200px; } }
+  .mvw-ref-frame img { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; }
+  .mvw-ref-frame img.hidden { display: none; }
+  .mvw-ex-number { font-family: 'Bebas Neue',sans-serif; font-size: 6rem; line-height: 1; color: color-mix(in oklch, var(--acc) 20%, Canvas); }
+  .mvw-ex-number.hidden { display: none; }
+  .mvw-ref-link { position: absolute; bottom: 1rem; display: flex; align-items: center; gap: .5rem; border-radius: .5rem; border: 1px solid color-mix(in oklch, var(--acc) 30%, Canvas); background: color-mix(in oklch, var(--acc) 12%, Canvas); padding: .5rem .75rem; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--acc); }
+  .mvw-ref-link.hidden { display: none; }
+  .mvw-rest-icon { font-size: 4rem; }
+  .mvw-rest-icon.hidden { display: none; }
+  .mvw-phase-label { font-family: 'Bebas Neue',sans-serif; font-size: 1.6rem; letter-spacing: 4px; color: var(--acc); }
+  .mvw-phase-label.hidden { display: none; }
+  .mvw-nav-btn { width: 100%; max-width: 260px; border-radius: 10px; border: 1px solid var(--mv-border); background: var(--mv-surface); padding: .5rem; font-family: 'Bebas Neue',sans-serif; font-size: .9rem; letter-spacing: 2px; color: var(--mv-muted); cursor: pointer; transition: all .2s; }
+  .mvw-nav-btn:hover:not(:disabled) { border-color: var(--mv-text); color: var(--mv-text); }
+  .mvw-nav-btn:disabled { opacity: .3; cursor: default; }
+
+  .mvw-info-col { display: flex; width: 100%; max-width: 400px; flex: 1; flex-direction: column; gap: 1.25rem; }
+  .mvw-chip { display: inline-flex; width: fit-content; align-items: center; gap: .375rem; border-radius: .375rem; border: 1px solid color-mix(in oklch, var(--acc) 30%, Canvas); background: color-mix(in oklch, var(--acc) 12%, Canvas); padding: .375rem .75rem; font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: var(--acc); }
+  .mvw-chip.mvw-chip-rest { border-color: color-mix(in oklch, var(--mv-rest) 30%, Canvas); background: color-mix(in oklch, var(--mv-rest) 12%, Canvas); color: var(--mv-rest); }
+  .mvw-name-col { display: flex; flex-direction: column; gap: 2px; }
+  .mvw-exname { font-family: 'Bebas Neue',sans-serif; font-size: clamp(2rem, 4vw, 3rem); line-height: 1; letter-spacing: 1px; color: var(--mv-text); }
+  .mvw-exnote { font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--mv-muted); }
+  .mvw-reps-display { display: flex; align-items: baseline; gap: .625rem; }
+  .mvw-reps-display.hidden { display: none; }
+  .mvw-reps-val { font-family: 'Bebas Neue',sans-serif; font-size: 5rem; line-height: 1; color: var(--acc); }
+  .mvw-reps-val.mvw-rest-val { color: var(--mv-rest); }
+  .mvw-reps-unit { align-self: flex-end; margin-bottom: .5rem; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; }
+  .mvw-timer-display { display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .mvw-timer-display.hidden { display: none; }
+  .mvw-timer-arc { transition: stroke-dashoffset .3s linear; }
+  .mvw-timer-label { font-family: 'Bebas Neue',sans-serif; font-size: 1rem; letter-spacing: 2px; }
+  .mvw-cue { border-radius: .75rem; border: 1px solid var(--mv-border); background: var(--mv-surface); padding: .75rem 1rem; font-size: .78rem; font-weight: 500; line-height: 1.6; color: var(--mv-muted); min-height: 3.2em; }
+  .mvw-action { width: 100%; border: 0; border-radius: 14px; background: var(--acc); color: var(--acc-contrast); padding: .875rem 2.5rem; font-family: 'Bebas Neue',sans-serif; font-size: 1.4rem; letter-spacing: 2px; cursor: pointer; box-shadow: 0 0 20px color-mix(in oklch, var(--acc) 25%, transparent); transition: all .2s; }
+  .mvw-action:hover { transform: scale(1.02); box-shadow: 0 0 40px color-mix(in oklch, var(--acc) 45%, transparent); }
+  .mvw-action.mvw-action-rest { background: var(--mv-rest); color: light-dark(#fff, #0f0f14); }
+
+  .mvw-done { position: relative; z-index: 10; display: none; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 1.25rem; padding: 2rem; text-align: center; }
+  .mvw-done.mvw-open-flex { display: flex; }
+  .mvw-done-emoji { font-size: 5rem; }
+  .mvw-done-title { font-family: 'Bebas Neue',sans-serif; font-size: 4rem; letter-spacing: 2px; color: var(--acc); }
+  .mvw-done-sub { max-width: 400px; font-size: .9rem; font-weight: 500; line-height: 1.6; color: var(--mv-muted); }
+  .mvw-nota { width: 100%; max-width: 360px; border-radius: .75rem; border: 1px solid var(--mv-border); background: var(--mv-surface); padding: .6rem .9rem; font-family: 'Syne',sans-serif; font-size: .85rem; color: var(--mv-text); }
+  .mvw-nota:focus { outline: 1px solid var(--acc); }
+  .mvw-done-actions { display: flex; gap: .6rem; flex-wrap: wrap; justify-content: center; }
+  .mvw-done-btn { border: 0; border-radius: 14px; background: var(--acc); color: var(--acc-contrast); padding: .875rem 2rem; font-family: 'Bebas Neue',sans-serif; font-size: 1.3rem; letter-spacing: 2px; cursor: pointer; transition: all .2s; }
+  .mvw-done-btn:hover:not(:disabled) { transform: scale(1.02); }
+  .mvw-done-btn:disabled { opacity: .5; cursor: default; }
+  .mvw-done-skip { border: 0; border-radius: 14px; background: transparent; color: var(--mv-muted); padding: .875rem 1rem; font-family: 'Bebas Neue',sans-serif; font-size: 1rem; letter-spacing: 2px; cursor: pointer; }
+  .mvw-done-skip:hover { color: var(--mv-text); }
+  .mvw-save-status { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; min-height: 1em; }
+
+  .mvw-countdown { position: absolute; inset: 0; z-index: 10; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; background: Canvas; }
+  .mvw-countdown.mvw-open-flex { display: flex; }
+  .mvw-cd-number { font-family: 'Bebas Neue',sans-serif; font-size: 12rem; line-height: 1; color: var(--acc); animation: mvwPulseCount 1s ease-out; }
+  .mvw-cd-label { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 6px; }
+  @keyframes mvwPulseCount { from { transform: scale(1.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+</style>
+
+<script define:vars={{ p, modalidad, gifBase }}>
+(function () {
+  const $ = (sel) => document.querySelector(`#${p}-engine ${sel.startsWith('[') ? sel : `[data-role="${sel}"]`}`);
+
+  // ── Estado ──
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  let selKey = null, selSemana = 0, opcion = null, semana = null;
+  let st = null, tickInterval = null, paused = false;
+  let gifMap = {}, gifsCargados = false;
+
+  // ── Auto-selección ──
+  const opciones = modalidad.programas[0].opciones;
+  const hoy = new Date();
+  const hoyISO = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
+  const hoyOp = opciones.find((o) => o.fecha === hoyISO);
+  const defaultOp = opciones.find((o) => o.key === lsGet(`mvw-ultimo-${p}`)) || hoyOp
+    || (p === 'pausas' ? opciones.find((o) => o.key === '11')
+      : p === 'movilidad' ? opciones.find((o) => o.key === 'night')
+      : opciones[0]);
+  selKey = defaultOp?.key;
+
+  // ── Helpers ──
+  function clearTimer() { if (tickInterval) { clearInterval(tickInterval); tickInterval = null; } }
+  function beep() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      [[0, 880], [0.18, 1100], [0.36, 1320]].forEach(([w, f]) => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination); o.type = 'sine'; o.frequency.value = f;
+        g.gain.setValueAtTime(0.4, ctx.currentTime + w); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + w + 0.15);
+        o.start(ctx.currentTime + w); o.stop(ctx.currentTime + w + 0.15);
+      });
+    } catch (e) {}
+  }
+  function guardarUltima() { lsSet(`mvw-ultimo-${p}`, selKey); }
+  function valorEjercicio(i) {
+    if (opcion.config.modo === 'fases') return opcion.config.reps ?? 0;
+    if (semana) return semana.values[i];
+    return opcion.config.reps ?? opcion.ejercicios[i]?.reps ?? 0;
+  }
+
+  // ── Render selectores ──
+  function renderSelectors() {
+    const wrap = $('[data-role="selectors"]');
+    wrap.innerHTML = '';
+    modalidad.programas.forEach((prog) => {
+      if (prog.opciones.length <= 1) return;
+      const row = document.createElement('div');
+      row.className = 'mvw-sel-row';
+      if (prog.opciones.length > 2 || prog.opciones[0]?.fecha) {
+        const lbl = document.createElement('span');
+        lbl.className = 'mvw-sel-label';
+        lbl.textContent = prog.label;
+        row.appendChild(lbl);
+      }
+      prog.opciones.forEach((op) => {
+        const b = document.createElement('button');
+        b.className = 'mvw-sel-btn' + (op.key === selKey ? ' mvw-sel-active' : '');
+        b.innerHTML = `${op.emoji ? op.emoji + ' ' : ''}${op.label}${op.fecha === hoyISO ? ' <span class="mvw-sel-today">· hoy</span>' : ''}`;
+        b.onclick = () => { selKey = op.key; guardarUltima(); renderSelectors(); renderPlan(); };
+        row.appendChild(b);
+      });
+      wrap.appendChild(row);
+    });
+  }
+
+  function opcionActual() { return modalidad.programas[0].opciones.find((o) => o.key === selKey) || opciones[0]; }
+  function semanaActualDe(op) { return op.config.semanas ? op.config.semanas[Math.min(selSemana, op.config.semanas.length - 1)] : null; }
+
+  // ── Render plan (resumen + cards) ──
+  function renderPlan() {
+    opcion = opcionActual();
+    semana = semanaActualDe(opcion);
+    const cfg = opcion.config;
+    const series = semana ? semana.series : cfg.series;
+
+    const parts = [`${series} ${cfg.modo === 'fases' ? 'SERIES' : 'VUELTAS'}`];
+    if (cfg.modo === 'fases') {
+      parts.push(`${cfg.reps ?? '∞'} REPS`);
+      if (cfg.pesoKg) parts.push(`${cfg.pesoKg} KG`);
+    } else {
+      parts.push(`${opcion.ejercicios.length} EJERCICIOS`);
+    }
+    if (cfg.restSegundos) parts.push(`PAUSA ${cfg.restSegundos}S`);
+    $('[data-role="summary"]').textContent = parts.join(' · ');
+
+    const grid = $('[data-role="grid"]');
+    grid.classList.toggle('mvw-grid-hidden', cfg.modo === 'fases');
+    if (cfg.modo !== 'fases') renderGrid();
+  }
+
+  function renderGrid() {
+    const grid = $('[data-role="grid"]');
+    grid.innerHTML = '';
+    const cfg = opcion.config;
+    opcion.ejercicios.forEach((ex, i) => {
+      const val = valorEjercicio(i);
+      const unit = ex.type === 'time' ? 'SEG' : 'REPS';
+      const card = document.createElement('div');
+      card.className = 'mvw-card';
+      const media = ex.gif
+        ? `<img src="${gifBase}${ex.gif}" alt="${ex.name}" loading="lazy">`
+        : '';
+      card.innerHTML = `
+        <div class="mvw-card-media">${media}<div class="mvw-card-num-badge">${i + 1}</div></div>
+        <div class="mvw-card-body">
+          <div class="mvw-card-name">${ex.name}</div>
+          <div class="mvw-card-val"><span>${val || '∞'}</span><span class="mvw-card-unit">${unit}</span></div>
+          ${ex.note ? `<div class="mvw-card-note">↳ ${ex.note}</div>` : ''}
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  // ── Preload de GIFs ──
+  function cargarGifs() {
+    if (gifsCargados || !gifBase) { gifsCargados = true; return; }
+    const gifs = [...new Set(modalidad.programas[0].opciones.flatMap((o) => o.ejercicios.map((e) => e.gif).filter(Boolean)))];
+    if (!gifs.length) { gifsCargados = true; return; }
+    const startBtn = $('[data-role="start-btn"]');
+    const original = startBtn.innerHTML;
+    startBtn.disabled = true;
+    Promise.all(gifs.map((g) =>
+      fetch(`${gifBase}${g}`).then((r) => r.blob()).then((blob) => {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(blob); img.alt = g;
+        $('[data-role="ref-frame"]').appendChild(img);
+        gifMap[g] = img;
+      }).catch(() => {})
+    )).then(() => { startBtn.innerHTML = original; startBtn.disabled = false; gifsCargados = true; });
+  }
+  function showGif(g) {
+    Object.values(gifMap).forEach((img) => img.classList.add('hidden'));
+    $('[data-role="rest-icon"]').classList.add('hidden');
+    if (g && gifMap[g]) gifMap[g].classList.remove('hidden');
+  }
+  function hideGif() {
+    Object.values(gifMap).forEach((img) => img.classList.add('hidden'));
+    $('[data-role="rest-icon"]').classList.remove('hidden');
+  }
+
+  // ── Overlay ──
+  const overlay = $('[data-role="overlay"]');
+  function openOverlay() {
+    overlay.classList.add('mvw-open');
+    $('[data-role="ov-content"]').style.display = 'flex';
+    $('[data-role="done-screen"]').classList.remove('mvw-open-flex');
+    $('[data-role="countdown-screen"]').classList.remove('mvw-open-flex');
+  }
+  function closeOverlay() {
+    clearTimer(); paused = false;
+    $('[data-role="pause-btn"]').textContent = '⏸';
+    overlay.classList.remove('mvw-open');
+    $('[data-role="done-screen"]').classList.remove('mvw-open-flex');
+    $('[data-role="countdown-screen"]').classList.remove('mvw-open-flex');
+    $('[data-role="progress-fill"]').style.width = '0%';
+    hideGif(); $('[data-role="rest-icon"]').classList.add('hidden');
+    st = null;
+  }
+
+  function countdown(cb) {
+    const cd = $('[data-role="countdown-screen"]');
+    cd.classList.add('mvw-open-flex');
+    const num = $('[data-role="cd-number"]');
+    let n = 3; num.textContent = n;
+    num.style.animation = 'none'; void num.offsetWidth; num.style.animation = 'mvwPulseCount 1s ease-out';
+    const iv = setInterval(() => {
+      n--;
+      if (n <= 0) { clearInterval(iv); cd.classList.remove('mvw-open-flex'); cb(); }
+      else { num.textContent = n; num.style.animation = 'none'; void num.offsetWidth; num.style.animation = 'mvwPulseCount 1s ease-out'; }
+    }, 1000);
+  }
+
+  function updateDots() {
+    const series = semana ? semana.series : st.config.series;
+    const sd = $('[data-role="series-dots"]');
+    sd.innerHTML = '';
+    for (let i = 0; i < series; i++) {
+      const d = document.createElement('div');
+      d.className = 'mvw-dot' + (i < st.set ? ' mvw-dot-done' : i === st.set ? ' mvw-dot-current' : '');
+      sd.appendChild(d);
+    }
+    const ed = $('[data-role="ex-dots"]');
+    ed.innerHTML = '';
+    for (let i = 0; i < opcion.ejercicios.length; i++) {
+      const d = document.createElement('div');
+      const done = st.modo === 'fases' ? true : i < st.ex;
+      d.className = 'mvw-exdot' + (done || st.fase !== 'ejercicio' ? ' mvw-dot-done' : i === st.ex ? ' mvw-dot-current' : '');
+      ed.appendChild(d);
+    }
+    $('[data-role="ov-serie"]').textContent = `${st.set + 1} / ${series}`;
+    $('[data-role="progress-fill"]').style.width =
+      ((st.set * opcion.ejercicios.length + (st.modo === 'fases' ? 0 : st.ex)) / (series * opcion.ejercicios.length) * 100) + '%';
+  }
+
+  function instruccionesPara(ex, restantes) {
+    if (!ex.instrucciones) return ex.cue || '';
+    const ins = ex.instrucciones.find((x) => x.hasta === undefined || restantes <= x.hasta);
+    return ins ? ins.texto : (ex.cue || '');
+  }
+
+  function mostrarRepsStatico(val, unit) {
+    $('[data-role="timer-display"]').classList.add('hidden');
+    const rd = $('[data-role="reps-display"]');
+    rd.classList.remove('hidden');
+    $('[data-role="ov-reps-val"]').classList.remove('mvw-rest-val');
+    $('[data-role="ov-reps-val"]').textContent = val;
+    $('[data-role="ov-reps-unit"]').textContent = unit;
+  }
+
+  // ── Modo CIRCUITO ──
+  function pasoEjercicio() {
+    clearTimer();
+    const ex = opcion.ejercicios[st.ex];
+    st.fase = 'ejercicio';
+    $('[data-role="ov-chip"]').className = 'mvw-chip';
+    $('[data-role="ov-chip"]').textContent = `Ejercicio ${st.ex + 1} de ${opcion.ejercicios.length}`;
+    $('[data-role="ov-exname"]').textContent = ex.name;
+    $('[data-role="ov-exnote"]').textContent = ex.note ? `↳ ${ex.note}` : '';
+    ex.gif ? showGif(ex.gif) : hideGif();
+    $('[data-role="ex-number"]').classList.toggle('hidden', !!ex.gif);
+    $('[data-role="ex-number"]').textContent = st.ex + 1;
+    $('[data-role="ref-link"]').classList.toggle('hidden', !ex.url);
+    if (ex.url) $('[data-role="ref-link"]').href = ex.url;
+    $('[data-role="phase-label"]').classList.add('hidden');
+    $('[data-role="cue-box"]').textContent = ex.cue || '';
+    $('[data-role="prev-btn"]').disabled = st.set === 0 && st.ex === 0;
+    updateDots();
+
+    const val = valorEjercicio(st.ex);
+    const btn = $('[data-role="action-btn"]');
+    btn.className = 'mvw-action';
+    if (ex.type === 'time') {
+      mostrarRepsStatico(val, 'SEGUNDOS');
+      iniciarTimerEjercicio(ex, val);
+    } else {
+      mostrarRepsStatico(val, 'REPETICIONES');
+      btn.textContent = '✓ LISTO';
+      btn.onclick = () => { beep(); avanzarCircuito(); };
+    }
+  }
+
+  function iniciarTimerEjercicio(ex, segundos) {
+    $('[data-role="reps-display"]').classList.add('hidden');
+    const td = $('[data-role="timer-display"]');
+    td.classList.remove('hidden');
+    $('[data-role="timer-label"]').textContent = 'SEGUNDOS';
+    const arc = $('[data-role="timer-arc"]');
+    const C = 326.7;
+    let remaining = segundos;
+    const setText = $('[data-role="timer-text"]');
+    const cueBox = $('[data-role="cue-box"]');
+    let last = Date.now();
+    const render = () => {
+      setText.textContent = Math.max(0, Math.ceil(remaining));
+      arc.style.strokeDashoffset = C * (1 - Math.max(0, remaining) / segundos);
+      cueBox.textContent = instruccionesPara(ex, remaining);
+    };
+    render();
+    tickInterval = setInterval(() => {
+      if (paused) { last = Date.now(); return; }
+      const now = Date.now();
+      remaining -= (now - last) / 1000; last = now;
+      if (remaining <= 0) { clearTimer(); render(); beep(); avanzarCircuito(); }
+      else render();
+    }, 100);
+    const btn = $('[data-role="action-btn"]');
+    btn.textContent = '⏭ SALTAR';
+    btn.onclick = () => { clearTimer(); avanzarCircuito(); };
+  }
+
+  function descansoCircuito() {
+    clearTimer();
+    st.fase = 'descanso';
+    hideGif();
+    $('[data-role="ov-chip"]').className = 'mvw-chip mvw-chip-rest';
+    $('[data-role="ov-chip"]').textContent = `⏸ Vuelta ${st.set + 1} completada`;
+    $('[data-role="ov-exname"]').textContent = `A continuación: vuelta ${st.set + 2}`;
+    $('[data-role="ov-exnote"]').textContent = `Desde: ${opcion.ejercicios[0].name}`;
+    $('[data-role="cue-box"]').textContent = 'Respirá profundo. Tomá el descanso que necesitás.';
+    updateDots();
+    mostrarRepsStatico(st.config.restSegundos, 'SEGUNDOS');
+    $('[data-role="ov-reps-val"]').classList.add('mvw-rest-val');
+    const btn = $('[data-role="action-btn"]');
+    btn.textContent = '⏭ SALTAR DESCANSO';
+    btn.className = 'mvw-action mvw-action-rest';
+    let remaining = st.config.restSegundos;
+    let last = Date.now();
+    tickInterval = setInterval(() => {
+      if (paused) { last = Date.now(); return; }
+      const now = Date.now();
+      remaining -= (now - last) / 1000; last = now;
+      $('[data-role="ov-reps-val"]').textContent = Math.max(0, Math.ceil(remaining));
+      if (remaining <= 0) { clearTimer(); beep(); st.set++; st.ex = 0; pasoEjercicio(); }
+    }, 100);
+    btn.onclick = () => { clearTimer(); st.set++; st.ex = 0; pasoEjercicio(); };
+  }
+
+  function avanzarCircuito() {
+    const series = semana ? semana.series : st.config.series;
+    const isLastEx = st.ex >= opcion.ejercicios.length - 1;
+    const isLastRound = st.set >= series - 1;
+    if (isLastEx && isLastRound) {
+      $('[data-role="progress-fill"]').style.width = '100%';
+      terminar();
+    } else if (isLastEx) {
+      descansoCircuito();
+    } else {
+      st.ex++; pasoEjercicio();
+    }
+  }
+
+  function anteriorCircuito() {
+    clearTimer();
+    if (st.ex > 0) { st.ex--; pasoEjercicio(); }
+    else if (st.set > 0) { st.set--; st.ex = opcion.ejercicios.length - 1; pasoEjercicio(); }
+  }
+
+  // ── Modo FASES (thruster/remo) ──
+  const FASE_COLORES = {
+    prepare: 'light-dark(#2563eb, #93c5fd)',
+    down: 'light-dark(#dc2626, #f87171)',
+    hold: 'light-dark(#b45309, #facc15)',
+    up: 'light-dark(#16a34a, #4ade80)',
+    trans: 'light-dark(#7c3aed, #a78bfa)',
+  };
+
+  function repObjetivo() {
+    const series = semana ? semana.series : st.config.series;
+    const esUltima = st.set >= series - 1;
+    if (esUltima && st.config.ultimaSerieInfinita) return Infinity;
+    return valorEjercicio(0);
+  }
+
+  function pasoFase(idx) {
+    clearTimer();
+    const fases = st.config.fases;
+    const fase = fases[idx];
+    st.faseIdx = idx;
+    const ex = opcion.ejercicios[0];
+    st.fase = 'ejercicio';
+    hideGif();
+    $('[data-role="ex-number"]').classList.add('hidden');
+    const pl = $('[data-role="phase-label"]');
+    pl.classList.remove('hidden');
+    pl.textContent = fase.label;
+    pl.style.color = FASE_COLORES[fase.key] || 'var(--acc)';
+
+    $('[data-role="ov-chip"]').className = 'mvw-chip';
+    const objetivo = repObjetivo();
+    $('[data-role="ov-chip"]').textContent = isFinite(objetivo)
+      ? `Serie ${st.set + 1} · Rep ${st.rep + 1} de ${objetivo}`
+      : `Serie ${st.set + 1} · libre`;
+    $('[data-role="ov-exname"]').textContent = ex.name;
+    $('[data-role="ov-exnote"]').textContent = ex.note ? `↳ ${ex.note}` : '';
+    $('[data-role="ref-link"]').classList.toggle('hidden', !ex.url);
+    if (ex.url) $('[data-role="ref-link"]').href = ex.url;
+    $('[data-role="cue-box"]').textContent = fase.label === 'PREPARATE' ? 'Armate en la posición inicial. Respirá.' : '';
+    $('[data-role="prev-btn"]').disabled = st.set === 0 && st.rep === 0 && idx === 0;
+    updateDots();
+
+    // display grande: cuenta regresiva de la fase; la unidad muestra la fase
+    $('[data-role="timer-display"]').classList.add('hidden');
+    $('[data-role="reps-display"]').classList.remove('hidden');
+    const rd = $('[data-role="ov-reps-val"]');
+    rd.classList.remove('mvw-rest-val');
+    $('[data-role="ov-reps-unit"]').textContent = fase.label;
+    let remaining = fase.segundos;
+    let last = Date.now();
+    rd.textContent = Math.ceil(remaining);
+    tickInterval = setInterval(() => {
+      if (paused) { last = Date.now(); return; }
+      const now = Date.now();
+      remaining -= (now - last) / 1000; last = now;
+      if (remaining <= 0) { clearTimer(); avanzarFase(); }
+      else rd.textContent = Math.ceil(remaining);
+    }, 100);
+
+    const btn = $('[data-role="action-btn"]');
+    btn.textContent = '⏭ SALTEAR FASE';
+    btn.className = 'mvw-action';
+    btn.onclick = () => { clearTimer(); avanzarFase(); };
+  }
+
+  function avanzarFase() {
+    const fases = st.config.fases;
+    if (st.faseIdx < fases.length - 1) { pasoFase(st.faseIdx + 1); return; }
+    st.rep++;
+    const objetivo = repObjetivo();
+    if (st.rep >= objetivo) { descansoSerie(); return; }
+    pasoFase(0);
+  }
+
+  function descansoSerie() {
+    clearTimer();
+    st.fase = 'descanso';
+    hideGif();
+    $('[data-role="phase-label"]').classList.add('hidden');
+    const series = semana ? semana.series : st.config.series;
+    const esUltima = st.set >= series - 1;
+    if (esUltima) { $('[data-role="progress-fill"]').style.width = '100%'; terminar(); return; }
+    $('[data-role="ov-chip"]').className = 'mvw-chip mvw-chip-rest';
+    $('[data-role="ov-chip"]').textContent = `⏸ Serie ${st.set + 1} completada`;
+    $('[data-role="ov-exname"]').textContent = `A continuación: serie ${st.set + 2}`;
+    $('[data-role="ov-exnote"]').textContent = '';
+    $('[data-role="cue-box"]').textContent = 'Respirá profundo. Aflojá agarre y soltá hombros.';
+    updateDots();
+    mostrarRepsStatico(st.config.restSegundos, 'SEGUNDOS');
+    $('[data-role="ov-reps-val"]').classList.add('mvw-rest-val');
+    const btn = $('[data-role="action-btn"]');
+    btn.textContent = '⏭ SALTAR DESCANSO';
+    btn.className = 'mvw-action mvw-action-rest';
+    let remaining = st.config.restSegundos;
+    let last = Date.now();
+    tickInterval = setInterval(() => {
+      if (paused) { last = Date.now(); return; }
+      const now = Date.now();
+      remaining -= (now - last) / 1000; last = now;
+      $('[data-role="ov-reps-val"]').textContent = Math.max(0, Math.ceil(remaining));
+      if (remaining <= 0) { clearTimer(); beep(); st.set++; st.rep = 0; pasoFase(0); }
+    }, 100);
+    btn.onclick = () => { clearTimer(); st.set++; st.rep = 0; pasoFase(0); };
+  }
+
+  function anteriorFases() {
+    clearTimer();
+    if (st.faseIdx > 0) { st.faseIdx--; pasoFase(st.faseIdx); return; }
+    if (st.rep > 0) { st.rep--; pasoFase(st.config.fases.length - 1); return; }
+    if (st.set > 0) { st.set--; st.rep = Math.max(0, repObjetivo() - 1); pasoFase(st.config.fases.length - 1); }
+  }
+
+  // ── Fin ──
+  function terminar() {
+    clearTimer();
+    $('[data-role="ov-content"]').style.display = 'none';
+    const done = $('[data-role="done-screen"]');
+    done.classList.add('mvw-open-flex');
+    $('[data-role="done-emoji"]').textContent = opcion.emoji || modalidad.icono;
+    const series = semana ? semana.series : st.config.series;
+    $('[data-role="done-sub"]').textContent =
+      `${series} ${st.config.modo === 'fases' ? 'series' : 'vueltas'} · ${opcion.ejercicios.length * series} ejercicios. ${st.config.doneMsg || ''}`;
+    $('[data-role="save-status"]').textContent = '';
+    $('[data-role="nota-input"]').value = '';
+    $('[data-role="guardar-btn"]').disabled = false;
+    st.guardada = false;
+  }
+
+  function guardarSesion(cb) {
+    if (!st || st.guardada) { cb && cb(); return; }
+    st.guardada = true;
+    const series = semana ? semana.series : st.config.series;
+    $('[data-role="guardar-btn"]').disabled = true;
+    window.dispatchEvent(new CustomEvent('movimiento:guardar', {
+      detail: {
+        modalidad: p, selector: selKey,
+        nombre: `${opcion.label}${semana ? ' · ' + semana.label : ''}`,
+        nota: ($('[data-role="nota-input"]')?.value || '').trim(),
+        detalle: { series, ejercicios: opcion.ejercicios.length },
+        cb: (msg) => {
+          $('[data-role="save-status"]').textContent = msg;
+          cb && cb();
+        },
+      },
+    }));
+  }
+
+  // ── Historial ──
+  function renderHistorial(sesiones) {
+    const box = $('[data-role="history"]');
+    const propias = (sesiones || []).filter((s) => s.modalidad === p);
+    if (!propias.length) { box.innerHTML = ''; return; }
+    const dias = [...new Set(propias.map((s) => s.fecha))].sort().reverse();
+    let racha = 0;
+    const d = new Date();
+    for (;;) {
+      const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      if (dias.includes(iso)) { racha++; d.setDate(d.getDate() - 1); }
+      else break;
+    }
+    const MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    const filas = dias.slice(0, 6).map((f) => {
+      const del = propias.filter((s) => s.fecha === f);
+      const counts = {};
+      del.forEach((s) => { counts[s.nombre] = (counts[s.nombre] || 0) + 1; });
+      const txt = Object.entries(counts)
+        .map(([n, c]) => `${n}${c > 1 ? ' ×' + c : ''}`)
+        .join(' · ');
+      const [, m, dia] = f.split('-');
+      return `<div class="mvw-history-row"><span class="mvw-history-fecha">${dia} ${MESES[Number(m) - 1]}</span><span class="mvw-history-sesiones">${txt}</span></div>`;
+    }).join('');
+    box.innerHTML = `
+      <div class="mvw-history-title">Historial · <span class="mvw-history-streak">🔥 ${racha} día${racha === 1 ? '' : 's'} seguidos</span></div>
+      ${filas}`;
+  }
+  window.addEventListener('movimiento:historial', (e) => renderHistorial(e.detail));
+
+  // ── Eventos ──
+  $('[data-role="start-btn"]').addEventListener('click', () => {
+    opcion = opcionActual();
+    semana = semanaActualDe(opcion);
+    cargarGifs();
+    const cfg = opcion.config;
+    st = {
+      modo: cfg.modo, config: cfg, set: 0, ex: 0, rep: 0, faseIdx: 0, fase: 'ejercicio',
+      seriesTotal: semana ? semana.series : cfg.series, guardada: false, iniciado: Date.now(),
+    };
+    openOverlay();
+    countdown(() => { if (st) { if (cfg.modo === 'fases') pasoFase(0); else pasoEjercicio(); } });
+  });
+  $('[data-role="close-btn"]').addEventListener('click', closeOverlay);
+  $('[data-role="done-close-btn"]').addEventListener('click', () => {
+    if (st && !st.guardada) guardarSesion(closeOverlay); else closeOverlay();
+  });
+  $('[data-role="guardar-btn"]').addEventListener('click', () => guardarSesion());
+  $('[data-role="pause-btn"]').addEventListener('click', () => {
+    paused = !paused;
+    $('[data-role="pause-btn"]').textContent = paused ? '▶' : '⏸';
+  });
+  $('[data-role="prev-btn"]').addEventListener('click', () => {
+    if (!st) return;
+    if (st.modo === 'fases') anteriorFases(); else anteriorCircuito();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!overlay.classList.contains('mvw-open')) return;
+    if (e.code === 'Space') { e.preventDefault(); $('[data-role="pause-btn"]').click(); }
+    if (e.code === 'ArrowRight') $('[data-role="action-btn"]').click();
+  });
+
+  renderSelectors();
+  renderPlan();
+  window.addEventListener('movimiento:activar-' + p, cargarGifs);
+})();
+</script>
