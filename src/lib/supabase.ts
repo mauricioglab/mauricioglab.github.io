@@ -335,32 +335,16 @@ export const supabase = {
   SESSION_DURATION_MS: 2 * 60 * 60 * 1000,
 };
 
-export const SESSION_DURATION_MS = 2 * 60 * 60 * 1000; // 2 horas
-const SESSION_START_KEY = 'spa_session_start';
-export const DEFAULT_USER_EMAIL = 'cervantes@mauricioglab.local';
-
-export function markSessionStart() {
-  try {
-    localStorage.setItem(SESSION_START_KEY, String(Date.now()));
-  } catch (e) {
-    console.warn('No se pudo guardar inicio de sesión:', e);
-  }
-}
-
-export function clearSessionStart() {
-  try {
-    localStorage.removeItem(SESSION_START_KEY);
-  } catch (e) { /* ignore */ }
-}
-
-export function sessionExpired() {
-  try {
-    const start = Number(localStorage.getItem(SESSION_START_KEY) || 0);
-    return start > 0 && Date.now() - start >= SESSION_DURATION_MS;
-  } catch (e) {
-    return false;
-  }
-}
+export {
+  SESSION_DURATION_MS,
+  DEFAULT_USER_EMAIL,
+  markSessionStart,
+  clearSessionStart,
+  sessionExpired,
+  scheduleSessionEnd,
+  resolveLoginUser,
+} from './session';
+import { sessionExpired, clearSessionStart } from './session';
 
 export async function enforceSessionExpiry() {
   if (sessionExpired()) {
@@ -369,17 +353,4 @@ export async function enforceSessionExpiry() {
     return true;
   }
   return false;
-}
-
-export function scheduleSessionEnd(callback) {
-  const start = Number(localStorage.getItem(SESSION_START_KEY) || 0);
-  const remaining = start > 0 ? Math.max(0, SESSION_DURATION_MS - (Date.now() - start)) : SESSION_DURATION_MS;
-  return setTimeout(callback, remaining);
-}
-
-export function resolveLoginUser(input) {
-  const v = (input || '').trim();
-  if (v.includes('@')) return v;
-  if (v.toLowerCase() === 'cervantes') return DEFAULT_USER_EMAIL;
-  return v;
 }

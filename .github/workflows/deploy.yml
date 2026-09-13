@@ -23,6 +23,8 @@ jobs:
         uses: withastro/action@v5
         env:
           PUBLIC_POCKETBASE_URL: https://spa-depot.46-225-2-192.nip.io
+          PUBLIC_SEGUIMIENTO_SUPABASE_URL: https://rnejgcdfpbkqbdoadeib.supabase.co
+          PUBLIC_SEGUIMIENTO_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJuZWpnY2RmcGJrcWJkb2FkZWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NjY5NDUsImV4cCI6MjA5NDQ0Mjk0NX0.A1kH1wW51eJeGh5bncjsm2EdTtY2cbJbAbNxMpnYpgQ
 
   deploy:
     needs: build
