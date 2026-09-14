@@ -1,0 +1,17 @@
+---
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+import GestionAdmin from '../../components/admin/GestionAdmin.astro';
+
+export const prerender = true;
+---
+
+<BaseTailwind
+  title="Panel de Gestión — MG Lab"
+  description="Enlaces del sitio, Blog, Disertaciones, Movimiento y Zona Lab en un solo panel"
+  lang="es"
+  layoutType="admin"
+  showMateGame={false}
+  showPromptModal={true}
+>
+  <GestionAdmin />
+</BaseTailwind>

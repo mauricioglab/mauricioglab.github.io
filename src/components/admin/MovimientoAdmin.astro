@@ -1,11 +1,8 @@
 ---
 /**
  * MovimientoAdmin - CRUD de programas y vista de sesiones.
- * Patron de los admins existentes: Alpine + supabase, login corto,
- * gate por profiles.role = 'admin'. Paleta agnostica (Canvas/CanvasText + light-dark).
+ * Vive como pestaña dentro de GestionAdmin: auth y logout los maneja el padre.
  */
-import { supabase } from '../../lib/supabase';
-import { resolveLoginUser, markSessionStart, clearSessionStart, scheduleSessionEnd, enforceSessionExpiry } from '../../lib/supabase';
 import { MODALIDADES } from '../../data/movimiento';
 
 export const prerender = true;
@@ -15,377 +12,287 @@ const MODALIDAD_IDS = MODALIDADES.map((m) => m.id);
 const FALLBACK = Object.fromEntries(MODALIDADES.map((m) => [m.id, m.programas[0].opciones]));
 ---
 
-<div x-data="movimientoAdmin()" x-init="init()" class="mva-root" style="color-scheme: light dark">
-  <style>
-    .mva-root {
-      --mv-text: CanvasText;
-      --mv-muted: color-mix(in oklch, CanvasText 55%, Canvas);
-      --mv-border: color-mix(in oklch, CanvasText 15%, Canvas);
-      --mv-surface: color-mix(in oklch, CanvasText 5%, Canvas);
-      font-family: 'Syne',sans-serif;
-      color: var(--mv-text);
-      background: Canvas;
-      min-height: 70vh;
-    }
-    .mva-title { font-family: 'Bebas Neue',sans-serif; font-size: 2.2rem; line-height: 1; letter-spacing: 2px; }
-    .mva-label { display: block; font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: var(--mv-muted); margin-bottom: .35rem; }
-    .mva-input, .mva-select, .mva-textarea {
-      width: 100%; border-radius: .6rem; border: 1px solid var(--mv-border); background: var(--mv-surface);
-      padding: .5rem .75rem; font-family: 'Syne',sans-serif; font-size: .85rem; color: var(--mv-text);
-    }
-    .mva-textarea { font-family: ui-monospace,monospace; font-size: .75rem; min-height: 180px; white-space: pre; }
-    .mva-input:focus, .mva-select:focus, .mva-textarea:focus { outline: 1px solid #2563eb; }
-    .mva-btn { border: 0; border-radius: .6rem; background: #2563eb; color: #fff; padding: .55rem 1.2rem; font-family: 'Bebas Neue',sans-serif; font-size: 1rem; letter-spacing: 2px; cursor: pointer; transition: all .2s; }
-    .mva-btn:hover:not(:disabled) { filter: brightness(1.15); }
-    .mva-btn:disabled { opacity: .5; cursor: default; }
-    .mva-btn-ghost { background: var(--mv-surface); color: var(--mv-muted); border: 1px solid var(--mv-border); }
-    .mva-btn-danger { background: light-dark(#dc2626, #f87171); color: #fff; }
-    .mva-card { border: 1px solid var(--mv-border); background: var(--mv-surface); border-radius: 1rem; padding: 1rem 1.25rem; }
-    .mva-row { display: flex; align-items: center; gap: .75rem; padding: .5rem 0; border-top: 1px solid var(--mv-border); font-size: .8rem; }
-    .mva-row:first-child { border-top: 0; }
-    .mva-badge { border-radius: .375rem; border: 1px solid var(--mv-border); padding: .1rem .5rem; font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--mv-muted); }
-    .mva-draft { border-color: light-dark(#b45309, #facc15); color: light-dark(#b45309, #facc15); }
-    .mva-muted { color: var(--mv-muted); }
-    .mva-tabs { display: flex; gap: .5rem; margin-bottom: 1.5rem; }
-    .mva-tab { border-radius: .6rem; border: 1px solid var(--mv-border); background: var(--mv-surface); color: var(--mv-muted); padding: .4rem 1rem; font-family: 'Bebas Neue',sans-serif; font-size: 1rem; letter-spacing: 2px; cursor: pointer; }
-    .mva-tab.mva-active { border-color: #2563eb; color: #2563eb; }
-    .mva-error { color: light-dark(#dc2626, #f87171); font-size: .8rem; }
-  </style>
-
-  <div class="mx-auto max-w-[1000px] px-6 py-10">
-    <div class="flex items-center justify-between gap-4 mb-8">
-      <h1 class="mva-title">ADMIN · MOVIMIENTO</h1>
-      <button x-show="user" @click="logout()" class="mva-btn mva-btn-ghost">SALIR</button>
-    </div>
-
-    <!-- ── Login ── -->
-    <template x-if="!user">
-      <div class="mva-card max-w-[380px] mx-auto flex flex-col gap-3">
-        <div>
-          <label class="mva-label">Usuario</label>
-          <input class="mva-input" type="text" x-model="loginEmail" placeholder="cervantes" />
-        </div>
-        <div>
-          <label class="mva-label">Contraseña</label>
-          <input class="mva-input" type="password" x-model="loginPassword" @keydown.enter="login()" />
-        </div>
-        <p x-show="loginError" x-text="loginError" class="mva-error"></p>
-        <button class="mva-btn" :disabled="busy" @click="login()" x-text="busy ? 'INGRESANDO...' : 'INGRESAR'"></button>
-      </div>
-    </template>
-
-    <!-- ── Panel ── -->
-    <template x-if="user && userRole === 'admin'">
-      <div>
-        <div class="mva-tabs">
-          <button class="mva-tab" :class="vista === 'programas' && 'mva-active'" @click="vista = 'programas'; loadProgramas()">PROGRAMAS</button>
-          <button class="mva-tab" :class="vista === 'sesiones' && 'mva-active'" @click="vista = 'sesiones'; loadSesiones()">SESIONES</button>
-        </div>
-
-        <!-- Programas -->
-        <div x-show="vista === 'programas'" class="flex flex-col gap-6">
-          <div class="flex flex-wrap items-center gap-2">
-            <select class="mva-select !w-auto" x-model="filtro">
-              <option value="">Todas las modalidades</option>
-              <template x-for="m in modalidades" :key="m"><option :value="m" x-text="m.toUpperCase()"></option></template>
-            </select>
-            <button class="mva-btn mva-btn-ghost" @click="nuevo()">+ NUEVO PROGRAMA</button>
-            <button class="mva-btn mva-btn-ghost" @click="seedModalidad()" :disabled="!filtro" x-text="'SEMBRAR ' + (filtro || '').toUpperCase()"></button>
-          </div>
-
-          <!-- Formulario -->
-          <div x-show="form" class="mva-card flex flex-col gap-3">
-            <div class="grid grid-cols-4 max-sm:grid-cols-1 gap-3">
-              <div>
-                <label class="mva-label">Modalidad</label>
-                <select class="mva-select" x-model="f.modalidad">
-                  <template x-for="m in modalidades" :key="m"><option :value="m" x-text="m.toUpperCase()"></option></template>
-                </select>
-              </div>
-              <div>
-                <label class="mva-label">Selector (clave)</label>
-                <input class="mva-input" x-model="f.selector" placeholder="11 / night / d1 / 2026-09-14" />
-              </div>
-              <div>
-                <label class="mva-label">Nombre</label>
-                <input class="mva-input" x-model="f.nombre" placeholder="11 hs / Noche / DÍA 1" />
-              </div>
-              <div class="flex items-end gap-3 pb-1">
-                <div>
-                  <label class="mva-label">Orden</label>
-                  <input class="mva-input !w-20" type="number" x-model.number="f.orden" />
-                </div>
-                <label class="flex items-center gap-2 text-[.75rem] cursor-pointer">
-                  <input type="checkbox" x-model="f.draft" /> Borrador
-                </label>
-              </div>
-            </div>
-            <div>
-              <label class="mva-label">Config (JSON) <span x-show="errorConfig" class="mva-error">· JSON inválido</span></label>
-              <textarea class="mva-textarea !min-h-[120px]" x-model="f.configText" spellcheck="false"></textarea>
-            </div>
-            <div>
-              <label class="mva-label">Ejercicios (JSON) <span x-show="errorEjercicios" class="mva-error">· JSON inválido</span></label>
-              <textarea class="mva-textarea" x-model="f.ejerciciosText" spellcheck="false"></textarea>
-            </div>
-            <p x-show="mensaje" x-text="mensaje" class="mva-muted text-[.78rem]"></p>
-            <div class="flex gap-2">
-              <button class="mva-btn" :disabled="busy" @click="guardar()" x-text="busy ? 'GUARDANDO...' : 'GUARDAR'"></button>
-              <button class="mva-btn mva-btn-ghost" @click="form = false">CANCELAR</button>
-              <button x-show="editando" class="mva-btn mva-btn-danger" @click="borrar()">ELIMINAR</button>
-            </div>
-          </div>
-
-          <!-- Lista -->
-          <div class="mva-card">
-            <template x-if="!programas.length">
-              <p class="mva-muted text-[.85rem]">No hay programas en la DB. Usá "sembrar" para precargar los datos locales de una modalidad.</p>
-            </template>
-            <template x-for="r in programasFiltrados" :key="r.modalidad + r.selector">
-              <div class="mva-row">
-                <span class="mva-badge" x-text="r.modalidad"></span>
-                <span class="font-bold" x-text="r.nombre || r.selector"></span>
-                <span class="mva-muted" x-text="r.selector"></span>
-                <span class="mva-badge mva-draft" x-show="r.draft">BORRADOR</span>
-                <span class="ml-auto flex gap-2">
-                  <button class="mva-btn mva-btn-ghost !py-1 !px-3 !text-[.8rem]" @click="editar(r)">EDITAR</button>
-                </span>
-              </div>
-            </template>
-          </div>
-        </div>
-
-        <!-- Sesiones -->
-        <div x-show="vista === 'sesiones'" class="mva-card">
-          <template x-if="!sesiones.length">
-            <p class="mva-muted text-[.85rem]">Sin sesiones registradas todavía.</p>
-          </template>
-          <template x-for="s in sesiones" :key="s.id">
-            <div class="mva-row">
-              <span class="mva-badge" x-text="s.fecha"></span>
-              <span class="mva-badge" x-text="s.modalidad"></span>
-              <span class="font-bold" x-text="s.programa_nombre"></span>
-              <span class="mva-muted" x-text="s.nota"></span>
-              <span class="ml-auto mva-muted text-[.7rem]" x-text="(s.usuario_email || s.user_id || '').slice(0, 18)"></span>
-            </div>
-          </template>
-        </div>
-      </div>
-    </template>
-
-    <!-- ── Sin permisos ── -->
-    <template x-if="user && userRole !== 'admin'">
-      <p class="mva-muted text-center">Esta sección requiere permisos de administrador.</p>
-    </template>
+<div x-data="movimientoAdmin()" x-init="init(); $watch(() => user, (u) => { if (u && userRole === 'admin') loadProgramas(); else { programas = []; sesiones = []; } })" class="max-w-7xl mx-auto p-4 md:p-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold">🤸 Movimiento</h1>
   </div>
 
-  <script type="application/json" id="mva-fallback" set:html={JSON.stringify({ modalidades: MODALIDAD_IDS, fallback: FALLBACK })} />
+  <div class="flex gap-1 border-b border-slate-700 mb-6">
+    <button class="px-4 py-2 text-sm font-bold border-b-2 -mb-px transition" :class="vista === 'programas' ? 'border-indigo-500 text-white' : 'border-transparent text-slate-400 hover:text-slate-200'" @click="vista = 'programas'; loadProgramas()">Programas</button>
+    <button class="px-4 py-2 text-sm font-bold border-b-2 -mb-px transition" :class="vista === 'sesiones' ? 'border-indigo-500 text-white' : 'border-transparent text-slate-400 hover:text-slate-200'" @click="vista = 'sesiones'; loadSesiones()">Sesiones</button>
+  </div>
 
-  <script>
-    import Alpine from 'alpinejs';
-    import { supabase } from '../../lib/supabase';
-    import { resolveLoginUser, markSessionStart, clearSessionStart, scheduleSessionEnd, enforceSessionExpiry } from '../../lib/supabase';
+  <!-- Programas -->
+  <div x-show="vista === 'programas'" class="flex flex-col gap-6">
+    <div class="flex flex-wrap items-center gap-2">
+      <select class="px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600" x-model="filtro">
+        <option value="">Todas las modalidades</option>
+        <template x-for="m in modalidades" :key="m"><option :value="m" x-text="m.toUpperCase()"></option></template>
+      </select>
+      <button class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-bold rounded-lg" @click="nuevo()">+ Nuevo programa</button>
+      <button class="px-4 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-white text-sm font-bold rounded-lg" @click="seedModalidad()" :disabled="!filtro" x-text="'Sembrar ' + (filtro || '').toUpperCase()"></button>
+    </div>
 
-    const { modalidades, fallback } = JSON.parse(document.getElementById('mva-fallback').textContent);
+    <!-- Formulario -->
+    <div x-show="form" class="bg-slate-800 rounded-xl p-5 space-y-4">
+      <h2 class="text-base font-bold">Identificación</h2>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Modalidad</label>
+          <select class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600" x-model="f.modalidad">
+            <template x-for="m in modalidades" :key="m"><option :value="m" x-text="m.toUpperCase()"></option></template>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Selector (clave)</label>
+          <input class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600" x-model="f.selector" placeholder="11 / night / d1 / 2026-09-14" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Nombre</label>
+          <input class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600" x-model="f.nombre" placeholder="11 hs / Noche / DÍA 1" />
+        </div>
+        <div class="flex gap-3">
+          <div class="w-20">
+            <label class="block text-xs font-bold text-slate-300 mb-1">Orden</label>
+            <input class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600" type="number" x-model.number="f.orden" />
+          </div>
+          <label class="flex items-center gap-2 text-xs text-slate-300 mt-6 cursor-pointer">
+            <input type="checkbox" x-model="f.draft" /> Borrador
+          </label>
+        </div>
+      </div>
 
-    Alpine.data('movimientoAdmin', () => ({
-        loadingAuth: true,
-        user: null,
-        userRole: null,
-        loginEmail: '',
-        loginPassword: '',
-        loginError: '',
-        busy: false,
-        vista: 'programas',
-        modalidades,
-        fallback,
-        filtro: '',
-        programas: [],
-        sesiones: [],
-        form: false,
-        editando: null,
-        mensaje: '',
-        errorConfig: false,
-        errorEjercicios: false,
-        f: { modalidad: 'pausas', selector: '', nombre: '', orden: 0, draft: false, configText: '{}', ejerciciosText: '[]' },
+      <div class="border-t border-slate-700 pt-4 space-y-3">
+        <h3 class="text-sm font-bold text-slate-200">Configuración avanzada (JSON)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Config <span x-show="errorConfig" class="text-red-400">· JSON inválido</span></label>
+            <textarea class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm font-mono min-h-[140px] focus:outline-none focus:ring-2 focus:ring-indigo-600" x-model="f.configText" spellcheck="false"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Ejercicios <span x-show="errorEjercicios" class="text-red-400">· JSON inválido</span></label>
+            <textarea class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm font-mono min-h-[140px] focus:outline-none focus:ring-2 focus:ring-indigo-600" x-model="f.ejerciciosText" spellcheck="false"></textarea>
+          </div>
+        </div>
+      </div>
 
-        async init() {
-          if (await enforceSessionExpiry()) { this.loadingAuth = false; return; }
-          const { data } = await supabase.auth.getSession();
-          if (data?.session?.user) {
-            this.user = data.session.user;
-            await this.loadProfile();
-            if (this.userRole === 'admin') this.loadProgramas();
-          }
-          this.loadingAuth = false;
-        },
+      <p x-show="mensaje" x-text="mensaje" class="text-xs text-slate-400"></p>
+      <div class="border-t border-slate-700 pt-4 flex gap-3">
+        <button class="px-5 py-2 bg-green-700 hover:bg-green-800 disabled:opacity-60 text-sm font-bold rounded-lg" :disabled="busy" @click="guardar()" x-text="busy ? 'Guardando…' : 'Guardar'"></button>
+        <button class="px-5 py-2 border border-slate-600 hover:border-slate-500 text-sm font-bold rounded-lg" @click="form = false">Cancelar</button>
+        <button x-show="editando" class="px-5 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-bold rounded-lg" @click="borrar()">Eliminar</button>
+      </div>
+    </div>
 
-        async loadProfile() {
-          const { data } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', this.user.id)
-            .maybeSingle();
-          this.userRole = data?.role || null;
-        },
+    <!-- Lista -->
+    <div class="bg-slate-800 rounded-xl p-5">
+      <template x-if="!programas.length">
+        <p class="text-sm text-slate-400">No hay programas en la DB. Usá "Sembrar" para precargar los datos locales de una modalidad.</p>
+      </template>
+      <div class="space-y-2">
+        <template x-for="r in programasFiltrados" :key="r.modalidad + r.selector">
+          <div class="bg-slate-900 border border-slate-700 rounded-lg p-3 flex items-center gap-3 text-sm">
+            <span class="rounded-md border border-slate-600 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-slate-400" x-text="r.modalidad"></span>
+            <span class="font-bold" x-text="r.nombre || r.selector"></span>
+            <span class="text-slate-400" x-text="r.selector"></span>
+            <span class="rounded-md border border-amber-500/40 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-amber-400" x-show="r.draft">Borrador</span>
+            <span class="ml-auto">
+              <button class="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-xs font-bold rounded-lg" @click="editar(r)">Editar</button>
+            </span>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
 
-        async login() {
-          this.loginError = '';
-          this.busy = true;
-          try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-              email: resolveLoginUser(this.loginEmail),
-              password: this.loginPassword,
-            });
-            if (error) throw error;
-            this.user = data.user;
-            this.loginPassword = '';
-            await this.loadProfile();
-            markSessionStart();
-            scheduleSessionEnd(() => this.logout(true));
-            if (this.userRole === 'admin') this.loadProgramas();
-          } catch (e) {
-            this.loginError = e.message || 'Error al iniciar sesión';
-          } finally {
-            this.busy = false;
-          }
-        },
-
-        async logout(auto = false) {
-          if (!auto) clearSessionStart();
-          await supabase.auth.signOut();
-          this.user = null;
-          this.userRole = null;
-          this.programas = [];
-          this.sesiones = [];
-        },
-
-        async loadProgramas() {
-          const { data, error } = await supabase
-            .from('movimiento_programas')
-            .select('*')
-            .order('modalidad').order('orden');
-          if (!error) this.programas = data || [];
-        },
-
-        async loadSesiones() {
-          const { data, error } = await supabase
-            .from('movimiento_historial')
-            .select('*')
-            .order('fecha', { ascending: false })
-            .limit(50);
-          if (!error) this.sesiones = data || [];
-        },
-
-        get programasFiltrados() {
-          return this.filtro ? this.programas.filter((r) => r.modalidad === this.filtro) : this.programas;
-        },
-
-        nuevo() {
-          this.editando = null;
-          this.mensaje = '';
-          const ordenMax = Math.max(0, ...this.programas.filter((r) => r.modalidad === this.filtro).map((r) => r.orden || 0));
-          this.f = { modalidad: this.filtro || 'pausas', selector: '', nombre: '', orden: ordenMax + 1, draft: false, configText: '{\n  "modo": "circuito",\n  "series": 2,\n  "restSegundos": 30,\n  "reps": 8,\n  "banner": ""}', ejerciciosText: '[]' };
-          this.form = true;
-        },
-
-        editar(r) {
-          this.editando = `${r.modalidad}|${r.selector}`;
-          this.mensaje = '';
-          this.f = {
-            modalidad: r.modalidad, selector: r.selector, nombre: r.nombre,
-            orden: r.orden || 0, draft: !!r.draft,
-            configText: JSON.stringify(r.config ?? {}, null, 2),
-            ejerciciosText: JSON.stringify(r.ejercicios ?? [], null, 2),
-          };
-          this.form = true;
-        },
-
-        validarJson() {
-          try { this.f.configText ? JSON.parse(this.f.configText) : {}; this.errorConfig = false; }
-          catch { this.errorConfig = true; }
-          try { JSON.parse(this.f.ejerciciosText || '[]'); this.errorEjercicios = false; }
-          catch { this.errorEjercicios = true; }
-          return !this.errorConfig && !this.errorEjercicios;
-        },
-
-        async guardar() {
-          if (!this.f.selector.trim()) { this.mensaje = 'El selector es obligatorio.'; return; }
-          if (!this.validarJson()) return;
-          this.busy = true;
-          this.mensaje = '';
-          try {
-            const { error } = await supabase
-              .from('movimiento_programas')
-              .upsert({
-                modalidad: this.f.modalidad,
-                selector: this.f.selector.trim(),
-                nombre: this.f.nombre.trim(),
-                orden: this.f.orden || 0,
-                draft: this.f.draft,
-                config: JSON.parse(this.f.configText || '{}'),
-                ejercicios: JSON.parse(this.f.ejerciciosText || '[]'),
-              }, { onConflict: 'modalidad,selector' });
-            if (error) throw error;
-            this.mensaje = 'Guardado ✓ (se publica en el próximo build)';
-            await this.loadProgramas();
-          } catch (e) {
-            this.mensaje = 'Error: ' + e.message;
-          } finally {
-            this.busy = false;
-          }
-        },
-
-        async borrar() {
-          const [modalidad, selector] = this.editando.split('|');
-          if (!confirm(`¿Eliminar ${modalidad} / ${selector}?`)) return;
-          this.busy = true;
-          try {
-            const { error } = await supabase
-              .from('movimiento_programas')
-              .delete()
-              .eq('modalidad', modalidad).eq('selector', selector);
-            if (error) throw error;
-            this.form = false;
-            this.editando = null;
-            await this.loadProgramas();
-          } catch (e) {
-            this.mensaje = 'Error: ' + e.message;
-          } finally {
-            this.busy = false;
-          }
-        },
-
-        // Siembra todas las opciones locales de la modalidad filtrada en la DB
-        async seedModalidad() {
-          const opciones = this.fallback[this.filtro];
-          if (!opciones) return;
-          if (!confirm(`Sembrar ${opciones.length} programas de ${this.filtro} en la DB? (sobrescribe los existentes de esa modalidad)`)) return;
-          this.busy = true;
-          try {
-            const rows = opciones.map((op, i) => ({
-              modalidad: this.filtro,
-              selector: op.key,
-              nombre: op.label,
-              orden: i,
-              draft: false,
-              config: op.config,
-              ejercicios: op.ejercicios,
-            }));
-            const { error } = await supabase
-              .from('movimiento_programas')
-              .upsert(rows, { onConflict: 'modalidad,selector' });
-            if (error) throw error;
-            this.mensaje = `${rows.length} programas sembrados ✓`;
-            await this.loadProgramas();
-          } catch (e) {
-            this.mensaje = 'Error: ' + e.message;
-          } finally {
-            this.busy = false;
-          }
-        },
-      }));
-
-    Alpine.start();
-  </script>
+  <!-- Sesiones -->
+  <div x-show="vista === 'sesiones'" class="bg-slate-800 rounded-xl p-5">
+    <template x-if="!sesiones.length">
+      <p class="text-sm text-slate-400">Sin sesiones registradas todavía.</p>
+    </template>
+    <div class="space-y-2">
+      <template x-for="s in sesiones" :key="s.id">
+        <div class="bg-slate-900 border border-slate-700 rounded-lg p-3 flex items-center gap-3 text-sm">
+          <span class="rounded-md border border-slate-600 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-slate-400" x-text="s.fecha"></span>
+          <span class="rounded-md border border-slate-600 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-slate-400" x-text="s.modalidad"></span>
+          <span class="font-bold" x-text="s.programa_nombre"></span>
+          <span class="text-slate-400" x-text="s.nota"></span>
+          <span class="ml-auto text-slate-500 text-xs" x-text="(s.usuario_email || s.user_id || '').slice(0, 18)"></span>
+        </div>
+      </template>
+    </div>
+  </div>
 </div>
+
+<script type="application/json" id="mva-fallback" set:html={JSON.stringify({ modalidades: MODALIDAD_IDS, fallback: FALLBACK })} />
+
+<script>
+  import Alpine from 'alpinejs';
+  import { supabase } from '../../lib/supabase';
+
+  const { modalidades, fallback } = JSON.parse(document.getElementById('mva-fallback').textContent);
+
+  Alpine.data('movimientoAdmin', () => ({
+      busy: false,
+      vista: 'programas',
+      modalidades,
+      fallback,
+      filtro: '',
+      programas: [],
+      sesiones: [],
+      form: false,
+      editando: null,
+      mensaje: '',
+      errorConfig: false,
+      errorEjercicios: false,
+      f: { modalidad: 'pausas', selector: '', nombre: '', orden: 0, draft: false, configText: '{}', ejerciciosText: '[]' },
+
+      async init() {},
+
+      async loadProgramas() {
+        const { data, error } = await supabase
+          .from('movimiento_programas')
+          .select('id, modalidad, nombre, data');
+        if (!error) {
+          // esquema PocketBase: selector/orden/draft/config/ejercicios viven en el json `data`
+          this.programas = (data || []).map((r: any) => ({
+            id: r.id,
+            modalidad: r.modalidad,
+            nombre: r.nombre || '',
+            selector: r.data?.selector ?? '',
+            orden: r.data?.orden ?? 0,
+            draft: !!r.data?.draft,
+            config: r.data?.config ?? {},
+            ejercicios: r.data?.ejercicios ?? [],
+          }));
+        }
+      },
+
+      async loadSesiones() {
+        const { data, error } = await supabase
+          .from('movimiento_historial')
+          .select('*')
+          .order('fecha', { ascending: false })
+          .limit(50);
+        if (!error) this.sesiones = data || [];
+      },
+
+      get programasFiltrados() {
+        return this.filtro ? this.programas.filter((r) => r.modalidad === this.filtro) : this.programas;
+      },
+
+      nuevo() {
+        this.editando = null;
+        this.mensaje = '';
+        const ordenMax = Math.max(0, ...this.programas.filter((r) => r.modalidad === this.filtro).map((r) => r.orden || 0));
+        this.f = { modalidad: this.filtro || 'pausas', selector: '', nombre: '', orden: ordenMax + 1, draft: false, configText: '{\n  "modo": "circuito",\n  "series": 2,\n  "restSegundos": 30,\n  "reps": 8,\n  "banner": ""}', ejerciciosText: '[]' };
+        this.form = true;
+      },
+
+      editar(r: any) {
+        this.editando = r.id;
+        this.mensaje = '';
+        this.f = {
+          modalidad: r.modalidad, selector: r.selector, nombre: r.nombre,
+          orden: r.orden || 0, draft: !!r.draft,
+          configText: JSON.stringify(r.config ?? {}, null, 2),
+          ejerciciosText: JSON.stringify(r.ejercicios ?? [], null, 2),
+        };
+        this.form = true;
+      },
+
+      validarJson() {
+        try { this.f.configText ? JSON.parse(this.f.configText) : {}; this.errorConfig = false; }
+        catch { this.errorConfig = true; }
+        try { JSON.parse(this.f.ejerciciosText || '[]'); this.errorEjercicios = false; }
+        catch { this.errorEjercicios = true; }
+        return !this.errorConfig && !this.errorEjercicios;
+      },
+
+      async guardar() {
+        if (!this.f.selector.trim()) { this.mensaje = 'El selector es obligatorio.'; return; }
+        if (!this.validarJson()) return;
+        this.busy = true;
+        this.mensaje = '';
+        try {
+          // PocketBase: selector/orden/draft/config/ejercicios van dentro del json `data`
+          const payload = {
+            modalidad: this.f.modalidad,
+            nombre: this.f.nombre.trim(),
+            data: {
+              selector: this.f.selector.trim(),
+              orden: this.f.orden || 0,
+              draft: this.f.draft,
+              config: JSON.parse(this.f.configText || '{}'),
+              ejercicios: JSON.parse(this.f.ejerciciosText || '[]'),
+            },
+          };
+          const existente = this.programas.find((r: any) => r.id === this.editando);
+          const { error } = existente
+            ? await supabase.from('movimiento_programas').update(payload).eq('id', existente.id)
+            : await supabase.from('movimiento_programas').insert(payload);
+          if (error) throw error;
+          this.mensaje = 'Guardado ✓ (se publica en el próximo build)';
+          await this.loadProgramas();
+        } catch (e: any) {
+          this.mensaje = 'Error: ' + (e.message ?? e);
+        } finally {
+          this.busy = false;
+        }
+      },
+
+      async borrar() {
+        if (!confirm('¿Eliminar este programa?')) return;
+        this.busy = true;
+        try {
+          const { error } = await supabase
+            .from('movimiento_programas')
+            .delete()
+            .eq('id', this.editando);
+          if (error) throw error;
+          this.form = false;
+          this.editando = null;
+          await this.loadProgramas();
+        } catch (e: any) {
+          this.mensaje = 'Error: ' + (e.message ?? e);
+        } finally {
+          this.busy = false;
+        }
+      },
+
+      // Siembra todas las opciones locales de la modalidad filtrada en la DB
+      async seedModalidad() {
+        const opciones = this.fallback[this.filtro];
+        if (!opciones) return;
+        if (!confirm(`¿Sembrar ${opciones.length} programas de ${this.filtro} en la DB? (sobrescribe los existentes de esa modalidad)`)) return;
+        this.busy = true;
+        try {
+          const existentes = new Map(
+            this.programas.filter((r: any) => r.modalidad === this.filtro).map((r: any) => [r.selector, r.id]),
+          );
+          let guardados = 0;
+          for (let i = 0; i < opciones.length; i++) {
+            const op = opciones[i];
+            const payload = {
+              modalidad: this.filtro,
+              nombre: op.label,
+              data: { selector: op.key, orden: i, draft: false, config: op.config, ejercicios: op.ejercicios },
+            };
+            const id = existentes.get(op.key);
+            const { error } = id
+              ? await supabase.from('movimiento_programas').update(payload).eq('id', id)
+              : await supabase.from('movimiento_programas').insert(payload);
+            if (error) throw error;
+            guardados++;
+          }
+          this.mensaje = `${guardados} programas sembrados ✓`;
+          await this.loadProgramas();
+        } catch (e: any) {
+          this.mensaje = 'Error: ' + (e.message ?? e);
+        } finally {
+          this.busy = false;
+        }
+      },
+    }));
+</script>

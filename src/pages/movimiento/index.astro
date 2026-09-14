@@ -174,7 +174,7 @@ const ACCENTOS_CLAROS: Record<string, string> = {
           if (session) {
             const { error } = await supabase.from('movimiento_historial').insert({
               modalidad, selector: selector || '', programa_nombre: nombre, nota: nota || '',
-              fecha: fechaHoy(), completada: true,
+              fecha: fechaHoy(), user: session.user.id,
             });
             if (error) { cb?.('Guardado local (error de sync)'); }
             else { sesion.fuente = 'db'; cb?.('Sesión guardada en tu historial'); }

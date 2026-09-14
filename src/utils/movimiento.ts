@@ -2,18 +2,25 @@ import { supabase } from '../lib/supabase';
 import { MODALIDADES, MODALIDAD_POR_ID, type ModalidadDef, type ModalidadId, type ProgramaOpcion } from '../data/movimiento';
 
 /**
- * Movimiento - capa de datos. Consulta `movimiento_programas` en build time
- * (patrón recursos: catch silencioso) y aplica las filas de la DB como
+ * Movimiento - capa de datos. Consulta `movimiento_programas` (PocketBase) en
+ * build time (patrón recursos: catch silencioso) y aplica las filas como
  * overrides de las opciones embebidas en `src/data/movimiento.ts`.
+ *
+ * Esquema real en PocketBase: modalidad, nombre y `data` (json) que contiene
+ * { selector, orden, draft, config, ejercicios }.
  */
 
 interface MovimientoProgramaRow {
+  id: string;
   modalidad: ModalidadId;
-  selector: string;
   nombre: string;
-  orden: number;
-  config: ProgramaOpcion['config'];
-  ejercicios: ProgramaOpcion['ejercicios'];
+  data: {
+    selector?: string;
+    orden?: number;
+    draft?: boolean;
+    config?: ProgramaOpcion['config'];
+    ejercicios?: ProgramaOpcion['ejercicios'];
+  } | null;
 }
 
 function clonarModalidades(): ModalidadDef[] {
@@ -26,36 +33,41 @@ export async function getModalidades(): Promise<ModalidadDef[]> {
   try {
     const { data, error } = await supabase
       .from('movimiento_programas')
-      .select('modalidad, selector, nombre, orden, config, ejercicios')
-      .eq('draft', false)
-      .order('orden', { ascending: true });
+      .select('id, modalidad, nombre, data');
 
     if (error) {
-      console.warn('No se pudieron cargar los programas de movimiento de Supabase:', error.message);
+      console.warn('No se pudieron cargar los programas de movimiento de PocketBase:', error.message ?? error);
       return modalidades;
     }
 
-    for (const row of (data ?? []) as MovimientoProgramaRow[]) {
-      const modalidad = MODALIDAD_POR_ID[row.modalidad];
-      if (!modalidad || !row.config) continue;
+    // PocketBase no tiene el campo `orden` como columna: se ordena en cliente
+    const rows = ((data ?? []) as MovimientoProgramaRow[])
+      .slice()
+      .sort((a, b) => (a.data?.orden ?? 0) - (b.data?.orden ?? 0));
 
-      const programa = modalidad.programas.find((p) => p.opciones.some((o) => o.key === row.selector))
+    for (const row of rows) {
+      const modalidad = MODALIDAD_POR_ID[row.modalidad];
+      const payload = row.data ?? {};
+      if (!modalidad || !payload.config) continue;
+      const selector = payload.selector ?? '';
+
+      const programa = modalidad.programas.find((p) => p.opciones.some((o) => o.key === selector))
         ?? modalidad.programas[0];
       if (!programa) continue;
 
       const opcion: ProgramaOpcion = {
-        key: row.selector,
-        label: row.nombre || row.selector,
-        config: row.config,
-        ejercicios: Array.isArray(row.ejercicios) ? row.ejercicios : [],
+        key: selector,
+        label: row.nombre || selector,
+        config: payload.config,
+        ejercicios: Array.isArray(payload.ejercicios) ? payload.ejercicios : [],
       };
 
-      const idx = programa.opciones.findIndex((o) => o.key === row.selector);
+      const idx = programa.opciones.findIndex((o) => o.key === selector);
       if (idx >= 0) programa.opciones[idx] = opcion;
       else programa.opciones.push(opcion);
     }
   } catch (e) {
-    console.warn('No se pudieron cargar los programas de movimiento de Supabase:', e);
+    console.warn('No se pudieron cargar los programas de movimiento de PocketBase:', e);
   }
 
   return modalidades;

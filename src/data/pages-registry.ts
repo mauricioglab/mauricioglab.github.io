@@ -54,12 +54,9 @@ export const pagesRegistry: PageEntry[] = [
   { id: 'calculadora', name: 'Calculadora', url: '/calculadora/', category: 'tool', icon: '🧮' },
   { id: 'nutricion', name: 'Nutrición', url: '/nutricion/', category: 'tool', icon: '🥗' },
   { id: 'movimiento', name: 'Movimiento', url: '/movimiento/', category: 'tool', icon: '🤸' },
-  { id: 'admin-movimiento', name: 'Admin Movimiento', url: '/admin/movimiento/', category: 'tool', icon: '🤸' },
   { id: 'workspace-mapper', name: 'Workspace Mapper', url: '/workspace-mapper/', category: 'tool', icon: '🖥️' },
   { id: 'vsagenda', name: 'vsagenda', url: '/vsagenda/', category: 'tool', icon: '🗓️' },
-  { id: 'admin-blog', name: 'Admin Blog', url: '/admin/blog/', category: 'tool', icon: '📝' },
-  { id: 'admin-disertaciones', name: 'Admin Disertaciones', url: '/admin/disertaciones/', category: 'tool', icon: '🎤' },
-  { id: 'admin-recursos', name: 'Admin Zona Lab', url: '/admin/recursos/', category: 'tool', icon: '📚' },
+  { id: 'admin-gestion', name: 'Admin Gestión', url: '/admin/gestion/', category: 'tool', icon: '🗂️' },
 
   // =====================
   // CASE STUDIES (solo en admin)
