@@ -1,6 +1,7 @@
-// Compatibility shim: exposes a supabase-js-like `supabase` object (`.from()`, `.auth`, `.storage`,
+// Compatibility shim: exposes a supabase-js-shaped `db` object (`.from()`, `.auth`, `.storage`,
 // `.rpc()`) backed by the self-hosted PocketBase instance, so existing call sites across the app
 // keep working with minimal changes after moving off Supabase Cloud.
+import type { CommonOptions } from 'pocketbase';
 import { pb } from './pb';
 
 const LEGACY_ID_COLLECTIONS = new Set([
@@ -44,6 +45,14 @@ function esc(v: any) {
 // `profiles` no longer exists as its own collection - role/nombre now live directly on `users`
 // (see the plan's PocketBase migration: RLS policies referencing `profiles` were folded in).
 const TABLE_ALIAS: Record<string, string> = { profiles: 'users' };
+
+// PocketBase's SDK auto-cancels concurrent requests that share a request key, and its default
+// key is just `method + path` (collection endpoint) - it ignores filter/sort/page. Two unrelated
+// queries to the same collection fired close together (e.g. one component loading a list while
+// another loads stats from the same collection) can silently cancel each other, leaving one
+// caller with a stale/empty result and no thrown error. This app has no "cancel the previous
+// request" UX (no live search-as-you-type), so every call below opts out with `requestKey: null`.
+const NO_AUTO_CANCEL: CommonOptions = { requestKey: null };
 
 class QueryBuilder implements PromiseLike<{ data: any; error: any }> {
   private table: string;
@@ -129,7 +138,7 @@ class QueryBuilder implements PromiseLike<{ data: any; error: any }> {
       const m = idFilter.match(/^id = "?(.+?)"?$/);
       if (m) return m[1];
     }
-    const rec = await pb.collection(this.table).getFirstListItem(this.filters.join(' && ')).catch(() => null);
+    const rec = await pb.collection(this.table).getFirstListItem(this.filters.join(' && '), NO_AUTO_CANCEL).catch(() => null);
     return rec ? rec.id : null;
   }
 
@@ -137,31 +146,32 @@ class QueryBuilder implements PromiseLike<{ data: any; error: any }> {
     try {
       if (this.op === 'select') {
         if (this.wantSingle) {
-          const rec = await pb.collection(this.table).getFirstListItem(this.filters.join(' && ') || '');
+          const rec = await pb.collection(this.table).getFirstListItem(this.filters.join(' && ') || '', NO_AUTO_CANCEL);
           return { data: rec, error: null };
         }
         const result = await pb.collection(this.table).getList(1, this.limitN || 200, {
           filter: this.filters.join(' && ') || undefined,
           sort: this.sortStr || undefined,
+          ...NO_AUTO_CANCEL,
         });
         return { data: result.items, error: null };
       }
       if (this.op === 'insert') {
         const items = Array.isArray(this.payload) ? this.payload : [this.payload];
         const created = [];
-        for (const item of items) created.push(await pb.collection(this.table).create(mapPayloadFields(item)));
+        for (const item of items) created.push(await pb.collection(this.table).create(mapPayloadFields(item), NO_AUTO_CANCEL));
         return { data: Array.isArray(this.payload) ? created : created[0], error: null };
       }
       if (this.op === 'update') {
         const id = await this.resolveIdForUpdateOrDelete();
         if (!id) return { data: null, error: new Error('No matching record to update') };
-        const rec = await pb.collection(this.table).update(id, mapPayloadFields(this.payload));
+        const rec = await pb.collection(this.table).update(id, mapPayloadFields(this.payload), NO_AUTO_CANCEL);
         return { data: rec, error: null };
       }
       if (this.op === 'delete') {
         const id = await this.resolveIdForUpdateOrDelete();
         if (!id) return { data: null, error: new Error('No matching record to delete') };
-        await pb.collection(this.table).delete(id);
+        await pb.collection(this.table).delete(id, NO_AUTO_CANCEL);
         return { data: null, error: null };
       }
       if (this.op === 'upsert') {
@@ -186,10 +196,10 @@ class QueryBuilder implements PromiseLike<{ data: any; error: any }> {
           }
 
           const existing = filter
-            ? await pb.collection(this.table).getFirstListItem(filter).catch(() => null)
+            ? await pb.collection(this.table).getFirstListItem(filter, NO_AUTO_CANCEL).catch(() => null)
             : null;
-          if (existing) results.push(await pb.collection(this.table).update(existing.id, mapPayloadFields(createItem)));
-          else results.push(await pb.collection(this.table).create(mapPayloadFields(createItem)));
+          if (existing) results.push(await pb.collection(this.table).update(existing.id, mapPayloadFields(createItem), NO_AUTO_CANCEL));
+          else results.push(await pb.collection(this.table).create(mapPayloadFields(createItem), NO_AUTO_CANCEL));
         }
         return { data: results, error: null };
       }
@@ -208,7 +218,7 @@ class QueryBuilder implements PromiseLike<{ data: any; error: any }> {
   }
 }
 
-function toSupabaseUser(record: any) {
+function toAppUser(record: any) {
   if (!record) return null;
   return {
     id: record.id,
@@ -217,7 +227,7 @@ function toSupabaseUser(record: any) {
   };
 }
 
-export const supabase = {
+export const db = {
   from(table: string) {
     return new QueryBuilder(table);
   },
@@ -225,7 +235,7 @@ export const supabase = {
   async rpc(fn: string, _args?: any) {
     if (fn === 'get_profesores') {
       try {
-        const users = await pb.collection('users').getFullList({ sort: 'nombre' });
+        const users = await pb.collection('users').getFullList({ sort: 'nombre', ...NO_AUTO_CANCEL });
         const data = users.map((u: any) => ({
           nombre: u.nombre || (u.email || '').split('@')[0],
           email: u.email,
@@ -242,8 +252,8 @@ export const supabase = {
   auth: {
     async signInWithPassword({ email, password }: { email: string; password: string }) {
       try {
-        const result = await pb.collection('users').authWithPassword(email, password);
-        return { data: { user: toSupabaseUser(result.record), session: { access_token: pb.authStore.token } }, error: null };
+        const result = await pb.collection('users').authWithPassword(email, password, NO_AUTO_CANCEL);
+        return { data: { user: toAppUser(result.record), session: { access_token: pb.authStore.token } }, error: null };
       } catch (error) {
         return { data: { user: null, session: null }, error };
       }
@@ -256,14 +266,14 @@ export const supabase = {
 
     async getSession() {
       if (pb.authStore.isValid) {
-        return { data: { session: { access_token: pb.authStore.token, user: toSupabaseUser(pb.authStore.record) } }, error: null };
+        return { data: { session: { access_token: pb.authStore.token, user: toAppUser(pb.authStore.record) } }, error: null };
       }
       return { data: { session: null }, error: null };
     },
 
     async resetPasswordForEmail(email: string, _opts?: any) {
       try {
-        await pb.collection('users').requestPasswordReset(email);
+        await pb.collection('users').requestPasswordReset(email, NO_AUTO_CANCEL);
         return { data: {}, error: null };
       } catch (error) {
         return { data: null, error };
@@ -277,7 +287,7 @@ export const supabase = {
         const params = new URLSearchParams(window.location.search);
         const token = params.get('token');
         if (!token) throw new Error('Falta el token de recuperación en el link');
-        await pb.collection('users').confirmPasswordReset(token, password, password);
+        await pb.collection('users').confirmPasswordReset(token, password, password, NO_AUTO_CANCEL);
         return { data: {}, error: null };
       } catch (error) {
         return { data: null, error };
@@ -348,7 +358,7 @@ import { sessionExpired, clearSessionStart } from './session';
 
 export async function enforceSessionExpiry() {
   if (sessionExpired()) {
-    await supabase.auth.signOut();
+    await db.auth.signOut();
     clearSessionStart();
     return true;
   }

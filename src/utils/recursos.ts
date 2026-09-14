@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase';
+import { db } from '../lib/db';
 
 /**
  * Forma unificada de un recurso de la Zona Lab. Vive en Supabase.
@@ -25,7 +25,7 @@ export async function getRecursos(): Promise<Recurso[]> {
   const items: Recurso[] = [];
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await db
       .from('recursos')
       .select(
         'id, slug, title, source_url, source_type, source_title, video_id, description, body_markdown, categories, topicos, cover_url, created, draft'

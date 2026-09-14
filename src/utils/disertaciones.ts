@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase';
+import { db } from '../lib/db';
 
 /**
  * Forma unificada de una disertación (charla dada). Vive en la base de datos
@@ -30,7 +30,7 @@ export async function getDisertaciones(): Promise<Disertacion[]> {
   const items: Disertacion[] = [];
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await db
       .from('disertaciones')
       .select(
         'id, slug, title, event_date, event_name, author, categories, description, bullets, cover_url, certificate_url, slides_urls, gallery_urls, draft'

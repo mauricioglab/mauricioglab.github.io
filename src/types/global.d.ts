@@ -2,8 +2,6 @@
  * Global type declarations for shared components
  */
 
-declare module 'alpinejs';
-
 interface PromptModalOptions {
   title?: string;
   message?: string;
@@ -41,12 +39,6 @@ interface SelectModalOptions {
 
 declare global {
   interface Window {
-    // Alpine + utilidades de admin
-    Alpine: any;
-    __BLOG_BASE__: string;
-    __DISERT_BASE__: string;
-    __RECURSOS_BASE__: string;
-
     // PromptModal functions
     showPromptModal: (options?: PromptModalOptions) => Promise<string | null>;
     showConfirmModal: (options?: ConfirmModalOptions) => Promise<boolean | null>;

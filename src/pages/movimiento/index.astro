@@ -78,7 +78,7 @@ const ACCENTOS_CLAROS: Record<string, string> = {
   </div>
 
   <script>
-    import { supabase } from '../../lib/supabase';
+    import { db } from '../../lib/db';
 
     const LS_KEY = 'movimiento-historial-local';
     const tabs = document.querySelectorAll<HTMLButtonElement>('.mv-tab');
@@ -121,7 +121,7 @@ const ACCENTOS_CLAROS: Record<string, string> = {
     async function cargarDb(): Promise<Sesion[]> {
       if (cacheDb) return cacheDb;
       try {
-        const { data, error } = await supabase
+        const { data, error } = await db
           .from('movimiento_historial')
           .select('modalidad, selector, programa_nombre, nota, fecha')
           .order('fecha', { ascending: false })
@@ -152,7 +152,7 @@ const ACCENTOS_CLAROS: Record<string, string> = {
     }
 
     async function refrescar() {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session } } = await db.auth.getSession();
       const chip = document.getElementById('mv-login-chip');
       if (session) {
         chip?.classList.remove('hidden');
@@ -170,9 +170,9 @@ const ACCENTOS_CLAROS: Record<string, string> = {
       guardarLocal(sesion);
       (async () => {
         try {
-          const { data: { session } } = await supabase.auth.getSession();
+          const { data: { session } } = await db.auth.getSession();
           if (session) {
-            const { error } = await supabase.from('movimiento_historial').insert({
+            const { error } = await db.from('movimiento_historial').insert({
               modalidad, selector: selector || '', programa_nombre: nombre, nota: nota || '',
               fecha: fechaHoy(), user: session.user.id,
             });

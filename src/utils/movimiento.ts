@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase';
+import { db } from '../lib/db';
 import { MODALIDADES, MODALIDAD_POR_ID, type ModalidadDef, type ModalidadId, type ProgramaOpcion } from '../data/movimiento';
 
 /**
@@ -31,7 +31,7 @@ export async function getModalidades(): Promise<ModalidadDef[]> {
   const modalidades = clonarModalidades();
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await db
       .from('movimiento_programas')
       .select('id, modalidad, nombre, data');
 

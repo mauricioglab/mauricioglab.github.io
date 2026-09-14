@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
+import preact from "@astrojs/preact";
 
 export default defineConfig({
   site: "https://mauricioglab.github.io/",
@@ -13,7 +14,7 @@ export default defineConfig({
     "/admin": "/admin/gestion/",
   },
   server: { open: "/" },
-  integrations: [tailwind()],
+  integrations: [tailwind(), preact()],
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en'],

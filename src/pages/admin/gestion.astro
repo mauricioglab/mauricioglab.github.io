@@ -1,6 +1,6 @@
 ---
 import BaseTailwind from '../../layouts/BaseTailwind.astro';
-import GestionAdmin from '../../components/admin/GestionAdmin.astro';
+import GestionAdminPreact from '../../components/admin/GestionAdminPreact';
 
 export const prerender = true;
 ---
@@ -13,5 +13,5 @@ export const prerender = true;
   showMateGame={false}
   showPromptModal={true}
 >
-  <GestionAdmin />
+  <GestionAdminPreact client:load />
 </BaseTailwind>

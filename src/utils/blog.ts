@@ -1,6 +1,6 @@
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
-import { supabase } from '../lib/supabase';
+import { db } from '../lib/db';
 import { normalizeCategories } from '../data/blog-categories';
 
 /**
@@ -50,7 +50,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
 
   // Posts desde Supabase (solo publicados)
   try {
-    const { data, error } = await supabase
+    const { data, error } = await db
       .from('blogs')
       .select(
         'slug, title, pub_date, author, categories, topicos, description, body_markdown, cover_url'
