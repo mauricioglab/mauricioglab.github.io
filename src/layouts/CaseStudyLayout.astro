@@ -2,6 +2,7 @@
 import type { Lang } from '../i18n';
 import MateGame from '../components/games/MateGame.astro';
 import ContactModal from '../components/landing/ContactModal.astro';
+import { BRAND_NAME } from '../data/brand';
 
 interface Props {
   title: string;
@@ -9,7 +10,7 @@ interface Props {
   lang: Lang;
   backUrl: string;
   backText: string;
-  accentColor?: 'blue' | 'emerald' | 'purple';
+  accentColor?: 'turquesa' | 'dorado';
 }
 
 const {
@@ -18,7 +19,6 @@ const {
   lang,
   backUrl,
   backText,
-  accentColor = 'blue'
 } = Astro.props;
 
 const baseUrl = import.meta.env.BASE_URL;
@@ -41,17 +41,17 @@ const baseUrl = import.meta.env.BASE_URL;
       }
     </script>
   </head>
-  <body class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors">
+  <body class="bg-white dark:bg-slate-900 text-[#082D3A] dark:text-slate-100 transition-colors">
     <!-- Header -->
     <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700">
       <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-        <a href={baseUrl} class="text-xl font-bold text-slate-900 dark:text-white">
-          MG<span class={`text-${accentColor}-600`}>.</span>
+        <a href={baseUrl} class="text-xl font-bold text-[#082D3A] dark:text-white">
+          {BRAND_NAME}
         </a>
-        <a 
+        <a
           id="backLink"
-          href={backUrl} 
-          class={`text-sm text-slate-600 dark:text-slate-400 hover:text-${accentColor}-600 dark:hover:text-${accentColor}-400 transition`}
+          href={backUrl}
+          class="text-sm text-slate-600 dark:text-slate-400 hover:text-[#16B6C9] dark:hover:text-[#7DE3FF] transition"
         >
           {backText}
         </a>
@@ -64,16 +64,16 @@ const baseUrl = import.meta.env.BASE_URL;
     </main>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 text-white py-8 mt-20">
+    <footer class="bg-[#0A1E28] text-white py-8 mt-20">
       <div class="max-w-4xl mx-auto px-6 text-center">
-        <p class="text-slate-400 text-sm">© 2026 Mauricio Gonzalez - Software Engineer especializado en IA y Automatización</p>
+        <p class="text-[#7DE3FF]/70 text-sm">© 2026 Mauricio Gonzalez - Software Engineer especializado en IA y Automatización</p>
       </div>
     </footer>
 
     <!-- Game Tab -->
-    <button 
+    <button
       id="gameTabBtn"
-      class="fixed bottom-0 right-6 bg-black hover:bg-gray-900 text-white px-3 py-1.5 rounded-t-lg shadow-md transition-transform duration-300 ease-out hover:-translate-y-0.5 text-lg z-40 cursor-pointer border-none"
+      class="fixed bottom-0 right-6 bg-[#0A1E28] hover:bg-[#082D3A] text-white px-3 py-1.5 rounded-t-lg shadow-md transition-transform duration-300 ease-out hover:-translate-y-0.5 text-lg z-40 cursor-pointer border-none"
       title="Jugar Mate Run"
     >
       🧉

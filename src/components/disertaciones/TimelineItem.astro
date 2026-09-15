@@ -57,16 +57,16 @@ const date = formatEventDate(disertacion.eventDate);
 
 <style>
   :global(:root) {
-    --accent: #1d4ed8;
-    --accent-deep: #1e40af;
-    --accent-soft: #eef2ff;
-    --ink: #141a2e;
+    --accent: #16b6c9;
+    --accent-deep: #082d3a;
+    --accent-soft: #e6fafc;
+    --ink: #082d3a;
     --muted: #5c6785;
     --faint: #8b94ab;
     --line: #e4e8f0;
     --panel: #f4f6fa;
-    --font-head: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-    --font-body: 'Inter', system-ui, sans-serif;
+    --font-head: 'Montserrat', system-ui, sans-serif;
+    --font-body: 'Montserrat', system-ui, sans-serif;
   }
 
   .tl-item {
@@ -90,9 +90,9 @@ const date = formatEventDate(disertacion.eventDate);
     position: absolute; left: 50%; top: 0; z-index: 2;
     transform: translateX(-50%);
     width: 46px; height: 46px; border-radius: 50%;
-    background: var(--accent-deep); color: #fff;
+    background: #d4af37; color: #082d3a;
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 8px 20px -8px rgba(30,64,175,.6);
+    box-shadow: 0 8px 20px -8px rgba(8,45,58,.5);
     border: 3px solid var(--panel);
   }
   .tl-year {
@@ -108,8 +108,8 @@ const date = formatEventDate(disertacion.eventDate);
   .tl-item:nth-child(even) .tl-card { grid-column: 1; }
   .tl-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 24px 48px -28px rgba(29,78,216,.3);
-    border-color: #c7d2fe;
+    box-shadow: 0 24px 48px -28px rgba(22,182,201,.3);
+    border-color: #a6e9f1;
   }
 
   /* Fotos inclinadas, tipo álbum */

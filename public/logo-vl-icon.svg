@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 90" role="img" aria-label="VeloCityLab">
+    <defs>
+        <linearGradient id="vclGradV" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7DE3FF" />
+            <stop offset="100%" stop-color="#16B6C9" />
+        </linearGradient>
+    </defs>
+    <!-- V: dos trazos angulados a 60°, gradiente cian -> turquesa -->
+    <polygon points="10,8 22,8 31,80 19,80" fill="url(#vclGradV)" />
+    <polygon points="44,8 32,8 23,80 35,80" fill="url(#vclGradV)" />
+    <!-- L: barra vertical + base horizontal, esquina a 45°, dorado -->
+    <rect x="56" y="8" width="14" height="72" fill="#D4AF37" />
+    <rect x="56" y="66" width="39" height="14" fill="#D4AF37" />
+</svg>

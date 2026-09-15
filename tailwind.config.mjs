@@ -44,11 +44,20 @@ export default {
         'diagram-indigo': '#5b6bb0',
         'diagram-indigo-tint': '#eef1fb',
         'diagram-indigo-text': '#3d4a8a',
-        'diagram-text-muted': '#6b6a63'
+        'diagram-text-muted': '#6b6a63',
+        // Paleta de marca VeloCityLab (Home, CV, Blog, Servicios, Zona Lab, Portfolio).
+        // Prefijo `vcl-` para no colisionar con las claves planas de arriba.
+        'vcl-petroleo': '#082D3A',
+        'vcl-turquesa': '#16B6C9',
+        'vcl-cian': '#7DE3FF',
+        'vcl-dorado': '#D4AF37',
+        'vcl-navy': '#0A1E28'
       },
       fontFamily: {
         head: ["'Space Grotesk'", "'Inter'", 'system-ui', 'sans-serif'],
-        body: ["'Inter'", 'system-ui', 'sans-serif']
+        body: ["'Inter'", 'system-ui', 'sans-serif'],
+        vclHead: ["'Montserrat'", 'system-ui', 'sans-serif'],
+        vclBody: ["'Montserrat'", 'system-ui', 'sans-serif']
       },
       borderRadius: {
         default: '14px'
@@ -88,6 +97,11 @@ export default {
     'bg-teal-100', 'text-teal-500', 'bg-teal-500',
     'bg-white', 'bg-slate-50', 'bg-slate-950', 'bg-slate-900',
     'text-white', 'text-slate-100', 'text-slate-400',
-    'border-slate-200', 'border-slate-800'
+    'border-slate-200', 'border-slate-800',
+    'bg-vcl-petroleo', 'text-vcl-petroleo', 'border-vcl-petroleo', 'hover:bg-vcl-petroleo',
+    'bg-vcl-turquesa', 'text-vcl-turquesa', 'border-vcl-turquesa', 'hover:bg-vcl-turquesa',
+    'bg-vcl-cian', 'text-vcl-cian', 'border-vcl-cian',
+    'bg-vcl-dorado', 'text-vcl-dorado', 'border-vcl-dorado', 'hover:bg-vcl-dorado',
+    'bg-vcl-navy', 'text-vcl-navy', 'border-vcl-navy'
   ]
 }

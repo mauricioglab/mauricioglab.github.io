@@ -15,7 +15,7 @@ export const getStaticPaths = getLanguagePaths;
 const { lang } = Astro.params as { lang: Lang };
 const content = await useTranslations<any>(lang, 'projects-monitoreo-agricola');
 
-const accentColor = 'orange';
+const accentColor = 'dorado';
 
 const headerStats = [
   { value: content.stats.iot.value, label: content.stats.iot.label },
@@ -87,6 +87,5 @@ const resultMetrics = [
     subtitle={content.cta.subtitle}
     buttonText={content.cta.button}
     accentColor={accentColor}
-    secondaryColor="purple"
   />
 </CaseStudyLayout>

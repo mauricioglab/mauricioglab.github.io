@@ -1,10 +1,10 @@
 {
   "meta": {
-    "title": "Welcome to MG Lab",
-    "description": "MG Lab Depot - Tools and applications"
+    "title": "Welcome to VeloCityLab",
+    "description": "VeloCityLab Depot - Tools and applications"
   },
   "header": {
-    "title": "Welcome to MG Lab Depot",
+    "title": "Welcome to VeloCityLab Depot",
     "searchPlaceholder": "Search Google...",
     "searchButton": "GO"
   },

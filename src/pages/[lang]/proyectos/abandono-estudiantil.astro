@@ -17,7 +17,7 @@ const { lang } = Astro.params as { lang: Lang };
 const content = await useTranslations<any>(lang, 'projects-abandono-estudiantil');
 const project = projects.find((p) => p.id === 'abandono-estudiantil')!;
 
-const accentColor = 'blue';
+const accentColor = 'turquesa';
 
 const headerStats = [
   { value: content.stats.alumnos.value, label: content.stats.alumnos.label },
@@ -92,6 +92,5 @@ const resultMetrics = [
     subtitle={content.cta.subtitle}
     buttonText={content.cta.button}
     accentColor={accentColor}
-    secondaryColor="purple"
   />
 </CaseStudyLayout>

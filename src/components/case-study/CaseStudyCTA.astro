@@ -6,53 +6,40 @@
 
 // ContactModal is triggered via data-contact-trigger attribute
 
-type AccentColor = 'blue' | 'emerald' | 'purple' | 'orange';
-type SecondaryColor = 'blue' | 'purple';
+type AccentColor = 'turquesa' | 'dorado';
 
 interface Props {
   title: string;
   subtitle: string;
   buttonText: string;
   accentColor: AccentColor;
-  secondaryColor?: SecondaryColor;
 }
 
-const { title, subtitle, buttonText, accentColor, secondaryColor = 'blue' } = Astro.props;
+const { title, subtitle, buttonText, accentColor } = Astro.props;
 
-// Static gradient and button color mappings
-const gradientClasses: Record<string, string> = {
-  'blue-purple': 'bg-gradient-to-r from-blue-600 to-purple-600',
-  'blue-blue': 'bg-gradient-to-r from-blue-600 to-blue-700',
-  'emerald-blue': 'bg-gradient-to-r from-emerald-600 to-blue-600',
-  'emerald-purple': 'bg-gradient-to-r from-emerald-600 to-purple-600',
-  'purple-blue': 'bg-gradient-to-r from-purple-600 to-blue-600',
-  'purple-purple': 'bg-gradient-to-r from-purple-600 to-purple-700',
-  'orange-blue': 'bg-gradient-to-r from-orange-600 to-blue-600',
-  'orange-purple': 'bg-gradient-to-r from-orange-600 to-purple-600',
+// Degradado petróleo -> acento de marca (mismo patrón que el CTA final de Servicios).
+const gradientClasses: Record<AccentColor, string> = {
+  turquesa: 'bg-gradient-to-r from-[#082D3A] to-[#16B6C9]',
+  dorado: 'bg-gradient-to-r from-[#082D3A] to-[#D4AF37]',
 };
 
 const subtitleClasses: Record<AccentColor, string> = {
-  blue: 'text-blue-100',
-  emerald: 'text-emerald-100',
-  purple: 'text-purple-100',
-  orange: 'text-orange-100',
+  turquesa: 'text-[#7DE3FF]',
+  dorado: 'text-[#FBF3DD]',
 };
 
 const buttonClasses: Record<AccentColor, string> = {
-  blue: 'text-blue-600 hover:bg-blue-50',
-  emerald: 'text-emerald-600 hover:bg-emerald-50',
-  purple: 'text-purple-600 hover:bg-purple-50',
-  orange: 'text-orange-600 hover:bg-orange-50',
+  turquesa: 'text-[#082D3A] hover:bg-[#E6FAFC]',
+  dorado: 'text-[#082D3A] hover:bg-[#FBF3DD]',
 };
 
-const gradientKey = `${accentColor}-${secondaryColor}`;
-const gradient = gradientClasses[gradientKey] || gradientClasses['blue-purple'];
+const gradient = gradientClasses[accentColor];
 ---
 
 <section class:list={['rounded-xl p-8 text-white text-center', gradient]}>
   <h2 class="text-2xl font-bold mb-4">{title}</h2>
   <p class:list={['mb-6', subtitleClasses[accentColor]]}>{subtitle}</p>
-  <button 
+  <button
     data-contact-trigger
     class:list={['inline-block px-6 py-3 bg-white rounded-lg font-semibold transition cursor-pointer', buttonClasses[accentColor]]}
   >

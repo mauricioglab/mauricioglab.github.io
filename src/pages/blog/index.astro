@@ -27,20 +27,20 @@ const currentUrl = `${Astro.site}${normalizedBase}blog/`;
     <p class="text-center text-[#5c6785]">No hay posts disponibles.</p>
   ) : (
     <div role="list">
-      {posts.map((post) => (
-        <PostCard post={post} />
+      {posts.map((post, i) => (
+        <PostCard post={post} featured={i === 0} />
       ))}
     </div>
   )}
 
   <section class="mt-14 mb-4">
     <div class="flex items-baseline justify-between gap-4 mb-3">
-      <h2 class="text-2xl font-semibold tracking-tight text-[#141a2e]">
+      <h2 class="text-2xl font-semibold tracking-tight text-[#082D3A]">
         Zona Lab
       </h2>
       <a
         href={`${normalizedBase}zona-lab/`}
-        class="text-sm text-[#1e40af] hover:text-[#1d4ed8] hover:underline whitespace-nowrap"
+        class="text-sm text-[#16B6C9] hover:text-[#082D3A] hover:underline whitespace-nowrap"
       >
         Ver todos →
       </a>

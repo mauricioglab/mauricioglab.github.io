@@ -13,7 +13,7 @@ export interface Phase {
   codeBlock?: string;
 }
 
-type AccentColor = 'blue' | 'emerald' | 'purple' | 'orange';
+type AccentColor = 'turquesa' | 'dorado';
 
 interface Props {
   title: string;
@@ -24,21 +24,18 @@ interface Props {
 
 const { title, phases, accentColor, showFirstPhaseCode = false } = Astro.props;
 
-// Phase border colors (cycling through)
+// Bordes de fase (cicla entre los acentos de marca; son decorativos, no texto,
+// así que el turquesa/dorado "brillante" es seguro acá).
 const phaseBorderClasses = [
-  'border-blue-600',
-  'border-purple-600',
-  'border-emerald-600',
-  'border-orange-600',
-  'border-red-600',
+  'border-[#16B6C9]',
+  'border-[#D4AF37]',
+  'border-[#082D3A]',
 ];
 
-// First phase uses accent color
+// La primera fase usa el color de acento del proyecto
 const accentBorderClasses: Record<AccentColor, string> = {
-  blue: 'border-blue-600',
-  emerald: 'border-emerald-600',
-  purple: 'border-purple-600',
-  orange: 'border-orange-600',
+  turquesa: 'border-[#16B6C9]',
+  dorado: 'border-[#D4AF37]',
 };
 ---
 
@@ -46,15 +43,15 @@ const accentBorderClasses: Record<AccentColor, string> = {
   <h2 class="text-3xl font-bold mb-6">{title}</h2>
   <div class="space-y-8">
     {phases.map((phase, idx) => {
-      const borderClass = idx === 0 
-        ? accentBorderClasses[accentColor] 
+      const borderClass = idx === 0
+        ? accentBorderClasses[accentColor]
         : phaseBorderClasses[(idx - 1) % phaseBorderClasses.length];
-      
+
       return (
         <div class:list={['border-l-4 pl-6', borderClass]}>
           <h3 class="text-xl font-bold mb-3">{phase.title}</h3>
           <p class="text-slate-600 dark:text-slate-400 mb-4">{phase.description}</p>
-          
+
           {/* Code block for first phase if enabled */}
           {idx === 0 && showFirstPhaseCode && (
             <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-4 font-mono text-sm">
@@ -71,7 +68,7 @@ const accentBorderClasses: Record<AccentColor, string> = {
               <div class="ml-4">└── Pages/</div>
             </div>
           )}
-          
+
           {/* Service list */}
           {phase.services && phase.services.length > 0 && (
             <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-4 text-sm space-y-2">
@@ -80,7 +77,7 @@ const accentBorderClasses: Record<AccentColor, string> = {
               ))}
             </div>
           )}
-          
+
           {/* Details list */}
           {phase.details && phase.details.length > 0 && (
             <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-4 text-sm space-y-2">
@@ -89,7 +86,7 @@ const accentBorderClasses: Record<AccentColor, string> = {
               ))}
             </div>
           )}
-          
+
           {/* Items list */}
           {phase.items && phase.items.length > 0 && (
             <ul class="space-y-2 text-sm">

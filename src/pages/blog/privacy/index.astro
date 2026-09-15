@@ -1,6 +1,7 @@
 ---
 import BlogLayout from '@layouts/BlogLayout.astro';
 import { normalizeBaseUrl } from '@utils/blog';
+import { BRAND_NAME } from '@data/brand';
 
 export const prerender = true;
 
@@ -26,7 +27,7 @@ const currentUrl = `${Astro.site}${normalizedBase}blog/privacy/`;
     <div class="entry-content">
       <p><strong>SECTION 1: WHO WE ARE</strong></p>
       
-      <p>Our website address is this blog. Privacy information is controlled by MG Lab who can be reached at the contact information provided below.</p>
+      <p>Our website address is this blog. Privacy information is controlled by {BRAND_NAME} who can be reached at the contact information provided below.</p>
       
       <p><strong>SECTION 2: WHAT PERSONAL DATA WE COLLECT AND WHY WE COLLECT IT</strong></p>
       

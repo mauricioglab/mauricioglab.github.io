@@ -3,6 +3,7 @@ import BaseTailwind from '../../layouts/BaseTailwind.astro';
 import SeoHead from '@components/shared/SeoHead.astro';
 import TimelineItem from '../../components/disertaciones/TimelineItem.astro';
 import { getDisertaciones } from '../../utils/disertaciones';
+import { BRAND_NAME } from '@data/brand';
 
 export const prerender = true;
 
@@ -11,25 +12,25 @@ const canonical = new URL('/disertaciones/', Astro.site).toString();
 ---
 
 <BaseTailwind
-  title="Disertaciones — MG Lab"
+  title={`Disertaciones — ${BRAND_NAME}`}
   description="Charlas, talleres y defensas que presenté, con su material."
   lang="es"
   layoutType="landing"
 >
-  <SeoHead slot="head" title="Disertaciones — MG Lab" description="Charlas, talleres y defensas que presenté, con su material." lang="es" canonical={canonical} />
+  <SeoHead slot="head" title={`Disertaciones — ${BRAND_NAME}`} description="Charlas, talleres y defensas que presenté, con su material." lang="es" canonical={canonical} />
 
   <style>
     :root {
-      --accent: #1d4ed8;
-      --accent-deep: #1e40af;
-      --accent-soft: #eef2ff;
-      --ink: #141a2e;
+      --accent: #16b6c9;
+      --accent-deep: #082d3a;
+      --accent-soft: #e6fafc;
+      --ink: #082d3a;
       --muted: #5c6785;
       --faint: #8b94ab;
       --line: #e4e8f0;
       --panel: #f4f6fa;
-      --font-head: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-      --font-body: 'Inter', system-ui, sans-serif;
+      --font-head: 'Montserrat', system-ui, sans-serif;
+      --font-body: 'Montserrat', system-ui, sans-serif;
     }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--panel); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
@@ -105,7 +106,7 @@ const canonical = new URL('/disertaciones/', Astro.site).toString();
 
   <header class="dz-header">
     <div class="row">
-      <div class="dz-brand">MG<b>.</b><span class="sub">| Disertaciones</span></div>
+      <div class="dz-brand">{BRAND_NAME}<span class="sub">| Disertaciones</span></div>
       <div class="dz-nav">
         <a class="link" href="/es/portfolio/">Portfolio</a>
         <a class="link" href="/es/servicios/">Servicios</a>

@@ -9,7 +9,7 @@ export interface Metric {
   label: string;
 }
 
-type AccentColor = 'blue' | 'emerald' | 'purple' | 'orange';
+type AccentColor = 'turquesa' | 'dorado';
 
 interface Props {
   title: string;
@@ -23,20 +23,17 @@ interface Props {
 
 const { title, metrics, learnings, accentColor } = Astro.props;
 
-// Static color mappings for metric cards (cycling through colors)
+// Tarjetas de métrica: alternan entre los dos acentos de marca (texto siempre en
+// petróleo/blanco para mantener contraste, el color de marca va en el fondo/borde).
 const metricColorClasses = [
-  { bg: 'bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30', border: 'border-blue-200 dark:border-blue-800', text: 'text-blue-600 dark:text-blue-400' },
-  { bg: 'bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/30 dark:to-emerald-800/30', border: 'border-emerald-200 dark:border-emerald-800', text: 'text-emerald-600 dark:text-emerald-400' },
-  { bg: 'bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30', border: 'border-purple-200 dark:border-purple-800', text: 'text-purple-600 dark:text-purple-400' },
-  { bg: 'bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30', border: 'border-orange-200 dark:border-orange-800', text: 'text-orange-600 dark:text-orange-400' },
+  { bg: 'bg-gradient-to-br from-[#E6FAFC] to-[#c5f0f6] dark:from-[#0b6e7d]/30 dark:to-[#0b6e7d]/10', border: 'border-[#a6e9f1] dark:border-[#0b6e7d]', text: 'text-[#082D3A] dark:text-[#7DE3FF]' },
+  { bg: 'bg-gradient-to-br from-[#FBF3DD] to-[#f5e7c0] dark:from-[#8A6A1F]/30 dark:to-[#8A6A1F]/10', border: 'border-[#e9d9a8] dark:border-[#8A6A1F]', text: 'text-[#082D3A] dark:text-[#D4AF37]' },
 ];
 
-// Color for learnings checkmarks based on accent
+// Color de los checks de aprendizajes, según el acento del proyecto
 const checkColorClasses: Record<AccentColor, string> = {
-  blue: 'text-blue-600 dark:text-blue-400',
-  emerald: 'text-emerald-600 dark:text-emerald-400',
-  purple: 'text-purple-600 dark:text-purple-400',
-  orange: 'text-orange-600 dark:text-orange-400',
+  turquesa: 'text-[#082D3A] dark:text-[#7DE3FF]',
+  dorado: 'text-[#082D3A] dark:text-[#D4AF37]',
 };
 
 const checkColor = checkColorClasses[accentColor];
@@ -56,7 +53,7 @@ const checkColor = checkColorClasses[accentColor];
       );
     })}
   </div>
-  
+
   {learnings && (
     <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
       <h3 class="text-xl font-bold mb-4">{learnings.title}</h3>

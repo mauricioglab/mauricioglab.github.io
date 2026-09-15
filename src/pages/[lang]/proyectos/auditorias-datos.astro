@@ -15,7 +15,7 @@ export const getStaticPaths = getLanguagePaths;
 const { lang } = Astro.params as { lang: Lang };
 const content = await useTranslations<any>(lang, 'projects-auditorias-datos');
 
-const accentColor = 'blue';
+const accentColor = 'turquesa';
 
 const headerStats = [
   { value: content.stats.eficiencia.value, label: content.stats.eficiencia.label },
@@ -87,6 +87,5 @@ const resultMetrics = [
     subtitle={content.cta.subtitle}
     buttonText={content.cta.button}
     accentColor={accentColor}
-    secondaryColor="blue"
   />
 </CaseStudyLayout>

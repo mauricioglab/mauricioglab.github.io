@@ -4,6 +4,7 @@ import SeoHead from '@components/shared/SeoHead.astro';
 import RecursoCard from '../../components/recursos/RecursoCard.astro';
 import { getRecursos } from '../../utils/recursos';
 import { getUltimosPosts } from '../../utils/relacionados';
+import { BRAND_NAME } from '../../data/brand';
 
 export const prerender = true;
 
@@ -16,25 +17,25 @@ const blogBase = import.meta.env.BASE_URL.endsWith('/')
 ---
 
 <BaseTailwind
-  title="Zona Lab — MG Lab"
+  title={`Zona Lab — ${BRAND_NAME}`}
   description="Recursos de estudio para alumnos: videos y reportes con su resumen."
   lang="es"
   layoutType="landing"
 >
-  <SeoHead slot="head" title="Zona Lab — MG Lab" description="Recursos de estudio para alumnos: videos y reportes con su resumen." lang="es" canonical={canonical} />
+  <SeoHead slot="head" title={`Zona Lab — ${BRAND_NAME}`} description="Recursos de estudio para alumnos: videos y reportes con su resumen." lang="es" canonical={canonical} />
 
   <style>
     :root {
-      --accent: #1d4ed8;
-      --accent-deep: #1e40af;
-      --accent-soft: #eef2ff;
-      --ink: #141a2e;
+      --accent: #16b6c9;
+      --accent-deep: #082d3a;
+      --accent-soft: #e6fafc;
+      --ink: #082d3a;
       --muted: #5c6785;
       --faint: #8b94ab;
       --line: #e4e8f0;
       --panel: #f4f6fa;
-      --font-head: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-      --font-body: 'Inter', system-ui, sans-serif;
+      --font-head: 'Montserrat', system-ui, sans-serif;
+      --font-body: 'Montserrat', system-ui, sans-serif;
     }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--panel); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
@@ -55,20 +56,28 @@ const blogBase = import.meta.env.BASE_URL.endsWith('/')
     .zl-nav a.link { color: var(--muted); font-size: .85rem; text-decoration: none; padding: 6px 10px; border-radius: 8px; transition: color .15s; }
     .zl-nav a.link:hover { color: var(--ink); background: var(--panel); }
 
+    .zl-topline { height: 4px; background: linear-gradient(90deg, #16B6C9, #D4AF37); }
+
     .zl-hero {
       position: relative; overflow: hidden;
       padding: 88px 28px 64px; text-align: center;
-      background: #fff; border-bottom: 1px solid var(--line);
+      background: linear-gradient(135deg, #082D3A 0%, #0A1E28 60%, #16B6C9 145%);
+    }
+    .zl-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle at 85% 15%, rgba(212, 175, 55, 0.28) 0%, transparent 45%),
+        radial-gradient(circle at 10% 90%, rgba(125, 227, 255, 0.18) 0%, transparent 40%);
     }
     .zl-hero .wrap { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; }
     .zl-badge {
       display: inline-flex; align-items: center; gap: 8px;
       font-family: var(--font-head); font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
-      color: var(--accent-deep); background: var(--accent-soft);
+      color: var(--vcl-cian, #7DE3FF); background: rgba(125, 227, 255, 0.12); border: 1px solid rgba(125, 227, 255, 0.3);
       padding: 7px 16px; border-radius: 999px; margin-bottom: 22px;
     }
-    .zl-hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 600; line-height: 1.06; color: var(--ink); letter-spacing: -0.03em; }
-    .zl-hero .sub { margin: 18px auto 0; max-width: 620px; color: var(--muted); font-size: 1.05rem; line-height: 1.7; }
+    .zl-hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 600; line-height: 1.06; color: #fff; letter-spacing: -0.03em; }
+    .zl-hero .sub { margin: 18px auto 0; max-width: 620px; color: rgba(125, 227, 255, 0.85); font-size: 1.05rem; line-height: 1.7; }
 
     .zl-section { padding: 64px 28px; max-width: 1100px; margin: 0 auto; }
     .zl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
@@ -78,10 +87,9 @@ const blogBase = import.meta.env.BASE_URL.endsWith('/')
     .zl-widget-link { font-family: var(--font-head); font-size: .85rem; font-weight: 600; color: var(--accent-deep); }
     .zl-widget-link:hover { text-decoration: underline; }
     .zl-widget-sub { color: var(--muted); font-size: .9rem; margin-bottom: 22px; }
-    .zl-widget-list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 14px; background: #fff; overflow: hidden; }
-    .zl-widget-item { display: block; padding: 16px 22px; border-bottom: 1px solid var(--line); transition: background .15s; }
-    .zl-widget-item:last-child { border-bottom: 0; }
-    .zl-widget-item:hover { background: var(--accent-soft); }
+    .zl-widget-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+    .zl-widget-item { display: block; padding: 16px 22px; background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 12px; transition: box-shadow .15s, border-color .15s, background .15s; }
+    .zl-widget-item:hover { background: var(--accent-soft); border-color: #a6e9f1; border-left-color: var(--accent); box-shadow: 0 10px 24px -16px rgba(22,182,201,.35); }
     .zl-widget-item-title { display: block; font-weight: 600; color: var(--ink); font-size: .98rem; line-height: 1.4; }
     .zl-widget-item:hover .zl-widget-item-title { color: var(--accent-deep); }
     .zl-widget-item-desc { display: block; color: var(--muted); font-size: .85rem; line-height: 1.55; margin-top: 3px; }
@@ -95,9 +103,11 @@ const blogBase = import.meta.env.BASE_URL.endsWith('/')
     @media (max-width: 560px) { .zl-hero { padding: 60px 20px 48px; } }
   </style>
 
+  <div class="zl-topline" aria-hidden="true"></div>
+
   <header class="zl-header">
     <div class="row">
-      <div class="zl-brand">MG<b>.</b><span class="sub">| Zona Lab</span></div>
+      <div class="zl-brand">{BRAND_NAME}<span class="sub">| Zona Lab</span></div>
       <div class="zl-nav">
         <a class="link" href="/disertaciones/">Disertaciones</a>
         <a class="link" href="/es/portfolio/">Portfolio</a>

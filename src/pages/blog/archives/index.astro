@@ -56,7 +56,7 @@ const monthNames = [
 
   <div>
     <header class="mb-12 text-center">
-      <h1 class="entry-title text-4xl font-semibold text-[#141a2e] mb-4">Archivo</h1>
+      <h1 class="entry-title text-4xl font-semibold text-[#082D3A] mb-4">Archivo</h1>
       <p class="text-lg text-[#5c6785]">Todos los artículos organizados por fecha</p>
     </header>
 
@@ -71,7 +71,7 @@ const monthNames = [
 
           return (
             <section class="year-section mb-12" aria-labelledby={`year-${year}`}>
-              <h2 id={`year-${year}`} class="text-3xl font-semibold text-[#141a2e] mb-6 pb-3 border-b border-[#e4e8f0]">{year}</h2>
+              <h2 id={`year-${year}`} class="text-3xl font-semibold text-[#082D3A] mb-6 pb-3 border-b border-[#e4e8f0]">{year}</h2>
 
               {months.map((monthIndex) => {
                 const monthPosts = postsByYearMonth[year][monthIndex];
@@ -79,7 +79,7 @@ const monthNames = [
 
                 return (
                   <div class="month-section mb-8">
-                    <h3 class="text-xl font-semibold text-[#141a2e] mb-4 capitalize">{monthName} {year}</h3>
+                    <h3 class="text-xl font-semibold text-[#082D3A] mb-4 capitalize">{monthName} {year}</h3>
                     <div class="posts-list" role="list">
                       {monthPosts.map((post) => (
                         <PostCard post={post} />

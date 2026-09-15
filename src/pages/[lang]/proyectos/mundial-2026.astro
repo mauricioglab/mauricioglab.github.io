@@ -17,7 +17,7 @@ const { lang } = Astro.params as { lang: Lang };
 const content = await useTranslations<any>(lang, 'projects-mundial-2026');
 const project = projects.find((p) => p.id === 'mundial-2026')!;
 
-const accentColor = 'blue';
+const accentColor = 'turquesa';
 
 const headerStats = [
   { value: content.stats.matches.value, label: content.stats.matches.label },
@@ -92,6 +92,5 @@ const resultMetrics = [
     subtitle={content.cta.subtitle}
     buttonText={content.cta.button}
     accentColor={accentColor}
-    secondaryColor="purple"
   />
 </CaseStudyLayout>

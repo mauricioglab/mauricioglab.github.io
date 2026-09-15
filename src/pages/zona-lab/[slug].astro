@@ -5,6 +5,7 @@ import ModoBanner from '../../components/shared/ModoBanner.astro';
 import { getRecursos, formatFecha } from '../../utils/recursos';
 import { getRelacionadosPosts, getUltimosPosts } from '../../utils/relacionados';
 import { createMarkdownProcessor } from '@astrojs/markdown-remark';
+import { BRAND_NAME } from '../../data/brand';
 
 export const prerender = true;
 
@@ -35,27 +36,29 @@ const bannerUltimos = ultimosPosts.map((p) => ({
 }));
 ---
 
-<BaseTailwind title={`${r.title} — Zona Lab | MG Lab`} description={r.description} lang="es" layoutType="landing">
-  <SeoHead slot="head" title={`${r.title} — Zona Lab | MG Lab`} description={r.description} lang="es" canonical={canonical} />
+<BaseTailwind title={`${r.title} — Zona Lab | ${BRAND_NAME}`} description={r.description} lang="es" layoutType="landing">
+  <SeoHead slot="head" title={`${r.title} — Zona Lab | ${BRAND_NAME}`} description={r.description} lang="es" canonical={canonical} />
 
   <style>
     :root {
-      --accent: #1d4ed8;
-      --accent-deep: #1e40af;
-      --accent-soft: #eef2ff;
-      --ink: #141a2e;
+      --accent: #16b6c9;
+      --accent-deep: #082d3a;
+      --accent-soft: #e6fafc;
+      --ink: #082d3a;
       --muted: #5c6785;
       --faint: #8b94ab;
       --line: #e4e8f0;
       --panel: #f4f6fa;
-      --font-head: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-      --font-body: 'Inter', system-ui, sans-serif;
+      --font-head: 'Montserrat', system-ui, sans-serif;
+      --font-body: 'Montserrat', system-ui, sans-serif;
     }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--panel); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
     h1, h2, h3, h4 { font-family: var(--font-head); line-height: 1.15; margin: 0; letter-spacing: -0.02em; font-weight: 600; }
     p { margin: 0; }
     a { color: inherit; text-decoration: none; }
+
+    .zl-topline { height: 4px; background: linear-gradient(90deg, #16B6C9, #D4AF37); }
 
     .zl-header {
       position: sticky; top: 0; z-index: 50;
@@ -79,6 +82,7 @@ const bannerUltimos = ultimosPosts.map((p) => ({
       color: var(--accent-deep); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;
     }
     .zl-type { color: #fff; background: var(--accent-deep); border-radius: 999px; padding: 3px 12px; }
+    .zl-type.zl-type--reporte { background: #082d3a; color: #d4af37; }
 
     .zl-title { font-size: clamp(1.9rem, 4.4vw, 2.6rem); font-weight: 600; line-height: 1.08; color: var(--ink); letter-spacing: -0.025em; margin-bottom: 16px; }
     .zl-desc { font-size: 1.08rem; color: var(--muted); line-height: 1.7; margin-bottom: 32px; max-width: 700px; }
@@ -94,7 +98,7 @@ const bannerUltimos = ultimosPosts.map((p) => ({
     .zl-cover img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
 
     .zl-article {
-      background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 36px 38px;
+      background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 16px; padding: 36px 38px;
     }
     .zl-article :global(h1), .zl-article :global(h2), .zl-article :global(h3) { font-weight: 600; color: var(--ink); margin: 1.4em 0 .5em; line-height: 1.2; }
     .zl-article :global(h1) { font-size: 1.5em; } .zl-article :global(h2) { font-size: 1.3em; } .zl-article :global(h3) { font-size: 1.12em; }
@@ -122,9 +126,11 @@ const bannerUltimos = ultimosPosts.map((p) => ({
     }
   </style>
 
+  <div class="zl-topline" aria-hidden="true"></div>
+
   <header class="zl-header">
     <div class="row">
-      <div class="zl-brand">MG<b>.</b></div>
+      <div class="zl-brand">{BRAND_NAME}</div>
       <div class="zl-nav">
         <a href="/zona-lab/">← Zona Lab</a>
         <a href="/disertaciones/">Disertaciones</a>
@@ -136,7 +142,7 @@ const bannerUltimos = ultimosPosts.map((p) => ({
     <div class="zl-crumbs"><a href="/zona-lab/">Zona Lab</a> <span>·</span> {r.title}</div>
 
     <div class="zl-meta">
-      <span class="zl-type">{isVideo ? '🎬 Video' : '📄 Reporte'}</span>
+      <span class:list={['zl-type', !isVideo && 'zl-type--reporte']}>{isVideo ? '🎬 Video' : '📄 Reporte'}</span>
       <time datetime={r.createdAt.toISOString()}>{formatFecha(r.createdAt)}</time>
       {r.sourceTitle && <span>{r.sourceTitle}</span>}
     </div>

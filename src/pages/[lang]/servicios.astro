@@ -5,6 +5,7 @@ import { SITE_CONFIG } from '@data/config';
 import { getLanguagePaths } from '@utils/i18n-paths';
 import { type Lang, useTranslations, getAlternateUrl } from '@i18n/index';
 import SeoHead from '@components/shared/SeoHead.astro';
+import { BRAND_NAME } from '@data/brand';
 
 export const getStaticPaths = getLanguagePaths;
 
@@ -30,12 +31,12 @@ const groups = content.groups.map((g: any) => ({
 
 // Mapa de colores por servicio (para diferenciar el ícono de cada card)
 const iconColorMap: Record<string, string> = {
-  'blue-600': '#1d4ed8',
-  'slate-900': '#334155',
-  'purple-600': '#7c3aed',
-  'emerald-600': '#059669',
-  'orange-600': '#ea580c',
-  'green-600': '#16a34a',
+  'blue-600': '#16B6C9',
+  'slate-900': '#082D3A',
+  'purple-600': '#0A1E28',
+  'emerald-600': '#16B6C9',
+  'orange-600': '#A9842A',
+  'green-600': '#16B6C9',
 };
 
 // Mailto del speaking (funnel separado del modal genérico)
@@ -60,16 +61,16 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
   <SeoHead slot="head" title={content.seo.title} description={content.seo.description} lang={lang} canonical={canonical} />
   <style>
     :root {
-      --accent: #1d4ed8;
-      --accent-deep: #1e40af;
-      --accent-soft: #eef2ff;
-      --ink: #141a2e;
+      --accent: #16b6c9;
+      --accent-deep: #082d3a;
+      --accent-soft: #e6fafc;
+      --ink: #082d3a;
       --muted: #5c6785;
       --faint: #8b94ab;
       --line: #e4e8f0;
       --panel: #f4f6fa;
-      --font-head: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-      --font-body: 'Inter', system-ui, sans-serif;
+      --font-head: 'Montserrat', system-ui, sans-serif;
+      --font-body: 'Montserrat', system-ui, sans-serif;
     }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--panel); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
@@ -118,15 +119,15 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
       position: absolute; width: 55vw; height: 55vw; max-width: 720px; max-height: 720px; border-radius: 50%;
       opacity: .3;
     }
-    .sv-aurora .b1 { background: #7ea2ff; top: -20%; left: -10%; animation: drift1 16s ease-in-out infinite alternate; }
-    .sv-aurora .b2 { background: #b7a6ff; bottom: -30%; right: -10%; animation: drift2 20s ease-in-out infinite alternate; }
+    .sv-aurora .b1 { background: #7de3ff; top: -20%; left: -10%; animation: drift1 16s ease-in-out infinite alternate; }
+    .sv-aurora .b2 { background: #d4af37; bottom: -30%; right: -10%; animation: drift2 20s ease-in-out infinite alternate; }
     @keyframes drift1 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(12vw, 8vh) scale(1.15); } }
     @keyframes drift2 { 0% { transform: translate(0,0) scale(1.1); } 100% { transform: translate(-10vw, -6vh) scale(.95); } }
 
     /* Spotlight que sigue al cursor */
     .sv-spotlight {
       position: absolute; inset: 0; z-index: 1; pointer-events: none;
-      background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 30%), rgba(29,78,216,.14), transparent 70%);
+      background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 30%), rgba(22,182,201,.14), transparent 70%);
     }
 
     .sv-badge {
@@ -186,7 +187,7 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
       background: #fff; padding: 30px 26px; border-radius: 14px; border: 1px solid var(--line);
       display: flex; flex-direction: column; gap: 14px; transition: transform .18s, box-shadow .18s, border-color .18s;
     }
-    .sv-card:hover { transform: translateY(-3px); box-shadow: 0 20px 44px -24px rgba(29,78,216,.28); border-color: #c7d2fe; }
+    .sv-card:hover { transform: translateY(-3px); box-shadow: 0 20px 44px -24px rgba(22,182,201,.28); border-color: #a6e9f1; }
     .sv-card .icon {
       width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
       background: var(--icon-bg, var(--accent-soft)); color: var(--icon-color, var(--accent-deep));
@@ -201,7 +202,7 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
       background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 26px 24px;
       display: flex; flex-direction: column; gap: 12px; transition: transform .18s, box-shadow .18s;
     }
-    .sv-case:hover { transform: translateY(-3px); box-shadow: 0 20px 44px -24px rgba(29,78,216,.28); }
+    .sv-case:hover { transform: translateY(-3px); box-shadow: 0 20px 44px -24px rgba(22,182,201,.28); }
     .sv-case .who { font-family: var(--font-head); font-size: .72rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-deep); }
     .sv-case .what { font-size: .95rem; font-weight: 600; color: var(--ink); }
     .sv-case .res { font-size: .86rem; color: var(--muted); line-height: 1.6; }
@@ -223,7 +224,7 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
     /* ---------- Speaking ---------- */
     .sv-speaking {
       max-width: 820px; margin: 0 auto; text-align: center;
-      background: var(--accent-soft); border: 1px solid #c7d2fe; border-radius: 18px;
+      background: var(--accent-soft); border: 1px solid #a6e9f1; border-radius: 18px;
       padding: 44px 40px;
     }
     .sv-speaking .k { font-family: var(--font-head); font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-deep); margin-bottom: 12px; }
@@ -246,8 +247,9 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
     .sv-final { padding: 72px 28px; }
     .sv-final .box {
       max-width: 900px; margin: 0 auto; text-align: center;
-      background: linear-gradient(135deg, #1e40af, #4338ca); color: #fff;
+      background: linear-gradient(135deg, #082d3a, #16b6c9); color: #fff;
       border-radius: 18px; padding: 56px 44px;
+      border-top: 3px solid #d4af37;
     }
     .sv-final h2 { font-size: 1.9rem; font-weight: 600; margin: 0 0 12px; letter-spacing: -.02em; }
     .sv-final p { font-size: 1.05rem; opacity: .92; margin: 0 0 28px; }
@@ -284,7 +286,7 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
   <!-- Header -->
   <header class="sv-header">
     <div class="row">
-      <div class="sv-brand">MG<b>.</b><span class="sub">| {content.subtitle}</span></div>
+      <div class="sv-brand">{BRAND_NAME}<span class="sub">| {content.subtitle}</span></div>
       <div class="sv-nav">
         <a class="link" href={`/${lang}/portfolio`}>{content.nav.portfolio}</a>
         <a class="link" href={`/${lang}/cv`}>{content.nav.cv}</a>
@@ -343,7 +345,7 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
                     <h3 class="sv-group-title">{group.label}</h3>
                     <div class="sv-grid sv-grid--stacked">
                       {group.items.map((card: any) => (
-                        <div class="sv-card reveal" style={`--icon-bg:${iconColorMap[card.color] || '#1d4ed8'}1a; --icon-color:${iconColorMap[card.color] || '#1d4ed8'}`}>
+                        <div class="sv-card reveal" style={`--icon-bg:${iconColorMap[card.color] || '#16B6C9'}1a; --icon-color:${iconColorMap[card.color] || '#16B6C9'}`}>
                           <div class="icon">
                             <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                               <path stroke-linecap="round" stroke-linejoin="round" d={iconPaths[card.icon] || defaultIcon} />
@@ -363,7 +365,7 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
                 <h3 class="sv-group-title">{group.label}</h3>
                 <div class="sv-grid">
                   {group.items.map((card) => (
-                    <div class="sv-card reveal" style={`--icon-bg:${iconColorMap[card.color] || '#1d4ed8'}1a; --icon-color:${iconColorMap[card.color] || '#1d4ed8'}`}>
+                    <div class="sv-card reveal" style={`--icon-bg:${iconColorMap[card.color] || '#16B6C9'}1a; --icon-color:${iconColorMap[card.color] || '#16B6C9'}`}>
                       <div class="icon">
                         <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" d={iconPaths[card.icon] || defaultIcon} />

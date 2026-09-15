@@ -6,6 +6,8 @@ import ReadingTime from './ReadingTime.astro';
 interface Props {
   post: BlogPost;
   baseUrl?: string;
+  /** Da al post el tratamiento "destacado" (card oscura petróleo/dorado) en vez de la card blanca estándar. */
+  featured?: boolean;
   /** i18n texts for the component */
   i18n?: {
     writtenBy?: string;
@@ -17,6 +19,7 @@ interface Props {
 const {
   post,
   baseUrl = import.meta.env.BASE_URL,
+  featured = false,
   i18n = {}
 } = Astro.props;
 
@@ -36,25 +39,36 @@ const url = `${normalizedBase}blog/${post.slug}/`;
   data-title={post.title}
   data-description={post.description}
   data-categories={post.categories.join(' ')}
-  class="post entry mb-[50px] pb-[50px] border-b border-[#e5e5e5] last:border-b-0"
+  class:list={[
+    'post entry mb-4 rounded-2xl transition-shadow',
+    featured
+      ? 'p-5 md:p-6 shadow-lg'
+      : 'p-4 md:p-5 bg-white border border-[#e4e8f0] border-l-4 border-l-vcl-turquesa shadow-sm hover:shadow-md',
+  ]}
+  style={featured ? 'background: linear-gradient(135deg, #082D3A 0%, #0A1E28 70%, #16B6C9 160%);' : undefined}
   itemscope
   itemtype="https://schema.org/BlogPosting"
 >
-  <header class="entry-header mb-5">
-    <h2 class="entry-title">
-      <a class="entry-title-link hover:opacity-80" href={url} itemprop="headline">
+  <header class="entry-header mb-2">
+    {featured && (
+      <span class="inline-block mb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#082D3A] bg-[#D4AF37] px-2.5 py-0.5 rounded-full">
+        Último artículo
+      </span>
+    )}
+    <h2 class:list={['entry-title !text-xl !mb-1', featured && '!text-white']}>
+      <a class:list={['entry-title-link hover:opacity-80', featured && '!text-white hover:!text-vcl-cian']} href={url} itemprop="headline">
         {post.title}
       </a>
     </h2>
-    <p class="entry-meta">
+    <p class:list={['entry-meta', featured && '!text-vcl-cian/80']}>
       {texts.writtenBy} <span class="entry-author-name" itemprop="author">{post.author}</span>
       <time datetime={post.pubDate.toISOString()} itemprop="datePublished" class="hidden">{post.pubDate.toISOString()}</time>
       <ReadingTime content={post.body} unitText={texts.readingTimeUnit} />
     </p>
   </header>
 
-  <div class="entry-content" itemprop="description">
-    <p>{post.description}</p>
-    <p><a href={url} class="more-link underline hover:opacity-80" aria-label={`${texts.readMore} ${post.title}`}>{texts.readMore}</a></p>
+  <div class:list={['entry-content !text-[15px] !leading-normal', featured && '!text-white/90']} itemprop="description">
+    <p class:list={['line-clamp-2 !mb-2', featured && '!text-white/90']}>{post.description}</p>
+    <p class="!mb-0"><a href={url} class:list={['more-link underline hover:opacity-80', featured && '!text-vcl-cian hover:!text-white']} aria-label={`${texts.readMore} ${post.title}`}>{texts.readMore}</a></p>
   </div>
 </article>

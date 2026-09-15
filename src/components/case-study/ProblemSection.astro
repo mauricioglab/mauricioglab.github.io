@@ -4,7 +4,7 @@
  * Displays the problem description and list of challenges
  */
 
-type AccentColor = 'blue' | 'emerald' | 'purple' | 'orange';
+type AccentColor = 'turquesa' | 'dorado';
 
 interface Props {
   title: string;
@@ -15,31 +15,22 @@ interface Props {
 
 const { title, intro, items, accentColor } = Astro.props;
 
-// Static color mappings for Tailwind
+// Mapeos de color VeloCityLab (bullet en petróleo sobre fondo claro para contraste;
+// en modo oscuro el acento de marca sí puede usarse como texto).
 const colorClasses: Record<AccentColor, {
   sectionBg: string;
   sectionBorder: string;
   bulletColor: string;
 }> = {
-  blue: {
-    sectionBg: 'bg-blue-50 dark:bg-blue-900/20',
-    sectionBorder: 'border-blue-200 dark:border-blue-800',
-    bulletColor: 'text-blue-600 dark:text-blue-400',
+  turquesa: {
+    sectionBg: 'bg-[#E6FAFC] dark:bg-[#0b6e7d]/20',
+    sectionBorder: 'border-[#a6e9f1] dark:border-[#0b6e7d]',
+    bulletColor: 'text-[#082D3A] dark:text-[#7DE3FF]',
   },
-  emerald: {
-    sectionBg: 'bg-emerald-50 dark:bg-emerald-900/20',
-    sectionBorder: 'border-emerald-200 dark:border-emerald-800',
-    bulletColor: 'text-emerald-600 dark:text-emerald-400',
-  },
-  purple: {
-    sectionBg: 'bg-purple-50 dark:bg-purple-900/20',
-    sectionBorder: 'border-purple-200 dark:border-purple-800',
-    bulletColor: 'text-purple-600 dark:text-purple-400',
-  },
-  orange: {
-    sectionBg: 'bg-orange-50 dark:bg-orange-900/20',
-    sectionBorder: 'border-orange-200 dark:border-orange-800',
-    bulletColor: 'text-orange-600 dark:text-orange-400',
+  dorado: {
+    sectionBg: 'bg-[#FBF3DD] dark:bg-[#8A6A1F]/20',
+    sectionBorder: 'border-[#e9d9a8] dark:border-[#8A6A1F]',
+    bulletColor: 'text-[#082D3A] dark:text-[#D4AF37]',
   },
 };
 

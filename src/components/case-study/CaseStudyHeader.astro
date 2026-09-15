@@ -15,7 +15,7 @@ export interface Link {
   primary?: boolean;
 }
 
-type AccentColor = 'blue' | 'emerald' | 'purple' | 'orange';
+type AccentColor = 'turquesa' | 'dorado';
 
 interface Props {
   badge: string;
@@ -28,41 +28,25 @@ interface Props {
 
 const { badge, title, description, stats, links, accentColor } = Astro.props;
 
-// Static color mappings for Tailwind
+// Mapeos de color VeloCityLab (turquesa/dorado como tinte de acento; el texto
+// siempre en petróleo/blanco para asegurar contraste, nunca color de marca fino).
 const colorClasses: Record<AccentColor, {
   badgeBg: string;
   badgeText: string;
-  statValue: string;
   primaryBtn: string;
   secondaryBtnHover: string;
 }> = {
-  blue: {
-    badgeBg: 'bg-blue-50 dark:bg-blue-900/30',
-    badgeText: 'text-blue-700 dark:text-blue-300',
-    statValue: 'text-blue-600 dark:text-blue-400',
-    primaryBtn: 'bg-blue-600 hover:bg-blue-700',
-    secondaryBtnHover: 'hover:border-blue-600',
+  turquesa: {
+    badgeBg: 'bg-[#E6FAFC] dark:bg-[#0b6e7d]/25',
+    badgeText: 'text-[#082D3A] dark:text-[#7DE3FF]',
+    primaryBtn: 'bg-[#082D3A] hover:bg-[#0b6e7d]',
+    secondaryBtnHover: 'hover:border-[#16B6C9]',
   },
-  emerald: {
-    badgeBg: 'bg-emerald-50 dark:bg-emerald-900/30',
-    badgeText: 'text-emerald-700 dark:text-emerald-300',
-    statValue: 'text-emerald-600 dark:text-emerald-400',
-    primaryBtn: 'bg-emerald-600 hover:bg-emerald-700',
-    secondaryBtnHover: 'hover:border-emerald-600',
-  },
-  purple: {
-    badgeBg: 'bg-purple-50 dark:bg-purple-900/30',
-    badgeText: 'text-purple-700 dark:text-purple-300',
-    statValue: 'text-purple-600 dark:text-purple-400',
-    primaryBtn: 'bg-purple-600 hover:bg-purple-700',
-    secondaryBtnHover: 'hover:border-purple-600',
-  },
-  orange: {
-    badgeBg: 'bg-orange-50 dark:bg-orange-900/30',
-    badgeText: 'text-orange-700 dark:text-orange-300',
-    statValue: 'text-orange-600 dark:text-orange-400',
-    primaryBtn: 'bg-orange-600 hover:bg-orange-700',
-    secondaryBtnHover: 'hover:border-orange-600',
+  dorado: {
+    badgeBg: 'bg-[#FBF3DD] dark:bg-[#8A6A1F]/25',
+    badgeText: 'text-[#082D3A] dark:text-[#D4AF37]',
+    primaryBtn: 'bg-[#082D3A] hover:bg-[#8A6A1F]',
+    secondaryBtnHover: 'hover:border-[#D4AF37]',
   },
 };
 
@@ -75,13 +59,13 @@ const colors = colorClasses[accentColor];
       {badge}
     </span>
   </div>
-  <h1 class="text-5xl font-extrabold mb-6">{title}</h1>
+  <h1 class="text-5xl font-extrabold mb-6 text-[#082D3A] dark:text-white">{title}</h1>
   <p class="text-xl text-slate-600 dark:text-slate-400 leading-relaxed mb-8">{description}</p>
 
   <div class="grid grid-cols-3 gap-4 mb-8">
     {stats.map(stat => (
       <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
-        <div class:list={['text-2xl font-bold', colors.statValue]}>{stat.value}</div>
+        <div class="text-2xl font-bold text-[#082D3A] dark:text-white">{stat.value}</div>
         <div class="text-sm text-slate-600 dark:text-slate-400">{stat.label}</div>
       </div>
     ))}
@@ -89,12 +73,12 @@ const colors = colorClasses[accentColor];
 
   <div class="flex flex-wrap gap-4">
     {links.map(link => (
-      <a 
-        href={link.url} 
-        target="_blank" 
+      <a
+        href={link.url}
+        target="_blank"
         class:list={[
           'px-6 py-3 rounded-lg font-semibold transition',
-          link.primary 
+          link.primary
             ? [colors.primaryBtn, 'text-white']
             : ['border-2 border-slate-300 dark:border-slate-600', colors.secondaryBtnHover]
         ]}

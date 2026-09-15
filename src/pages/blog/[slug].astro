@@ -71,7 +71,7 @@ const bannerUltimos = ultimosRecursos.map((r) => ({
   </slot>
 
   <article
-    class="post entry"
+    class="post entry bg-white border border-[#e4e8f0] border-l-4 border-l-vcl-turquesa rounded-2xl shadow-sm p-6 md:p-10"
     itemscope
     itemtype="https://schema.org/BlogPosting"
   >
@@ -122,6 +122,17 @@ const bannerUltimos = ultimosRecursos.map((r) => ({
           )
         }
       </p>
+      {
+        post.categories.length > 0 && (
+          <div class="flex flex-wrap gap-2 mt-3">
+            {post.categories.map((category) => (
+              <span class="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#082D3A] bg-[#E6FAFC] border border-[#a6e9f1] px-3 py-1 rounded-full">
+                {category}
+              </span>
+            ))}
+          </div>
+        )
+      }
     </header>
 
     <div class="entry-content" itemprop="articleBody">

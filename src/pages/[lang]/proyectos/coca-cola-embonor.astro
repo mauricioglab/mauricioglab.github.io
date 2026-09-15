@@ -15,7 +15,7 @@ export const getStaticPaths = getLanguagePaths;
 const { lang } = Astro.params as { lang: Lang };
 const content = await useTranslations<any>(lang, 'projects-coca-cola-embonor');
 
-const accentColor = 'emerald';
+const accentColor = 'turquesa';
 
 const headerStats = [
   { value: content.stats.errores.value, label: content.stats.errores.label },
@@ -87,6 +87,5 @@ const resultMetrics = [
     subtitle={content.cta.subtitle}
     buttonText={content.cta.button}
     accentColor={accentColor}
-    secondaryColor="blue"
   />
 </CaseStudyLayout>

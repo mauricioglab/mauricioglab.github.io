@@ -36,14 +36,13 @@ const clusters = [
       { id: 'videos', label: 'Video Organizer', url: resolveUrl('/videos/'), hint: 'YouTube + Udemy' },
       { id: 'extensions', label: 'Extensiones', url: resolveUrl('/extensions/'), hint: 'Chrome / Firefox' },
       { id: 'vsagenda', label: 'vsagenda', url: resolveUrl('/vsagenda/'), hint: 'Agenda PWA estilo VS Code' },
-      { id: 'seguimiento', label: 'Panel Seguimiento', url: resolveUrl('/seguimiento/'), hint: 'Tutorías y prácticas' },
     ],
   },
   {
     label: "Retro",
     primary: false,
     links: [
-      { id: 'main', label: 'Main (Retro)', url: resolveUrl('/main/'), hint: 'El MG Lab Depot original' },
+      { id: 'main', label: 'Main (Retro)', url: resolveUrl('/main/'), hint: 'El VeloCityLab Depot original' },
     ],
   },
 ];
@@ -55,7 +54,7 @@ const clusters = [
       <div class="flex items-baseline justify-between gap-4 mb-3">
         <h2
           class:list={[
-            'uppercase tracking-[0.14em] text-[#1e40af] font-bold',
+            'uppercase tracking-[0.14em] text-vcl-turquesa font-vclHead font-bold',
             cluster.primary ? 'text-sm' : 'text-xs',
           ]}
         >
@@ -77,13 +76,13 @@ const clusters = [
             <li>
               <a
                 href={link.url}
-                class="group block px-3.5 py-3.5 rounded-lg bg-white border border-[#e4e8f0] shadow-sm hover:border-[#1e40af] hover:shadow-md transition-all"
+                class="group block px-3.5 py-3.5 rounded-lg bg-vcl-petroleo border border-vcl-petroleo shadow-sm hover:border-vcl-turquesa hover:shadow-md transition-all"
               >
-                <span class="block font-semibold text-[#141a2e] text-[15px] group-hover:text-[#1e40af] transition-colors">
+                <span class="block font-semibold text-white text-[15px] group-hover:text-vcl-cian transition-colors">
                   {link.label}
                 </span>
                 {link.hint && (
-                  <span class="block mt-1 text-xs text-[#5c6785] group-hover:text-[#1d4ed8] transition-colors">
+                  <span class="block mt-1 text-xs text-vcl-dorado/90 group-hover:text-vcl-dorado transition-colors">
                     {link.hint}
                   </span>
                 )}
@@ -93,17 +92,17 @@ const clusters = [
             <li class="py-3">
               <a
                 href={link.url}
-                class="group flex items-baseline justify-between gap-3 transition-colors duration-200 text-[#141a2e] hover:text-[#1e40af]"
+                class="group flex items-baseline justify-between gap-3 transition-colors duration-200 text-vcl-petroleo hover:text-vcl-turquesa"
               >
                 <span class="flex items-baseline gap-2 min-w-0">
                   <span class="text-[15px] font-medium truncate">{link.label}</span>
                   {link.hint && (
-                    <span class="hidden sm:inline text-xs text-[#5c6785] group-hover:text-[#1d4ed8] transition-colors truncate">
+                    <span class="hidden sm:inline text-xs text-[#5c6785] group-hover:text-vcl-turquesa transition-colors truncate">
                       {link.hint}
                     </span>
                   )}
                 </span>
-                <span aria-hidden="true" class="text-[#5c6785] group-hover:text-[#1e40af] transition-colors text-base shrink-0">→</span>
+                <span aria-hidden="true" class="text-[#5c6785] group-hover:text-vcl-turquesa transition-colors text-base shrink-0">→</span>
               </a>
             </li>
           ),

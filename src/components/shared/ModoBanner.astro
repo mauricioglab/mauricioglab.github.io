@@ -50,11 +50,11 @@ const textos = esBlogALab
 
 <aside class="modo-banner rounded-2xl border border-[#e4e8f0] bg-white shadow-sm overflow-hidden">
   <div
-    class="flex items-start gap-3 px-6 py-4 bg-gradient-to-r from-[#eef2ff] to-white border-b border-[#e4e8f0]"
+    class="flex items-start gap-3 px-6 py-4 bg-gradient-to-r from-[#E6FAFC] to-white border-b border-[#e4e8f0]"
   >
     <span class="text-2xl leading-none" aria-hidden="true">{textos.badge}</span>
     <div>
-      <p class="font-semibold text-[#1e40af] text-lg leading-tight">
+      <p class="font-semibold text-vcl-turquesa text-lg leading-tight">
         {textos.titulo}
       </p>
       <p class="text-sm text-[#5c6785] leading-snug mt-0.5">
@@ -65,15 +65,15 @@ const textos = esBlogALab
 
   {
     contextuales.length > 0 ? (
-      <ul class="divide-y divide-[#e4e8f0]">
+      <ul class="px-6 py-4 flex flex-col gap-2">
         {contextuales.map((item) => (
           <li>
             <a
               href={item.url}
-              class="group block px-6 py-3"
+              class="group block px-4 py-3 rounded-lg border border-[#e4e8f0] border-l-4 border-l-vcl-turquesa bg-white hover:bg-[#E6FAFC] hover:border-[#a6e9f1] hover:border-l-vcl-turquesa transition-colors"
             >
               <span
-                class="block font-medium text-[#141a2e] group-hover:text-[#1e40af] text-[15px] leading-snug"
+                class="block font-medium text-vcl-petroleo group-hover:text-vcl-turquesa text-[15px] leading-snug"
               >
                 {item.title}
               </span>
@@ -108,7 +108,7 @@ const textos = esBlogALab
             <li>
               <a
                 href={item.url}
-                class="text-[13px] text-[#5c6785] hover:text-[#1e40af] underline underline-offset-2"
+                class="text-[13px] text-[#5c6785] hover:text-vcl-turquesa underline underline-offset-2"
               >
                 {item.title}
               </a>
@@ -122,7 +122,7 @@ const textos = esBlogALab
   <div class="px-6 py-4 border-t border-[#e4e8f0]">
     <a
       href={textos.ctaUrl}
-      class="inline-flex items-center gap-2 rounded-lg bg-[#1e40af] hover:bg-[#1d4ed8] text-white text-sm font-semibold px-4 py-2 transition-colors"
+      class="inline-flex items-center gap-2 rounded-lg bg-vcl-petroleo hover:bg-vcl-turquesa text-white text-sm font-semibold px-4 py-2 transition-colors"
     >
       {textos.cta} <span aria-hidden="true">→</span>
     </a>
@@ -131,6 +131,6 @@ const textos = esBlogALab
 
 <style>
   .modo-banner {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
   }
 </style>
