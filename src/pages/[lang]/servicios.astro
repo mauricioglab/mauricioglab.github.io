@@ -87,7 +87,8 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
       border-bottom: 1px solid var(--line);
     }
     .sv-header .row { max-width: 1100px; margin: 0 auto; padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-    .sv-brand { font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); letter-spacing: .02em; }
+    .sv-brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); letter-spacing: .02em; }
+    .sv-brand-icon { width: 22px; height: 22px; flex-shrink: 0; }
     .sv-brand b { color: var(--accent); }
     .sv-brand .sub { font-weight: 400; font-size: .8rem; color: var(--faint); margin-left: .5rem; }
     .sv-nav { display: flex; align-items: center; gap: .75rem; }
@@ -286,7 +287,7 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
   <!-- Header -->
   <header class="sv-header">
     <div class="row">
-      <div class="sv-brand">{BRAND_NAME}<span class="sub">| {content.subtitle}</span></div>
+      <div class="sv-brand"><img src="/logo-vl-icon.svg" alt="" class="sv-brand-icon" />{BRAND_NAME}<span class="sub">| {content.subtitle}</span></div>
       <div class="sv-nav">
         <a class="link" href={`/${lang}/portfolio`}>{content.nav.portfolio}</a>
         <a class="link" href={`/${lang}/cv`}>{content.nav.cv}</a>

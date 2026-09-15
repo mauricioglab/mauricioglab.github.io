@@ -66,7 +66,8 @@ const bannerUltimos = ultimosPosts.map((p) => ({
       border-bottom: 1px solid var(--line);
     }
     .zl-header .row { max-width: 1000px; margin: 0 auto; padding: 14px 28px; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-    .zl-brand { font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); letter-spacing: .02em; }
+    .zl-brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); letter-spacing: .02em; }
+    .zl-brand-icon { width: 22px; height: 22px; flex-shrink: 0; }
     .zl-brand b { color: var(--accent); }
     .zl-nav { display: flex; align-items: center; gap: .9rem; }
     .zl-nav a { color: var(--muted); font-size: .85rem; padding: 6px 10px; border-radius: 8px; transition: color .15s; }
@@ -130,7 +131,7 @@ const bannerUltimos = ultimosPosts.map((p) => ({
 
   <header class="zl-header">
     <div class="row">
-      <div class="zl-brand">{BRAND_NAME}</div>
+      <div class="zl-brand"><img src="/logo-vl-icon.svg" alt="" class="zl-brand-icon" />{BRAND_NAME}</div>
       <div class="zl-nav">
         <a href="/zona-lab/">← Zona Lab</a>
         <a href="/disertaciones/">Disertaciones</a>

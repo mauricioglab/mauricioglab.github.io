@@ -146,7 +146,8 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
     /* Header */
     .pf-header { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
     .pf-header .row { max-width: 1080px; margin: 0 auto; padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-    .pf-brand { font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); }
+    .pf-brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); }
+    .pf-brand-icon { width: 22px; height: 22px; flex-shrink: 0; }
     .pf-brand span { color: var(--ink-faint); font-weight: 400; }
     .pf-nav { display: flex; align-items: center; gap: 1.1rem; }
     .pf-nav a.link { font-size: .85rem; color: var(--ink-soft); text-decoration: none; padding: 6px 10px; border-radius: 8px; transition: color .15s; }
@@ -255,7 +256,7 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
   <!-- Header -->
   <header class="pf-header">
     <div class="row">
-      <div class="pf-brand">{BRAND_NAME}<span class="sub"> | Portfolio</span></div>
+      <div class="pf-brand"><img src="/logo-vl-icon.svg" alt="" class="pf-brand-icon" />{BRAND_NAME}<span class="sub"> | Portfolio</span></div>
       <div class="pf-nav">
         <a class="link" href="#proyectos">{lang === 'es' ? 'Proyectos' : 'Projects'}</a>
         <a class="link" href={`/${lang}/servicios`}>{t.nav.servicios}</a>
