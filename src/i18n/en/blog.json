@@ -1,10 +1,10 @@
 {
   "nav": {
     "about": "About",
-    "blog": "Blog"
+    "blog": "Parece que fue ayer"
   },
   "header": {
-    "defaultTitle": "Blog",
+    "defaultTitle": "Parece que fue ayer",
     "defaultSubtitle": "Articles and thoughts"
   },
   "footer": {
@@ -13,7 +13,7 @@
     "privacy": "Privacy"
   },
   "search": {
-    "pageTitle": "Search | Blog",
+    "pageTitle": "Search | Parece que fue ayer",
     "pageDescription": "Search blog articles",
     "title": "Search",
     "subtitle": "Search articles by title, content or category",
@@ -22,7 +22,7 @@
     "noResults": "No results found for your search."
   },
   "about": {
-    "pageTitle": "About | Blog",
+    "pageTitle": "About | Parece que fue ayer",
     "pageDescription": "About this blog",
     "title": "About",
     "intro": "Welcome to my blog. This is a space where I share my thoughts, ideas and learnings on various topics.",

@@ -12,6 +12,8 @@ export default defineConfig({
     "/movilidad": "/movimiento/?modo=movilidad",
     "/entrenamiento": "/movimiento/?modo=entrenamiento",
     "/admin": "/admin/gestion/",
+    "/es/videos": "/videos/",
+    "/en/videos": "/videos/",
   },
   server: { open: "/" },
   integrations: [tailwind(), preact()],

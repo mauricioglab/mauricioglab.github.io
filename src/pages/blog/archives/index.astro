@@ -1,6 +1,7 @@
 ---
 import BlogLayout from '@layouts/BlogLayout.astro';
 import { getBlogPosts, normalizeBaseUrl } from '@utils/blog';
+import { SITE_CONFIG } from '@data/config';
 import PostCard from '@components/blog/PostCard.astro';
 
 export const prerender = true;
@@ -45,9 +46,8 @@ const monthNames = [
 ---
 
 <BlogLayout 
-  title="Archivo | Blog"
+  title={`Archivo | ${SITE_CONFIG.blogName}`}
   description="Archivo de artículos del blog"
-  blogTitle="Blog"
   blogSubtitle="Artículos y pensamientos"
 >
   <slot name="head">

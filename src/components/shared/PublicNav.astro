@@ -1,0 +1,105 @@
+---
+type PageId = 'servicios' | 'portfolio' | 'cv' | 'disertaciones' | 'blog';
+
+interface Props {
+  current: PageId;
+  lang?: 'es' | 'en';
+}
+
+const { current, lang = 'es' } = Astro.props;
+
+const items: { id: PageId; href: string; label: string }[] = [
+  { id: 'servicios', href: `/${lang}/servicios/`, label: lang === 'es' ? 'Servicios' : 'Services' },
+  { id: 'portfolio', href: `/${lang}/portfolio/`, label: 'Portfolio' },
+  { id: 'cv', href: `/${lang}/cv/`, label: 'CV' },
+  { id: 'disertaciones', href: '/disertaciones/', label: lang === 'es' ? 'Disertaciones' : 'Talks' },
+  { id: 'blog', href: '/blog/', label: 'Parece que fue ayer' },
+];
+---
+
+<nav class="public-nav" aria-label="Sitio">
+  <ul class="bar">
+    {items.map((item) => (
+      <li>
+        {item.id === current ? (
+          <span aria-current="page">{item.label}</span>
+        ) : (
+          <a href={item.href}>{item.label}</a>
+        )}
+      </li>
+    ))}
+  </ul>
+  <details class="menu">
+    <summary>Menú</summary>
+    <ul>
+      {items.map((item) => (
+        <li>
+          {item.id === current ? (
+            <span aria-current="page">{item.label}</span>
+          ) : (
+            <a href={item.href}>{item.label}</a>
+          )}
+        </li>
+      ))}
+    </ul>
+  </details>
+</nav>
+
+<style>
+  .public-nav { position: relative; flex: none; }
+  .public-nav ul {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .public-nav .menu { display: none; }
+  .public-nav summary {
+    list-style: none;
+    cursor: pointer;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #e4e8f0;
+    color: #082d3a;
+  }
+  .public-nav summary::-webkit-details-marker { display: none; }
+  .public-nav a,
+  .public-nav span {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-size: 0.85rem;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    color: #5c6785;
+    white-space: nowrap;
+  }
+  .public-nav a:hover { color: #082d3a; background: #f4f6fa; }
+  .public-nav span[aria-current="page"] {
+    color: #082d3a;
+    font-weight: 600;
+  }
+  @media (max-width: 1040px) {
+    .public-nav .bar { display: none; }
+    .public-nav .menu { display: block; }
+    .public-nav .menu:not([open]) ul { display: none; }
+    .public-nav .menu[open] ul {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      z-index: 60;
+      min-width: 180px;
+      padding: 8px;
+      background: #fff;
+      border: 1px solid #e4e8f0;
+      border-radius: 12px;
+    }
+  }
+</style>

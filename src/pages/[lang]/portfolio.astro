@@ -6,7 +6,9 @@ import { getProjectsByProfile } from '@data/projects';
 import { getLanguagePaths } from '@utils/i18n-paths';
 import { type Lang, useTranslations, getAlternateUrl } from '@i18n/index';
 import SeoHead from '@components/shared/SeoHead.astro';
-import { BRAND_NAME } from '@data/brand';
+import PublicNav from '@components/shared/PublicNav.astro';
+import GestionLink from '@components/shared/GestionLink.astro';
+import { SITE_CONFIG } from '@data/config';
 
 export const getStaticPaths = getLanguagePaths;
 
@@ -62,6 +64,9 @@ const caseStudyUrls: Record<string, string | undefined> = {
   'abandono-estudiantil': '/proyectos/abandono-estudiantil',
   'caso-arquitectura': '/caso-arquitectura',
 };
+
+// Estas páginas no tienen versión en otro idioma: no llevan prefijo /es ni /en.
+const singleLanguageCaseStudies = new Set(['caso-arquitectura']);
 
 // Stack técnico: cada tecnología con su slug oficial de Simple Icons (isologotipo)
 // Los slugs sin logo se marcan con "" (chip de solo texto)
@@ -146,10 +151,9 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
     /* Header */
     .pf-header { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
     .pf-header .row { max-width: 1080px; margin: 0 auto; padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-    .pf-brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); }
-    .pf-brand-icon { width: 22px; height: 22px; flex-shrink: 0; }
+    .pf-brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); text-decoration: none; }
     .pf-brand span { color: var(--ink-faint); font-weight: 400; }
-    .pf-nav { display: flex; align-items: center; gap: 1.1rem; }
+    .pf-nav { display: flex; align-items: center; gap: 1.1rem; flex-shrink: 0; }
     .pf-nav a.link { font-size: .85rem; color: var(--ink-soft); text-decoration: none; padding: 6px 10px; border-radius: 8px; transition: color .15s; }
     .pf-nav a.link:hover { color: var(--ink); background: var(--paper); }
     .pf-toggle { font-family: var(--font-head); font-size: .8rem; font-weight: 600; color: var(--ink-soft); border: 1px solid var(--line); background: #fff; padding: .45rem .9rem; border-radius: 999px; transition: border-color .15s, color .15s; }
@@ -251,17 +255,22 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
       .pf-skill-row { grid-template-columns: 1fr; gap: .4rem; }
       .pf-hero { padding-top: 52px; }
     }
+    @media (max-width: 760px) {
+      .pf-header .row { padding: 12px 16px; gap: .6rem; }
+      .pf-brand { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .pf-brand .sub { display: none; }
+      .pf-nav { flex-shrink: 0; gap: .45rem; }
+      .pf-nav a.link { display: none; }
+    }
   </style>
 
   <!-- Header -->
   <header class="pf-header">
     <div class="row">
-      <div class="pf-brand"><img src="/logo-vl-icon.svg" alt="" class="pf-brand-icon" />{BRAND_NAME}<span class="sub"> | Portfolio</span></div>
+      <a class="pf-brand" href={`/${lang}/servicios/`}>{SITE_CONFIG.author}<span class="sub"> | Portfolio</span></a>
       <div class="pf-nav">
         <a class="link" href="#proyectos">{lang === 'es' ? 'Proyectos' : 'Projects'}</a>
-        <a class="link" href={`/${lang}/servicios`}>{t.nav.servicios}</a>
-        <a class="link" href={`/${lang}/cv`}>{t.nav.cv}</a>
-        <a class="link" href="/disertaciones/">{t.nav.disertaciones}</a>
+        <PublicNav current="portfolio" lang={lang} />
         <a class="pf-toggle" href={altPath}>{altLang.toUpperCase()}</a>
         <button class="pf-cta" data-contact-trigger>{t.contact}</button>
       </div>
@@ -308,7 +317,10 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
                 const profile = project.profiles['engineer'];
                 const title = p?.title || project.id;
                 const shortDescription = p?.shortDescription || p?.profiles?.engineer?.description || '';
-                const caseStudyUrl = caseStudyUrls[project.id] ? `/${lang}${caseStudyUrls[project.id]}` : null;
+                const caseStudyPath = caseStudyUrls[project.id];
+                const caseStudyUrl = caseStudyPath
+                  ? (singleLanguageCaseStudies.has(project.id) ? caseStudyPath : `/${lang}${caseStudyPath}`)
+                  : null;
                 const isFeaturedCard = project.category === 'analisis';
                 return (
                   <div class:list={['pf-card', isFeaturedCard && 'pf-card--featured']} data-case={project.id} data-case-full={caseStudyUrl || ''}>
@@ -371,7 +383,7 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
   </main>
 
   <footer class="pf-footer">
-    <div class="wrap">© 2026 Mauricio González — Software Engineer · IA &amp; Automatización</div>
+    <div class="wrap">© 2026 Mauricio González — Software Engineer · IA &amp; Automatización · <GestionLink /></div>
   </footer>
 
   <CaseStudyModal lang={lang} cases={modalCases} labels={modalLabels} />

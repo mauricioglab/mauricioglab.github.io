@@ -171,8 +171,7 @@
       { "period": "2025", "title": "Data Science & AI Diploma", "inst": "UTN" },
       { "period": "2025", "title": "Python Diploma", "inst": "UTN" },
       { "period": "2023", "title": "Systems Analyst", "inst": "Instituto Cervantes · Honor Roll" },
-      { "period": "2021", "title": "Full Stack with React JS Diploma", "inst": "UTN" },
-      { "period": "In progress", "title": "Google Data Analytics Professional Certificate", "inst": "Coursera" }
+      { "period": "2021", "title": "Full Stack with React JS Diploma", "inst": "UTN" }
     ]
   },
   "docencia": {

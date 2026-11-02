@@ -100,7 +100,6 @@
   "education": [
     { "title": "Analista de Sistemas de Computación", "institution": "Instituto Cervantes", "period": "2023 · Cuadro de Honor" },
     { "title": "Diplomatura en Ciencias de Datos e IA", "institution": "UTN", "period": "2025" },
-    { "title": "Diplomatura en Python", "institution": "UTN", "period": "2025" },
-    { "title": "Google Data Analytics Professional Certificate", "institution": "Coursera", "period": "En curso" }
+    { "title": "Diplomatura en Python", "institution": "UTN", "period": "2025" }
   ]
 }

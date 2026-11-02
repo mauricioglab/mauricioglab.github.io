@@ -1,6 +1,6 @@
 import { getBlogPosts, normalizeBaseUrl } from '../../utils/blog';
 import rss from '@astrojs/rss';
-import { BRAND_NAME } from '../../data/brand';
+import { SITE_CONFIG } from '../../data/config';
 
 export async function GET(context: { site: string | undefined }) {
   const posts = await getBlogPosts();
@@ -8,7 +8,7 @@ export async function GET(context: { site: string | undefined }) {
   const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
 
   return rss({
-    title: `Blog | ${BRAND_NAME}`,
+    title: `${SITE_CONFIG.blogName} | ${SITE_CONFIG.author}`,
     description: 'Artículos y publicaciones',
     site: `${site}${normalizedBase}`,
     items: posts.map((post) => ({

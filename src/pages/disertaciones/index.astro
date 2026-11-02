@@ -1,9 +1,11 @@
 ---
 import BaseTailwind from '../../layouts/BaseTailwind.astro';
 import SeoHead from '@components/shared/SeoHead.astro';
+import PublicNav from '@components/shared/PublicNav.astro';
+import GestionLink from '@components/shared/GestionLink.astro';
 import TimelineItem from '../../components/disertaciones/TimelineItem.astro';
 import { getDisertaciones } from '../../utils/disertaciones';
-import { BRAND_NAME } from '@data/brand';
+import { SITE_CONFIG } from '@data/config';
 
 export const prerender = true;
 
@@ -12,12 +14,12 @@ const canonical = new URL('/disertaciones/', Astro.site).toString();
 ---
 
 <BaseTailwind
-  title={`Disertaciones — ${BRAND_NAME}`}
+  title={`Disertaciones — ${SITE_CONFIG.author}`}
   description="Charlas, talleres y defensas que presenté, con su material."
   lang="es"
   layoutType="landing"
 >
-  <SeoHead slot="head" title={`Disertaciones — ${BRAND_NAME}`} description="Charlas, talleres y defensas que presenté, con su material." lang="es" canonical={canonical} />
+  <SeoHead slot="head" title={`Disertaciones — ${SITE_CONFIG.author}`} description="Charlas, talleres y defensas que presenté, con su material." lang="es" canonical={canonical} />
 
   <style>
     :root {
@@ -46,12 +48,18 @@ const canonical = new URL('/disertaciones/', Astro.site).toString();
       border-bottom: 1px solid var(--line);
     }
     .dz-header .row { max-width: 1100px; margin: 0 auto; padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-    .dz-brand { font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); letter-spacing: .02em; }
+    .dz-brand { font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); letter-spacing: .02em; text-decoration: none; }
     .dz-brand b { color: var(--accent); }
     .dz-brand .sub { font-weight: 400; font-size: .8rem; color: var(--faint); margin-left: .5rem; }
-    .dz-nav { display: flex; align-items: center; gap: .75rem; }
+    .dz-nav { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; }
     .dz-nav a.link { color: var(--muted); font-size: .85rem; text-decoration: none; padding: 6px 10px; border-radius: 8px; transition: color .15s; }
     .dz-nav a.link:hover { color: var(--ink); background: var(--panel); }
+    @media (max-width: 760px) {
+      .dz-header .row { padding: 12px 16px; gap: .6rem; }
+      .dz-brand { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .dz-brand .sub { display: none; }
+      .dz-nav { flex-shrink: 0; }
+    }
 
     /* Hero */
     .dz-hero {
@@ -106,12 +114,9 @@ const canonical = new URL('/disertaciones/', Astro.site).toString();
 
   <header class="dz-header">
     <div class="row">
-      <div class="dz-brand">Mauricio González<span class="sub">| Disertaciones</span></div>
+      <a class="dz-brand" href="/es/servicios/">Mauricio González<span class="sub">| Disertaciones</span></a>
       <div class="dz-nav">
-        <a class="link" href="/es/portfolio/">Portfolio</a>
-        <a class="link" href="/es/servicios/">Servicios</a>
-        <a class="link" href="/es/cv/">CV</a>
-        <a class="link" href="/blog/">Blog</a>
+        <PublicNav current="disertaciones" lang="es" />
       </div>
     </div>
   </header>
@@ -140,7 +145,7 @@ const canonical = new URL('/disertaciones/', Astro.site).toString();
   </main>
 
   <footer class="dz-footer">
-    <p>© 2026 Mauricio González · Córdoba, Argentina</p>
+    <p>© 2026 Mauricio González · Córdoba, Argentina · <GestionLink /></p>
   </footer>
 
   <script is:inline>

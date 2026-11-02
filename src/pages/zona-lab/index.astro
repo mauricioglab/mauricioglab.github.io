@@ -5,6 +5,7 @@ import RecursoCard from '../../components/recursos/RecursoCard.astro';
 import { getRecursos } from '../../utils/recursos';
 import { getUltimosPosts } from '../../utils/relacionados';
 import { BRAND_NAME } from '../../data/brand';
+import { SITE_CONFIG } from '../../data/config';
 
 export const prerender = true;
 
@@ -108,11 +109,11 @@ const blogBase = import.meta.env.BASE_URL.endsWith('/')
 
   <header class="zl-header">
     <div class="row">
-      <div class="zl-brand"><img src="/logo-vl-icon.svg" alt="" class="zl-brand-icon" />{BRAND_NAME}<span class="sub">| Zona Lab</span></div>
+      <a class="zl-brand" href="/blog/"><img src="/logo-vl-icon.svg" alt="" class="zl-brand-icon" />{BRAND_NAME}<span class="sub">| Zona Lab</span></a>
       <div class="zl-nav">
         <a class="link" href="/disertaciones/">Disertaciones</a>
         <a class="link" href="/es/portfolio/">Portfolio</a>
-        <a class="link" href="/blog/">Blog</a>
+        <a class="link" href="/blog/">{SITE_CONFIG.blogName}</a>
       </div>
     </div>
   </header>

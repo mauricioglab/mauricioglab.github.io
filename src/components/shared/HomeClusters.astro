@@ -1,4 +1,6 @@
 ---
+import { SITE_CONFIG } from '../../data/config';
+
 const base = import.meta.env.BASE_URL;
 const b = base.endsWith("/") ? base : `${base}/`;
 
@@ -14,10 +16,10 @@ const clusters = [
     ],
   },
   {
-    label: "Blog",
+    label: SITE_CONFIG.blogName,
     primary: false,
     links: [
-      { id: 'blog', label: 'Blog', url: resolveUrl('/blog/'), hint: 'Artículos y pensamientos' },
+      { id: 'blog', label: SITE_CONFIG.blogName, url: resolveUrl('/blog/'), hint: 'Artículos y pensamientos' },
     ],
   },
   {

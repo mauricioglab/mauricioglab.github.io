@@ -1,6 +1,8 @@
 ---
 import { getBlogPosts, normalizeBaseUrl } from "../utils/blog";
-import { BRAND_NAME } from "../data/brand";
+import { SITE_CONFIG } from "../data/config";
+import PublicNav from "../components/shared/PublicNav.astro";
+import GestionLink from "../components/shared/GestionLink.astro";
 import "../styles/brand.css";
 
 interface Props {
@@ -14,7 +16,7 @@ interface Props {
 const {
   title,
   description,
-  blogTitle = "Blog",
+  blogTitle = SITE_CONFIG.blogName,
   blogSubtitle = "Artículos y pensamientos",
   lang = "es",
 } = Astro.props;
@@ -56,6 +58,13 @@ const allCategories = Array.from(
       <!-- Top Brand Line -->
       <div class="top-line h-1" style="background: linear-gradient(90deg, #16B6C9, #D4AF37);"></div>
 
+      <div class="bg-white border-b border-[#e4e8f0]">
+        <div class="max-w-[1140px] mx-auto px-5 py-3 flex items-center justify-between gap-4">
+          <a href="/es/servicios/" class="text-sm font-semibold text-[#082d3a] no-underline">{SITE_CONFIG.author}</a>
+          <PublicNav current="blog" lang="es" />
+        </div>
+      </div>
+
       <!-- Top Navigation Bar -->
       <nav
         class="nav-primary bg-white border-b border-[#e4e8f0]"
@@ -65,9 +74,9 @@ const allCategories = Array.from(
           <ul class="menu flex flex-wrap justify-center items-center list-none gap-y-1 gap-x-0" aria-label="Ir al inicio">
             <li>
               <a
-                href={normalizedBase}
+                href={`${normalizedBase}blog/`}
                 class="block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#5c6785] hover:text-vcl-turquesa"
-                aria-label="Volver al inicio"><span>← Inicio</span></a
+                aria-label="Volver al blog"><span>← Inicio</span></a
               >
             </li>
           </ul>
@@ -78,10 +87,10 @@ const allCategories = Array.from(
             <li>
               <a
                 href={`${normalizedBase}blog/`}
-                class="menu-primary block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em]"
+                class="menu-primary block whitespace-nowrap py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em]"
                 aria-label="Lista de artículos"
                 aria-current={Astro.url.pathname === `${normalizedBase}blog/` ? "page" : undefined}
-              ><span>Blog</span></a
+              ><span>{SITE_CONFIG.blogName}</span></a
               >
             </li>
           </ul>
@@ -111,7 +120,7 @@ const allCategories = Array.from(
             <li>
               <a
                 href={`${normalizedBase}blog/about/`}
-                class="menu-meta block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#5c6785] hover:text-vcl-turquesa"
+                class="menu-meta block whitespace-nowrap py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#5c6785] hover:text-vcl-turquesa"
                 aria-label="Acerca del blog"
                 aria-current={Astro.url.pathname === `${normalizedBase}blog/about/` ? "page" : undefined}
               ><span>Acerca de</span></a
@@ -166,7 +175,7 @@ const allCategories = Array.from(
       >
         <div class="wrap max-w-[1140px] mx-auto px-5">
           <p>
-            &copy; {new Date().getFullYear()} {BRAND_NAME} &middot; <a
+            &copy; {new Date().getFullYear()} {SITE_CONFIG.author} &middot; <a
               href={`${normalizedBase}blog/archives/`}
               class="text-vcl-turquesa hover:text-vcl-petroleo hover:underline"
               aria-label="Archivo de artículos">Archivo</a
@@ -179,6 +188,7 @@ const allCategories = Array.from(
               class="text-vcl-turquesa hover:text-vcl-petroleo hover:underline"
               aria-label="Política de privacidad">Privacidad</a
             >
+            &middot; <GestionLink />
           </p>
         </div>
       </footer>

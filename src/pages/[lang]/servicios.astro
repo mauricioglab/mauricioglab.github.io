@@ -5,6 +5,8 @@ import { SITE_CONFIG } from '@data/config';
 import { getLanguagePaths } from '@utils/i18n-paths';
 import { type Lang, useTranslations, getAlternateUrl } from '@i18n/index';
 import SeoHead from '@components/shared/SeoHead.astro';
+import PublicNav from '@components/shared/PublicNav.astro';
+import GestionLink from '@components/shared/GestionLink.astro';
 import { BRAND_NAME } from '@data/brand';
 
 export const getStaticPaths = getLanguagePaths;
@@ -87,11 +89,11 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
       border-bottom: 1px solid var(--line);
     }
     .sv-header .row { max-width: 1100px; margin: 0 auto; padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-    .sv-brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); letter-spacing: .02em; }
+    .sv-brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); letter-spacing: .02em; text-decoration: none; }
     .sv-brand-icon { width: 22px; height: 22px; flex-shrink: 0; }
     .sv-brand b { color: var(--accent); }
     .sv-brand .sub { font-weight: 400; font-size: .8rem; color: var(--faint); margin-left: .5rem; }
-    .sv-nav { display: flex; align-items: center; gap: .75rem; }
+    .sv-nav { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; }
     .sv-nav a.link { color: var(--muted); font-size: .85rem; text-decoration: none; padding: 6px 10px; border-radius: 8px; transition: color .15s; }
     .sv-nav a.link:hover { color: var(--ink); background: var(--panel); }
     .sv-toggle {
@@ -272,6 +274,12 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
       .sv-aurora .blob { width: 80vw; height: 80vw; }
       .sv-pair { grid-template-columns: 1fr; gap: 32px; }
     }
+    @media (max-width: 760px) {
+      .sv-header .row { padding: 12px 16px; gap: .6rem; }
+      .sv-brand { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .sv-brand .sub { display: none; }
+      .sv-nav { flex-shrink: 0; gap: .45rem; }
+    }
     @media (max-width: 560px) {
       .sv-cases, .sv-steps { grid-template-columns: 1fr; }
       .sv-hero { padding: 64px 20px 52px; }
@@ -287,11 +295,9 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
   <!-- Header -->
   <header class="sv-header">
     <div class="row">
-      <div class="sv-brand"><img src="/logo-vl-icon.svg" alt="" class="sv-brand-icon" />{BRAND_NAME}<span class="sub">| {content.subtitle}</span></div>
+      <a class="sv-brand" href={`/${lang}/servicios/`}><img src="/logo-vl-icon.svg" alt="" class="sv-brand-icon" />{BRAND_NAME}<span class="sub">| {content.subtitle}</span></a>
       <div class="sv-nav">
-        <a class="link" href={`/${lang}/portfolio`}>{content.nav.portfolio}</a>
-        <a class="link" href={`/${lang}/cv`}>{content.nav.cv}</a>
-        <a class="link" href="/disertaciones/">{content.nav.disertaciones}</a>
+        <PublicNav current="servicios" lang={lang} />
         <a class="sv-toggle" href={altPath}>{altLang.toUpperCase()}</a>
         <button class="sv-cta" data-contact-trigger>{lang === 'es' ? 'Contactar' : 'Contact'}</button>
       </div>
@@ -461,7 +467,7 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
   </main>
 
   <footer class="sv-footer">
-    <p>© 2026 Mauricio González · Córdoba, Argentina</p>
+    <p>© 2026 Mauricio González · Córdoba, Argentina · <GestionLink /></p>
   </footer>
 
   <ContactModal lang={lang} />

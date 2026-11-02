@@ -2,6 +2,7 @@
 import BlogLayout from '@layouts/BlogLayout.astro';
 import PostCard from '@components/blog/PostCard.astro';
 import { getBlogPosts, normalizeBaseUrl, type BlogPost } from '@utils/blog';
+import { SITE_CONFIG } from '@data/config';
 
 export async function getStaticPaths() {
   const posts = await getBlogPosts();
@@ -31,9 +32,8 @@ const currentUrl = `${Astro.site}${normalizedBase}blog/category/${categoryName.t
 ---
 
 <BlogLayout
-  title={`${categoryName} | Blog`}
+  title={`${categoryName} | ${SITE_CONFIG.blogName}`}
   description={`Artículos sobre ${categoryName}`}
-  blogTitle="Blog"
   blogSubtitle={`Artículos sobre ${categoryName}`}
 >
   <slot name="head">

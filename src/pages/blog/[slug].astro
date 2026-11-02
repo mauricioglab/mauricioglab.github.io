@@ -3,6 +3,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
 import ShareButtons from "../../components/blog/ShareButtons.astro";
 import ModoBanner from "../../components/shared/ModoBanner.astro";
 import { calculateReadingTime, getBlogPosts, normalizeBaseUrl, type BlogPost } from "../../utils/blog";
+import { SITE_CONFIG } from "../../data/config";
 import { getRelacionadosRecursos, getUltimosRecursos } from "../../utils/relacionados";
 import { createMarkdownProcessor } from "@astrojs/markdown-remark";
 import { Image } from "astro:assets";
@@ -44,9 +45,8 @@ const bannerUltimos = ultimosRecursos.map((r) => ({
 ---
 
 <BlogLayout
-  title={`${post.title} | Blog`}
+  title={`${post.title} | ${SITE_CONFIG.blogName}`}
   description={post.description}
-  blogTitle="Blog"
   blogSubtitle="Artículos y pensamientos"
 >
   <slot name="head">

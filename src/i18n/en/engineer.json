@@ -100,7 +100,6 @@
   "education": [
     { "title": "Systems Analyst", "institution": "Instituto Cervantes", "period": "2023 · Honor Roll" },
     { "title": "Data Science & AI Diploma", "institution": "UTN", "period": "2025" },
-    { "title": "Python Diploma", "institution": "UTN", "period": "2025" },
-    { "title": "Google Data Analytics Professional Certificate", "institution": "Coursera", "period": "In progress" }
+    { "title": "Python Diploma", "institution": "UTN", "period": "2025" }
   ]
 }

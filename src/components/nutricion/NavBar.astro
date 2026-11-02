@@ -2,9 +2,12 @@
 const { basePath = '/nutricion/' } = Astro.props;
 ---
 <nav class="w-full bg-[#2E7D5E] px-4 py-3 flex items-center justify-between shadow-md sticky top-0 z-50">
-  <a href={basePath} class="text-white text-xl font-bold flex items-center gap-2 tracking-tight">
-    🥗 NutriApp
-  </a>
+  <div class="flex items-center gap-3 min-w-0">
+    <a href="/admin/gestion/" class="text-white/80 hover:text-white text-xs font-semibold shrink-0">← Gestión</a>
+    <a href={basePath} class="text-white text-xl font-bold flex items-center gap-2 tracking-tight">
+      🥗 NutriApp
+    </a>
+  </div>
   <button id="resetBtn" class="text-xs text-white border border-white/60 px-3 py-1.5 rounded-md hover:bg-white/10 active:bg-white/20 transition-colors">
     Empezar de nuevo
   </button>

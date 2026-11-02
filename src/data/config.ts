@@ -45,6 +45,7 @@ export const SITE_CONFIG = {
   // SITIO WEB
   // =====================
   siteName: 'Mauricio González',
+  blogName: 'Parece que fue ayer',
   siteUrl: 'https://mauricioglab.github.io/',  // URL de producción
   defaultDescription: 'Software Engineer especializado en IA y Automatización',
   

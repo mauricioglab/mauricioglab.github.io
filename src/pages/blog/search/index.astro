@@ -1,6 +1,7 @@
 ---
 import BlogLayout from '@layouts/BlogLayout.astro';
 import { getBlogPosts, normalizeBaseUrl } from '@utils/blog';
+import { SITE_CONFIG } from '@data/config';
 import PostCard from '@components/blog/PostCard.astro';
 
 export const prerender = true;
@@ -11,9 +12,8 @@ const currentUrl = `${Astro.site}${normalizedBase}blog/search/`;
 ---
 
 <BlogLayout 
-  title="Buscar | Blog"
+  title={`Buscar | ${SITE_CONFIG.blogName}`}
   description="Buscar artículos del blog"
-  blogTitle="Blog"
   blogSubtitle="Artículos y pensamientos"
 >
   <slot name="head">

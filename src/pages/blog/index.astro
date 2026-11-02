@@ -1,6 +1,7 @@
 ---
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import { getBlogPosts, normalizeBaseUrl } from '../../utils/blog';
+import { SITE_CONFIG } from '../../data/config';
 import PostCard from '../../components/blog/PostCard.astro';
 import RecursoCard from '../../components/recursos/RecursoCard.astro';
 import { getUltimosRecursos } from '../../utils/relacionados';
@@ -14,9 +15,8 @@ const currentUrl = `${Astro.site}${normalizedBase}blog/`;
 ---
 
 <BlogLayout 
-  title="Blog" 
+  title={SITE_CONFIG.blogName} 
   description="Artículos y publicaciones"
-  blogTitle="Blog"
   blogSubtitle="Artículos y pensamientos"
 >
   <slot name="head">

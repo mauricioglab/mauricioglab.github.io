@@ -3,9 +3,6 @@ import BaseTailwind from '../../layouts/BaseTailwind.astro';
 
 export const prerender = true;
 
-const base = import.meta.env.BASE_URL;
-const b = base.endsWith("/") ? base : `${base}/`;
-
 function getSourceName(url: string): string {
 	if (url.includes('openai.com')) return 'OpenAI';
 	if (url.includes('blog.google')) return 'Gemini';
@@ -169,7 +166,7 @@ for (let i = 0; i < noticias.length; i += 6) {
 
 			<div class="mt-10 pt-6 border-t border-[#e4e8f0]">
 				<p>
-					<small><a href={b} class="text-[#5c6785] hover:text-[#1e40af] transition-colors">← Inicio</a></small>
+					<small><a href="/inicio/" class="text-[#5c6785] hover:text-[#1e40af] transition-colors">← Inicio</a></small>
 				</p>
 			</div>
 		</div>

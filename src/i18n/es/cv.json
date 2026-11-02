@@ -171,8 +171,7 @@
       { "period": "2025", "title": "Diplomatura en Ciencias de Datos e IA", "inst": "UTN" },
       { "period": "2025", "title": "Diplomatura en Python", "inst": "UTN" },
       { "period": "2023", "title": "Analista de Sistemas de Computación", "inst": "Instituto Cervantes · Cuadro de Honor" },
-      { "period": "2021", "title": "Diplomatura en Programación Full Stack con React JS", "inst": "UTN" },
-      { "period": "En curso", "title": "Google Data Analytics Professional Certificate", "inst": "Coursera" }
+      { "period": "2021", "title": "Diplomatura en Programación Full Stack con React JS", "inst": "UTN" }
     ]
   },
   "docencia": {

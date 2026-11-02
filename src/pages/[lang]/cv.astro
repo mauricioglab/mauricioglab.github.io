@@ -7,6 +7,8 @@
 import { type Lang, useTranslations, getAlternateUrl } from '@i18n/index';
 import { getLanguagePaths } from '@utils/i18n-paths';
 import SeoHead from '@components/shared/SeoHead.astro';
+import PublicNav from '@components/shared/PublicNav.astro';
+import GestionLink from '@components/shared/GestionLink.astro';
 
 export const getStaticPaths = getLanguagePaths;
 
@@ -114,9 +116,10 @@ const years = Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 
                 font-size: 0.95rem;
                 letter-spacing: 0.02em;
                 color: var(--ink);
+                text-decoration: none;
             }
             .site-brand span { color: var(--ink-faint); font-weight: 400; }
-            .site-actions { display: flex; align-items: center; gap: 1.25rem; }
+            .site-actions { display: flex; align-items: center; gap: 1.25rem; flex-shrink: 0; }
             .btn-print {
                 font-family: var(--font-head);
                 font-size: 0.82rem;
@@ -481,6 +484,13 @@ const years = Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 
             }
 
             /* ---------- Responsive ---------- */
+            @media (max-width: 760px) {
+                .site-header .wrap { flex-wrap: wrap; gap: 0.55rem 0.6rem; }
+                .site-brand { min-width: 0; }
+                .site-brand span { display: none; }
+                .site-actions { flex-shrink: 0; gap: 0.45rem; margin-left: auto; }
+                .btn-print { padding: 6px 10px; }
+            }
             @media (max-width: 720px) {
                 .row { grid-template-columns: 1fr; gap: 0.4rem; }
                 .row .meta { font-size: 0.74rem; }
@@ -515,11 +525,9 @@ const years = Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 
     <body>
         <header class="site-header no-print">
             <div class="wrap">
-                <div class="site-brand">{content.header.brand}<span>{content.header.brandSub}</span></div>
+                <a class="site-brand" href={`/${lang}/servicios/`}>{content.header.brand}<span>{content.header.brandSub}</span></a>
                 <div class="site-actions">
-                    <a class="back-link" href={`/${lang}/portfolio`}>{content.header.portfolio}</a>
-                    <a class="back-link" href={`/${lang}/servicios`}>{content.header.servicios}</a>
-                    <a class="back-link" href="/disertaciones/">{content.header.disertaciones}</a>
+                    <PublicNav current="cv" lang={lang} />
                     <a class="lang-toggle" href={altUrl}>{content.header.langLabel}</a>
                     <button class="btn-print" onclick="window.print()">{content.header.print}</button>
                 </div>
@@ -715,7 +723,7 @@ const years = Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 
 
         <footer class="site-footer">
             <div class="wrap">
-                <p set:html={content.footer.text}></p>
+                <p><span set:html={content.footer.text}></span> · <GestionLink /></p>
             </div>
         </footer>
         </div>
