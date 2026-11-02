@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "title": "Velocity — Quiénes somos",
+    "description": "Velocity es el estudio de Mauricio González e Iris."
+  },
+  "about": {
+    "eyebrow": "Quiénes somos",
+    "title": "Tecnología, estrategia y resultados",
+    "paragraphs": [
+      "Velocity es el estudio de Mauricio González e Iris.",
+      "El trabajo del estudio es software, inteligencia artificial aplicada y automatización de procesos."
+    ]
+  },
+  "people": {
+    "eyebrow": "El equipo",
+    "members": [
+      { "role": "Software Engineer · IA y automatización", "name": "Mauricio González" },
+      { "role": "Completar rol", "name": "Iris" }
+    ]
+  }
+}

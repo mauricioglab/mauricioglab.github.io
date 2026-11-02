@@ -1,0 +1,269 @@
+---
+interface Props {
+  content: any;
+  altUrl: string;
+  years?: number;
+}
+
+const { content, altUrl, years = 0 } = Astro.props;
+const fill = (value: string) => value.replaceAll('{years}', String(years));
+const links = Array.isArray(content.closing?.links) ? content.closing.links : [];
+const contact = [
+  content.masthead.location ? { text: content.masthead.location, url: '' } : null,
+  ...links,
+].filter(Boolean);
+---
+
+<header class="toolbar">
+  <a href={altUrl}>{content.header.langLabel}</a>
+  <button type="button" onclick="window.print()">{content.header.print}</button>
+</header>
+
+<article class="cv">
+  <header class="mast">
+    <h1>{content.masthead.name}</h1>
+    {content.masthead.role && <p class="role" set:html={content.masthead.role} />}
+    {content.masthead.stack && <p class="stack">{content.masthead.stack}</p>}
+    {contact.length > 0 && (
+      <p class="contact">
+        {contact.map((item: { text: string; url: string }, index: number) => (
+          <>
+            {index > 0 && <span class="dot" aria-hidden="true">·</span>}
+            {item.url ? (
+              <a
+                href={item.url}
+                target={item.url.startsWith('http') ? '_blank' : undefined}
+                rel={item.url.startsWith('http') ? 'noopener noreferrer' : undefined}
+              >{item.text}</a>
+            ) : (
+              <span>{item.text}</span>
+            )}
+          </>
+        ))}
+      </p>
+    )}
+  </header>
+
+  <section>
+    <h2>{content.perfil.label}</h2>
+    {content.perfil.paragraphs?.map((paragraph: string) => <p>{fill(paragraph)}</p>)}
+    {content.perfil.highlights?.length > 0 && (
+      <ul>
+        {content.perfil.highlights.map((item: string) => <li set:html={fill(item)} />)}
+      </ul>
+    )}
+  </section>
+
+  <section>
+    <h2>{content.experiencia.label}</h2>
+    {content.experiencia.jobs?.map((job: any) => (
+      <div class="entry">
+        <div class="entry-top">
+          <span class="org">{job.company}</span>
+          <span class="when">{job.period}</span>
+        </div>
+        {job.role && <p class="position">{job.role}</p>}
+        {job.summary && <p>{job.summary}</p>}
+        {job.sections?.map((section: any) => (
+          <div class="sub">
+            {section.title && <p class="subhead">{section.title}</p>}
+            {section.items?.length > 0 && (
+              <ul>
+                {section.items.map((item: string) => <li>{item}</li>)}
+              </ul>
+            )}
+          </div>
+        ))}
+        {job.items?.length > 0 && (
+          <ul>
+            {job.items.map((item: string) => <li>{item}</li>)}
+          </ul>
+        )}
+        {job.also && <p class="also" set:html={job.also} />}
+        {job.stack && <p class="meta"><span>Stack</span> {job.stack}</p>}
+      </div>
+    ))}
+  </section>
+
+  <section>
+    <h2>{content.proyectos.label}</h2>
+    {content.proyectos.intro && <p>{content.proyectos.intro}</p>}
+    {content.proyectos.items?.map((item: any) => (
+      <div class="entry">
+        <div class="entry-top">
+          <span class="org">{item.title}</span>
+        </div>
+        {(item.client || item.meta) && (
+          <p class="position">{[item.client, item.meta].filter(Boolean).join(' · ')}</p>
+        )}
+        {item.desc && <p>{item.desc}</p>}
+        {item.stack && <p class="meta"><span>Stack</span> {item.stack}</p>}
+      </div>
+    ))}
+  </section>
+
+  <section>
+    <h2>{content.ia.label}</h2>
+    {content.ia.flagship && (
+      <div class="entry">
+        <div class="entry-top">
+          <span class="org">{content.ia.flagship.title}</span>
+        </div>
+        {content.ia.flagship.badge && <p class="position">{content.ia.flagship.badge}</p>}
+        {content.ia.flagship.items?.length > 0 && (
+          <ul>
+            {content.ia.flagship.items.map((item: string) => <li>{item}</li>)}
+          </ul>
+        )}
+      </div>
+    )}
+    {content.ia.personal?.map((item: any) => (
+      <div class="entry">
+        <div class="entry-top">
+          <span class="org">{item.title}</span>
+          {content.ia.personalMeta && <span class="when">{content.ia.personalMeta}</span>}
+        </div>
+        {item.desc && <p>{item.desc}</p>}
+      </div>
+    ))}
+  </section>
+
+  <section>
+    <h2>{content.tecnologias.label}</h2>
+    {content.tecnologias.rows?.map((row: any) => (
+      <p class="skill">
+        <span set:html={row.label} />
+        {row.vals?.join(' · ')}
+      </p>
+    ))}
+  </section>
+
+  <section>
+    <h2>{content.formacion.label}</h2>
+    {content.formacion.rows?.map((row: any) => (
+      <div class="entry">
+        <div class="entry-top">
+          <span class="org">{row.title}</span>
+          <span class="when">{row.period}</span>
+        </div>
+        {row.inst && <p class="position">{row.inst}</p>}
+      </div>
+    ))}
+  </section>
+
+  <section>
+    <h2>{content.docencia.label}</h2>
+    {(content.docencia.role || content.docencia.org || content.docencia.when) && (
+      <div class="entry">
+        <div class="entry-top">
+          <span class="org">{[content.docencia.role, content.docencia.org].filter(Boolean).join(' · ')}</span>
+          {content.docencia.when && <span class="when">{content.docencia.when}</span>}
+        </div>
+        {content.docencia.description && <p>{content.docencia.description}</p>}
+        {content.docencia.materias && (
+          <p class="meta">
+            {content.docencia.materiasLabel && <span set:html={content.docencia.materiasLabel} />}
+            {content.docencia.materias}
+          </p>
+        )}
+      </div>
+    )}
+  </section>
+</article>
+
+<style>
+  :global(html) { scroll-behavior: smooth; }
+  :global(body) {
+    margin: 0;
+    background: #fff;
+    color: #1c1c1c;
+    font-family: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .toolbar {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px 28px 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    font-family: Georgia, "Iowan Old Style", Palatino, serif;
+  }
+  .toolbar a,
+  .toolbar button {
+    font: inherit;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: #3d3d3d;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .toolbar a:hover,
+  .toolbar button:hover { border-bottom-color: #16b6c9; color: #0b6e7d; }
+
+  .cv {
+    max-width: 720px;
+    margin: 12px auto 64px;
+    padding: 12px 28px 48px;
+  }
+
+  .mast { text-align: center; padding-bottom: 1.1rem; border-bottom: 2px solid #16b6c9; }
+  h1 {
+    margin: 0;
+    font-size: 1.85rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .role { margin: 0.45rem 0 0; font-size: 1.02rem; }
+  .role :global(.accent) { font-style: italic; }
+  .stack { margin: 0.35rem 0 0; font-size: 0.92rem; color: #333; }
+  .contact { margin: 0.7rem 0 0; font-size: 0.86rem; color: #333; }
+  .contact a { color: inherit; text-decoration: none; border-bottom: 1px solid transparent; }
+  .contact a:hover { border-bottom-color: #16b6c9; }
+  .dot { margin: 0 0.35rem; }
+
+  section { margin-top: 1.35rem; }
+  h2 {
+    margin: 0 0 0.55rem;
+    padding-bottom: 0.15rem;
+    border-bottom: 1px solid #1c1c1c;
+    font-size: 0.78rem;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  p { margin: 0.35rem 0 0; }
+  ul { margin: 0.35rem 0 0; padding-left: 1.15rem; }
+  li { margin: 0.15rem 0; }
+
+  .entry { margin-top: 0.85rem; }
+  .entry-top { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+  .org { font-weight: 700; }
+  .when { flex-shrink: 0; font-size: 0.92rem; }
+  .position { margin-top: 0.1rem; font-style: italic; }
+  .sub { margin-top: 0.45rem; }
+  .subhead { font-style: italic; }
+  .also { margin-top: 0.35rem; }
+  .meta { margin-top: 0.3rem; font-size: 0.92rem; }
+  .meta span { font-variant: small-caps; letter-spacing: 0.04em; margin-right: 0.35rem; }
+  .skill { margin-top: 0.4rem; }
+  .skill span { font-weight: 700; margin-right: 0.45rem; }
+
+  @media (max-width: 640px) {
+    .entry-top { flex-direction: column; gap: 0.1rem; }
+    h1 { letter-spacing: 0.04em; font-size: 1.5rem; }
+  }
+
+  @media print {
+    .toolbar { display: none; }
+    .cv { margin: 0; max-width: none; padding: 0; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>

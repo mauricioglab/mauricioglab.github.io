@@ -50,10 +50,12 @@ export const SITE_CONFIG = {
   defaultDescription: 'Software Engineer especializado en IA y Automatización',
   
   // =====================
-  // CV (único)
+  // CV Y VELOCITY
   // =====================
-  // Ruta a la página del CV único (localizada, default es). Ver src/pages/[lang]/cv.astro.
+  // Los CV no se enlazan desde el sitio. Velocity es la página pública.
   cv: '/es/cv/',
+  cvIris: '/es/cv/iris/',
+  velocity: '/es/velocity/',
   
   // =====================
   // IDIOMAS

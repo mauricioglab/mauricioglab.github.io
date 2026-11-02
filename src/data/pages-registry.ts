@@ -46,7 +46,9 @@ export const pagesRegistry: PageEntry[] = [
   // =====================
   { id: 'portfolio', name: 'Portfolio', url: '/es/portfolio/', category: 'landing', icon: '📁', active: true },
   { id: 'servicios', name: 'Servicios', url: '/es/servicios/', category: 'landing', icon: '🤝', active: true },
-  { id: 'cv', name: 'CV', url: '/es/cv/', category: 'landing', icon: '📄' },
+  { id: 'velocity', name: 'Velocity', url: '/es/velocity/', category: 'landing', icon: '🤝', active: true },
+  { id: 'cv', name: 'CV', url: '/es/cv/', category: 'landing', icon: '📄', active: false },
+  { id: 'cv-iris', name: 'CV Iris', url: '/es/cv/iris/', category: 'landing', icon: '📄', active: false },
 
   // =====================
   // HERRAMIENTAS (solo en admin)

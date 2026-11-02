@@ -1,5 +1,5 @@
 ---
-type PageId = 'servicios' | 'portfolio' | 'cv' | 'disertaciones' | 'blog';
+type PageId = 'servicios' | 'portfolio' | 'disertaciones' | 'blog';
 
 interface Props {
   current: PageId;
@@ -11,7 +11,6 @@ const { current, lang = 'es' } = Astro.props;
 const items: { id: PageId; href: string; label: string }[] = [
   { id: 'servicios', href: `/${lang}/servicios/`, label: lang === 'es' ? 'Servicios' : 'Services' },
   { id: 'portfolio', href: `/${lang}/portfolio/`, label: 'Portfolio' },
-  { id: 'cv', href: `/${lang}/cv/`, label: 'CV' },
   { id: 'disertaciones', href: '/disertaciones/', label: lang === 'es' ? 'Disertaciones' : 'Talks' },
   { id: 'blog', href: '/blog/', label: 'Parece que fue ayer' },
 ];

@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "title": "Velocity — Who we are",
+    "description": "Velocity is the studio of Mauricio González and Iris."
+  },
+  "about": {
+    "eyebrow": "Who we are",
+    "title": "Technology, strategy, and results",
+    "paragraphs": [
+      "Velocity is the studio of Mauricio González and Iris.",
+      "The studio's work is software, applied artificial intelligence, and process automation."
+    ]
+  },
+  "people": {
+    "eyebrow": "The team",
+    "members": [
+      { "role": "Software Engineer · AI and automation", "name": "Mauricio González" },
+      { "role": "Role to be completed", "name": "Iris" }
+    ]
+  }
+}

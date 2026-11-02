@@ -1,0 +1,104 @@
+{
+  "meta": {
+    "title": "Iris — Curriculum",
+    "description": "Iris's curriculum. Draft to be completed."
+  },
+  "header": {
+    "brand": "Iris",
+    "brandSub": "",
+    "print": "Print / PDF",
+    "back": "",
+    "langLabel": "ES",
+    "portfolio": "",
+    "servicios": "",
+    "disertaciones": ""
+  },
+  "masthead": {
+    "eyebrow": "",
+    "name": "Iris",
+    "role": "To be completed",
+    "stack": "",
+    "location": "",
+    "linkedin": "",
+    "github": ""
+  },
+  "perfil": {
+    "num": "01",
+    "label": "Profile",
+    "paragraphs": ["To be completed."],
+    "highlights": []
+  },
+  "experiencia": {
+    "num": "02",
+    "label": "Experience",
+    "jobs": [
+      {
+        "period": "To be completed",
+        "company": "To be completed",
+        "current": false,
+        "role": "To be completed",
+        "summary": "",
+        "sections": [],
+        "also": "",
+        "stack": "",
+        "items": ["To be completed."]
+      }
+    ]
+  },
+  "proyectos": {
+    "num": "03",
+    "label": "Projects",
+    "intro": "",
+    "items": [
+      {
+        "client": "",
+        "title": "To be completed",
+        "meta": "",
+        "desc": "To be completed.",
+        "stack": ""
+      }
+    ]
+  },
+  "ia": {
+    "num": "04",
+    "label": "AI and data",
+    "flagship": {
+      "title": "To be completed",
+      "badge": "",
+      "items": ["To be completed."]
+    },
+    "personalMeta": "",
+    "personal": []
+  },
+  "tecnologias": {
+    "num": "05",
+    "label": "Technologies",
+    "rows": [
+      { "label": "To be completed", "vals": ["To be completed"] }
+    ]
+  },
+  "formacion": {
+    "num": "06",
+    "label": "Education",
+    "rows": [
+      { "period": "To be completed", "title": "To be completed", "inst": "" }
+    ]
+  },
+  "docencia": {
+    "num": "07",
+    "label": "Teaching",
+    "role": "To be completed",
+    "org": "",
+    "when": "",
+    "description": "To be completed.",
+    "materiasLabel": "",
+    "materias": ""
+  },
+  "closing": {
+    "title": "",
+    "links": []
+  },
+  "footer": {
+    "text": ""
+  }
+}
