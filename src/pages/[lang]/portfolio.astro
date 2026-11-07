@@ -7,7 +7,6 @@ import { getLanguagePaths } from '@utils/i18n-paths';
 import { type Lang, useTranslations, getAlternateUrl } from '@i18n/index';
 import SeoHead from '@components/shared/SeoHead.astro';
 import PublicNav from '@components/shared/PublicNav.astro';
-import GestionLink from '@components/shared/GestionLink.astro';
 import { SITE_CONFIG } from '@data/config';
 
 export const getStaticPaths = getLanguagePaths;
@@ -383,7 +382,7 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
   </main>
 
   <footer class="pf-footer">
-    <div class="wrap">© 2026 Mauricio González — Software Engineer · IA &amp; Automatización · <GestionLink /></div>
+    <div class="wrap">© 2026 Mauricio González — Software Engineer · IA &amp; Automatización</div>
   </footer>
 
   <CaseStudyModal lang={lang} cases={modalCases} labels={modalLabels} />

@@ -6,7 +6,6 @@ import { getAlternateUrl } from '@i18n/index';
 import { type Lang, useTranslations } from '@i18n/index';
 import SeoHead from '@components/shared/SeoHead.astro';
 import PublicNav from '@components/shared/PublicNav.astro';
-import GestionLink from '@components/shared/GestionLink.astro';
 import { BRAND_NAME } from '@data/brand';
 
 interface Props {
@@ -469,7 +468,7 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
   </main>
 
   <footer class="sv-footer">
-    <p>© 2026 Mauricio González · Córdoba, Argentina · <GestionLink /></p>
+    <p>© 2026 Mauricio González · Córdoba, Argentina</p>
   </footer>
 
   <ContactModal lang={lang} />

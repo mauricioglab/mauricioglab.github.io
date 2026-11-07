@@ -2,7 +2,6 @@
 import BaseTailwind from '../../layouts/BaseTailwind.astro';
 import SeoHead from '@components/shared/SeoHead.astro';
 import PublicNav from '@components/shared/PublicNav.astro';
-import GestionLink from '@components/shared/GestionLink.astro';
 import TimelineItem from '../../components/disertaciones/TimelineItem.astro';
 import { getDisertaciones } from '../../utils/disertaciones';
 import { SITE_CONFIG } from '@data/config';
@@ -145,7 +144,7 @@ const canonical = new URL('/disertaciones/', Astro.site).toString();
   </main>
 
   <footer class="dz-footer">
-    <p>© 2026 Mauricio González · Córdoba, Argentina · <GestionLink /></p>
+    <p>© 2026 Mauricio González · Córdoba, Argentina</p>
   </footer>
 
   <script is:inline>

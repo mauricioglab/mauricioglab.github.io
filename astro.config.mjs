@@ -2,8 +2,15 @@ import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import preact from "@astrojs/preact";
 
+// SITE_TARGET decide qué dominio se arma en este build:
+// "personal" (default) → mauricioglab.github.io, "company" → velocitylab.com.ar
+const SITE_TARGET = process.env.SITE_TARGET === "company" ? "company" : "personal";
+const SITE_URL = SITE_TARGET === "company"
+  ? "https://velocitylab.com.ar/"
+  : "https://mauricioglab.github.io/";
+
 export default defineConfig({
-  site: "https://mauricioglab.github.io/",
+  site: SITE_URL,
   base: "/",
   trailingSlash: "ignore",
   output: "static",
