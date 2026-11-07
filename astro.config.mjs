@@ -1,6 +1,7 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import preact from "@astrojs/preact";
+import domainRoutes from "./src/integrations/domain-routes.mjs";
 
 // SITE_TARGET decide qué dominio se arma en este build:
 // "personal" (default) → mauricioglab.github.io, "company" → velocitylab.com.ar
@@ -14,7 +15,8 @@ export default defineConfig({
   base: "/",
   trailingSlash: "ignore",
   output: "static",
-  redirects: {
+  // Todos estos redirects apuntan a contenido exclusivo del dominio personal.
+  redirects: SITE_TARGET === "company" ? {} : {
     "/pausas-activas": "/movimiento/?modo=pausas",
     "/movilidad": "/movimiento/?modo=movilidad",
     "/entrenamiento": "/movimiento/?modo=entrenamiento",
@@ -23,7 +25,7 @@ export default defineConfig({
     "/en/videos": "/videos/",
   },
   server: { open: "/" },
-  integrations: [tailwind(), preact()],
+  integrations: [tailwind(), preact(), domainRoutes(SITE_TARGET)],
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en'],

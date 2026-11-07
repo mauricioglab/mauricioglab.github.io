@@ -67,6 +67,11 @@ const caseStudyUrls: Record<string, string | undefined> = {
 // Estas páginas no tienen versión en otro idioma: no llevan prefijo /es ni /en.
 const singleLanguageCaseStudies = new Set(['caso-arquitectura']);
 
+// Los casos /proyectos/<id> viven solo en el dominio personal (detalle técnico completo);
+// caso-arquitectura es compartido y se queda relativo en los dos dominios.
+const isCompanyBuild = process.env.SITE_TARGET === 'company';
+const PERSONAL_ORIGIN = 'https://mauricioglab.github.io';
+
 // Stack técnico: cada tecnología con su slug oficial de Simple Icons (isologotipo)
 // Los slugs sin logo se marcan con "" (chip de solo texto)
 const skillGroups: { label: string; items: { name: string; slug: string }[] }[] = [
@@ -318,7 +323,9 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
                 const shortDescription = p?.shortDescription || p?.profiles?.engineer?.description || '';
                 const caseStudyPath = caseStudyUrls[project.id];
                 const caseStudyUrl = caseStudyPath
-                  ? (singleLanguageCaseStudies.has(project.id) ? caseStudyPath : `/${lang}${caseStudyPath}`)
+                  ? (singleLanguageCaseStudies.has(project.id)
+                      ? caseStudyPath
+                      : (isCompanyBuild ? `${PERSONAL_ORIGIN}/${lang}${caseStudyPath}` : `/${lang}${caseStudyPath}`))
                   : null;
                 const isFeaturedCard = project.category === 'analisis';
                 return (

@@ -17,5 +17,22 @@
       { "role": "Software Engineer · IA y automatización", "name": "Mauricio González" },
       { "role": "Analista", "name": "Iris" }
     ]
+  },
+  "results": {
+    "eyebrow": "Resultados",
+    "cases": [
+      { "who": "Embotelladora multinacional", "metric": "-75%", "what": "Integración contable con SAP" },
+      { "who": "Agencia de Sistemas de Información", "metric": "4h → 30min", "what": "Automatización de liquidaciones" },
+      { "who": "Empresa de transmisión eléctrica", "metric": "+60%", "what": "Auditorías con análisis de datos" }
+    ]
+  },
+  "stack": {
+    "eyebrow": "Stack",
+    "text": "Aplicaciones .NET Core, Angular, Node y Python. Microservicios, DDD y CQRS, en producción real."
+  },
+  "cta": {
+    "title": "¿Hablamos de tu proyecto?",
+    "button": "Conversemos sin compromiso",
+    "href": "/es/servicios/"
   }
 }

@@ -211,7 +211,7 @@ export default function GestionAdminPreact() {
               )}
             </div>
             <p class="text-center mt-4">
-              <a href="/inicio/" class="text-sm text-slate-400 hover:text-white">← Inicio</a>
+              <a href="/" class="text-sm text-slate-400 hover:text-white">← Inicio</a>
             </p>
           </div>
         </div>
@@ -283,7 +283,7 @@ export default function GestionAdminPreact() {
 
               <div class="flex items-center justify-between">
                 <p class="text-sm text-slate-400">{TOTAL_PAGES} páginas en el sitio</p>
-                <a href="/inicio/" class="text-sm text-slate-400 hover:text-white">
+                <a href="/" class="text-sm text-slate-400 hover:text-white">
                   ← Inicio
                 </a>
               </div>

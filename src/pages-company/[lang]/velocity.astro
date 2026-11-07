@@ -10,6 +10,10 @@ const altUrl = getAlternateUrl(Astro.url, lang);
 const altLang = lang === 'es' ? 'en' : 'es';
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const alternate = new URL(altUrl, Astro.site).toString();
+
+const startDate = new Date('2021-07-01');
+const years = Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
+const yearsLabel = lang === 'es' ? `${years}+ años en producción` : `${years}+ years in production`;
 ---
 
 <!doctype html>
@@ -40,6 +44,28 @@ const alternate = new URL(altUrl, Astro.site).toString();
           </li>
         ))}
       </ul>
+
+      <p class="eyebrow results">{content.results.eyebrow}</p>
+      <p class="years">{yearsLabel}</p>
+      <ul class="cases">
+        {content.results.cases.map((c: { who: string; metric: string; what: string }) => (
+          <li>
+            <span class="metric">{c.metric}</span>
+            <span class="case-body">
+              <span class="who">{c.who}</span>
+              <span class="what">{c.what}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      <p class="eyebrow stack">{content.stack.eyebrow}</p>
+      <p>{content.stack.text}</p>
+
+      <div class="cta">
+        <h2>{content.cta.title}</h2>
+        <a class="cta-btn" href={content.cta.href}>{content.cta.button}</a>
+      </div>
 
       <p class="lang"><a href={altUrl}>{altLang === 'en' ? 'EN' : 'ES'}</a></p>
     </main>
@@ -84,6 +110,40 @@ const alternate = new URL(altUrl, Astro.site).toString();
   }
   .role { font-weight: 700; color: #0b6e7d; }
   .name { color: #082d3a; }
+  .results { margin-top: 2.2rem; }
+  .years { font-weight: 700; color: #082d3a; }
+  .cases { list-style: none; margin: 0.8rem 0 0; padding: 0; display: grid; gap: 0.75rem; }
+  .cases li {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    background: #f3fbfc;
+    border-radius: 12px;
+    padding: 1rem 1.15rem;
+  }
+  .cases .metric { font-weight: 700; font-size: 1.3rem; color: #0b6e7d; min-width: 5.5rem; }
+  .cases .case-body { display: flex; flex-direction: column; }
+  .cases .who { font-weight: 700; color: #082d3a; }
+  .cases .what { color: #3d4c5c; font-size: 0.9rem; }
+  .stack { margin-top: 2.2rem; }
+  .cta {
+    margin-top: 2.5rem;
+    padding: 1.75rem;
+    border-radius: 16px;
+    background: #082d3a;
+    color: #fff;
+    text-align: center;
+  }
+  .cta h2 { margin: 0 0 1rem; font-size: 1.3rem; }
+  .cta-btn {
+    display: inline-block;
+    background: #fff;
+    color: #082d3a;
+    font-weight: 700;
+    padding: 0.7rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+  }
   .lang { margin-top: 2rem; }
   .lang a { color: #0b6e7d; font-weight: 700; font-size: 0.85rem; text-decoration: none; }
 </style>
