@@ -167,7 +167,7 @@ const acentoClaro = ACCENTOS_CLAROS[p] ?? acentoOscuro;
   .mvw-card { overflow: hidden; border-radius: 1rem; border: 1px solid var(--mv-border); background: var(--mv-surface); transition: all .2s; }
   .mvw-card:hover { transform: translateY(-4px); border-color: color-mix(in oklch, var(--acc) 40%, Canvas); }
   .mvw-card-media { position: relative; aspect-ratio: 1; width: 100%; overflow: hidden; background: color-mix(in oklch, CanvasText 6%, Canvas); display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  .mvw-card-media img { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; }
+  .mvw-card-media img, .mvw-card-media video { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; }
   .mvw-card-num-badge { position: absolute; left: .5rem; top: .5rem; display: flex; height: 1.75rem; width: 1.75rem; align-items: center; justify-content: center; border-radius: .375rem; border: 1px solid var(--mv-border); background: color-mix(in oklch, Canvas 60%, transparent); font-family: 'Bebas Neue',sans-serif; font-size: 1.2rem; color: var(--acc); }
   .mvw-card-body { padding: 1rem; }
   .mvw-card-name { margin-bottom: .6rem; min-height: 2.4em; font-size: .85rem; font-weight: 700; line-height: 1.35; color: var(--mv-text); }
@@ -220,8 +220,8 @@ const acentoClaro = ACCENTOS_CLAROS[p] ?? acentoOscuro;
   @media (max-width: 640px) { .mvw-ref-col { flex-basis: auto; } }
   .mvw-ref-frame { position: relative; display: flex; height: 260px; width: 260px; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; overflow: hidden; border-radius: 20px; border: 2px solid color-mix(in oklch, var(--acc) 25%, Canvas); background: color-mix(in oklch, CanvasText 6%, Canvas); transition: border-color .3s; }
   @media (max-width: 640px) { .mvw-ref-frame { height: 200px; width: 200px; } }
-  .mvw-ref-frame img { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; }
-  .mvw-ref-frame img.hidden { display: none; }
+  .mvw-ref-frame img, .mvw-ref-frame video { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; }
+  .mvw-ref-frame img.hidden, .mvw-ref-frame video.hidden { display: none; }
   .mvw-ex-number { font-family: 'Bebas Neue',sans-serif; font-size: 6rem; line-height: 1; color: color-mix(in oklch, var(--acc) 20%, Canvas); }
   .mvw-ex-number.hidden { display: none; }
   .mvw-ref-link { position: absolute; bottom: 1rem; display: flex; align-items: center; gap: .5rem; border-radius: .5rem; border: 1px solid color-mix(in oklch, var(--acc) 30%, Canvas); background: color-mix(in oklch, var(--acc) 12%, Canvas); padding: .5rem .75rem; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--acc); }
@@ -378,7 +378,7 @@ const acentoClaro = ACCENTOS_CLAROS[p] ?? acentoOscuro;
       const card = document.createElement('div');
       card.className = 'mvw-card';
       const media = ex.gif
-        ? `<img src="${gifBase}${ex.gif}" alt="${ex.name}" loading="lazy">`
+        ? `<video src="${gifBase}${ex.gif}" autoplay loop muted playsinline preload="none"></video>`
         : '';
       card.innerHTML = `
         <div class="mvw-card-media">${media}<div class="mvw-card-num-badge">${i + 1}</div></div>
@@ -391,28 +391,25 @@ const acentoClaro = ACCENTOS_CLAROS[p] ?? acentoOscuro;
     });
   }
 
-  // ── Preload de GIFs ──
-  function cargarGifs() {
-    if (gifsCargados || !gifBase) { gifsCargados = true; return; }
-    const gifs = [...new Set(modalidad.programas[0].opciones.flatMap((o) => o.ejercicios.map((e) => e.gif).filter(Boolean)))];
-    if (!gifs.length) { gifsCargados = true; return; }
-    const startBtn = $('[data-role="start-btn"]');
-    const original = startBtn.innerHTML;
-    startBtn.disabled = true;
-    Promise.all(gifs.map((g) =>
-      fetch(`${gifBase}${g}`).then((r) => r.blob()).then((blob) => {
-        const img = document.createElement('img');
-        img.src = URL.createObjectURL(blob); img.alt = g;
-        $('[data-role="ref-frame"]').appendChild(img);
-        gifMap[g] = img;
-      }).catch(() => {})
-    )).then(() => { startBtn.innerHTML = original; startBtn.disabled = false; gifsCargados = true; });
-  }
+  // ── Carga de videos de referencia ──
+  // Se carga solo el video del ejercicio actual (bajo demanda), no todo el
+  // programa de una vez: precargarlos todos al entrar a la modalidad
+  // saturaba la conexión.
+  function cargarGifs() { gifsCargados = true; }
   function showGif(g) {
-    Object.values(gifMap).forEach((img) => img.classList.add('hidden'));
+    Object.values(gifMap).forEach((v) => { v.classList.add('hidden'); v.pause(); });
     $('[data-role="rest-icon"]').classList.add('hidden');
-    if (g && gifMap[g]) gifMap[g].classList.remove('hidden');
-  }
+    if (!g || !gifBase) return;
+    if (!gifMap[g]) {
+      const video = document.createElement('video');
+      video.src = `${gifBase}${g}`;
+      video.autoplay = true; video.loop = true; video.muted = true; video.playsInline = true;
+      $('[data-role="ref-frame"]').appendChild(video);
+      gifMap[g] = video;
+    }
+    gifMap[g].classList.remove('hidden');
+    gifMap[g].currentTime = 0;
+    gifMap[g].play();
   function hideGif() {
     Object.values(gifMap).forEach((img) => img.classList.add('hidden'));
     $('[data-role="rest-icon"]').classList.remove('hidden');

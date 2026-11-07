@@ -266,9 +266,9 @@ const gifBase = `${basePath}entrenamiento/`;
     1: {
       label: 'DÍA 1',
       exercises: [
-        { name: 'Bolitas Abdominales', gif: '1bolitas.gif',  type: 'reps' },
-        { name: 'Press de Hombros',    gif: '1press.gif',    type: 'reps', note: '5 kg' },
-        { name: 'Jumping Jacks',       gif: '1jumping.gif',  type: 'reps' },
+        { name: 'Bolitas Abdominales', gif: '1bolitas.mp4',  type: 'reps' },
+        { name: 'Press de Hombros',    gif: '1press.mp4',    type: 'reps', note: '5 kg' },
+        { name: 'Jumping Jacks',       gif: '1jumping.mp4',  type: 'reps' },
       ],
       weeks: [
         { series: 3, values: [6,  8,  8]  },
@@ -281,9 +281,9 @@ const gifBase = `${basePath}entrenamiento/`;
     2: {
       label: 'DÍA 2',
       exercises: [
-        { name: 'Cuadrupedia Despegando Rodillas', gif: '2cuadrupedia.gif', type: 'time' },
-        { name: 'Sentadilla con Mancuerna',        gif: '2sentadilla.gif',  type: 'reps', note: '10 kg' },
-        { name: 'Mountain Climbers',               gif: '2climbers.gif',   type: 'reps' },
+        { name: 'Cuadrupedia Despegando Rodillas', gif: '2cuadrupedia.mp4', type: 'time' },
+        { name: 'Sentadilla con Mancuerna',        gif: '2sentadilla.mp4',  type: 'reps', note: '10 kg' },
+        { name: 'Mountain Climbers',               gif: '2climbers.mp4',   type: 'reps' },
       ],
       weeks: [
         { series: 3, values: [15, 8,  12] },
@@ -296,9 +296,9 @@ const gifBase = `${basePath}entrenamiento/`;
     3: {
       label: 'DÍA 3',
       exercises: [
-        { name: 'Bicho Muerto',                 gif: '3bicho.gif',    type: 'reps' },
-        { name: 'Remos en Plancha sobre Silla', gif: '3remos.gif',    type: 'reps', note: '5 kg · por lado' },
-        { name: 'Subo y Bajo Escalón',          gif: '3repiques.gif', type: 'reps' },
+        { name: 'Bicho Muerto',                 gif: '3bicho.mp4',    type: 'reps' },
+        { name: 'Remos en Plancha sobre Silla', gif: '3remos.mp4',    type: 'reps', note: '5 kg · por lado' },
+        { name: 'Subo y Bajo Escalón',          gif: '3repiques.mp4', type: 'reps' },
       ],
       weeks: [
         { series: 3, values: [8,  6,  12] },
@@ -311,9 +311,9 @@ const gifBase = `${basePath}entrenamiento/`;
     4: {
       label: 'DÍA 4',
       exercises: [
-        { name: 'Bird Dog',                  gif: '4bird.gif',       type: 'reps' },
-        { name: 'Buenos Días con Mancuerna', gif: '4buenosdias.gif', type: 'reps' },
-        { name: 'Sprowl con Silla',          gif: '4sprwol.gif',     type: 'reps' },
+        { name: 'Bird Dog',                  gif: '4bird.mp4',       type: 'reps' },
+        { name: 'Buenos Días con Mancuerna', gif: '4buenosdias.mp4', type: 'reps' },
+        { name: 'Sprowl con Silla',          gif: '4sprwol.mp4',     type: 'reps' },
       ],
       weeks: [
         { series: 3, values: [8,  8,  6]  },
@@ -326,9 +326,9 @@ const gifBase = `${basePath}entrenamiento/`;
     5: {
       label: 'DÍA 5',
       exercises: [
-        { name: 'Hollow',                               gif: '5hollow.gif',    type: 'time' },
-        { name: 'Flexiones en Plano Inclinado / Pared', gif: '5flrexiones.gif', type: 'reps' },
-        { name: 'Rodillas Arriba en el Lugar',          gif: '5rodillas.gif',  type: 'reps' },
+        { name: 'Hollow',                               gif: '5hollow.mp4',    type: 'time' },
+        { name: 'Flexiones en Plano Inclinado / Pared', gif: '5flrexiones.mp4', type: 'reps' },
+        { name: 'Rodillas Arriba en el Lugar',          gif: '5rodillas.mp4',  type: 'reps' },
       ],
       weeks: [
         { series: 3, values: [8,  6,  12] },
@@ -387,11 +387,11 @@ const gifBase = `${basePath}entrenamiento/`;
 
   // ── GIF PRELOAD ───────────────────────────────────────────────────────────
   const allGifs = [
-    '1bolitas.gif','1jumping.gif','1press.gif',
-    '2climbers.gif','2cuadrupedia.gif','2sentadilla.gif',
-    '3bicho.gif','3remos.gif','3repiques.gif',
-    '4bird.gif','4buenosdias.gif','4sprwol.gif',
-    '5flrexiones.gif','5hollow.gif','5rodillas.gif',
+    '1bolitas.mp4','1jumping.mp4','1press.mp4',
+    '2climbers.mp4','2cuadrupedia.mp4','2sentadilla.mp4',
+    '3bicho.mp4','3remos.mp4','3repiques.mp4',
+    '4bird.mp4','4buenosdias.mp4','4sprwol.mp4',
+    '5flrexiones.mp4','5hollow.mp4','5rodillas.mp4',
   ];
 
   const gifImgMap = {};
@@ -407,20 +407,22 @@ const gifBase = `${basePath}entrenamiento/`;
         .then(r => r.blob())
         .then(blob => {
           const url = URL.createObjectURL(blob);
-          const img = document.createElement('img');
-          img.src = url; img.alt = filename;
-          img.className = 'absolute inset-0 hidden h-full w-full object-cover';
-          ovGifFrame.appendChild(img);
-          gifImgMap[filename] = img;
+          const video = document.createElement('video');
+          video.src = url;
+          video.loop = true; video.muted = true; video.playsInline = true;
+          video.className = 'absolute inset-0 hidden h-full w-full object-cover';
+          ovGifFrame.appendChild(video);
+          gifImgMap[filename] = video;
           loaded++;
           startBtn.textContent = `CARGANDO... ${loaded}/${allGifs.length}`;
         })
         .catch(() => {
-          const img = document.createElement('img');
-          img.src = `${gifBase}${filename}`; img.alt = filename;
-          img.className = 'absolute inset-0 hidden h-full w-full object-cover';
-          ovGifFrame.appendChild(img);
-          gifImgMap[filename] = img;
+          const video = document.createElement('video');
+          video.src = `${gifBase}${filename}`;
+          video.loop = true; video.muted = true; video.playsInline = true;
+          video.className = 'absolute inset-0 hidden h-full w-full object-cover';
+          ovGifFrame.appendChild(video);
+          gifImgMap[filename] = video;
           loaded++;
         })
     )
@@ -435,8 +437,8 @@ const gifBase = `${basePath}entrenamiento/`;
   function showGif(filename) {
     if (currentGifShown) currentGifShown.classList.add('hidden');
     restIcon.classList.add('hidden');
-    const img = gifImgMap[filename];
-    if (img) { img.classList.remove('hidden'); currentGifShown = img; }
+    const video = gifImgMap[filename];
+    if (video) { video.classList.remove('hidden'); video.currentTime = 0; video.play(); currentGifShown = video; }
   }
   function hideGif() {
     if (currentGifShown) { currentGifShown.classList.add('hidden'); currentGifShown = null; }
@@ -495,7 +497,7 @@ const gifBase = `${basePath}entrenamiento/`;
       card.className = 'overflow-hidden rounded-2xl border border-[#1f1f38] bg-[#111120] transition-all duration-200 hover:-translate-y-1 hover:border-[#6a9400]';
       card.innerHTML = `
         <div class="relative aspect-square w-full overflow-hidden bg-[#0a0a15]">
-          <img src="${gifSrc(ex.gif)}" alt="${ex.name}" loading="lazy" class="h-full w-full object-cover"
+          <video src="${gifSrc(ex.gif)}" autoplay loop muted playsinline class="h-full w-full object-cover"
             onerror="this.parentElement.innerHTML='<div class=\\'flex h-full w-full flex-col items-center justify-center gap-2 text-[0.7rem] font-semibold uppercase tracking-[2px] text-[#5a5a7a]\\'><svg width=\\'40\\' height=\\'40\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1.5\\' opacity=\\'0.3\\'><path d=\\'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z\\'/><path d=\\'M21 12a9 9 0 11-18 0 9 9 0 0118 0z\\'/></svg><span>GIF</span></div>'">
           <div class="absolute left-2 top-2 flex h-7 w-7 items-center justify-center rounded-md border border-[#1f1f38] bg-black/75 font-['Bebas_Neue',sans-serif] text-[1.2rem] text-[#b8ff00]">${i+1}</div>
         </div>

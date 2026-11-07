@@ -335,9 +335,9 @@ export const MODALIDADES: ModalidadDef[] = [
               ],
             },
             ejercicios: [
-              { name: 'Bolitas Abdominales', gif: '1bolitas.gif', type: 'reps' },
-              { name: 'Press de Hombros', gif: '1press.gif', note: '5 kg', type: 'reps' },
-              { name: 'Jumping Jacks', gif: '1jumping.gif', type: 'reps' },
+              { name: 'Bolitas Abdominales', gif: '1bolitas.mp4', type: 'reps' },
+              { name: 'Press de Hombros', gif: '1press.mp4', note: '5 kg', type: 'reps' },
+              { name: 'Jumping Jacks', gif: '1jumping.mp4', type: 'reps' },
             ],
           },
           {
@@ -356,9 +356,9 @@ export const MODALIDADES: ModalidadDef[] = [
               ],
             },
             ejercicios: [
-              { name: 'Cuadrupedia Despegando Rodillas', gif: '2cuadrupedia.gif', type: 'time' },
-              { name: 'Sentadilla con Mancuerna', gif: '2sentadilla.gif', note: '10 kg', type: 'reps' },
-              { name: 'Mountain Climbers', gif: '2climbers.gif', type: 'reps' },
+              { name: 'Cuadrupedia Despegando Rodillas', gif: '2cuadrupedia.mp4', type: 'time' },
+              { name: 'Sentadilla con Mancuerna', gif: '2sentadilla.mp4', note: '10 kg', type: 'reps' },
+              { name: 'Mountain Climbers', gif: '2climbers.mp4', type: 'reps' },
             ],
           },
           {
@@ -377,9 +377,9 @@ export const MODALIDADES: ModalidadDef[] = [
               ],
             },
             ejercicios: [
-              { name: 'Bicho Muerto', gif: '3bicho.gif', type: 'reps' },
-              { name: 'Remos en Plancha sobre Silla', gif: '3remos.gif', note: '5 kg · por lado', type: 'reps' },
-              { name: 'Subo y Bajo Escalón', gif: '3repiques.gif', type: 'reps' },
+              { name: 'Bicho Muerto', gif: '3bicho.mp4', type: 'reps' },
+              { name: 'Remos en Plancha sobre Silla', gif: '3remos.mp4', note: '5 kg · por lado', type: 'reps' },
+              { name: 'Subo y Bajo Escalón', gif: '3repiques.mp4', type: 'reps' },
             ],
           },
           {
@@ -398,9 +398,9 @@ export const MODALIDADES: ModalidadDef[] = [
               ],
             },
             ejercicios: [
-              { name: 'Bird Dog', gif: '4bird.gif', type: 'reps' },
-              { name: 'Buenos Días con Mancuerna', gif: '4buenosdias.gif', type: 'reps' },
-              { name: 'Sprowl con Silla', gif: '4sprwol.gif', type: 'reps' },
+              { name: 'Bird Dog', gif: '4bird.mp4', type: 'reps' },
+              { name: 'Buenos Días con Mancuerna', gif: '4buenosdias.mp4', type: 'reps' },
+              { name: 'Sprowl con Silla', gif: '4sprwol.mp4', type: 'reps' },
             ],
           },
           {
@@ -419,9 +419,9 @@ export const MODALIDADES: ModalidadDef[] = [
               ],
             },
             ejercicios: [
-              { name: 'Hollow', gif: '5hollow.gif', type: 'time' },
-              { name: 'Flexiones en Plano Inclinado / Pared', gif: '5flrexiones.gif', type: 'reps' },
-              { name: 'Rodillas Arriba en el Lugar', gif: '5rodillas.gif', type: 'reps' },
+              { name: 'Hollow', gif: '5hollow.mp4', type: 'time' },
+              { name: 'Flexiones en Plano Inclinado / Pared', gif: '5flrexiones.mp4', type: 'reps' },
+              { name: 'Rodillas Arriba en el Lugar', gif: '5rodillas.mp4', type: 'reps' },
             ],
           },
         ],
