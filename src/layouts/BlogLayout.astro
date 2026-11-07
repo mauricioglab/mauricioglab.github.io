@@ -90,28 +90,9 @@ const allCategories = Array.from(
                 class="menu-primary block whitespace-nowrap py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em]"
                 aria-label="Lista de artículos"
                 aria-current={Astro.url.pathname === `${normalizedBase}blog/` ? "page" : undefined}
-              ><span>{SITE_CONFIG.blogName}</span></a
+              ><span>{SITE_CONFIG.blogName} (Blog)</span></a
               >
             </li>
-          </ul>
-
-          <ul class="menu-divider" aria-hidden="true"></ul>
-
-          <ul class="menu flex flex-wrap justify-center items-center list-none gap-y-3 gap-x-2 py-2" aria-label="Filtrar por etiqueta">
-            {
-              allCategories.map((category) => (
-                <li>
-                  <a
-                    href={`${normalizedBase}blog/category/${category.toLowerCase().replace(/\s+/g, "-")}/`}
-                    class="menu-tag text-[11px] md:text-xs"
-                    aria-label={`Artículos de la categoría ${category}`}
-                    aria-current={Astro.url.pathname === `${normalizedBase}blog/category/${category.toLowerCase().replace(/\s+/g, "-")}/` ? "page" : undefined}
-                  >
-                    {category}
-                  </a>
-                </li>
-              ))
-            }
           </ul>
 
           <ul class="menu-divider" aria-hidden="true"></ul>
@@ -126,6 +107,25 @@ const allCategories = Array.from(
               ><span>Acerca de</span></a
               >
             </li>
+          </ul>
+        </div>
+
+        <div class="wrap max-w-[1140px] mx-auto px-5 border-t border-[#e4e8f0]">
+          <ul class="menu flex flex-wrap justify-center items-center list-none gap-y-2 gap-x-2 py-1" aria-label="Filtrar por etiqueta">
+            {
+              allCategories.map((category) => (
+                <li>
+                  <a
+                    href={`${normalizedBase}blog/category/${category.toLowerCase().replace(/\s+/g, "-")}/`}
+                    class="menu-tag text-[11px] md:text-xs"
+                    aria-label={`Artículos de la categoría ${category}`}
+                    aria-current={Astro.url.pathname === `${normalizedBase}blog/category/${category.toLowerCase().replace(/\s+/g, "-")}/` ? "page" : undefined}
+                  >
+                    {category}
+                  </a>
+                </li>
+              ))
+            }
           </ul>
         </div>
       </nav>
@@ -147,7 +147,7 @@ const allCategories = Array.from(
             >
               <a
                 href={`${normalizedBase}blog/`}
-                class="text-white hover:text-vcl-cian">{blogTitle}</a
+                class="text-white hover:text-vcl-cian">{blogTitle} (Blog)</a
               >
             </h1>
             <p
