@@ -17,13 +17,14 @@ const chapter = current >= 0 ? chapters[current] : null;
 const prev = current > 0 ? chapters[current - 1] : null;
 const next = current >= 0 && current < chapters.length - 1 ? chapters[current + 1] : null;
 ---
-<Layout title={`${title}: ${PRODUCT_NAME}`} noTransition={noTransition}>
+<Layout title={`${title} | Caso ${PRODUCT_NAME}`} description={chapter?.desc} noTransition={noTransition}>
   <div class="min-h-screen">
     <header class="doc-header">
       <a href="/caso-arquitectura/" class="doc-logo">
         <Logo size={22} />
         <span>{PRODUCT_NAME}</span>
       </a>
+      <a href="/es/portfolio/" class="doc-back">← Portfolio</a>
       <a href="/caso-arquitectura/" class="doc-index-link">El proyecto</a>
       <button class="doc-nav-toggle" id="doc-nav-toggle" aria-label="Abrir índice" aria-expanded="false">
         <span></span><span></span><span></span>

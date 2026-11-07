@@ -1,8 +1,11 @@
 ---
+import SeoHead from '../../components/shared/SeoHead.astro';
 import '../../styles/caso-arquitectura.css';
 import { ClientRouter } from 'astro:transitions';
 import { STUDIO_NAME, PRODUCT_NAME } from '../../data/caso-arquitectura/brand';
 import LoadingOverlay from '../../components/caso-arquitectura/LoadingOverlay.astro';
+import SiteHeader from '../../components/shared/SiteHeader.astro';
+import SiteFooter from '../../components/shared/SiteFooter.astro';
 
 interface Props {
   title: string;
@@ -21,10 +24,13 @@ const { title, description = `Caso de estudio: ${PRODUCT_NAME}, la plataforma de
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     {!noTransition && <ClientRouter />}
     <title>{title}</title>
+    <SeoHead title={title} description={description} lang="es" canonical={new URL(Astro.url.pathname, Astro.site).toString()} />
   </head>
   <body>
     <a href="#main-content" class="skip-link">Saltar al contenido</a>
     <LoadingOverlay />
+    <SiteHeader current="portfolio" lang="es" />
     <slot />
+    <div transition:persist="site-footer"><SiteFooter lang="es" /></div>
   </body>
 </html>

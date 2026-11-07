@@ -1,11 +1,13 @@
 ---
-import Header from './Header.astro';
-import Footer from './Footer.astro';
+import SiteHeader from '../components/shared/SiteHeader.astro';
+import SiteFooter from '../components/shared/SiteFooter.astro';
+import SeoHead from '../components/shared/SeoHead.astro';
 import MateGame from '../components/games/MateGame.astro';
 import PromptModal from '../components/shared/PromptModal.astro';
 import type { LayoutType } from '../data/layout-features';
 import { getLayoutFeatures } from '../data/layout-features';
-import { BRAND_NAME } from '../data/brand';
+import { isCompanyBuild } from '../data/site-target';
+import { getSiteNav } from '../data/site-nav';
 import '../styles/brand.css';
 
 interface Props {
@@ -19,11 +21,16 @@ interface Props {
 	showMateGame?: boolean;
 	showPromptModal?: boolean;
 	noindex?: boolean;
+	// Ítem marcado como actual en el menú del shell y destino del selector ES/EN
+	current?: string;
+	altHref?: string;
+	// URL canónica (por defecto, la de la página actual en el dominio del build)
+	canonical?: string;
 }
 
 const {
-	title = `${BRAND_NAME} Depot`,
-	description = `${BRAND_NAME} Applications`,
+	title = getSiteNav().brand.name,
+	description = getSiteNav().brand.name,
 	lang = "es",
 	layoutType = 'public',
 	showHeader: showHeaderOverride,
@@ -31,15 +38,19 @@ const {
 	showMateGame: showMateGameOverride,
 	showPromptModal = false,
 	noindex = false,
+	current,
+	altHref,
+	canonical,
 } = Astro.props;
 
 // Get features from config, allow overrides
 const features = getLayoutFeatures(layoutType);
 const showHeader = showHeaderOverride ?? features.showMainHeader;
 const showFooter = showFooterOverride ?? features.showMainFooter;
-const showMateGame = showMateGameOverride ?? features.showMateGame;
+const showMateGame = !isCompanyBuild && (showMateGameOverride ?? features.showMateGame);
 
 const baseUrl = import.meta.env.BASE_URL;
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
 ---
 
 <!DOCTYPE html>
@@ -53,27 +64,20 @@ const baseUrl = import.meta.env.BASE_URL;
 		<link rel="icon" href={`${baseUrl}favicon.ico`} />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" />
 		<title>{title}</title>
-		<!-- Prevent flash of wrong theme -->
-		<script is:inline>
-			const savedTheme = localStorage.getItem('theme');
-			const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-			if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
-				document.documentElement.classList.add('dark');
-			}
-		</script>
+		{!noindex && <SeoHead title={title} description={description} lang={lang === 'en' ? 'en' : 'es'} canonical={canonicalUrl} />}
 		<slot name="head" />
 	</head>
 	<body class="min-h-screen flex flex-col p-0 bg-white text-vcl-petroleo font-vclBody font-light">
-		{showHeader && <Header />}
+		{showHeader && <SiteHeader current={current} lang={lang === 'en' ? 'en' : 'es'} altHref={altHref} />}
 
 		<!-- Main Content -->
 		<main class="flex-1">
 			<slot />
 		</main>
 
-		{showFooter && <Footer />}
+		{showFooter && <SiteFooter lang={lang === 'en' ? 'en' : 'es'} />}
 
 		{showMateGame && (
 			<>

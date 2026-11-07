@@ -6,13 +6,13 @@ export const prerender = true;
 ---
 
 <BaseTailwind
-  title="Mauricio González · Software Engineer, IA & Automatización"
-  description="Servicios, portfolio y recursos de Mauricio González, Software Engineer especializado en IA y automatización."
+  title="Mauricio González | Software Engineer · IA y automatización"
+  description="Portfolio, disertaciones, blog y herramientas de Mauricio González, Software Engineer especializado en IA y automatización."
   layoutType="index"
   showPromptModal={true}
 >
-<main>
-    <div class="home-split mx-auto max-w-6xl h-[calc(100vh-112px)] min-h-[560px] flex flex-col md:flex-row">
+<div>
+    <div class="home-split mx-auto max-w-6xl h-[calc(100vh_-_var(--site-header-h)_-_80px)] min-h-[560px] flex flex-col md:flex-row">
 
       <!-- Left: Clusters -->
       <section class="home-clusters md:w-1/2 px-6 sm:px-10 py-8 md:py-10 overflow-y-auto">
@@ -46,12 +46,12 @@ export const prerender = true;
         </div>
       </section>
     </div>
-  </main>
+  </div>
 </BaseTailwind>
 
 <style>
   @media (max-width: 767px) {
-    .home-split { height: auto; min-height: calc(100vh - 112px); }
+    .home-split { height: auto; min-height: calc(100vh - var(--site-header-h) - 80px); }
     .home-clusters { overflow-y: visible; }
     .home-greeting { min-height: 30vh; }
   }

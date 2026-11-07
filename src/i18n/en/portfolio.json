@@ -5,16 +5,25 @@
   },
   "title": "Portfolio",
   "subtitle": "Software Engineer · AI & Automation",
-  "intro": "Projects, experience and specialization in one place. When a new project is added, this page updates itself.",
   "projectsLabel": "Projects",
   "downloadCV": "Download CV",
   "viewProfile": "View full profile",
-  "emptyProjects": "No projects yet — pending to complete",
   "contact": "Contact",
-  "nav": {
-    "portfolio": "Portfolio",
-    "servicios": "Services",
-    "cv": "CV",
-    "disertaciones": "Talks"
+  "company": {
+    "seo": {
+      "title": "Portfolio | VeloCityLab",
+      "description": "Development, applied AI and process automation projects from the VeloCityLab team."
+    },
+    "badges": [
+      "Mauricio: {years}+ years of experience",
+      "AI in production (RENAPER/AWS Rekognition)",
+      "Teaching in Data Science & AI"
+    ],
+    "headlineMain": "Software studio ·",
+    "headlineAccent": "AI & Automation",
+    "subheadline": "We combine full-stack development (.NET Core, Angular) with applied AI. The team brings real experience taking AI solutions to production at government/enterprise scale, and building and validating predictive models with Python.",
+    "projectsNote": "Projects delivered by Mauricio as a contracted professional.",
+    "ctaTitle": "Looking for a team that combines development and AI?",
+    "ctaDescription": "Let's talk about your project."
   }
 }

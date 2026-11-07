@@ -1,5 +1,7 @@
 ---
 import BaseTailwind from '@layouts/BaseTailwind.astro';
+import OwnerGuard from '@components/shared/OwnerGuard.astro';
+import OwnerBar from '@components/shared/OwnerBar.astro';
 import NavBar from '@components/nutricion/NavBar.astro';
 import mealsData from '@data/nutricion/meals.json';
 import ingredientsData from '@data/nutricion/ingredients.json';
@@ -9,7 +11,9 @@ export const prerender = true;
 const title = 'NutriApp - Lista';
 const basePath = `${import.meta.env.BASE_URL}nutricion/`;
 ---
-<BaseTailwind title={title} description="Generá tu lista de compras según menú y porciones" lang="es" layoutType="tool" showPromptModal={true} noindex>
+<BaseTailwind title={title} description="Generá tu lista de compras según menú y porciones" lang="es" layoutType="private" showPromptModal={true} noindex>
+  <OwnerGuard slot="head" />
+  <OwnerBar current="nutricion" />
   <div class="mx-auto w-full max-w-md bg-white min-h-screen pb-24 relative shadow-sm">
     <NavBar basePath={basePath} />
 

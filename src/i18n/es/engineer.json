@@ -7,11 +7,9 @@
     "description": "Software Engineer · IA & Automatización · Python · .NET Core · Angular. IA en producción, modelos predictivos y arquitectura enterprise."
   },
   "hero": {
-    "badge": "DISPONIBLE PARA NUEVOS DESAFÍOS",
-    "headline": "Software Engineer · <span class=\"text-blue-600 dark:text-blue-400\">IA &amp; Automatización</span>.",
     "subheadline": "Base sólida en desarrollo full-stack (.NET Core, Angular) y especialización creciente en IA aplicada. Experiencia real llevando soluciones de IA a producción a escala gubernamental/enterprise, además de construir y validar modelos predictivos propios con Python.",
-    "ctaPrimary": "Descargar CV",
-    "ctaSecondary": "Ver Proyectos"
+    "headlineMain": "Software Engineer ·",
+    "headlineAccent": "IA & Automatización"
   },
   "projectsDescription": "Sistemas enterprise que soportan carga real y modelos de IA/datos validados con rigor.",
   "ctaTitle": "¿Buscás un Software Engineer que combine desarrollo e IA?",
@@ -98,8 +96,20 @@
     ]
   },
   "education": [
-    { "title": "Analista de Sistemas de Computación", "institution": "Instituto Cervantes", "period": "2023 · Cuadro de Honor" },
-    { "title": "Diplomatura en Ciencias de Datos e IA", "institution": "UTN", "period": "2025" },
-    { "title": "Diplomatura en Python", "institution": "UTN", "period": "2025" }
+    {
+      "title": "Analista de Sistemas de Computación",
+      "institution": "Instituto Cervantes",
+      "period": "2023 · Cuadro de Honor"
+    },
+    {
+      "title": "Diplomatura en Ciencias de Datos e IA",
+      "institution": "UTN",
+      "period": "2025"
+    },
+    {
+      "title": "Diplomatura en Python",
+      "institution": "UTN",
+      "period": "2025"
+    }
   ]
 }

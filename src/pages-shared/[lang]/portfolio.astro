@@ -1,14 +1,10 @@
 ---
 import BaseTailwind from '@layouts/BaseTailwind.astro';
-import ContactModal from '@components/landing/ContactModal.astro';
 import CaseStudyModal from '@components/case-study/CaseStudyModal.astro';
 import { getProjectsByProfile } from '@data/projects';
 import { getLanguagePaths } from '@utils/i18n-paths';
 import { type Lang, useTranslations, getAlternateUrl } from '@i18n/index';
-import SeoHead from '@components/shared/SeoHead.astro';
-import PublicNav from '@components/shared/PublicNav.astro';
-import { SITE_CONFIG } from '@data/config';
-import { isCompanyBuild, PERSONAL_ORIGIN, homeHref } from '@data/site-target';
+import { isCompanyBuild, PERSONAL_ORIGIN } from '@data/site-target';
 
 export const getStaticPaths = getLanguagePaths;
 
@@ -19,7 +15,6 @@ const projectsT = await useTranslations<any>(lang, 'projects');
 const modalT = await useTranslations<any>(lang, 'case-modal');
 const altPath = getAlternateUrl(Astro.url, lang);
 const altLang = lang === 'es' ? 'en' : 'es';
-const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 
 const projects = getProjectsByProfile('engineer', true);
 
@@ -41,8 +36,34 @@ const projectGroups = categoryOrder
 const startDate = new Date('2021-07-01');
 const years = Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
 
-const headline = content.hero.headline
-  .replace('text-blue-600 dark:text-blue-400', 'accent');
+// Voz de estudio en el dominio empresa; voz personal en el dominio personal.
+const copy = isCompanyBuild
+  ? {
+      seoTitle: t.company.seo.title,
+      seoDescription: t.company.seo.description,
+      badges: t.company.badges.map((b: string) => b.replace('{years}', String(years))),
+      headlineMain: t.company.headlineMain,
+      headlineAccent: t.company.headlineAccent,
+      subheadline: t.company.subheadline,
+      projectsNote: t.company.projectsNote as string | null,
+      ctaTitle: t.company.ctaTitle,
+      ctaDescription: t.company.ctaDescription,
+    }
+  : {
+      seoTitle: t.seo.title,
+      seoDescription: t.seo.description,
+      badges: [
+        `${years}+ ${lang === 'es' ? 'años de experiencia' : 'years of experience'}`,
+        lang === 'es' ? 'IA en producción (RENAPER/AWS Rekognition)' : 'AI in production (RENAPER/AWS Rekognition)',
+        lang === 'es' ? 'Docente en Ciencia de Datos e IA' : 'Instructor in Data Science & AI',
+      ],
+      headlineMain: content.hero.headlineMain,
+      headlineAccent: content.hero.headlineAccent,
+      subheadline: content.hero.subheadline,
+      projectsNote: null as string | null,
+      ctaTitle: content.ctaTitle,
+      ctaDescription: content.ctaDescription,
+    };
 
 const modalLabels = {
   title: modalT.title,
@@ -127,8 +148,7 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
 ];
 ---
 
-<BaseTailwind title={t.seo.title} description={t.seo.description} lang={lang} layoutType="landing">
-  <SeoHead slot="head" title={t.seo.title} description={t.seo.description} lang={lang} canonical={canonical} />
+<BaseTailwind title={copy.seoTitle} description={copy.seoDescription} lang={lang} layoutType="landing" current="portfolio" altHref={altPath}>
   <style>
     :root {
       --paper: #f4f6fa;
@@ -152,17 +172,6 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
     .accent { color: var(--teal-deep); }
 
     /* Header */
-    .pf-header { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
-    .pf-header .row { max-width: 1080px; margin: 0 auto; padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-    .pf-brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); text-decoration: none; }
-    .pf-brand span { color: var(--ink-faint); font-weight: 400; }
-    .pf-nav { display: flex; align-items: center; gap: 1.1rem; flex-shrink: 0; }
-    .pf-nav a.link { font-size: .85rem; color: var(--ink-soft); text-decoration: none; padding: 6px 10px; border-radius: 8px; transition: color .15s; }
-    .pf-nav a.link:hover { color: var(--ink); background: var(--paper); }
-    .pf-toggle { font-family: var(--font-head); font-size: .8rem; font-weight: 600; color: var(--ink-soft); border: 1px solid var(--line); background: #fff; padding: .45rem .9rem; border-radius: 999px; transition: border-color .15s, color .15s; }
-    .pf-toggle:hover { border-color: var(--teal-deep); color: var(--teal-deep); }
-    .pf-cta { font-family: var(--font-head); font-size: .82rem; font-weight: 600; color: #fff; background: var(--teal-deep); border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; transition: opacity .15s; }
-    .pf-cta:hover { opacity: .9; }
 
     /* Hero */
     .pf-hero { padding: 72px 0 40px; text-align: center; }
@@ -193,6 +202,7 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
       background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 24px;
       display: flex; flex-direction: column; gap: 12px; cursor: pointer; transition: transform .15s, box-shadow .15s, border-color .15s;
     }
+    .pf-card:focus-visible { outline: 2px solid var(--accent, #16b6c9); outline-offset: 3px; }
     .pf-card:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -22px rgba(8,45,58,.25); border-color: #a6e9f1; }
     .pf-card h3 { font-size: 1.08rem; font-weight: 600; color: var(--ink); }
     .pf-card p { font-size: .88rem; color: var(--ink-soft); line-height: 1.6; }
@@ -251,55 +261,31 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
     .pf-final .a-solid { background: var(--teal); color: #fff; font-weight: 600; padding: 12px 22px; border-radius: 999px; transition: opacity .15s; }
     .pf-final .a-solid:hover { opacity: .9; }
 
-    .pf-footer { border-top: 1px solid var(--line); padding: 26px 0; text-align: center; font-size: .82rem; color: var(--ink-faint); }
-
     @media (max-width: 820px) {
       .pf-grid { grid-template-columns: 1fr; }
       .pf-skill-row { grid-template-columns: 1fr; gap: .4rem; }
       .pf-hero { padding-top: 52px; }
     }
-    @media (max-width: 760px) {
-      .pf-header .row { padding: 12px 16px; gap: .6rem; }
-      .pf-brand { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-      .pf-brand .sub { display: none; }
-      .pf-nav { flex-shrink: 0; gap: .45rem; }
-      .pf-nav a.link { display: none; }
-    }
   </style>
 
-  <!-- Header -->
-  <header class="pf-header">
-    <div class="row">
-      <a class="pf-brand" href={homeHref(lang)}>{SITE_CONFIG.author}<span class="sub"> | Portfolio</span></a>
-      <div class="pf-nav">
-        <a class="link" href="#proyectos">{lang === 'es' ? 'Proyectos' : 'Projects'}</a>
-        <PublicNav current="portfolio" lang={lang} />
-        <a class="pf-toggle" href={altPath}>{altLang.toUpperCase()}</a>
-        <button class="pf-cta" data-contact-trigger>{t.contact}</button>
-      </div>
-    </div>
-  </header>
-
-  <main>
+  <div>
     <!-- Hero -->
     <section class="pf-hero">
       <div class="wrap">
         <div class="pf-badges">
-          <span>{years}+ {lang === 'es' ? 'años de experiencia' : 'years of experience'}</span>
-          <span>{lang === 'es' ? 'IA en producción (RENAPER/AWS Rekognition)' : 'AI in production (RENAPER/AWS Rekognition)'}</span>
-          <span>{lang === 'es' ? 'Docente en Ciencia de Datos e IA' : 'Instructor in Data Science & AI'}</span>
+          {copy.badges.map((b: string) => <span>{b}</span>)}
         </div>
-        <h1 set:html={headline}></h1>
-        <p class="sub">{content.hero.subheadline}</p>
+        <h1>{copy.headlineMain} <span class="accent">{copy.headlineAccent}</span>.</h1>
+        <p class="sub">{copy.subheadline}</p>
         <div class="pf-trusted">
           <span class="lbl">{lang === 'es' ? 'Proyectos para' : 'Projects for'}</span>
           <span class="cl">Coca-Cola Embonor</span>
-          <span class="cl">{lang === 'es' ? 'Renaseg (SSN)' : 'Renaseg (SSN)'}</span>
+          <span class="cl">Renaseg (SSN)</span>
           <span class="cl">{lang === 'es' ? 'Agencia de Sistemas de Información' : 'Information Systems Agency'}</span>
         </div>
         <div class="actions">
           <a class="pf-btn-solid" href="#proyectos">{lang === 'es' ? 'Ver proyectos' : 'View projects'}</a>
-          <a class="pf-btn-ghost" href="/disertaciones/">{lang === 'es' ? 'Disertaciones' : 'Talks'}</a>
+          <a class="pf-btn-ghost" href={`/${lang}/disertaciones/`}>{lang === 'es' ? 'Disertaciones' : 'Talks'}</a>
           <button class="pf-btn-ghost" data-contact-trigger>{lang === 'es' ? 'Contactar' : 'Contact'}</button>
         </div>
         <hr class="rule" />
@@ -310,7 +296,7 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
     <section class="pf-section" id="proyectos">
       <div class="wrap">
         <div class="eyebrow"><span class="num">01</span><span class="label">{t.projectsLabel}</span></div>
-        <p style="color:var(--ink-soft);max-width:62ch;margin-bottom:1.6rem">{content.projectsDescription}</p>
+        <p style="color:var(--ink-soft);max-width:62ch;margin-bottom:1.6rem">{content.projectsDescription}{copy.projectsNote ? ` ${copy.projectsNote}` : ''}</p>
         {projectGroups.map((group) => (
           <div class="pf-group">
             <h3 class="pf-group-title">{group.label}</h3>
@@ -328,7 +314,7 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
                   : null;
                 const isFeaturedCard = project.category === 'analisis';
                 return (
-                  <div class:list={['pf-card', isFeaturedCard && 'pf-card--featured']} data-case={project.id} data-case-full={caseStudyUrl || ''}>
+                  <div class:list={['pf-card', isFeaturedCard && 'pf-card--featured']} data-case={project.id} data-case-full={caseStudyUrl || ''} role="button" tabindex="0" aria-haspopup="dialog">
                     <div class="body">
                       {isFeaturedCard && <span class="badge-featured">{lang === 'es' ? 'Caso de estudio · 14 capítulos' : 'Case study · 14 chapters'}</span>}
                       <h3>{title}</h3>
@@ -377,27 +363,29 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
     <section class="pf-final">
       <div class="wrap">
         <div class="box">
-          <h2>{content.ctaTitle}</h2>
-          <p>{content.ctaDescription}</p>
+          <h2>{copy.ctaTitle}</h2>
+          <p>{copy.ctaDescription}</p>
           <div class="actions">
             <button class="a-solid" data-contact-trigger>{lang === 'es' ? 'Contactar' : 'Contact'}</button>
           </div>
         </div>
       </div>
     </section>
-  </main>
-
-  <footer class="pf-footer">
-    <div class="wrap">© 2026 Mauricio González — Software Engineer · IA &amp; Automatización</div>
-  </footer>
+  </div>
 
   <CaseStudyModal lang={lang} cases={modalCases} labels={modalLabels} />
-  <ContactModal lang={lang} />
 
   <script is:inline>
     document.addEventListener('click', function (e) {
       var card = e.target.closest('.pf-card[data-case]');
       if (!card) return;
+      e.preventDefault();
+      window.openCaseModal(card.getAttribute('data-case'), card.getAttribute('data-case-full'));
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var card = e.target.closest && e.target.closest('.pf-card[data-case]');
+      if (!card || e.target !== card) return;
       e.preventDefault();
       window.openCaseModal(card.getAttribute('data-case'), card.getAttribute('data-case-full'));
     });

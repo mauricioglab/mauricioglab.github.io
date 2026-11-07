@@ -1,5 +1,7 @@
 ---
 import BaseTailwind from '@layouts/BaseTailwind.astro';
+import OwnerGuard from '@components/shared/OwnerGuard.astro';
+import OwnerBar from '@components/shared/OwnerBar.astro';
 import WorkoutEngine from '@components/movimiento/WorkoutEngine.astro';
 import { getModalidades } from '@utils/movimiento';
 import type { ModalidadId } from '@data/movimiento';
@@ -20,7 +22,9 @@ const ACCENTOS_CLAROS: Record<string, string> = {
 };
 ---
 
-<BaseTailwind title={title} description="Movimiento · Pausas activas, movilidad, entrenamiento, remo y thruster" lang="es" layoutType="tool" showPromptModal={false} noindex>
+<BaseTailwind title={title} description="Movimiento · Pausas activas, movilidad, entrenamiento, remo y thruster" lang="es" layoutType="private" showPromptModal={false} noindex>
+  <OwnerGuard slot="head" />
+  <OwnerBar current="movimiento" />
   <link slot="head" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style is:global>
     .mv-page {
@@ -32,7 +36,7 @@ const ACCENTOS_CLAROS: Record<string, string> = {
       font-family: 'Syne',sans-serif;
       color: var(--mv-text);
       background: Canvas;
-      min-height: 100vh;
+      min-height: calc(100vh - var(--owner-bar-h, 0px));
     }
     .mv-title { font-family: 'Bebas Neue',sans-serif; font-size: 2.8rem; line-height: 1; letter-spacing: 2px; color: var(--mv-text); }
     .mv-subtitle { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 4px; color: var(--mv-muted); }
@@ -49,7 +53,6 @@ const ACCENTOS_CLAROS: Record<string, string> = {
   <div class="mv-page relative overflow-x-hidden">
     <header class="relative z-10 flex items-center max-sm:items-start max-sm:flex-col gap-6 max-sm:gap-4 border-b px-10 max-sm:px-6 py-8 max-sm:py-6" style="border-color: var(--mv-border)">
       <div class="flex flex-col">
-        <a href="/admin/gestion/" class="mb-2 text-xs font-semibold uppercase tracking-[3px] no-underline" style="color: var(--mv-muted)">← Gestión</a>
         <span class="mv-title">MOVIMIENTO</span>
         <span class="mv-subtitle">Pausas · Movilidad · Entrenamiento · Remo · Thruster</span>
       </div>

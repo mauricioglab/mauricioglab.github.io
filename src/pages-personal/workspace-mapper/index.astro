@@ -1,6 +1,8 @@
 ---
 // Workspace Mapper - Mapeo de dispositivos, editores y proyectos
 import BaseTailwind from '@layouts/BaseTailwind.astro';
+import OwnerGuard from '@components/shared/OwnerGuard.astro';
+import OwnerBar from '@components/shared/OwnerBar.astro';
 
 export const prerender = true;
 
@@ -11,14 +13,16 @@ const title = "Workspace Mapper";
     title={title}
     description="Mapea dispositivos, editores e IDEs con tus proyectos"
     lang="es"
-    layoutType="tool"
+    layoutType="private"
     showPromptModal={true}
+    noindex
 >
+<OwnerGuard slot="head" />
+<OwnerBar current="workspace-mapper" />
 <div class="min-h-screen bg-slate-50 dark:bg-slate-900 py-6 px-4">
     <div class="max-w-6xl mx-auto">
         <!-- Header -->
         <header class="text-center mb-8">
-            <a href="/" class="inline-block mb-3 text-sm font-semibold text-slate-500 hover:text-indigo-600 no-underline">← Inicio</a>
             <h1 class="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
                 🖥️ Workspace Mapper
             </h1>

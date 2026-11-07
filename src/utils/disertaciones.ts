@@ -46,7 +46,7 @@ export async function getDisertaciones(): Promise<Disertacion[]> {
           title: row.title,
           eventDate: /^\d{4}-\d{2}-\d{2}$/.test(row.event_date) ? new Date(`${row.event_date}T00:00:00`) : new Date(row.event_date),
           eventName: row.event_name ?? '',
-          author: row.author ?? 'Mauricio Gonzalez',
+          author: row.author ?? 'Mauricio González',
           categories: Array.isArray(row.categories) ? row.categories : [],
           description: row.description ?? '',
           bullets: Array.isArray(row.bullets) ? row.bullets : [],
@@ -67,8 +67,8 @@ export async function getDisertaciones(): Promise<Disertacion[]> {
   return items.sort((a, b) => b.eventDate.getTime() - a.eventDate.getTime());
 }
 
-export function formatEventDate(date: Date): string {
-  return new Intl.DateTimeFormat('es-ES', {
+export function formatEventDate(date: Date, lang: 'es' | 'en' = 'es'): string {
+  return new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',

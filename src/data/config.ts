@@ -54,7 +54,6 @@ export const SITE_CONFIG = {
   // =====================
   // Los CV no se enlazan desde el sitio. Velocity es la página pública.
   cv: '/es/cv/',
-  cvIris: '/es/cv/iris/',
   velocity: '/es/velocity/',
   
   // =====================

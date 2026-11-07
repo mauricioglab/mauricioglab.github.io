@@ -4,9 +4,10 @@ import { formatEventDate } from '../../utils/disertaciones';
 
 interface Props {
   disertacion: Disertacion;
+  lang?: 'es' | 'en';
 }
 
-const { disertacion } = Astro.props;
+const { disertacion, lang = 'es' } = Astro.props;
 const cover = disertacion.coverUrl || disertacion.slidesUrls[0];
 const secondary: string[] = [];
 if (disertacion.certificateUrl) secondary.push(disertacion.certificateUrl);
@@ -15,7 +16,7 @@ secondary.push(...disertacion.slidesUrls.filter((s) => s !== cover));
 const shown = secondary.filter(Boolean).slice(0, 2);
 const certPhoto = shown[0];
 const slidePhoto = shown[1];
-const date = formatEventDate(disertacion.eventDate);
+const date = formatEventDate(disertacion.eventDate, lang);
 ---
 
 <article class="tl-item reveal" itemscope itemtype="https://schema.org/Event">

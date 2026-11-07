@@ -18,6 +18,7 @@
     "@astrojs/markdown-remark": "^6.3.10",
     "@astrojs/preact": "^4.1.0",
     "@astrojs/rss": "^4.0.15",
+    "@astrojs/sitemap": "^3.7.4",
     "@preact/signals": "^2.11.2",
     "archiver": "^7.0.1",
     "astro": "^5.16.15",

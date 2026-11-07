@@ -1,29 +1,49 @@
 {
   "meta": {
-    "title": "Velocity — Who we are",
-    "description": "Velocity is the studio of Mauricio González and Iris."
+    "title": "About us | VeloCityLab",
+    "description": "VeloCityLab is the studio of Mauricio González and Iris: software, applied AI and process automation."
   },
   "about": {
     "eyebrow": "Who we are",
     "title": "Technology, strategy, and results",
     "paragraphs": [
-      "Velocity is the studio of Mauricio González and Iris.",
-      "The studio's work is software, applied artificial intelligence, and process automation."
+      "VeloCityLab is the studio of Mauricio González and Iris.",
+      "Our work is software, applied artificial intelligence and process automation."
     ]
   },
   "people": {
     "eyebrow": "The team",
     "members": [
-      { "role": "Software Engineer · AI and automation", "name": "Mauricio González" },
-      { "role": "Analyst", "name": "Iris" }
+      {
+        "role": "Software Engineer · AI and automation",
+        "name": "Mauricio González"
+      },
+      {
+        "role": "Analyst",
+        "name": "Iris"
+      }
     ]
   },
   "results": {
-    "eyebrow": "Results",
+    "eyebrow": "Team experience",
+    "note": "Projects delivered by Mauricio as a contracted professional.",
+    "yearsLabel": "Mauricio has {years}+ years of professional experience",
     "cases": [
-      { "who": "Multinational bottling company", "metric": "-75%", "what": "SAP accounting integration" },
-      { "who": "Information Systems Agency", "metric": "4h → 30min", "what": "Settlement automation" },
-      { "who": "Electric transmission company", "metric": "+60%", "what": "Audits with data analysis" }
+      {
+        "who": "Coca-Cola Embonor",
+        "metric": "-75%",
+        "what": "SAP accounting integration"
+      },
+      {
+        "who": "Information Systems Agency",
+        "metric": "4h → 30min",
+        "what": "Settlement automation"
+      },
+      {
+        "who": "ISA CTEEP",
+        "metric": "+60%",
+        "what": "Audits with data analysis"
+      }
     ]
   },
   "stack": {

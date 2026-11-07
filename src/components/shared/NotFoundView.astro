@@ -12,13 +12,13 @@ const resolveUrl = (url: string) => url.startsWith('/') ? `${b}${url.slice(1)}` 
 const companyLinks = [
   { label: 'Servicios', url: '/es/servicios/' },
   { label: 'Portfolio', url: '/es/portfolio/' },
-  { label: 'Disertaciones', url: '/disertaciones/' },
+  { label: 'Disertaciones', url: '/es/disertaciones/' },
   { label: 'Velocity', url: '/es/velocity/' },
 ];
 ---
 
-<main>
-  <div class="home-split mx-auto max-w-6xl h-[calc(100vh-112px)] min-h-[560px] flex flex-col md:flex-row">
+<div>
+  <div class="home-split mx-auto max-w-6xl h-[calc(100vh_-_var(--site-header-h)_-_80px)] min-h-[560px] flex flex-col md:flex-row">
 
     <!-- Left: Clusters -->
     <section class="home-clusters md:w-1/2 px-6 sm:px-10 py-8 md:py-10 overflow-y-auto">
@@ -71,11 +71,11 @@ const companyLinks = [
       </div>
     </section>
   </div>
-</main>
+</div>
 
 <style>
   @media (max-width: 767px) {
-    .home-split { height: auto; min-height: calc(100vh - 112px); }
+    .home-split { height: auto; min-height: calc(100vh - var(--site-header-h) - 80px); }
     .home-clusters { overflow-y: visible; }
     .home-greeting { min-height: 40vh; }
   }

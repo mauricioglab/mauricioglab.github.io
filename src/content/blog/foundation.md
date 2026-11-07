@@ -1,7 +1,7 @@
 ---
 title: "Fundación y la Psicohistoria: Un Espejo de Nuestro Presente con IA"
 pubDate: 2025-01-26
-author: "MG Lab"
+author: "Mauricio González"
 categories: ["Libros", "Reflexiones"]
 description: "Reflexiones sobre la psicohistoria de Asimov y su paralelismo con la inteligencia artificial."
 image: "../../assets/blog/foundation.png"

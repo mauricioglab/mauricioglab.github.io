@@ -1,29 +1,28 @@
 ---
 import BaseTailwind from '../../layouts/BaseTailwind.astro';
-import SeoHead from '@components/shared/SeoHead.astro';
 import RecursoCard from '../../components/recursos/RecursoCard.astro';
 import { getRecursos } from '../../utils/recursos';
 import { getUltimosPosts } from '../../utils/relacionados';
-import { BRAND_NAME } from '../../data/brand';
-import { SITE_CONFIG } from '../../data/config';
+import { getSiteNav } from '../../data/site-nav';
+
+const SITE_NAME = getSiteNav().brand.name;
 
 export const prerender = true;
 
 const recursos = await getRecursos();
 const ultimosPosts = await getUltimosPosts(4);
-const canonical = new URL('/zona-lab/', Astro.site).toString();
 const blogBase = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 ---
 
 <BaseTailwind
-  title={`Zona Lab — ${BRAND_NAME}`}
+  title={`Zona Lab | ${SITE_NAME}`}
   description="Recursos de estudio para alumnos: videos y reportes con su resumen."
   lang="es"
-  layoutType="landing"
+  layoutType="public"
+  current="zona-lab"
 >
-  <SeoHead slot="head" title={`Zona Lab — ${BRAND_NAME}`} description="Recursos de estudio para alumnos: videos y reportes con su resumen." lang="es" canonical={canonical} />
 
   <style>
     :root {
@@ -43,22 +42,6 @@ const blogBase = import.meta.env.BASE_URL.endsWith('/')
     h1, h2, h3, h4 { font-family: var(--font-head); line-height: 1.15; margin: 0; letter-spacing: -0.02em; font-weight: 600; }
     p { margin: 0; }
     a { color: inherit; text-decoration: none; }
-
-    .zl-header {
-      position: sticky; top: 0; z-index: 50;
-      background: rgba(255,255,255,.92); backdrop-filter: saturate(1.4) blur(8px);
-      border-bottom: 1px solid var(--line);
-    }
-    .zl-header .row { max-width: 1100px; margin: 0 auto; padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-    .zl-brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); letter-spacing: .02em; }
-    .zl-brand-icon { width: 22px; height: 22px; flex-shrink: 0; }
-    .zl-brand b { color: var(--accent); }
-    .zl-brand .sub { font-weight: 400; font-size: .8rem; color: var(--faint); margin-left: .5rem; }
-    .zl-nav { display: flex; align-items: center; gap: .75rem; }
-    .zl-nav a.link { color: var(--muted); font-size: .85rem; text-decoration: none; padding: 6px 10px; border-radius: 8px; transition: color .15s; }
-    .zl-nav a.link:hover { color: var(--ink); background: var(--panel); }
-
-    .zl-topline { height: 4px; background: linear-gradient(90deg, #16B6C9, #D4AF37); }
 
     .zl-hero {
       position: relative; overflow: hidden;
@@ -99,26 +82,11 @@ const blogBase = import.meta.env.BASE_URL.endsWith('/')
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.is-visible { opacity: 1; transform: translateY(0); }
 
-    .zl-footer { border-top: 1px solid var(--line); background: #fff; padding: 26px 28px; text-align: center; font-size: .82rem; color: var(--faint); }
-
     @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
     @media (max-width: 560px) { .zl-hero { padding: 60px 20px 48px; } }
   </style>
 
-  <div class="zl-topline" aria-hidden="true"></div>
-
-  <header class="zl-header">
-    <div class="row">
-      <a class="zl-brand" href="/blog/"><img src="/logo-vl-icon.svg" alt="" class="zl-brand-icon" />{BRAND_NAME}<span class="sub">| Zona Lab</span></a>
-      <div class="zl-nav">
-        <a class="link" href="/disertaciones/">Disertaciones</a>
-        <a class="link" href="/es/portfolio/">Portfolio</a>
-        <a class="link" href="/blog/">{SITE_CONFIG.blogName} (Blog)</a>
-      </div>
-    </div>
-  </header>
-
-  <main>
+  <div>
     <section class="zl-hero">
       <div class="wrap">
         <div class="zl-badge"><span>📚</span> Recursos para alumnos</div>
@@ -165,11 +133,7 @@ const blogBase = import.meta.env.BASE_URL.endsWith('/')
         </ul>
       </section>
     )}
-  </main>
-
-  <footer class="zl-footer">
-    <p>© 2026 Mauricio González · Córdoba, Argentina</p>
-  </footer>
+  </div>
 
   <script is:inline>
     (function () {

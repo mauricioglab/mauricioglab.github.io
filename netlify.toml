@@ -137,3 +137,10 @@
   from = "/inicio/*"
   to = "/"
   status = 301
+
+# Disertaciones pasó a /es/disertaciones/ (y /en/disertaciones/).
+[[redirects]]
+  from = "/disertaciones"
+  to = "/es/disertaciones/"
+  status = 301
+  force = true

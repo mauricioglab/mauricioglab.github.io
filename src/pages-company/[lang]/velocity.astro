@@ -1,4 +1,5 @@
 ---
+import BaseTailwind from '@layouts/BaseTailwind.astro';
 import { type Lang, useTranslations, getAlternateUrl } from '@i18n/index';
 import { getLanguagePaths } from '@utils/i18n-paths';
 
@@ -8,80 +9,65 @@ const { lang } = Astro.params as { lang: Lang };
 const content = await useTranslations<any>(lang, 'velocity');
 const altUrl = getAlternateUrl(Astro.url, lang);
 const altLang = lang === 'es' ? 'en' : 'es';
-const canonical = new URL(Astro.url.pathname, Astro.site).toString();
-const alternate = new URL(altUrl, Astro.site).toString();
 
 const startDate = new Date('2021-07-01');
 const years = Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
-const yearsLabel = lang === 'es' ? `${years}+ años en producción` : `${years}+ years in production`;
+const yearsLabel = content.results.yearsLabel.replace('{years}', String(years));
 ---
 
-<!doctype html>
-<html lang={lang}>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{content.meta.title}</title>
-    <meta name="description" content={content.meta.description} />
-    <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang={altLang} href={alternate} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
-  </head>
-  <body>
-    <main>
-      <p class="eyebrow">{content.about.eyebrow}</p>
-      <h1>{content.about.title}</h1>
-      {content.about.paragraphs.map((paragraph: string) => <p>{paragraph}</p>)}
+<BaseTailwind title={content.meta.title} description={content.meta.description} lang={lang} layoutType="landing" current="velocity" altHref={altUrl}>
+  <div class="velocity">
+    <p class="eyebrow">{content.about.eyebrow}</p>
+    <h1>{content.about.title}</h1>
+    {content.about.paragraphs.map((paragraph: string) => <p>{paragraph}</p>)}
 
-      <p class="eyebrow team">{content.people.eyebrow}</p>
-      <ul>
-        {content.people.members.map((member: { role: string; name: string }) => (
-          <li>
-            <span class="role">{member.role}</span>
-            <span class="name">{member.name}</span>
-          </li>
-        ))}
-      </ul>
+    <p class="eyebrow team">{content.people.eyebrow}</p>
+    <ul>
+      {content.people.members.map((member: { role: string; name: string; url?: string }) => (
+        <li>
+          <span class="role">{member.role}</span>
+          <span class="name">
+            {member.url ? <a href={member.url} target="_blank" rel="noopener noreferrer">{member.name}</a> : member.name}
+          </span>
+        </li>
+      ))}
+    </ul>
 
-      <p class="eyebrow results">{content.results.eyebrow}</p>
-      <p class="years">{yearsLabel}</p>
-      <ul class="cases">
-        {content.results.cases.map((c: { who: string; metric: string; what: string }) => (
-          <li>
-            <span class="metric">{c.metric}</span>
-            <span class="case-body">
-              <span class="who">{c.who}</span>
-              <span class="what">{c.what}</span>
-            </span>
-          </li>
-        ))}
-      </ul>
+    <p class="eyebrow results">{content.results.eyebrow}</p>
+    <p class="years">{yearsLabel}</p>
+    <p class="results-note">{content.results.note}</p>
+    <ul class="cases">
+      {content.results.cases.map((c: { who: string; metric: string; what: string }) => (
+        <li>
+          <span class="metric">{c.metric}</span>
+          <span class="case-body">
+            <span class="who">{c.who}</span>
+            <span class="what">{c.what}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
 
-      <p class="eyebrow stack">{content.stack.eyebrow}</p>
-      <p>{content.stack.text}</p>
+    <p class="eyebrow stack">{content.stack.eyebrow}</p>
+    <p>{content.stack.text}</p>
 
-      <div class="cta">
-        <h2>{content.cta.title}</h2>
-        <a class="cta-btn" href={content.cta.href}>{content.cta.button}</a>
-      </div>
-
-      <p class="lang"><a href={altUrl}>{altLang === 'en' ? 'EN' : 'ES'}</a></p>
-    </main>
-  </body>
-</html>
+    <div class="cta">
+      <h2>{content.cta.title}</h2>
+      <button type="button" class="cta-btn" data-contact-trigger>{content.cta.button}</button>
+    </div>
+  </div>
+</BaseTailwind>
 
 <style>
-  body {
-    margin: 0;
-    background: #fff;
+  .velocity {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 64px 28px 80px;
     color: #082d3a;
     font-family: Montserrat, system-ui, sans-serif;
     font-size: 16px;
     line-height: 1.6;
   }
-  main { max-width: 760px; margin: 0 auto; padding: 64px 28px 80px; }
   .eyebrow {
     margin: 0;
     color: #0b6e7d;
@@ -112,6 +98,7 @@ const yearsLabel = lang === 'es' ? `${years}+ años en producción` : `${years}+
   .name { color: #082d3a; }
   .results { margin-top: 2.2rem; }
   .years { font-weight: 700; color: #082d3a; }
+  .results-note { color: #5c6785; font-size: 0.85rem; margin: 0.2rem 0 0; }
   .cases { list-style: none; margin: 0.8rem 0 0; padding: 0; display: grid; gap: 0.75rem; }
   .cases li {
     display: flex;
@@ -137,6 +124,10 @@ const yearsLabel = lang === 'es' ? `${years}+ años en producción` : `${years}+
   .cta h2 { margin: 0 0 1rem; font-size: 1.3rem; }
   .cta-btn {
     display: inline-block;
+    font-family: inherit;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
     background: #fff;
     color: #082d3a;
     font-weight: 700;
@@ -144,6 +135,6 @@ const yearsLabel = lang === 'es' ? `${years}+ años en producción` : `${years}+
     border-radius: 10px;
     text-decoration: none;
   }
-  .lang { margin-top: 2rem; }
-  .lang a { color: #0b6e7d; font-weight: 700; font-size: 0.85rem; text-decoration: none; }
+  .name a { color: #0b6e7d; font-weight: 700; text-decoration: none; }
+  .name a:hover { text-decoration: underline; }
 </style>

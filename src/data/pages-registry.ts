@@ -30,13 +30,13 @@ export const pagesRegistry: PageEntry[] = [
   // PÚBLICAS (aparecen en index y main)
   // =====================
   { id: 'blog', name: 'Parece que fue ayer (Blog)', url: '/blog/', category: 'public', icon: '📝' },
-  { id: 'disertaciones', name: 'Disertaciones', url: '/disertaciones/', category: 'public', icon: '🎤' },
+  { id: 'disertaciones', name: 'Disertaciones', url: '/es/disertaciones/', category: 'public', icon: '🎤' },
   { id: 'recursos', name: 'Zona Lab', url: '/zona-lab/', category: 'public', icon: '📚' },
   { id: 'prompt', name: 'Prompts', url: '/prompt/', category: 'public', icon: '🤖' },
   { id: 'videos', name: 'Videos', url: '/videos/', category: 'public', icon: '🎬' },
   { id: 'extensions', name: 'Extensiones', url: '/extensions/', category: 'public', icon: '🧩' },
   { id: 'urls', name: 'URLs Útiles', url: '/urls/', category: 'public', icon: '🔗' },
-  { id: 'main', name: 'Main (Retro)', url: '/main/', category: 'public', icon: '🏠' },
+  { id: 'main', name: 'Rincón retro', url: '/main/', category: 'public', icon: '🏠' },
 
   // =====================
   // LANDINGS (solo en admin, solo español)
@@ -45,7 +45,6 @@ export const pagesRegistry: PageEntry[] = [
   { id: 'servicios', name: 'Servicios', url: 'https://velocitylab.com.ar/es/servicios/', category: 'landing', icon: '🤝', active: true },
   { id: 'velocity', name: 'Velocity', url: 'https://velocitylab.com.ar/es/velocity/', category: 'landing', icon: '🤝', active: true },
   { id: 'cv', name: 'CV', url: '/es/cv/', category: 'landing', icon: '📄', active: false },
-  { id: 'cv-iris', name: 'CV Iris', url: '/es/cv/iris/', category: 'landing', icon: '📄', active: false },
 
   // =====================
   // HERRAMIENTAS (solo en admin)

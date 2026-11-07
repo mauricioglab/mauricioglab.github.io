@@ -1,0 +1,39 @@
+---
+import ContactModal from '../landing/ContactModal.astro';
+import { getSiteNav, type Lang } from '../../data/site-nav';
+import { isCompanyBuild, PERSONAL_ORIGIN } from '../../data/site-target';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'es' } = Astro.props;
+const nav = getSiteNav(lang);
+const privacyHref = isCompanyBuild ? `${PERSONAL_ORIGIN}/blog/privacy/` : '/blog/privacy/';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <p>
+    &copy; {year} {nav.brand.name} &middot; Córdoba, Argentina &middot;
+    <a href="#contacto" data-contact-trigger>{lang === 'es' ? 'Contacto' : 'Contact'}</a> &middot;
+    <a href={privacyHref}>{lang === 'es' ? 'Privacidad' : 'Privacy'}</a>
+  </p>
+</footer>
+
+<ContactModal lang={lang} />
+
+<style>
+  .site-footer {
+    border-top: 1px solid #e4e8f0;
+    background: #fff;
+    padding: 26px 28px;
+    text-align: center;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-size: 0.82rem;
+    color: #5c6785;
+  }
+  .site-footer p { margin: 0; }
+  .site-footer a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+  .site-footer a:hover { color: #082d3a; }
+</style>

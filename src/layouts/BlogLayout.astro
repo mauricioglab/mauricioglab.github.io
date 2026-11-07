@@ -1,12 +1,15 @@
 ---
+import SeoHead from "../components/shared/SeoHead.astro";
 import { getBlogPosts, normalizeBaseUrl } from "../utils/blog";
 import { SITE_CONFIG } from "../data/config";
-import PublicNav from "../components/shared/PublicNav.astro";
+import SiteHeader from "../components/shared/SiteHeader.astro";
+import SiteFooter from "../components/shared/SiteFooter.astro";
 import "../styles/brand.css";
 
 interface Props {
   title: string;
   description?: string;
+  seo?: boolean;
   blogTitle?: string;
   blogSubtitle?: string;
   lang?: string;
@@ -15,6 +18,7 @@ interface Props {
 const {
   title,
   description,
+  seo = true,
   blogTitle = SITE_CONFIG.blogName,
   blogSubtitle = "Artículos y pensamientos",
   lang = "es",
@@ -41,10 +45,11 @@ const allCategories = Array.from(
     />
     <link rel="icon" href={`${normalizedBase}favicon.ico`} />
     <title>{title}</title>
+    {seo && <SeoHead title={title} description={description || title} lang="es" canonical={new URL(Astro.url.pathname, Astro.site).toString()} />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap"
       rel="stylesheet"
     />
     <slot name="head" />
@@ -54,15 +59,7 @@ const allCategories = Array.from(
     style="font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 18px; line-height: 27px;"
   >
     <div class="site-container min-h-screen flex flex-col">
-      <!-- Top Brand Line -->
-      <div class="top-line h-1" style="background: linear-gradient(90deg, #16B6C9, #D4AF37);"></div>
-
-      <div class="bg-white border-b border-[#e4e8f0]">
-        <div class="max-w-[1140px] mx-auto px-5 py-3 flex items-center justify-between gap-4">
-          <a href="/" class="text-sm font-semibold text-[#082d3a] no-underline">{SITE_CONFIG.author}</a>
-          <PublicNav current="blog" lang="es" />
-        </div>
-      </div>
+      <SiteHeader current="blog" lang="es" />
 
       <!-- Top Navigation Bar -->
       <nav
@@ -70,18 +67,6 @@ const allCategories = Array.from(
         aria-label="Navegación principal"
       >
         <div class="wrap max-w-[1140px] mx-auto px-5 flex justify-center">
-          <ul class="menu flex flex-wrap justify-center items-center list-none gap-y-1 gap-x-0" aria-label="Ir al inicio">
-            <li>
-              <a
-                href={`${normalizedBase}blog/`}
-                class="block py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#5c6785] hover:text-vcl-turquesa"
-                aria-label="Volver al blog"><span>← Inicio</span></a
-              >
-            </li>
-          </ul>
-
-          <ul class="menu-divider" aria-hidden="true"></ul>
-
           <ul class="menu flex flex-wrap justify-center items-center list-none gap-y-1 gap-x-0" aria-label="Sección principal">
             <li>
               <a
@@ -89,7 +74,7 @@ const allCategories = Array.from(
                 class="menu-primary block whitespace-nowrap py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em]"
                 aria-label="Lista de artículos"
                 aria-current={Astro.url.pathname === `${normalizedBase}blog/` ? "page" : undefined}
-              ><span>{SITE_CONFIG.blogName} (Blog)</span></a
+              ><span>Artículos</span></a
               >
             </li>
           </ul>
@@ -104,6 +89,22 @@ const allCategories = Array.from(
                 aria-label="Acerca del blog"
                 aria-current={Astro.url.pathname === `${normalizedBase}blog/about/` ? "page" : undefined}
               ><span>Acerca de</span></a
+              >
+            </li>
+            <li>
+              <a
+                href={`${normalizedBase}blog/archives/`}
+                class="menu-meta block whitespace-nowrap py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#5c6785] hover:text-vcl-turquesa"
+                aria-current={Astro.url.pathname === `${normalizedBase}blog/archives/` ? "page" : undefined}
+              ><span>Archivo</span></a
+              >
+            </li>
+            <li>
+              <a
+                href={`${normalizedBase}blog/search/`}
+                class="menu-meta block whitespace-nowrap py-[15px] px-3 md:py-5 md:px-6 text-[11px] md:text-xs font-semibold uppercase tracking-[0.1em] text-[#5c6785] hover:text-vcl-turquesa"
+                aria-current={Astro.url.pathname === `${normalizedBase}blog/search/` ? "page" : undefined}
+              ><span>Buscar</span></a
               >
             </li>
           </ul>
@@ -131,7 +132,7 @@ const allCategories = Array.from(
 
       <!-- Header -->
       <header
-        class="site-header py-[30px] md:py-10 md:pb-[30px] px-0 text-center relative overflow-hidden"
+        class="blog-hero py-[30px] md:py-10 md:pb-[30px] px-0 text-center relative overflow-hidden"
         style="background: linear-gradient(135deg, #082D3A 0%, #0A1E28 60%, #16B6C9 145%);"
       >
         <div
@@ -146,7 +147,7 @@ const allCategories = Array.from(
             >
               <a
                 href={`${normalizedBase}blog/`}
-                class="text-white hover:text-vcl-cian">{blogTitle} (Blog)</a
+                class="text-white hover:text-vcl-cian">{blogTitle}</a
               >
             </h1>
             <p
@@ -167,29 +168,7 @@ const allCategories = Array.from(
         </div>
       </div>
 
-      <!-- Footer -->
-      <footer
-        class="site-footer py-10 px-5 text-center text-base text-[#5c6785] relative overflow-hidden bg-white border-t border-[#e4e8f0]"
-        role="contentinfo"
-      >
-        <div class="wrap max-w-[1140px] mx-auto px-5">
-          <p>
-            &copy; {new Date().getFullYear()} {SITE_CONFIG.author} &middot; <a
-              href={`${normalizedBase}blog/archives/`}
-              class="text-vcl-turquesa hover:text-vcl-petroleo hover:underline"
-              aria-label="Archivo de artículos">Archivo</a
-            > &middot; <a
-              href={`${normalizedBase}blog/search/`}
-              class="text-vcl-turquesa hover:text-vcl-petroleo hover:underline"
-              aria-label="Buscar artículos">Buscar</a
-            > &middot; <a
-              href={`${normalizedBase}blog/privacy/`}
-              class="text-vcl-turquesa hover:text-vcl-petroleo hover:underline"
-              aria-label="Política de privacidad">Privacidad</a
-            >
-          </p>
-        </div>
-      </footer>
+      <SiteFooter lang="es" />
     </div>
 
     <style is:global>

@@ -11,18 +11,13 @@ export const prerender = true;
 const posts = await getBlogPosts();
 const recursos = await getUltimosRecursos(3);
 const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
-const currentUrl = `${Astro.site}${normalizedBase}blog/`;
 ---
 
 <BlogLayout 
-  title={SITE_CONFIG.blogName} 
-  description="Artículos y publicaciones"
+  title={`${SITE_CONFIG.blogName} | ${SITE_CONFIG.siteName}`}
+  description="Artículos y reflexiones sobre inteligencia artificial, tecnología, filosofía y libros."
   blogSubtitle="Artículos y pensamientos"
 >
-  <slot name="head">
-    <link rel="canonical" href={currentUrl} />
-  </slot>
-
   {posts.length === 0 ? (
     <p class="text-center text-[#5c6785]">No hay posts disponibles.</p>
   ) : (

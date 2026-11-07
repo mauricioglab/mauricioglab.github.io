@@ -2,6 +2,9 @@
 // vsagenda — agenda PWA estilo VS Code Dark+
 // Wrapper minimal para que la UI fullscreen del PWA no choque con BaseTailwind.
 
+import OwnerGuard from '@components/shared/OwnerGuard.astro';
+import OwnerBar from '@components/shared/OwnerBar.astro';
+
 export const prerender = true;
 
 const baseUrl = import.meta.env.BASE_URL;
@@ -15,6 +18,8 @@ const vsagendaBase = baseUrl.endsWith('/') ? `${baseUrl}vsagenda/` : `${baseUrl}
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 	<meta name="theme-color" content="#1e1e1e" />
 	<meta name="description" content="vsagenda — agenda retro estilo VS Code" />
+	<meta name="robots" content="noindex, nofollow" />
+	<OwnerGuard />
 	<title>vsagenda</title>
 
 	<link rel="manifest" href={`${vsagendaBase}manifest.webmanifest`} />
@@ -25,12 +30,15 @@ const vsagendaBase = baseUrl.endsWith('/') ? `${baseUrl}vsagenda/` : `${baseUrl}
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Cascadia+Code:wght@400;600&display=swap" />
 	<link rel="stylesheet" href={`${vsagendaBase}style.css`} />
+	<style is:inline>
+		.app { height: calc(100vh - var(--owner-bar-h, 0px)) !important; height: calc(100dvh - var(--owner-bar-h, 0px)) !important; }
+	</style>
 </head>
 <body>
+	<OwnerBar current="vsagenda" />
 	<div class="app">
 		<header class="titlebar">
 			<div class="titlebar-left">
-				<a href="/" style="color:inherit;font-size:12px;font-weight:600;text-decoration:none;margin-right:12px;">← Inicio</a>
 				<span class="title">vsagenda</span>
 				<span class="title-sep">·</span>
 				<span class="subtitle" id="todayFullDate"></span>

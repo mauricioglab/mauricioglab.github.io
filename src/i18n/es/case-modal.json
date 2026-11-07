@@ -12,11 +12,26 @@
       "problem": "Un organismo necesitaba validar identidad en tiempo real contra RENAPER, con prueba de vida anti-fraude y trazabilidad auditable.",
       "solution": "Reconocimiento facial con AWS Rekognition + backend NestJS integrado a RENAPER y ledger inmutable en AWS QLDB.",
       "metrics": [
-        { "value": "99.8%", "label": "Precisión biométrica" },
-        { "value": "500+", "label": "Verificaciones/día" },
-        { "value": "100%", "label": "Trazabilidad" }
+        {
+          "value": "99.8%",
+          "label": "Precisión biométrica"
+        },
+        {
+          "value": "500+",
+          "label": "Verificaciones/día"
+        },
+        {
+          "value": "100%",
+          "label": "Trazabilidad"
+        }
       ],
-      "stack": ["AWS Rekognition", "RENAPER", "NestJS", "Angular", "QLDB"]
+      "stack": [
+        "AWS Rekognition",
+        "RENAPER",
+        "NestJS",
+        "Angular",
+        "QLDB"
+      ]
     },
     "billetera-virtual": {
       "title": "Core API — Billetera virtual TotalCoin",
@@ -24,11 +39,27 @@
       "problem": "Una billetera necesitaba un backend transaccional con flujo de autorización multi-nivel y reglas distintas por sub-billetera.",
       "solution": "Módulo de firmantes/aprobadores con DDD, CQRS, Facade y Mediator, y migración de 3 microservicios heredados a Docker/ECS.",
       "metrics": [
-        { "value": "-40%", "label": "Tiempo de deployment" },
-        { "value": "4", "label": "Sub-billeteras comerciales" },
-        { "value": "3", "label": "Microservicios migrados" }
+        {
+          "value": "-40%",
+          "label": "Tiempo de deployment"
+        },
+        {
+          "value": "4",
+          "label": "Sub-billeteras comerciales"
+        },
+        {
+          "value": "3",
+          "label": "Microservicios migrados"
+        }
       ],
-      "stack": ["C#", ".NET 4.5", "Docker", "Amazon ECS", "DDD", "CQRS"]
+      "stack": [
+        "C#",
+        ".NET 4.5",
+        "Docker",
+        "Amazon ECS",
+        "DDD",
+        "CQRS"
+      ]
     },
     "monitoreo-agricola": {
       "title": "Monitoreo agrícola con ML",
@@ -36,11 +67,26 @@
       "problem": "Un cliente en España necesitaba monitorear cultivos con datos de sensores IoT dispersos y sin historial auditable.",
       "solution": "Pipeline Python + ML con sincronización nocturna a AWS QLDB y visualizaciones/alertas en tiempo real.",
       "metrics": [
-        { "value": "IoT", "label": "Sensores con sync nocturno" },
-        { "value": "QLDB", "label": "Trazabilidad inmutable" },
-        { "value": "Real-time", "label": "Alertas de cultivo" }
+        {
+          "value": "Nocturna",
+          "label": "Sincronización de sensores IoT"
+        },
+        {
+          "value": "Inmutable",
+          "label": "Trazabilidad en AWS QLDB"
+        },
+        {
+          "value": "En vivo",
+          "label": "Visualizaciones y alertas de cultivo"
+        }
       ],
-      "stack": ["Python", "Scikit-learn", "AWS Lambda", "AWS QLDB", "Angular"]
+      "stack": [
+        "Python",
+        "Scikit-learn",
+        "AWS Lambda",
+        "AWS QLDB",
+        "Angular"
+      ]
     },
     "auditorias-datos": {
       "title": "Auditorías con análisis de datos",
@@ -48,11 +94,25 @@
       "problem": "La auditoría se hacía a mano sobre planillas Excel: miles de registros, filtros en memoria y reportes uno a uno.",
       "solution": "Sistema interactivo con filtros avanzados, priorización visual y reportes PDF/Excel automáticos.",
       "metrics": [
-        { "value": "+60%", "label": "Eficiencia operativa" },
-        { "value": "Miles", "label": "Registros por ciclo" },
-        { "value": "Auto", "label": "Reportes PDF/Excel" }
+        {
+          "value": "+60%",
+          "label": "Eficiencia operativa"
+        },
+        {
+          "value": "Excel → web",
+          "label": "De planillas a sistema interactivo"
+        },
+        {
+          "value": "PDF/Excel",
+          "label": "Reportes automáticos"
+        }
       ],
-      "stack": ["Angular 17-18", ".NET Core", "SQL Server", "Entity Framework"]
+      "stack": [
+        "Angular 17-18",
+        ".NET Core",
+        "SQL Server",
+        "Entity Framework"
+      ]
     },
     "coca-cola-embonor": {
       "title": "Sistema de gastos empresariales",
@@ -60,11 +120,26 @@
       "problem": "La gestión de usuarios/permisos y el envío de datos contables a SAP se hacían a mano, con errores recurrentes.",
       "solution": "Módulos de usuarios, grupos y permisos con integración a SAP para automatizar la contabilidad.",
       "metrics": [
-        { "value": "-75%", "label": "Errores manuales" },
-        { "value": "Cientos", "label": "Transacciones/día" },
-        { "value": "SAP", "label": "Integración automatizada" }
+        {
+          "value": "-75%",
+          "label": "Errores manuales"
+        },
+        {
+          "value": "SAP",
+          "label": "Contabilidad integrada"
+        },
+        {
+          "value": "3",
+          "label": "Módulos: usuarios, grupos y permisos"
+        }
       ],
-      "stack": ["ASP.NET", "C#", "SQL Server", "Entity Framework", "SAP API"]
+      "stack": [
+        "ASP.NET",
+        "C#",
+        "SQL Server",
+        "Entity Framework",
+        "SAP API"
+      ]
     },
     "mundial-2026": {
       "title": "Modelo predictivo del Mundial 2026",
@@ -72,11 +147,26 @@
       "problem": "Estimar la probabilidad de cada selección con un modelo honesto, sin usar información posterior al torneo.",
       "solution": "Rating Elo + Poisson + simulación Monte Carlo, validado contra el torneo real.",
       "metrics": [
-        { "value": "22/32", "label": "Aciertos de bracket" },
-        { "value": "2/2", "label": "Semifinales acertadas" },
-        { "value": "16%", "label": "España 2ª favorita (campeona)" }
+        {
+          "value": "22/32",
+          "label": "Aciertos de bracket"
+        },
+        {
+          "value": "2/2",
+          "label": "Semifinales acertadas"
+        },
+        {
+          "value": "16%",
+          "label": "España 2ª favorita (campeona)"
+        }
       ],
-      "stack": ["Python", "Pandas", "Statsmodels", "Streamlit", "Monte Carlo"]
+      "stack": [
+        "Python",
+        "Pandas",
+        "Statsmodels",
+        "Streamlit",
+        "Monte Carlo"
+      ]
     },
     "abandono-estudiantil": {
       "title": "Predicción de abandono estudiantil",
@@ -84,11 +174,26 @@
       "problem": "Priorizar tutorías con recursos limitados: a quién intervenir primero y con qué anticipación.",
       "solution": "Regresión logística vs. Random Forest, con umbral de decisión como dial de negocio y lista priorizada.",
       "metrics": [
-        { "value": "65.8%", "label": "Abandonos detectados a tiempo" },
-        { "value": "0.908", "label": "ROC-AUC (versión completa)" },
-        { "value": "0.53", "label": "Umbral operativo (F1)" }
+        {
+          "value": "65.8%",
+          "label": "Abandonos detectados a tiempo"
+        },
+        {
+          "value": "0.908",
+          "label": "ROC-AUC (versión completa)"
+        },
+        {
+          "value": "0.53",
+          "label": "Umbral operativo (F1)"
+        }
       ],
-      "stack": ["Python", "scikit-learn", "Pandas", "Plotly", "Streamlit"]
+      "stack": [
+        "Python",
+        "scikit-learn",
+        "Pandas",
+        "Plotly",
+        "Streamlit"
+      ]
     },
     "caso-arquitectura": {
       "title": "Caso de Estudio: Analista de Sistemas",
@@ -96,11 +201,26 @@
       "problem": "Ciclo completo de análisis de sistemas para un estudio de arquitectura: relevamiento, modelado y metodología.",
       "solution": "14 capítulos navegables con UML, DER, DFD y 13 sprints Scrum documentados.",
       "metrics": [
-        { "value": "14", "label": "Capítulos navegables" },
-        { "value": "13", "label": "Sprints Scrum" },
-        { "value": "100%", "label": "Trazabilidad requerimientos" }
+        {
+          "value": "14",
+          "label": "Capítulos navegables"
+        },
+        {
+          "value": "13",
+          "label": "Sprints Scrum"
+        },
+        {
+          "value": "100%",
+          "label": "Trazabilidad requerimientos"
+        }
       ],
-      "stack": ["UML", "DER", "DFD", "Event Storming", "Scrum"]
+      "stack": [
+        "UML",
+        "DER",
+        "DFD",
+        "Event Storming",
+        "Scrum"
+      ]
     }
   }
 }

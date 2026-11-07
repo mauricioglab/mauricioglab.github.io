@@ -5,16 +5,25 @@
   },
   "title": "Portfolio",
   "subtitle": "Software Engineer · IA & Automatización",
-  "intro": "Proyectos, experiencia y especialización en un solo lugar. Al agregar un proyecto nuevo, esta página se actualiza sola.",
   "projectsLabel": "Proyectos",
   "downloadCV": "Descargar CV",
   "viewProfile": "Ver perfil completo",
-  "emptyProjects": "Sin proyectos aún — pendiente de completar",
   "contact": "Contacto",
-  "nav": {
-    "portfolio": "Portfolio",
-    "servicios": "Servicios",
-    "cv": "CV",
-    "disertaciones": "Disertaciones"
+  "company": {
+    "seo": {
+      "title": "Portfolio | VeloCityLab",
+      "description": "Proyectos de desarrollo, IA aplicada y automatización de procesos del equipo de VeloCityLab."
+    },
+    "badges": [
+      "Mauricio: {years}+ años de experiencia",
+      "IA en producción (RENAPER/AWS Rekognition)",
+      "Docencia en Ciencia de Datos e IA"
+    ],
+    "headlineMain": "Estudio de software ·",
+    "headlineAccent": "IA & Automatización",
+    "subheadline": "Combinamos desarrollo full-stack (.NET Core, Angular) con IA aplicada. El equipo suma experiencia real llevando soluciones de IA a producción a escala gubernamental/enterprise, y construyendo y validando modelos predictivos con Python.",
+    "projectsNote": "Proyectos realizados por Mauricio como profesional contratado.",
+    "ctaTitle": "¿Buscás un equipo que combine desarrollo e IA?",
+    "ctaDescription": "Hablemos de tu proyecto."
   }
 }

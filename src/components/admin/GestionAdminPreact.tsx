@@ -27,6 +27,14 @@ const PAGES_BY_CATEGORY = CATEGORIES.map((cat) => ({
 })).filter((c) => c.pages.length > 0);
 const TOTAL_PAGES = getAllPages().length;
 
+// Destino tras iniciar sesión (lo manda OwnerGuard). Solo rutas relativas del mismo sitio.
+function safeNext(): string | null {
+  const n = new URLSearchParams(location.search).get('next');
+  if (!n || !n.startsWith('/') || n.startsWith('//') || n.includes('\\')) return null;
+  if (n.startsWith('/admin')) return null;
+  return n;
+}
+
 const CATEGORY_ICON: Record<PageCategory, string> = {
   public: '🌐',
   landing: '🚀',
@@ -111,6 +119,11 @@ export default function GestionAdminPreact() {
       if (data?.session?.user) {
         setUser(data.session.user);
         const role = await loadProfile(data.session.user.id);
+        const next = safeNext();
+        if (role === 'admin' && next) {
+          location.replace(next);
+          return;
+        }
         if (role === 'admin') loadStats();
       }
       setLoadingAuth(false);
@@ -133,6 +146,11 @@ export default function GestionAdminPreact() {
       const role = await loadProfile(data.user.id);
       markSessionStart();
       scheduleSessionEnd(() => logout(true));
+      const next = safeNext();
+      if (role === 'admin' && next) {
+        location.replace(next);
+        return;
+      }
       if (role === 'admin') loadStats();
     } catch (e) {
       setLoginError((e as Error).message || 'Error al iniciar sesión');

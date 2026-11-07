@@ -1,7 +1,5 @@
 ---
 import { type Lang, useTranslations } from '@i18n/index';
-import { getLanguagePaths } from '@utils/i18n-paths';
-import { projects } from '@data/projects';
 import CaseStudyLayout from '@layouts/CaseStudyLayout.astro';
 import CaseStudyHeader from '@components/case-study/CaseStudyHeader.astro';
 import ProblemSection from '@components/case-study/ProblemSection.astro';
@@ -10,32 +8,34 @@ import SolutionSection from '@components/case-study/SolutionSection.astro';
 import MetricsGrid from '@components/case-study/MetricsGrid.astro';
 import TechStack from '@components/case-study/TechStack.astro';
 import CaseStudyCTA from '@components/case-study/CaseStudyCTA.astro';
+import { projects } from '@data/projects';
+import { caseStudies } from '@data/case-study-config';
 
-export const getStaticPaths = getLanguagePaths;
+export function getStaticPaths() {
+  return ['es', 'en'].flatMap((lang) =>
+    Object.keys(caseStudies).map((slug) => ({ params: { lang, slug } })),
+  );
+}
 
-const { lang } = Astro.params as { lang: Lang };
-const content = await useTranslations<any>(lang, 'projects-abandono-estudiantil');
-const project = projects.find((p) => p.id === 'abandono-estudiantil')!;
+const { lang, slug } = Astro.params as { lang: Lang; slug: string };
+const config = caseStudies[slug];
+const content = await useTranslations<any>(lang, `projects-${slug}`);
+const project = projects.find((p) => p.id === slug);
 
-const accentColor = 'turquesa';
+const pick = (group: Record<string, { value: string; label: string }>, keys: string[]) =>
+  keys.map((key) => ({ value: group[key].value, label: group[key].label }));
 
-const headerStats = [
-  { value: content.stats.alumnos.value, label: content.stats.alumnos.label },
-  { value: content.stats.recall.value, label: content.stats.recall.label },
-  { value: content.stats.auc.value, label: content.stats.auc.label },
-];
+const headerStats = pick(content.stats, config.stats);
+const resultMetrics = pick(content.results.metrics, config.metrics);
 
-const headerLinks = [
-  { text: content.links.demo, url: project.links.demo!, primary: true },
-  { text: content.links.github, url: project.links.github!, primary: false },
-];
+const headerLinks = config.links
+  ? [
+      { text: content.links.demo, url: project!.links.demo!, primary: true },
+      { text: content.links.github, url: project!.links.github!, primary: false },
+    ]
+  : [];
 
-const resultMetrics = [
-  { value: content.results.metrics.recallFull.value, label: content.results.metrics.recallFull.label },
-  { value: content.results.metrics.recall1s.value, label: content.results.metrics.recall1s.label },
-  { value: content.results.metrics.aucFull.value, label: content.results.metrics.aucFull.label },
-  { value: content.results.metrics.umbral.value, label: content.results.metrics.umbral.label },
-];
+const accentColor = config.accent ?? 'turquesa';
 ---
 
 <CaseStudyLayout

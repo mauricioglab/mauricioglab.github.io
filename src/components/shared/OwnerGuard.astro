@@ -1,0 +1,53 @@
+---
+// Guard de sesión para las herramientas privadas. Va en el <head> (ya sea con
+// `<OwnerGuard slot="head" />` dentro de BaseTailwind o directo en un <head> propio).
+// La página queda oculta hasta validar la sesión; sin sesión válida redirige al admin.
+---
+
+<script is:inline>
+  document.documentElement.classList.add('owner-pending');
+  // Falla cerrado: si el guard no llega a ejecutarse, no dejar la página oculta sin salida.
+  setTimeout(function () {
+    if (document.documentElement.classList.contains('owner-pending')) {
+      location.replace('/admin/gestion/?next=' + encodeURIComponent(location.pathname + location.search));
+    }
+  }, 10000);
+</script>
+<style is:global>
+  html.owner-pending body { visibility: hidden; }
+</style>
+<script>
+  import { pb } from '../../lib/pb';
+  import { SESSION_DURATION_MS } from '../../lib/session';
+
+  const show = () => document.documentElement.classList.remove('owner-pending');
+
+  const toLogin = (clear: boolean) => {
+    if (clear) {
+      // Evita un bucle con el admin, que si ve un token "no vencido" volvería a mandar acá.
+      pb.authStore.clear();
+      try { localStorage.removeItem('spa_session_start'); } catch { /* ignore */ }
+    }
+    location.replace('/admin/gestion/?next=' + encodeURIComponent(location.pathname + location.search));
+  };
+
+  (async () => {
+    let start = 0;
+    try { start = Number(localStorage.getItem('spa_session_start') || 0); } catch { /* ignore */ }
+    const localOk = !!pb.authStore.token && start > 0 && Date.now() - start < SESSION_DURATION_MS;
+    if (!localOk) return toLogin(false);
+
+    try {
+      const res = await pb.collection('users').authRefresh({ requestKey: null });
+      if (res?.record?.role !== 'admin') return toLogin(false);
+      show();
+    } catch (e: any) {
+      // status 0 = sin red (p. ej. la PWA de vsagenda offline): se confía en la sesión local.
+      if (e?.status === 0) {
+        if ((pb.authStore.record as any)?.role === 'admin') return show();
+        return toLogin(false);
+      }
+      toLogin(true);
+    }
+  })();
+</script>

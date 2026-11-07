@@ -1,29 +1,49 @@
 {
   "meta": {
-    "title": "Velocity — Quiénes somos",
-    "description": "Velocity es el estudio de Mauricio González e Iris."
+    "title": "Quiénes somos | VeloCityLab",
+    "description": "VeloCityLab es el estudio de Mauricio González e Iris: software, IA aplicada y automatización de procesos."
   },
   "about": {
     "eyebrow": "Quiénes somos",
     "title": "Tecnología, estrategia y resultados",
     "paragraphs": [
-      "Velocity es el estudio de Mauricio González e Iris.",
-      "El trabajo del estudio es software, inteligencia artificial aplicada y automatización de procesos."
+      "VeloCityLab es el estudio de Mauricio González e Iris.",
+      "Nuestro trabajo es software, inteligencia artificial aplicada y automatización de procesos."
     ]
   },
   "people": {
     "eyebrow": "El equipo",
     "members": [
-      { "role": "Software Engineer · IA y automatización", "name": "Mauricio González" },
-      { "role": "Analista", "name": "Iris" }
+      {
+        "role": "Software Engineer · IA y automatización",
+        "name": "Mauricio González"
+      },
+      {
+        "role": "Analista",
+        "name": "Iris"
+      }
     ]
   },
   "results": {
-    "eyebrow": "Resultados",
+    "eyebrow": "Experiencia del equipo",
+    "note": "Proyectos realizados por Mauricio como profesional contratado.",
+    "yearsLabel": "Mauricio suma {years}+ años de experiencia profesional",
     "cases": [
-      { "who": "Embotelladora multinacional", "metric": "-75%", "what": "Integración contable con SAP" },
-      { "who": "Agencia de Sistemas de Información", "metric": "4h → 30min", "what": "Automatización de liquidaciones" },
-      { "who": "Empresa de transmisión eléctrica", "metric": "+60%", "what": "Auditorías con análisis de datos" }
+      {
+        "who": "Coca-Cola Embonor",
+        "metric": "-75%",
+        "what": "Integración contable con SAP"
+      },
+      {
+        "who": "Agencia de Sistemas de Información",
+        "metric": "4h → 30min",
+        "what": "Automatización de liquidaciones"
+      },
+      {
+        "who": "ISA CTEEP",
+        "metric": "+60%",
+        "what": "Auditorías con análisis de datos"
+      }
     ]
   },
   "stack": {

@@ -9,24 +9,24 @@ const promptBase = baseUrl.endsWith('/') ? `${baseUrl}prompt/` : `${baseUrl}/pro
 ---
 
 <BaseTailwind
-  title="Teleprompter — by MgLab"
-  description="Laboratorio avanzado de ingeniería de prompts"
+  title="Teleprompter | Mauricio González"
+  description="Teleprompter y laboratorio de ingeniería de prompts."
   lang="es"
+  current="prompt"
 >
   <link slot="head" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
   <link slot="head" rel="stylesheet" href={`${promptBase}style.css`} />
 
-  <div id="appContainer" class="flex h-screen overflow-hidden bg-[var(--bs-body-bg)] text-[var(--bs-body-color)] font-sans">
+  <div id="appContainer" class="flex h-[calc(100vh_-_var(--site-header-h))] overflow-hidden bg-[var(--bs-body-bg)] text-[var(--bs-body-color)] font-sans">
   <!-- Sidebar -->
   <aside class="flex flex-col w-72 bg-[var(--bs-body-bg)] border-r border-[var(--bs-border-color)] shadow-lg">
     <!-- Sidebar Header -->
     <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-700 text-white px-6 py-5 flex-shrink-0">
-      <a href="/" class="text-xs font-semibold text-blue-100 hover:text-white no-underline">← Inicio</a>
-      <div class="flex items-center gap-3 mb-1 mt-2">
+      <div class="flex items-center gap-3 mb-1">
         <i class="fas fa-scroll text-2xl"></i>
         <h4 class="m-0 text-xl font-bold">Teleprompter</h4>
       </div>
-      <p class="text-xs text-blue-100 font-medium">by MgLab</p>
+      <p class="text-xs text-blue-100 font-medium">por Mauricio González</p>
       </div>
     
     <!-- Search -->
@@ -48,7 +48,7 @@ const promptBase = baseUrl.endsWith('/') ? `${baseUrl}prompt/` : `${baseUrl}/pro
   </aside>
 
   <!-- Main content -->
-  <main class="flex-1 flex flex-col overflow-hidden">
+  <div class="flex-1 flex flex-col overflow-hidden">
     <!-- Header -->
     <header class="flex items-center justify-between px-8 py-5 bg-[var(--bs-body-bg)] border-b border-[var(--bs-border-color)] shadow-sm">
       <h1 id="selectedTitle" class="m-0 text-2xl font-bold text-[var(--bs-heading-color)] flex items-center gap-3">
@@ -152,7 +152,7 @@ const promptBase = baseUrl.endsWith('/') ? `${baseUrl}prompt/` : `${baseUrl}/pro
       </div>
     </div>
   </div>
-  </main>
+  </div>
 
   <!-- Settings Modal -->
   <div class="fixed inset-0 z-50 hidden" id="settingsModal" tabindex="-1" aria-hidden="true">
@@ -242,7 +242,7 @@ const promptBase = baseUrl.endsWith('/') ? `${baseUrl}prompt/` : `${baseUrl}/pro
                 educativos y de investigación defensiva</strong>. Estos ejemplos ilustran vulnerabilidades de seguridad
               y patrones de ataque (como Jailbreaking o Prompt Leaking) para que los desarrolladores puedan aprender a
               proteger sus propios sistemas.</p>
-            <p class="text-amber-800 text-sm">MgLab y el autor no se responsabilizan por el uso indebido de esta información fuera
+            <p class="text-amber-800 text-sm">El autor no se responsabiliza por el uso indebido de esta información fuera
               de entornos controlados de investigación.</p>
           </div>
         </div>

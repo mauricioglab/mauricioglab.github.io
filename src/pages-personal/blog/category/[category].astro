@@ -28,18 +28,13 @@ interface Props {
 
 const { categoryName, posts } = Astro.props;
 const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
-const currentUrl = `${Astro.site}${normalizedBase}blog/category/${categoryName.toLowerCase().replace(/\s+/g, '-')}/`;
 ---
 
 <BlogLayout
-  title={`${categoryName} | ${SITE_CONFIG.blogName}`}
+  title={`${categoryName} | ${SITE_CONFIG.siteName}`}
   description={`Artículos sobre ${categoryName}`}
   blogSubtitle={`Artículos sobre ${categoryName}`}
 >
-  <slot name="head">
-    <link rel="canonical" href={currentUrl} />
-  </slot>
-
   <div>
     <header class="text-center mb-[50px] pb-[30px] border-b border-[#e4e8f0]">
       <p class="text-xs font-semibold uppercase tracking-[0.1em] text-[#8b94ab] mb-2.5">Categoría</p>

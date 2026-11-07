@@ -6,69 +6,80 @@ import { SITE_CONFIG } from '@data/config';
 export const prerender = true;
 
 const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
-const currentUrl = `${Astro.site}${normalizedBase}blog/privacy/`;
 ---
 
-<BlogLayout 
-  title={`Política de Privacidad | ${SITE_CONFIG.blogName}`}
-  description="Política de privacidad"
+<BlogLayout
+  title={`Política de privacidad | ${SITE_CONFIG.siteName}`}
+  description="Qué datos recolecta este sitio, qué servicios de terceros usa y cómo ejercer tus derechos."
   blogSubtitle="Artículos y pensamientos"
 >
-  <slot name="head">
-    <link rel="canonical" href={currentUrl} />
-  </slot>
-
   <article class="post entry">
     <header class="entry-header">
-      <h1 class="entry-title">Política de Privacidad</h1>
+      <h1 class="entry-title">Política de privacidad</h1>
     </header>
-    
+
     <div class="entry-content">
-      <p><strong>SECTION 1: WHO WE ARE</strong></p>
-      
-      <p>Our website address is this blog. Privacy information is controlled by {SITE_CONFIG.author} who can be reached at the contact information provided below.</p>
-      
-      <p><strong>SECTION 2: WHAT PERSONAL DATA WE COLLECT AND WHY WE COLLECT IT</strong></p>
-      
-      <p><strong>COMMENTS:</strong> When visitors leave comments on the site we collect the data shown in the comments form, and also the visitor's IP address and browser to help prevent spam.</p>
-      
-      <p><strong>CONTACT FORMS:</strong> To assist with sending you requested information, we may collect and store your email address. You may opt out of the collection of your data by unsubscribing from any mailing lists.</p>
-      
-      <p><strong>EMBEDDED CONTENT FROM OTHER WEBSITES:</strong> Articles on this site may include embedded content (e.g. youtube, facebook, x, etc.). Embedded content from other websites behaves in the exact same way as if the visitor has visited the other website. These websites may collect data about you, use cookies, embed additional third-party tracking, and monitor your interaction with that embedded content.</p>
-      
-      <p><strong>ANALYTICS:</strong> We may use analytics services to record information about the pages a user has seen, for example the URL of the page, time of day, device used, etc. The information that we collect is anonymized.</p>
-      
-      <p><strong>SECTION 3: WHO WE SHARE YOUR DATA WITH</strong></p>
-      
-      <p>The data collected may be shared with service providers and others who help with our business operations and assist in the delivery of our products and services. We will never sell, rent, or lease your Personal Data to a third party.</p>
-      
-      <p><strong>SECTION 4: HOW LONG WE RETAIN YOUR DATA</strong></p>
-      
-      <p>If you leave a comment, the comment and its metadata are retained indefinitely. Analytics data is retained indefinitely. Contact forms are held indefinitely.</p>
-      
-      <p><strong>SECTION 5: WHAT RIGHTS YOU HAVE OVER YOUR DATA</strong></p>
-      
-      <p>If you have an account on this site, or have left comments, you can request to receive an exported file of the personal data we hold about you, including any data you have provided to us. You can also request that we erase any personal data we hold about you. This does not include any data we are obliged to keep for administrative, legal, or security purposes.</p>
-      
-      <p><strong>SECTION 6: WHERE WE SEND YOUR DATA</strong></p>
-      
-      <p>Visitor comments may be checked through an automated spam detection service. Third parties have access to your data as noted within this agreement.</p>
-      
-      <p><strong>ADDITIONAL INFORMATION</strong></p>
-      
-      <p>We will retain your Personal Data for the period necessary to fulfill the purposes outlined in this Privacy Policy unless a longer retention period is required or allowed by law.</p>
-      
-      <p><strong>PROTECTION OF PERSONAL DATA</strong></p>
-      
-      <p>We use reasonable and appropriate physical, electronic, and administrative safeguards to protect personal data from loss, misuse and unauthorized access, disclosure, alteration and destruction, taking into account the nature of the Personal Data and risks involved in processing that information.</p>
-      
-      <p><strong>CHANGES TO THIS PRIVACY POLICY</strong></p>
-      
-      <p>We may change this Privacy Policy at any time. The most recent version of the Privacy Policy is indicated by the "Last Updated" date at the top of the Privacy Policy. All changes are effective immediately upon posting. Please review this Privacy Policy frequently to stay updated on changes that may affect you.</p>
-      
-      <p><strong>CONTACT INFORMATION</strong></p>
-      
-      <p>If you have any questions about this Privacy Policy, please contact us through the contact information provided on this website.</p>
+      <p><em>Última actualización: 7 de noviembre de 2026.</em></p>
+      <p>
+        Esta política vale para <strong>mauricioglab.github.io</strong> y para <strong>velocitylab.com.ar</strong>.
+        El sitio no tiene cuentas de usuario para el público, ni analítica, ni cookies de seguimiento.
+      </p>
+
+      <h2>1. Responsable</h2>
+      <p>
+        {SITE_CONFIG.author}, {SITE_CONFIG.location}. Podés escribirme desde el
+        <a href="#contacto" data-contact-trigger>formulario de contacto</a> del sitio.
+      </p>
+
+      <h2>2. Qué datos recolecto</h2>
+      <p>
+        Solo los que vos enviás con el <strong>formulario de contacto</strong>: nombre, email y mensaje.
+        Se procesan a través de <a href="https://formspree.io/legal/privacy-policy/" rel="noopener">Formspree</a>, que me los
+        reenvía por correo, y los uso únicamente para responderte. No los cedo ni los uso para otra cosa.
+      </p>
+      <p>
+        Los servidores que alojan el sitio (<a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub Pages</a>
+        para mauricioglab.github.io y <a href="https://www.netlify.com/privacy/" rel="noopener">Netlify</a> para velocitylab.com.ar)
+        pueden registrar tu dirección IP y datos técnicos de la visita, según sus propias políticas.
+      </p>
+
+      <h2>3. Servicios de terceros que se cargan en el navegador</h2>
+      <p>Al visitar el sitio, tu navegador puede conectarse a estos servicios, que reciben tu dirección IP:</p>
+      <ul>
+        <li><strong>Google Fonts</strong>: tipografías de todo el sitio.</li>
+        <li><strong>jsDelivr</strong> (íconos de tecnologías en el Portfolio) y <strong>cdnjs / Cloudflare</strong> (íconos del Teleprompter).</li>
+        <li><strong>YouTube</strong>: videos incrustados en Zona Lab.</li>
+        <li><strong>Calendly</strong>: solo si hacés clic en "Agendar"; es un enlace externo.</li>
+        <li>
+          <strong>Rincón retro (/main/)</strong>: GIFs de Giphy y consultas a Open-Meteo (clima de Córdoba), DolarAPI (cotización),
+          MyMemory (traductor: el texto que escribís se envía para traducirlo), is.gd (acortador: la URL que ingresás se envía para
+          acortarla), PokéAPI, Rick and Morty API y Chuck Norris API. Son recursos de entretenimiento y podés evitarlos no visitando esa página.
+        </li>
+        <li>
+          <strong>Video Organizer</strong>: solo si activás la sincronización, tu navegador se conecta a GitHub con el token que ingresás
+          para guardar tus datos en un Gist tuyo. El token queda en tu navegador.
+        </li>
+      </ul>
+
+      <h2>4. Almacenamiento en tu navegador</h2>
+      <p>
+        No uso cookies. Algunas herramientas guardan datos en el almacenamiento local de tu navegador (por ejemplo preferencias de tema,
+        datos de la calculadora 3D y el puntaje del juego del mate). Esos datos quedan en tu dispositivo, no se envían a ningún servidor
+        propio y podés borrarlos desde la configuración del navegador.
+      </p>
+      <p>
+        El panel de administración usa un backend propio con inicio de sesión, restringido a mi cuenta; no está disponible para el público.
+      </p>
+
+      <h2>5. Tus derechos</h2>
+      <p>
+        Podés pedirme acceso, rectificación o eliminación de los datos que me enviaste por el formulario de contacto. Según la Ley 25.326 de
+        Protección de Datos Personales de Argentina, la Agencia de Acceso a la Información Pública es el órgano de control y atiende denuncias
+        e inquietudes sobre incumplimientos.
+      </p>
+
+      <h2>6. Cambios</h2>
+      <p>Si el sitio cambia en algo que afecte estos puntos, voy a actualizar esta página y su fecha.</p>
     </div>
   </article>
 </BlogLayout>

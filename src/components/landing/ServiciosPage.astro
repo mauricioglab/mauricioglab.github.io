@@ -1,11 +1,7 @@
 ---
 import BaseTailwind from '@layouts/BaseTailwind.astro';
-import ContactModal from '@components/landing/ContactModal.astro';
 import { SITE_CONFIG } from '@data/config';
 import { type Lang, useTranslations } from '@i18n/index';
-import SeoHead from '@components/shared/SeoHead.astro';
-import PublicNav from '@components/shared/PublicNav.astro';
-import { BRAND_NAME } from '@data/brand';
 
 interface Props {
   lang: Lang;
@@ -61,8 +57,7 @@ const iconPaths: Record<string, string> = {
 const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253';
 ---
 
-<BaseTailwind title={content.seo.title} description={content.seo.description} lang={lang} layoutType="landing">
-  <SeoHead slot="head" title={content.seo.title} description={content.seo.description} lang={lang} canonical={canonical} />
+<BaseTailwind title={content.seo.title} description={content.seo.description} lang={lang} layoutType="landing" current="servicios" altHref={altPath} canonical={canonical}>
   <style>
     :root {
       --accent: #16b6c9;
@@ -82,33 +77,6 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
     p { margin: 0; }
     a { color: inherit; text-decoration: none; }
     .accent { color: var(--accent-deep); }
-
-    /* ---------- Header ---------- */
-    .sv-header {
-      position: sticky; top: 0; z-index: 50;
-      background: rgba(255,255,255,.92);
-      backdrop-filter: saturate(1.4) blur(8px);
-      border-bottom: 1px solid var(--line);
-    }
-    .sv-header .row { max-width: 1100px; margin: 0 auto; padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-    .sv-brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-head); font-weight: 600; font-size: .95rem; color: var(--ink); letter-spacing: .02em; text-decoration: none; }
-    .sv-brand-icon { width: 22px; height: 22px; flex-shrink: 0; }
-    .sv-brand b { color: var(--accent); }
-    .sv-brand .sub { font-weight: 400; font-size: .8rem; color: var(--faint); margin-left: .5rem; }
-    .sv-nav { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; }
-    .sv-nav a.link { color: var(--muted); font-size: .85rem; text-decoration: none; padding: 6px 10px; border-radius: 8px; transition: color .15s; }
-    .sv-nav a.link:hover { color: var(--ink); background: var(--panel); }
-    .sv-toggle {
-      font-family: var(--font-head); font-size: .8rem; font-weight: 600; color: var(--muted);
-      border: 1px solid var(--line); background: #fff;
-      padding: 7px 14px; border-radius: 999px; text-decoration: none; transition: border-color .15s, color .15s;
-    }
-    .sv-toggle:hover { border-color: var(--accent); color: var(--accent-deep); }
-    .sv-cta {
-      font-family: var(--font-head); font-size: .82rem; font-weight: 600; color: #fff; background: var(--accent-deep);
-      border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; transition: opacity .15s;
-    }
-    .sv-cta:hover { opacity: .9; }
 
     /* ---------- Hero ---------- */
     .sv-hero {
@@ -179,6 +147,7 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
     .sv-section { padding: 64px 28px; max-width: 1100px; margin: 0 auto; }
     .sv-title { text-align: center; font-size: 1.7rem; font-weight: 600; color: var(--ink); margin-bottom: 8px; letter-spacing: -.02em; }
     .sv-subtitle { text-align: center; color: var(--muted); max-width: 560px; margin: 0 auto 44px; }
+    .sv-note { text-align: center; color: var(--faint); font-size: .85rem; margin: -30px auto 32px; max-width: 560px; }
     .sv-group { margin-bottom: 40px; }
     .sv-group:last-child { margin-bottom: 0; }
     .sv-group-title { font-family: var(--font-head); font-size: .82rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-deep); margin: 0 0 16px; }
@@ -263,9 +232,6 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
     .sv-final .a-white:hover { transform: translateY(-1px); }
     .sv-final .a-ghost { background: transparent; color: #fff; font-family: var(--font-head); font-weight: 600; font-size: .92rem; padding: 12px 24px; border-radius: 12px; border: 2px solid #fff; text-decoration: none; }
 
-    /* ---------- Footer ---------- */
-    .sv-footer { border-top: 1px solid var(--line); background: #fff; padding: 26px 28px; text-align: center; font-size: .82rem; color: var(--faint); }
-
     /* ---------- Reveal ---------- */
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.is-visible { opacity: 1; transform: translateY(0); }
@@ -275,12 +241,6 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
       .sv-cases, .sv-steps { grid-template-columns: 1fr 1fr; }
       .sv-aurora .blob { width: 80vw; height: 80vw; }
       .sv-pair { grid-template-columns: 1fr; gap: 32px; }
-    }
-    @media (max-width: 760px) {
-      .sv-header .row { padding: 12px 16px; gap: .6rem; }
-      .sv-brand { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-      .sv-brand .sub { display: none; }
-      .sv-nav { flex-shrink: 0; gap: .45rem; }
     }
     @media (max-width: 560px) {
       .sv-cases, .sv-steps { grid-template-columns: 1fr; }
@@ -294,19 +254,7 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
     }
   </style>
 
-  <!-- Header -->
-  <header class="sv-header">
-    <div class="row">
-      <a class="sv-brand" href={`/${lang}/servicios/`}><img src="/logo-vl-icon.svg" alt="" class="sv-brand-icon" />{BRAND_NAME}<span class="sub">| {content.subtitle}</span></a>
-      <div class="sv-nav">
-        <PublicNav current="servicios" lang={lang} />
-        <a class="sv-toggle" href={altPath}>{altLang.toUpperCase()}</a>
-        <button class="sv-cta" data-contact-trigger>{lang === 'es' ? 'Contactar' : 'Contact'}</button>
-      </div>
-    </div>
-  </header>
-
-  <main>
+  <div>
     <!-- Hero -->
     <section class="sv-hero" id="svHero">
       <div class="sv-aurora" aria-hidden="true">
@@ -320,7 +268,7 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
           {content.hero.headlinePrefix}
           <span class="rotate" id="svRotate">
             {content.hero.rotate.map((r: string, i: number) => (
-              <span class:list={['rotate-item', i === 0 ? 'is-active' : '']}>{r}</span>
+              <span class:list={['rotate-item', i === 0 ? 'is-active' : '']} aria-hidden={i === 0 ? undefined : 'true'}>{r}</span>
             ))}
           </span>
         </h1>
@@ -330,9 +278,9 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
           <a class="sv-btn-ghost" href={`/${lang}/portfolio`}>{content.hero.ctaSecondary}</a>
         </div>
         <div class="sv-verify">
-          <div><b data-count="99.8" data-suffix="%">0%</b>{lang === 'es' ? 'precisión biométrica' : 'biometric precision'}</div>
-          <div><b data-count="500" data-suffix="+">0+</b>{lang === 'es' ? 'verificaciones/día en prod' : 'verifications/day in prod'}</div>
-          <div><b data-count="87.5" data-suffix="%">0%</b>{lang === 'es' ? 'reducción de tiempo' : 'time reduction'}</div>
+          <div><b data-count="99.8" data-suffix="%">99.8%</b>{lang === 'es' ? 'precisión biométrica' : 'biometric precision'}</div>
+          <div><b data-count="500" data-suffix="+">500+</b>{lang === 'es' ? 'verificaciones/día en prod' : 'verifications/day in prod'}</div>
+          <div><b data-count="87.5" data-suffix="%">87.5%</b>{lang === 'es' ? 'reducción de tiempo' : 'time reduction'}</div>
         </div>
       </div>
     </section>
@@ -392,51 +340,52 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
       })()}
     </section>
 
-    <!-- Casos con resultado -->
+    <!-- Experiencia del equipo -->
     <section class="sv-section">
-      <h2 class="sv-title">{lang === 'es' ? 'Casos con resultado' : 'Results, not promises'}</h2>
-      <p class="sv-subtitle">{lang === 'es' ? 'No te cuento lo que podría hacer. Te muestro lo que ya hice, con números.' : "I won't tell you what I could do. I'll show you what I already did, with numbers."}</p>
+      <h2 class="sv-title">{lang === 'es' ? 'Experiencia del equipo' : 'Team experience'}</h2>
+      <p class="sv-subtitle">{lang === 'es' ? 'No te contamos lo que podríamos hacer: te mostramos lo que ya se hizo, con números.' : "We won't tell you what we could do: we show you what has already been done, with numbers."}</p>
+      <p class="sv-note">{lang === 'es' ? 'Proyectos realizados por Mauricio como profesional contratado.' : 'Projects delivered by Mauricio as a contracted professional.'}</p>
       <div class="sv-cases">
         <div class="sv-case reveal">
-          <div class="who">{lang === 'es' ? 'Embotelladora multinacional' : 'Multinational bottling company'}</div>
+          <div class="who">Coca-Cola Embonor</div>
           <div class="what">{lang === 'es' ? 'Integración contable con SAP' : 'SAP accounting integration'}</div>
-          <div class="res">{lang === 'es' ? 'Automaticé el envío de datos a SAP eliminando la carga manual.' : 'Automated SAP data delivery, eliminating manual entry.'}</div>
+          <div class="res">{lang === 'es' ? 'Automatización del envío de datos a SAP, eliminando la carga manual y los errores recurrentes.' : 'Automated SAP data delivery, eliminating manual entry and recurring errors.'}</div>
           <div class="metric">-75%</div>
         </div>
         <div class="sv-case reveal">
           <div class="who">{lang === 'es' ? 'Agencia de Sistemas de Información' : 'Information Systems Agency'}</div>
           <div class="what">{lang === 'es' ? 'Automatización de liquidaciones' : 'Settlement automation'}</div>
-          <div class="res">{lang === 'es' ? 'Refactoricé el proceso que procesa 250K registros por mes.' : 'Refactored a process handling 250K records/month.'}</div>
+          <div class="res">{lang === 'es' ? 'Refactorización del proceso que procesa 250K registros por mes.' : 'Refactoring of a process handling 250K records/month.'}</div>
           <div class="metric">4h → 30min</div>
         </div>
         <div class="sv-case reveal">
-          <div class="who">{lang === 'es' ? 'Empresa de transmisión eléctrica' : 'Electric transmission company'}</div>
+          <div class="who">ISA CTEEP</div>
           <div class="what">{lang === 'es' ? 'Auditorías con análisis de datos' : 'Audits with data analysis'}</div>
-          <div class="res">{lang === 'es' ? 'Convertí la revisión manual de Excel en un sistema interactivo.' : 'Turned manual Excel review into an interactive system.'}</div>
+          <div class="res">{lang === 'es' ? 'La revisión manual en Excel pasó a ser un sistema interactivo.' : 'Manual Excel review became an interactive system.'}</div>
           <div class="metric">+60%</div>
         </div>
       </div>
     </section>
 
-    <!-- Cómo trabajo -->
+    <!-- Cómo trabajamos -->
     <section class="sv-section">
-      <h2 class="sv-title">{lang === 'es' ? 'Cómo trabajo' : 'How I work'}</h2>
+      <h2 class="sv-title">{lang === 'es' ? 'Cómo trabajamos' : 'How we work'}</h2>
       <p class="sv-subtitle">{lang === 'es' ? 'Tres pasos, sin vueltas. Sabés qué pasa desde el primer contacto.' : 'Three steps, no surprises. You know what happens from first contact.'}</p>
       <div class="sv-steps">
         <div class="sv-step reveal">
           <div class="n">1</div>
           <h3>{lang === 'es' ? 'Consulta inicial (sin cargo)' : 'Initial conversation (free)'}</h3>
-          <p>{lang === 'es' ? 'Hablamos de tu problema y te digo si puedo ayudarte.' : 'We talk about your problem and I tell you if I can help.'}</p>
+          <p>{lang === 'es' ? 'Hablamos de tu problema y te decimos si podemos ayudarte.' : 'We talk about your problem and tell you whether we can help.'}</p>
         </div>
         <div class="sv-step reveal">
           <div class="n">2</div>
           <h3>{lang === 'es' ? 'Análisis y propuesta' : 'Analysis & proposal'}</h3>
-          <p>{lang === 'es' ? 'Reviso tu stack a fondo y te entrego alcance, impacto estimado y stack. Esto es parte del servicio.' : 'I review your stack in depth and deliver scope, estimated impact and stack. This is part of the service.'}</p>
+          <p>{lang === 'es' ? 'Revisamos tu stack a fondo y te entregamos alcance, impacto estimado y stack. Esto es parte del servicio.' : 'We review your stack in depth and deliver scope, estimated impact and stack. This is part of the service.'}</p>
         </div>
         <div class="sv-step reveal">
           <div class="n">3</div>
           <h3>{lang === 'es' ? 'Implementación' : 'Implementation'}</h3>
-          <p>{lang === 'es' ? 'Lo dejo funcionando, con métricas verificables como las de arriba.' : 'I leave it working, with verifiable metrics like the ones above.'}</p>
+          <p>{lang === 'es' ? 'Lo dejamos funcionando, con métricas verificables como las de arriba.' : 'We leave it working, with verifiable metrics like the ones above.'}</p>
         </div>
       </div>
     </section>
@@ -449,7 +398,7 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
         <p>{content.speaking.credential}</p>
         <div class="sp-actions">
           <a class="sp-cta" href={speakingMailto}>{content.speaking.cta}</a>
-          <a class="sp-link" href="/disertaciones/">{content.speaking.seeTalks}</a>
+          <a class="sp-link" href={`/${lang}/disertaciones/`}>{content.speaking.seeTalks}</a>
         </div>
       </div>
     </section>
@@ -461,17 +410,11 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
         <p>{content.ctaDescription}</p>
         <div class="actions">
           <button class="a-white" data-contact-trigger>{content.hero.ctaPrimary}</button>
-          <a class="a-ghost" href={SITE_CONFIG.calendly} target="_blank" rel="noopener noreferrer">{lang === 'es' ? 'Agendar Reunión' : 'Schedule a Call'}</a>
+          <a class="a-ghost" href={SITE_CONFIG.calendly} target="_blank" rel="noopener noreferrer">{lang === 'es' ? 'Agendar reunión' : 'Schedule a call'}</a>
         </div>
       </div>
     </section>
-  </main>
-
-  <footer class="sv-footer">
-    <p>© 2026 Mauricio González · Córdoba, Argentina</p>
-  </footer>
-
-  <ContactModal lang={lang} />
+  </div>
 
   <script is:inline>
     (function () {
@@ -485,8 +428,10 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
           var idx = 0;
           setInterval(function () {
             items[idx].classList.remove('is-active');
+            items[idx].setAttribute('aria-hidden', 'true');
             idx = (idx + 1) % items.length;
             items[idx].classList.add('is-active');
+            items[idx].removeAttribute('aria-hidden');
           }, 3200);
         }
       }
@@ -544,8 +489,9 @@ const defaultIcon = 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 
         document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
 
         if (!reduceMotion) {
+          // El HTML trae el valor final (crawlers, lectores de pantalla, sin JS); acá se reinicia a 0 solo para animar.
           document.querySelectorAll('.sv-verify b[data-count]').forEach(function (el) {
-            el.setAttribute('data-count', el.getAttribute('data-count'));
+            el.textContent = '0' + (el.getAttribute('data-suffix') || '');
             io.observe(el);
           });
         }

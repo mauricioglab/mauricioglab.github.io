@@ -1,5 +1,7 @@
 ---
 import BaseTailwind from '@layouts/BaseTailwind.astro';
+import OwnerGuard from '@components/shared/OwnerGuard.astro';
+import OwnerBar from '@components/shared/OwnerBar.astro';
 import NavBar from '@components/nutricion/NavBar.astro';
 import MealCard from '@components/nutricion/MealCard.astro';
 import mealsData from '@data/nutricion/meals.json';
@@ -10,7 +12,9 @@ export const prerender = true;
 const title = 'NutriApp - Posibilidades';
 const basePath = `${import.meta.env.BASE_URL}nutricion/`;
 ---
-<BaseTailwind title={title} description="Elegí comidas según lo que ya tenés" lang="es" layoutType="tool" showPromptModal={true} noindex>
+<BaseTailwind title={title} description="Elegí comidas según lo que ya tenés" lang="es" layoutType="private" showPromptModal={true} noindex>
+  <OwnerGuard slot="head" />
+  <OwnerBar current="nutricion" />
   <div class="mx-auto w-full max-w-md bg-white min-h-screen pb-24 relative shadow-sm">
     <NavBar basePath={basePath} />
 

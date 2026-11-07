@@ -1,0 +1,52 @@
+---
+type Tool = 'gestion' | 'nutricion' | 'movimiento' | 'vsagenda' | 'workspace-mapper';
+
+interface Props {
+  current: Tool;
+}
+
+const { current } = Astro.props;
+
+const links: { id: Tool; label: string; href: string }[] = [
+  { id: 'gestion', label: 'Gestión', href: '/admin/gestion/' },
+  { id: 'nutricion', label: 'Nutrición', href: '/nutricion/' },
+  { id: 'movimiento', label: 'Movimiento', href: '/movimiento/' },
+  { id: 'vsagenda', label: 'vsagenda', href: '/vsagenda/' },
+  { id: 'workspace-mapper', label: 'Workspace Mapper', href: '/workspace-mapper/' },
+];
+---
+
+<nav class="owner-bar" aria-label="Herramientas privadas">
+  {links.map((l) =>
+    l.id === current ? <span aria-current="page">{l.label}</span> : <a href={l.href}>{l.label}</a>,
+  )}
+</nav>
+
+<style is:global>
+  :root { --owner-bar-h: 32px; }
+</style>
+
+<style>
+  .owner-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    height: var(--owner-bar-h);
+    padding: 0 12px;
+    overflow-x: auto;
+    white-space: nowrap;
+    background: #0f172a;
+    border-bottom: 1px solid #1e293b;
+    font: 600 11px/1 system-ui, sans-serif;
+    letter-spacing: 0.04em;
+  }
+  .owner-bar a,
+  .owner-bar span {
+    padding: 5px 9px;
+    border-radius: 6px;
+    text-decoration: none;
+  }
+  .owner-bar a { color: #94a3b8; }
+  .owner-bar a:hover { color: #fff; background: #1e293b; }
+  .owner-bar span { color: #fff; background: #334155; }
+</style>

@@ -7,11 +7,9 @@
     "description": "Software Engineer · AI & Automation · Python · .NET Core · Angular. AI in production, predictive models and enterprise architecture."
   },
   "hero": {
-    "badge": "AVAILABLE FOR NEW CHALLENGES",
-    "headline": "Software Engineer · <span class=\"text-blue-600 dark:text-blue-400\">AI &amp; Automation</span>.",
     "subheadline": "Solid foundation in full-stack development (.NET Core, Angular) and a growing specialization in applied AI. Real experience taking AI solutions to production at government/enterprise scale, plus building and validating my own predictive models with Python.",
-    "ctaPrimary": "Download CV",
-    "ctaSecondary": "View Projects"
+    "headlineMain": "Software Engineer ·",
+    "headlineAccent": "AI & Automation"
   },
   "projectsDescription": "Enterprise systems that hold up under real load, and AI/data models validated with rigor.",
   "ctaTitle": "Looking for a Software Engineer who combines development and AI?",
@@ -98,8 +96,20 @@
     ]
   },
   "education": [
-    { "title": "Systems Analyst", "institution": "Instituto Cervantes", "period": "2023 · Honor Roll" },
-    { "title": "Data Science & AI Diploma", "institution": "UTN", "period": "2025" },
-    { "title": "Python Diploma", "institution": "UTN", "period": "2025" }
+    {
+      "title": "Systems Analyst",
+      "institution": "Instituto Cervantes",
+      "period": "2023 · Honor Roll"
+    },
+    {
+      "title": "Data Science & AI Diploma",
+      "institution": "UTN",
+      "period": "2025"
+    },
+    {
+      "title": "Python Diploma",
+      "institution": "UTN",
+      "period": "2025"
+    }
   ]
 }

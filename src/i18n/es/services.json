@@ -1,11 +1,11 @@
 {
   "title": "Servicios Profesionales",
   "subtitle": "Consultoría · Desarrollo · IA",
-  "description": "Lo que puedo hacer por tu empresa",
+  "description": "Lo que podemos hacer por tu empresa",
   "sectionSubtitle": "Del relevamiento a la puesta en producción, con foco en datos y resultados medibles.",
   "seo": {
-    "title": "Servicios | Software Engineer · IA & Automatización · Consultoría en Córdoba, Argentina",
-    "description": "Software Engineer especializado en IA y automatización. Consultoría técnica, documentación para aprobación, desarrollo full-stack, IA aplicada, automatización, capacitación y speaking. Córdoba, Argentina."
+    "title": "Servicios | VeloCityLab",
+    "description": "Estudio de IA y automatización en Córdoba, Argentina: consultoría técnica, desarrollo full-stack, IA aplicada y capacitación."
   },
   "nav": {
     "portfolio": "Portfolio",
@@ -13,44 +13,53 @@
     "disertaciones": "Disertaciones"
   },
   "hero": {
-    "badge": "Software Engineer · IA & Automatización",
+    "badge": "Estudio de IA y automatización",
     "headlinePrefix": "Tu equipo pierde horas en procesos manuales.",
     "rotate": [
-      "Yo los automatizo.",
-      "Lo documento para aprobar.",
-      "Lo llevo a producción con IA.",
-      "Yo lo enseño en workshops."
+      "Los automatizamos.",
+      "Los documentamos para aprobarlos.",
+      "Los llevamos a producción con IA.",
+      "Capacitamos a tu equipo en workshops."
     ],
-    "subheadline": "Soy Software Engineer especializado en IA y automatización. Relevo tu problema, lo documento para que se apruebe, lo desarrollo y lo dejo funcionando. Speaker y docente en IA aplicada.",
+    "subheadline": "Somos un estudio de software especializado en IA y automatización. Relevamos tu problema, lo documentamos para que se apruebe, lo desarrollamos y lo dejamos funcionando. También damos charlas y workshops de IA aplicada.",
     "ctaPrimary": "Conversemos sin compromiso",
-    "ctaSecondary": "Ver Portfolio"
+    "ctaSecondary": "Ver portfolio"
   },
   "ctaTitle": "¿Hablamos de tu proyecto?",
   "ctaDescription": "La conversación inicial es sin cargo. El análisis técnico es parte del trabajo.",
   "groups": [
-    { "id": "consultoria", "label": "Consultoría técnica" },
-    { "id": "desarrollo", "label": "Desarrollo y datos" },
-    { "id": "capacitacion", "label": "Capacitación y speaking" }
+    {
+      "id": "consultoria",
+      "label": "Consultoría técnica"
+    },
+    {
+      "id": "desarrollo",
+      "label": "Desarrollo y datos"
+    },
+    {
+      "id": "capacitacion",
+      "label": "Capacitación y speaking"
+    }
   ],
   "speaking": {
-    "title": "Speaker",
-    "text": "Doy charlas y workshops sobre IA aplicada y automatización, siempre anclados en proyectos reales, no en teoría.",
-    "credential": "Docente en 3 carreras de tecnología · 5 de 20 alumnos consiguieron empleo como Jr Dev",
+    "title": "Charlas y workshops",
+    "text": "Damos charlas y workshops sobre IA aplicada y automatización, siempre anclados en proyectos reales, no en teoría.",
+    "credential": "Mauricio es docente en 3 carreras de tecnología · 5 de 20 alumnos consiguieron empleo como Jr Dev en el último ciclo",
     "cta": "Quiero a Mauricio en mi evento",
-    "seeTalks": "Ver mis disertaciones"
+    "seeTalks": "Ver las disertaciones"
   },
   "services": [
     {
       "icon": "fas fa-search",
       "title": "Análisis y relevamiento",
-      "description": "Relevamiento con stakeholders, especificaciones técnicas y modelado (UML, DER, DFD). Entiendo el problema antes de escribir código.",
+      "description": "Relevamiento con stakeholders, especificaciones técnicas y modelado (UML, DER, DFD). Entendemos el problema antes de escribir código.",
       "color": "blue-600",
       "group": "consultoria"
     },
     {
       "icon": "fas fa-clipboard-check",
       "title": "Documentación para aprobación",
-      "description": "Documentación de sistemas para auditorías y cumplimiento: CMMI, normativa SSN, modelos de datos. Lo dejo listo para aprobar.",
+      "description": "Documentación de sistemas para auditorías y cumplimiento: CMMI, normativa SSN, modelos de datos. La dejamos lista para aprobar.",
       "color": "blue-600",
       "group": "consultoria"
     },
@@ -64,21 +73,21 @@
     {
       "icon": "fas fa-brain",
       "title": "IA aplicada",
-      "description": "Llevo IA de la idea a producción: biometría con AWS Rekognition, RAG con LangChain y modelos predictivos en Python.",
+      "description": "Llevamos IA de la idea a producción: biometría con AWS Rekognition, RAG con LangChain y modelos predictivos en Python.",
       "color": "purple-600",
       "group": "desarrollo"
     },
     {
       "icon": "fas fa-cogs",
       "title": "Automatización de procesos",
-      "description": "Convierto tareas manuales en sistemas con métricas verificables: 4h → 30min, -75% de errores, +60% de eficiencia.",
+      "description": "Convertimos tareas manuales en sistemas con métricas verificables: 4h → 30min, -75% de errores, +60% de eficiencia.",
       "color": "emerald-600",
       "group": "desarrollo"
     },
     {
       "icon": "fas fa-chalkboard-teacher",
       "title": "Disertaciones, charlas, clases y workshops",
-      "description": "Charlas y workshops de IA aplicada y automatización anclados en proyectos reales, no en teoría. Docente en 3 carreras de tecnología.",
+      "description": "Charlas y workshops de IA aplicada y automatización anclados en proyectos reales, no en teoría. Mauricio es docente en 3 carreras de tecnología.",
       "color": "orange-600",
       "group": "capacitacion"
     }

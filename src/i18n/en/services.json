@@ -1,11 +1,11 @@
 {
   "title": "Professional Services",
   "subtitle": "Consulting · Development · AI",
-  "description": "What I can do for your company",
+  "description": "What we can do for your company",
   "sectionSubtitle": "From requirements to production, with a focus on data and measurable results.",
   "seo": {
-    "title": "Services | Software Engineer · AI & Automation · Consulting in Córdoba, Argentina",
-    "description": "Software Engineer specialized in AI and automation. Technical consulting, approval documentation, full-stack development, applied AI, automation, training and speaking. Córdoba, Argentina."
+    "title": "Services | VeloCityLab",
+    "description": "AI and automation studio in Córdoba, Argentina: technical consulting, full-stack development, applied AI and training."
   },
   "nav": {
     "portfolio": "Portfolio",
@@ -13,44 +13,53 @@
     "disertaciones": "Talks"
   },
   "hero": {
-    "badge": "Software Engineer · AI & Automation",
+    "badge": "AI & automation studio",
     "headlinePrefix": "Your team loses hours on manual processes.",
     "rotate": [
-      "I automate them.",
-      "I get them approved.",
-      "I ship them to production.",
-      "I teach it in workshops."
+      "We automate them.",
+      "We document them for approval.",
+      "We take them to production with AI.",
+      "We train your team in workshops."
     ],
-    "subheadline": "I'm a Software Engineer specialized in AI and automation. I gather your requirements, document them for approval, build them and leave them working. Speaker and instructor in applied AI.",
+    "subheadline": "We are a software studio specialized in AI and automation. We gather your requirements, document them for approval, build them and leave them working. We also give talks and workshops on applied AI.",
     "ctaPrimary": "Let's talk, no strings attached",
-    "ctaSecondary": "View Portfolio"
+    "ctaSecondary": "View portfolio"
   },
-  "ctaTitle": "Let's talk about your project?",
+  "ctaTitle": "Shall we talk about your project?",
   "ctaDescription": "The initial conversation is free. The technical analysis is part of the work.",
   "groups": [
-    { "id": "consultoria", "label": "Technical consulting" },
-    { "id": "desarrollo", "label": "Development & data" },
-    { "id": "capacitacion", "label": "Training & speaking" }
+    {
+      "id": "consultoria",
+      "label": "Technical consulting"
+    },
+    {
+      "id": "desarrollo",
+      "label": "Development & data"
+    },
+    {
+      "id": "capacitacion",
+      "label": "Training & speaking"
+    }
   ],
   "speaking": {
-    "title": "Speaker",
-    "text": "I give talks and workshops on applied AI and automation, always grounded in real projects, not theory.",
-    "credential": "Instructor across 3 tech programs · 5 of 20 students landed Jr Dev jobs",
+    "title": "Talks & workshops",
+    "text": "We give talks and workshops on applied AI and automation, always grounded in real projects, not theory.",
+    "credential": "Mauricio teaches across 3 tech programs · 5 of 20 students landed Jr Dev jobs in the last cohort",
     "cta": "I want Mauricio at my event",
-    "seeTalks": "See my talks"
+    "seeTalks": "See the talks"
   },
   "services": [
     {
       "icon": "fas fa-search",
       "title": "Analysis & requirements",
-      "description": "Stakeholder requirements gathering, technical specs and modeling (UML, ERD, DFD). I understand the problem before writing code.",
+      "description": "Stakeholder requirements gathering, technical specs and modeling (UML, ERD, DFD). We understand the problem before writing code.",
       "color": "blue-600",
       "group": "consultoria"
     },
     {
       "icon": "fas fa-clipboard-check",
       "title": "Approval documentation",
-      "description": "System documentation for audits and compliance: CMMI, SSN regulations, data models. Left ready for approval.",
+      "description": "System documentation for audits and compliance: CMMI, SSN regulations, data models. We leave it ready for approval.",
       "color": "blue-600",
       "group": "consultoria"
     },
@@ -64,21 +73,21 @@
     {
       "icon": "fas fa-brain",
       "title": "Applied AI",
-      "description": "I take AI from idea to production: biometrics with AWS Rekognition, RAG with LangChain and predictive models in Python.",
+      "description": "We take AI from idea to production: biometrics with AWS Rekognition, RAG with LangChain and predictive models in Python.",
       "color": "purple-600",
       "group": "desarrollo"
     },
     {
       "icon": "fas fa-cogs",
       "title": "Process automation",
-      "description": "I turn manual tasks into systems with verifiable metrics: 4h → 30min, -75% errors, +60% efficiency.",
+      "description": "We turn manual tasks into systems with verifiable metrics: 4h → 30min, -75% errors, +60% efficiency.",
       "color": "emerald-600",
       "group": "desarrollo"
     },
     {
       "icon": "fas fa-chalkboard-teacher",
       "title": "Talks, classes & workshops",
-      "description": "Talks and workshops on applied AI and automation grounded in real projects, not theory. Instructor across 3 tech programs.",
+      "description": "Talks and workshops on applied AI and automation grounded in real projects, not theory. Mauricio teaches across 3 tech programs.",
       "color": "orange-600",
       "group": "capacitacion"
     }

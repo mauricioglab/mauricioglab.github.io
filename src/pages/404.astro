@@ -1,10 +1,11 @@
 ---
 import BaseTailwind from '../layouts/BaseTailwind.astro';
 import NotFoundView from '../components/shared/NotFoundView.astro';
+import { getSiteNav } from '../data/site-nav';
 
 export const prerender = true;
 ---
 
-<BaseTailwind title="404 - MG Lab" description="Página no encontrada" layoutType="index">
+<BaseTailwind title={`Página no encontrada | ${getSiteNav().brand.name}`} description="La página que buscás no existe o cambió de lugar." layoutType="index">
   <NotFoundView />
 </BaseTailwind>

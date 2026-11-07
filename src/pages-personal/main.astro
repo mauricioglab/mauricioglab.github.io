@@ -29,13 +29,13 @@ const pages = getPublicPages()
 ---
 
 <BaseTailwind 
-	title="Bienvenido a MG Lab"
-	description="MG Lab Depot - Herramientas y aplicaciones"
+	title="Rincón retro | Mauricio González"
+	description="Un rincón retro del sitio: widgets, GIFs y curiosidades."
 	lang="es"
 >
 	<div class="container">
-			<aside class="sidebar" aria-label="Main Navigation Sidebar">
-				<nav class="menu">
+			<aside class="sidebar" aria-label="Navegación">
+				<nav class="main-menu">
 					{
 						pages.map((p) => (
 							<a href={p.url}>{p.name}</a>
@@ -44,13 +44,13 @@ const pages = getPublicPages()
 				</nav>
 				<hr />
 
-				<div class="alf-section" aria-label="Fun corner with ALF">
+				<div class="alf-section" aria-label="Rincón de ALF">
 					<img
 						src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWd2cTd3MXdhd2UwZnlrNTBkYXI2M2JkaWpjNDh5eXVpdDR1cjdxbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LLWteC47MmBck/giphy.gif"
-						alt="ALF mascot waving"
+						alt="ALF saludando"
 						class="alf-image"
 					/>
-					<div class="alf-text">ALF SAYS:<br />"Visit us!"</div>
+					<div class="alf-text">ALF DICE:<br />"¡Pasá a visitarnos!"</div>
 				</div>
 
 				<hr />
@@ -62,23 +62,23 @@ const pages = getPublicPages()
 				<WantedPoster />
 			</aside>
 
-			<main class="main-content" aria-label="Main Content Area">
+			<main class="main-content" aria-label="Contenido">
 				<header class="header">
 					<div class="header-inner">
-						<h1>Welcome to MG Lab Depot</h1>
+						<h1>Rincón retro</h1>
 						<div class="search-container">
 							<form action="https://www.google.com/search" method="get" target="_blank" class="search-form">
 								<input
 									type="text"
 									name="q"
-									placeholder="Search Google..."
+									placeholder="Buscar en Google..."
 									class="search-input"
-									aria-label="Search Google"
+									aria-label="Buscar en Google"
 								/>
-								<button type="submit" class="search-btn">GO</button>
+								<button type="submit" class="search-btn">IR</button>
 							</form>
 						</div>
-						<div class="date" aria-label="Current date">
+						<div class="date" aria-label="Fecha actual">
 							{formattedDate}
 						</div>
 					</div>
@@ -88,7 +88,7 @@ const pages = getPublicPages()
 					<PokemonBanner />
 
 					<br />
-					<div class="whats-hot-header">▼ What's Hot</div>
+					<div class="whats-hot-header">▼ Lo más visto</div>
 					<br />
 
 					<ChuckFacts />
@@ -105,10 +105,6 @@ const pages = getPublicPages()
 					</div>
 				</div>
 
-				<footer class="footer">
-					<hr />
-					<p><a href="/">← Volver al inicio</a></p>
-				</footer>
 			</main>
 
 			<AdsSidebar class="right-sidebar">
@@ -143,7 +139,7 @@ const pages = getPublicPages()
 				font-family: Arial, Helvetica, sans-serif;
 			}
 
-			.menu a {
+			.main-menu a {
 				color: #ffffff;
 				text-decoration: none;
 				padding: 8px 5px;
@@ -151,7 +147,7 @@ const pages = getPublicPages()
 				font-weight: bold;
 				display: block;
 			}
-			.menu a:hover {
+			.main-menu a:hover {
 				background-color: #bb0000;
 			}
 

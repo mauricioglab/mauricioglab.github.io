@@ -10,11 +10,12 @@ const title = "Creatopia Calc";
 ---
 
 <BaseTailwind 
-    title={title}
-    description="Calculadora de costos para impresión 3D"
+    title="Calculadora 3D | Mauricio González"
+    description="Calculá el costo de una impresión 3D: filamento, energía y margen de ganancia."
     lang="es"
     layoutType="tool"
     showPromptModal={true}
+    current="calculadora"
 >
     <div class="max-w-[500px] mx-auto bg-white p-5 rounded-xl shadow-lg">
     <style>
@@ -59,7 +60,6 @@ const title = "Creatopia Calc";
     </style>
         <!-- Header -->
         <div class="text-center my-6">
-            <a href="/" class="inline-block mb-3 text-sm font-semibold text-slate-500 hover:text-blue-600 no-underline">← Inicio</a>
             <div class="flex items-center justify-center gap-4 mb-2">
                 <Image src={calculadoraLogo} alt="Creatopia Calc" class="h-12 w-auto object-contain rounded-xl shadow-md" />
                 <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{title}</h1>

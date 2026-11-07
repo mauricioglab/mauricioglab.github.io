@@ -1,5 +1,7 @@
 ---
 import BaseTailwind from '@layouts/BaseTailwind.astro';
+import OwnerGuard from '@components/shared/OwnerGuard.astro';
+import OwnerBar from '@components/shared/OwnerBar.astro';
 import NavBar from '@components/nutricion/NavBar.astro';
 import IngredientToggle from '@components/nutricion/IngredientToggle.astro';
 import ingredients from '@data/nutricion/ingredients.json';
@@ -23,7 +25,9 @@ const groupedIngredients = Object.keys(categories).map((cat) => ({
   items: ingredients.filter((i: any) => i.category === cat),
 }));
 ---
-<BaseTailwind title={title} description="Planificador de comidas y lista de compras" lang="es" layoutType="tool" showPromptModal={true} noindex>
+<BaseTailwind title={title} description="Planificador de comidas y lista de compras" lang="es" layoutType="private" showPromptModal={true} noindex>
+  <OwnerGuard slot="head" />
+  <OwnerBar current="nutricion" />
   <div class="mx-auto w-full max-w-md bg-white min-h-screen pb-24 relative shadow-sm">
     <NavBar basePath={basePath} />
 

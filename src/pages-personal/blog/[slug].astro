@@ -45,9 +45,10 @@ const bannerUltimos = ultimosRecursos.map((r) => ({
 ---
 
 <BlogLayout
-  title={`${post.title} | ${SITE_CONFIG.blogName}`}
+  title={`${post.title} | ${SITE_CONFIG.siteName}`}
   description={post.description}
   blogSubtitle="Artículos y pensamientos"
+  seo={false}
 >
   <slot name="head">
     <link rel="canonical" href={fullUrl} />
