@@ -23,7 +23,7 @@ const groupedIngredients = Object.keys(categories).map((cat) => ({
   items: ingredients.filter((i: any) => i.category === cat),
 }));
 ---
-<BaseTailwind title={title} description="Planificador de comidas y lista de compras" lang="es" layoutType="tool" showPromptModal={true}>
+<BaseTailwind title={title} description="Planificador de comidas y lista de compras" lang="es" layoutType="tool" showPromptModal={true} noindex>
   <div class="mx-auto w-full max-w-md bg-white min-h-screen pb-24 relative shadow-sm">
     <NavBar basePath={basePath} />
 

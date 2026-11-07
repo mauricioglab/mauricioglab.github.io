@@ -18,6 +18,7 @@ interface Props {
 	showFooter?: boolean;
 	showMateGame?: boolean;
 	showPromptModal?: boolean;
+	noindex?: boolean;
 }
 
 const {
@@ -29,6 +30,7 @@ const {
 	showFooter: showFooterOverride,
 	showMateGame: showMateGameOverride,
 	showPromptModal = false,
+	noindex = false,
 } = Astro.props;
 
 // Get features from config, allow overrides
@@ -46,6 +48,7 @@ const baseUrl = import.meta.env.BASE_URL;
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="description" content={description} />
+		{noindex && <meta name="robots" content="noindex, nofollow" />}
 		<link rel="icon" type="image/svg+xml" href={`${baseUrl}favicon.svg`} />
 		<link rel="icon" href={`${baseUrl}favicon.ico`} />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />

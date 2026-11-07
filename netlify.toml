@@ -7,8 +7,133 @@
   PUBLIC_POCKETBASE_URL = "https://spa-depot.46-225-2-192.nip.io"
   NODE_VERSION = "22"
 
+# velocitylab.com.ar servía antes todo el sitio. Lo que hoy es exclusivo del
+# dominio personal se redirige (301) para no romper links viejos.
 [[redirects]]
   from = "/admin/*"
   to = "https://mauricioglab.github.io/admin/:splat"
   status = 301
   force = true
+
+[[redirects]]
+  from = "/blog"
+  to = "https://mauricioglab.github.io/blog/"
+  status = 301
+
+[[redirects]]
+  from = "/blog/*"
+  to = "https://mauricioglab.github.io/blog/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/zona-lab"
+  to = "https://mauricioglab.github.io/zona-lab/"
+  status = 301
+
+[[redirects]]
+  from = "/zona-lab/*"
+  to = "https://mauricioglab.github.io/zona-lab/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/es/cv/*"
+  to = "https://mauricioglab.github.io/es/cv/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/en/cv/*"
+  to = "https://mauricioglab.github.io/en/cv/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/es/proyectos/*"
+  to = "https://mauricioglab.github.io/es/proyectos/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/en/proyectos/*"
+  to = "https://mauricioglab.github.io/en/proyectos/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/urls"
+  to = "https://mauricioglab.github.io/urls/"
+  status = 301
+
+[[redirects]]
+  from = "/prompt"
+  to = "https://mauricioglab.github.io/prompt/"
+  status = 301
+
+[[redirects]]
+  from = "/videos"
+  to = "https://mauricioglab.github.io/videos/"
+  status = 301
+
+[[redirects]]
+  from = "/extensions"
+  to = "https://mauricioglab.github.io/extensions/"
+  status = 301
+
+[[redirects]]
+  from = "/vsagenda"
+  to = "https://mauricioglab.github.io/vsagenda/"
+  status = 301
+
+[[redirects]]
+  from = "/calculadora"
+  to = "https://mauricioglab.github.io/calculadora/"
+  status = 301
+
+[[redirects]]
+  from = "/workspace-mapper"
+  to = "https://mauricioglab.github.io/workspace-mapper/"
+  status = 301
+
+[[redirects]]
+  from = "/main"
+  to = "https://mauricioglab.github.io/main/"
+  status = 301
+
+# Secciones privadas: no se publican en ningún dominio para visitantes nuevos,
+# pero las URLs viejas se mandan al sitio personal en vez de dar 404.
+[[redirects]]
+  from = "/nutricion/*"
+  to = "https://mauricioglab.github.io/nutricion/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/movimiento/*"
+  to = "https://mauricioglab.github.io/movimiento/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/pausas-activas"
+  to = "https://mauricioglab.github.io/pausas-activas"
+  status = 301
+
+[[redirects]]
+  from = "/movilidad"
+  to = "https://mauricioglab.github.io/movilidad"
+  status = 301
+
+[[redirects]]
+  from = "/entrenamiento"
+  to = "https://mauricioglab.github.io/entrenamiento"
+  status = 301
+
+# Secciones dadas de baja.
+[[redirects]]
+  from = "/noticias/*"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/floppy/*"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/inicio/*"
+  to = "/"
+  status = 301

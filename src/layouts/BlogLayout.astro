@@ -2,7 +2,6 @@
 import { getBlogPosts, normalizeBaseUrl } from "../utils/blog";
 import { SITE_CONFIG } from "../data/config";
 import PublicNav from "../components/shared/PublicNav.astro";
-import GestionLink from "../components/shared/GestionLink.astro";
 import "../styles/brand.css";
 
 interface Props {
@@ -188,7 +187,6 @@ const allCategories = Array.from(
               class="text-vcl-turquesa hover:text-vcl-petroleo hover:underline"
               aria-label="Política de privacidad">Privacidad</a
             >
-            &middot; <GestionLink />
           </p>
         </div>
       </footer>
