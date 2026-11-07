@@ -38,7 +38,6 @@ export const pagesRegistry: PageEntry[] = [
   { id: 'urls', name: 'URLs Útiles', url: '/urls/', category: 'public', icon: '🔗' },
   { id: 'noticias', name: 'Noticias IA', url: '/noticias/', category: 'public', icon: '📰' },
   { id: 'main', name: 'Main (Retro)', url: '/main/', category: 'public', icon: '🏠' },
-  { id: 'seguimiento', name: 'Panel de Seguimiento de Alumnos', url: '/seguimiento/', category: 'public', icon: '📊' },
   { id: 'floppy', name: 'Disquete 3½', url: '/floppy/', category: 'public', icon: '💾' },
 
   // =====================
