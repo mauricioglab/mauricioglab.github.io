@@ -18,7 +18,8 @@ const clusters = [
     label: SITE_CONFIG.blogName,
     primary: false,
     links: [
-      { id: 'blog', label: SITE_CONFIG.blogName, url: resolveUrl('/blog/'), hint: 'Artículos y pensamientos' },
+      { id: 'blog', label: `${SITE_CONFIG.blogName} (Blog)`, url: resolveUrl('/blog/'), hint: 'Artículos y pensamientos' },
+      { id: 'zona-lab', label: 'Zona Lab', url: resolveUrl('/zona-lab/'), hint: 'Recursos de estudio' },
     ],
   },
   {

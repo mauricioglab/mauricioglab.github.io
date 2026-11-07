@@ -1,5 +1,5 @@
 ---
-type PageId = 'servicios' | 'portfolio' | 'disertaciones' | 'blog';
+type PageId = 'servicios' | 'portfolio' | 'disertaciones' | 'blog' | 'zona-lab';
 
 interface Props {
   current: PageId;
@@ -12,7 +12,8 @@ const items: { id: PageId; href: string; label: string }[] = [
   { id: 'servicios', href: `/${lang}/servicios/`, label: lang === 'es' ? 'Servicios' : 'Services' },
   { id: 'portfolio', href: `/${lang}/portfolio/`, label: 'Portfolio' },
   { id: 'disertaciones', href: '/disertaciones/', label: lang === 'es' ? 'Disertaciones' : 'Talks' },
-  { id: 'blog', href: '/blog/', label: 'Parece que fue ayer' },
+  { id: 'blog', href: '/blog/', label: 'Parece que fue ayer (Blog)' },
+  { id: 'zona-lab', href: '/zona-lab/', label: 'Zona Lab' },
 ];
 ---
 

@@ -29,7 +29,7 @@ export const pagesRegistry: PageEntry[] = [
   // =====================
   // PÚBLICAS (aparecen en index y main)
   // =====================
-  { id: 'blog', name: 'Parece que fue ayer', url: '/blog/', category: 'public', icon: '📝' },
+  { id: 'blog', name: 'Parece que fue ayer (Blog)', url: '/blog/', category: 'public', icon: '📝' },
   { id: 'disertaciones', name: 'Disertaciones', url: '/disertaciones/', category: 'public', icon: '🎤' },
   { id: 'recursos', name: 'Zona Lab', url: '/zona-lab/', category: 'public', icon: '📚' },
   { id: 'prompt', name: 'Prompts', url: '/prompt/', category: 'public', icon: '🤖' },
