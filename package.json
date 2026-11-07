@@ -6,7 +6,11 @@
     "build:extensions": "tsx src/utils/build-extensions.ts",
     "images:optimize": "node src/utils/resize-blog-images.js",
     "dev": "npm run images:optimize && npm run build:extensions && astro dev",
+    "dev:personal": "cross-env SITE_TARGET=personal npm run dev -- --port 4321",
+    "dev:company": "cross-env SITE_TARGET=company npm run dev -- --port 4322",
     "build": "npm run images:optimize && npm run build:extensions && astro build",
+    "build:personal": "cross-env SITE_TARGET=personal npm run build",
+    "build:company": "cross-env SITE_TARGET=company npm run build",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -31,6 +35,7 @@
     "@astrojs/tailwind": "^6.0.2",
     "@types/archiver": "^7.0.0",
     "@types/node": "^25.0.10",
+    "cross-env": "^10.1.0",
     "tailwindcss": "^3.4.19",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"

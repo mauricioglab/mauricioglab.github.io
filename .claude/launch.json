@@ -4,8 +4,14 @@
     {
       "name": "spa-depot-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": ["run", "dev:personal"],
       "port": 4321
+    },
+    {
+      "name": "spa-depot-dev-company",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev:company"],
+      "port": 4322
     }
   ]
 }
