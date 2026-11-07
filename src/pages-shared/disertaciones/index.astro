@@ -5,6 +5,7 @@ import PublicNav from '@components/shared/PublicNav.astro';
 import TimelineItem from '../../components/disertaciones/TimelineItem.astro';
 import { getDisertaciones } from '../../utils/disertaciones';
 import { SITE_CONFIG } from '@data/config';
+import { homeHref } from '@data/site-target';
 
 export const prerender = true;
 
@@ -113,7 +114,7 @@ const canonical = new URL('/disertaciones/', Astro.site).toString();
 
   <header class="dz-header">
     <div class="row">
-      <a class="dz-brand" href="/es/servicios/">Mauricio González<span class="sub">| Disertaciones</span></a>
+      <a class="dz-brand" href={homeHref()}>Mauricio González<span class="sub">| Disertaciones</span></a>
       <div class="dz-nav">
         <PublicNav current="disertaciones" lang="es" />
       </div>

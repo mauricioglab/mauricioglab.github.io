@@ -36,16 +36,14 @@ export const pagesRegistry: PageEntry[] = [
   { id: 'videos', name: 'Videos', url: '/videos/', category: 'public', icon: '🎬' },
   { id: 'extensions', name: 'Extensiones', url: '/extensions/', category: 'public', icon: '🧩' },
   { id: 'urls', name: 'URLs Útiles', url: '/urls/', category: 'public', icon: '🔗' },
-  { id: 'noticias', name: 'Noticias IA', url: '/noticias/', category: 'public', icon: '📰' },
   { id: 'main', name: 'Main (Retro)', url: '/main/', category: 'public', icon: '🏠' },
-  { id: 'floppy', name: 'Disquete 3½', url: '/floppy/', category: 'public', icon: '💾' },
 
   // =====================
   // LANDINGS (solo en admin, solo español)
   // =====================
   { id: 'portfolio', name: 'Portfolio', url: '/es/portfolio/', category: 'landing', icon: '📁', active: true },
-  { id: 'servicios', name: 'Servicios', url: '/es/servicios/', category: 'landing', icon: '🤝', active: true },
-  { id: 'velocity', name: 'Velocity', url: '/es/velocity/', category: 'landing', icon: '🤝', active: true },
+  { id: 'servicios', name: 'Servicios', url: 'https://velocitylab.com.ar/es/servicios/', category: 'landing', icon: '🤝', active: true },
+  { id: 'velocity', name: 'Velocity', url: 'https://velocitylab.com.ar/es/velocity/', category: 'landing', icon: '🤝', active: true },
   { id: 'cv', name: 'CV', url: '/es/cv/', category: 'landing', icon: '📄', active: false },
   { id: 'cv-iris', name: 'CV Iris', url: '/es/cv/iris/', category: 'landing', icon: '📄', active: false },
 

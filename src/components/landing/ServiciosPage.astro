@@ -2,7 +2,6 @@
 import BaseTailwind from '@layouts/BaseTailwind.astro';
 import ContactModal from '@components/landing/ContactModal.astro';
 import { SITE_CONFIG } from '@data/config';
-import { getAlternateUrl } from '@i18n/index';
 import { type Lang, useTranslations } from '@i18n/index';
 import SeoHead from '@components/shared/SeoHead.astro';
 import PublicNav from '@components/shared/PublicNav.astro';
@@ -15,8 +14,9 @@ interface Props {
 
 const { lang, canonical: canonicalOverride } = Astro.props;
 const content = await useTranslations<any>(lang, 'services');
-const altPath = getAlternateUrl(Astro.url, lang);
 const altLang = lang === 'es' ? 'en' : 'es';
+// Siempre al servicios del otro idioma: esta página también se sirve en "/" (home de empresa).
+const altPath = `/${altLang}/servicios/`;
 const canonical = canonicalOverride ?? new URL(Astro.url.pathname, Astro.site).toString();
 
 const cards = content.services.map((s: any) => ({

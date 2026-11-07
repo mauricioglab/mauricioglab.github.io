@@ -40,9 +40,9 @@ import { slug, FUNC_BY_CANONICAL } from '../../data/caso-arquitectura/moduleMap'
               {a.incluye.map(t => <li>{t}</li>)}
             </ul>
             <div class="cross-links">
-              <a href={`/requerimientos#${slug(a.modulo)}`} class="text-teal-deep font-semibold">Ver requerimientos →</a>
+              <a href={`/caso-arquitectura/requerimientos#${slug(a.modulo)}`} class="text-teal-deep font-semibold">Ver requerimientos →</a>
               {funcs.map(f => (
-                <a href={`/funcionalidades#${slug(f)}`} class="text-teal-deep font-semibold">Ver funcionalidades: {f} →</a>
+                <a href={`/caso-arquitectura/funcionalidades#${slug(f)}`} class="text-teal-deep font-semibold">Ver funcionalidades: {f} →</a>
               ))}
             </div>
           </div>

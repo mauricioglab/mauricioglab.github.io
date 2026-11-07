@@ -1,4 +1,6 @@
 ---
+import { isCompanyBuild, COMPANY_ORIGIN } from '../../data/site-target';
+
 type PageId = 'servicios' | 'portfolio' | 'disertaciones' | 'blog' | 'zona-lab';
 
 interface Props {
@@ -8,13 +10,20 @@ interface Props {
 
 const { current, lang = 'es' } = Astro.props;
 
-const items: { id: PageId; href: string; label: string }[] = [
-  { id: 'servicios', href: `/${lang}/servicios/`, label: lang === 'es' ? 'Servicios' : 'Services' },
+// Servicios solo existe en el dominio empresa; Blog y Zona Lab solo en el personal.
+const allItems: { id: PageId; href: string; label: string; only?: 'company' | 'personal' }[] = [
+  {
+    id: 'servicios',
+    href: isCompanyBuild ? `/${lang}/servicios/` : `${COMPANY_ORIGIN}/${lang}/servicios/`,
+    label: lang === 'es' ? 'Servicios' : 'Services',
+  },
   { id: 'portfolio', href: `/${lang}/portfolio/`, label: 'Portfolio' },
   { id: 'disertaciones', href: '/disertaciones/', label: lang === 'es' ? 'Disertaciones' : 'Talks' },
-  { id: 'blog', href: '/blog/', label: 'Parece que fue ayer (Blog)' },
-  { id: 'zona-lab', href: '/zona-lab/', label: 'Zona Lab' },
+  { id: 'blog', href: '/blog/', label: 'Parece que fue ayer (Blog)', only: 'personal' },
+  { id: 'zona-lab', href: '/zona-lab/', label: 'Zona Lab', only: 'personal' },
 ];
+
+const items = allItems.filter((item) => !item.only || (item.only === 'company') === isCompanyBuild);
 ---
 
 <nav class="public-nav" aria-label="Sitio">

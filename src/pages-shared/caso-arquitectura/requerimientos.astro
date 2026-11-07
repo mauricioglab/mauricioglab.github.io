@@ -93,15 +93,15 @@ function prioridadDe(modulo: string, id: string) {
         const funcs = FUNC_BY_CANONICAL[m.modulo] ?? [];
         return (
           <div class="trace-map-row">
-            <a href={`/impulsos#${slug(m.necesidad_origen)}`} class="tag trace-tag-muted">{m.necesidad_origen}</a>
+            <a href={`/caso-arquitectura/impulsos#${slug(m.necesidad_origen)}`} class="tag trace-tag-muted">{m.necesidad_origen}</a>
             <span class="trace-arrow" aria-hidden="true">→</span>
-            <a href={`/requerimientos#${slug(m.modulo)}`} class="tag">{m.modulo}</a>
+            <a href={`/caso-arquitectura/requerimientos#${slug(m.modulo)}`} class="tag">{m.modulo}</a>
             <span class="trace-arrow" aria-hidden="true">→</span>
-            <a href={`/objetivos-alcance#${slug(m.modulo)}`} class="tag">{m.modulo}</a>
+            <a href={`/caso-arquitectura/objetivos-alcance#${slug(m.modulo)}`} class="tag">{m.modulo}</a>
             <span class="trace-arrow" aria-hidden="true">→</span>
             <span class="trace-map-func">
               {funcs.length > 0
-                ? funcs.map(f => <a href={`/funcionalidades#${slug(f)}`} class="tag">{f}</a>)
+                ? funcs.map(f => <a href={`/caso-arquitectura/funcionalidades#${slug(f)}`} class="tag">{f}</a>)
                 : <span class="trace-tag-muted">sin tarjeta propia en Funcionalidades</span>}
             </span>
           </div>
@@ -168,9 +168,9 @@ function prioridadDe(modulo: string, id: string) {
               ))}
             </div>
             <div class="cross-links">
-              <a href={`/objetivos-alcance#${slug(m.modulo)}`} class="text-teal-deep font-semibold">Ver alcance →</a>
+              <a href={`/caso-arquitectura/objetivos-alcance#${slug(m.modulo)}`} class="text-teal-deep font-semibold">Ver alcance →</a>
               {funcs.map(f => (
-                <a href={`/funcionalidades#${slug(f)}`} class="text-teal-deep font-semibold">Ver funcionalidades: {f} →</a>
+                <a href={`/caso-arquitectura/funcionalidades#${slug(f)}`} class="text-teal-deep font-semibold">Ver funcionalidades: {f} →</a>
               ))}
             </div>
           </Reveal>
