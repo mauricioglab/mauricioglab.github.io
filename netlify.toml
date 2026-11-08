@@ -144,3 +144,9 @@
   to = "/es/disertaciones/"
   status = 301
   force = true
+
+[[redirects]]
+  from = "/caso-arquitectura/*"
+  to = "https://mauricioglab.github.io/caso-arquitectura/:splat"
+  status = 301
+  force = true

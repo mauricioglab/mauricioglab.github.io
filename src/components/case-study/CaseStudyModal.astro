@@ -4,12 +4,14 @@ import { type Lang } from '../../i18n';
 interface Props {
   lang: Lang;
   cases: Record<string, any>;
+  company?: { viewFull: string; contact: string; demo: string; code: string } | null;
   labels: { title: string; viewFull: string; contact: string; close: string; problem: string; solution: string };
 }
 
-const { lang, cases, labels } = Astro.props;
+const { lang, cases, labels, company = null } = Astro.props;
 
 const casesJson = JSON.stringify(cases);
+const companyJson = JSON.stringify(company);
 ---
 
 <div id="caseModal" class="cs-modal" role="dialog" aria-modal="true" aria-labelledby="csModalTitle" hidden>
@@ -32,15 +34,29 @@ const casesJson = JSON.stringify(cases);
       <div class="cs-metrics" id="csMetrics"></div>
       <div class="cs-stack" id="csStack"></div>
       <div class="cs-actions">
-        <a class="cs-full" id="csFullLink" href="#">{labels.viewFull}</a>
-        <button class="cs-contact" data-contact-trigger>{labels.contact}</button>
+        {company ? (
+          <>
+            <button class="cs-full" data-contact-trigger>{company.contact}</button>
+            <a class="cs-contact cs-link-demo" id="csDemoLink" href="#" target="_blank" rel="noopener" hidden>{company.demo}</a>
+            <a class="cs-contact cs-link-code" id="csCodeLink" href="#" target="_blank" rel="noopener" hidden>{company.code}</a>
+            <a class="cs-secondary" id="csFullLink" href="#" target="_blank" rel="noopener">{company.viewFull}</a>
+          </>
+        ) : (
+          <>
+            <a class="cs-full" id="csFullLink" href="#">{labels.viewFull}</a>
+            <button class="cs-contact" data-contact-trigger>{labels.contact}</button>
+          </>
+        )}
       </div>
     </div>
   </div>
 </div>
 
-<script is:inline define:vars={{ casesJson }}>
+<script is:inline define:vars={{ casesJson, companyJson }}>
   var cases = JSON.parse(casesJson);
+  var isCompany = JSON.parse(companyJson) !== null;
+  var demoLink = document.getElementById('csDemoLink');
+  var codeLink = document.getElementById('csCodeLink');
   var modal = document.getElementById('caseModal');
   var badge = document.getElementById('csModalBadge');
   var title = document.getElementById('csModalTitle');
@@ -83,6 +99,14 @@ const casesJson = JSON.stringify(cases);
     });
 
     fullLink.href = fullUrl || '#';
+    if (isCompany) {
+      fullLink.hidden = !fullUrl;
+      demoLink.hidden = !c.demo;
+      if (c.demo) demoLink.href = c.demo;
+      codeLink.hidden = !c.code;
+      if (c.code) codeLink.href = c.code;
+      history.replaceState(null, '', '#' + id);
+    }
 
     lastFocused = document.activeElement;
     modal.hidden = false;
@@ -93,7 +117,14 @@ const casesJson = JSON.stringify(cases);
   function closeModal() {
     modal.hidden = true;
     document.body.style.overflow = '';
+    if (isCompany && location.hash) history.replaceState(null, '', location.pathname + location.search);
     if (lastFocused) lastFocused.focus();
+  }
+
+  // Empresa: un caso se puede compartir y abrir directo con #<id>.
+  if (isCompany && location.hash.length > 1) {
+    var hashCard = document.querySelector('.pf-card[data-case="' + decodeURIComponent(location.hash.slice(1)) + '"]');
+    if (hashCard) openModal(hashCard.getAttribute('data-case'), hashCard.getAttribute('data-case-full'));
   }
 
   window.openCaseModal = openModal;
@@ -147,9 +178,13 @@ const casesJson = JSON.stringify(cases);
   .cs-stack { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
   .cs-tag { font-family: 'Montserrat', sans-serif; font-size: .7rem; font-weight: 600; color: #082D3A; background: #E6FAFC; padding: 4px 10px; border-radius: 999px; }
   .cs-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-  .cs-full { font-family: 'Montserrat', sans-serif; font-size: .88rem; font-weight: 600; color: #fff; background: #082D3A; padding: 11px 20px; border-radius: 999px; text-decoration: none; }
+  .cs-full { font-family: 'Montserrat', sans-serif; font-size: .88rem; font-weight: 600; color: #fff; background: #082D3A; padding: 11px 20px; border-radius: 999px; text-decoration: none; border: none; cursor: pointer; display: inline-block; }
   .cs-full:hover { opacity: .9; }
+  a.cs-contact { text-decoration: none; display: inline-block; }
   .cs-contact { font-family: 'Montserrat', sans-serif; font-size: .88rem; font-weight: 600; color: #082D3A; background: transparent; border: 1.5px solid #082D3A; padding: 10px 18px; border-radius: 999px; cursor: pointer; }
+  .cs-secondary { font-family: 'Montserrat', sans-serif; font-size: .82rem; font-weight: 600; color: #5c6785; text-decoration: underline; text-underline-offset: 3px; padding: 6px 4px; }
+  .cs-secondary:hover { color: #082D3A; }
+  .cs-modal [hidden] { display: none; }
   .cs-contact:hover { background: #082D3A; color: #fff; }
   @media (max-width: 560px) {
     .cs-cols { grid-template-columns: 1fr; }

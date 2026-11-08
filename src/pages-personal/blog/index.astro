@@ -17,6 +17,7 @@ const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
   title={`${SITE_CONFIG.blogName} | ${SITE_CONFIG.siteName}`}
   description="Artículos y reflexiones sobre inteligencia artificial, tecnología, filosofía y libros."
   blogSubtitle="Artículos y pensamientos"
+  titleAsH1
 >
   {posts.length === 0 ? (
     <p class="text-center text-[#5c6785]">No hay posts disponibles.</p>

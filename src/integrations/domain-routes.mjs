@@ -1,4 +1,5 @@
-import { readdirSync, statSync } from "node:fs";
+import { readdirSync, statSync, rmSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { join, relative, extname, basename, dirname } from "node:path";
 
 const ROUTE_EXTENSIONS = new Set([".astro", ".ts", ".js"]);
@@ -42,6 +43,15 @@ export default function domainRoutes(target) {
   return {
     name: "domain-routes",
     hooks: {
+      // El dominio de la empresa no sirve herramientas ni descargas del personal:
+      // public/ se copia entero, así que se borra lo que no le corresponde.
+      "astro:build:done": ({ dir }) => {
+        if (target !== "company") return;
+        const out = fileURLToPath(dir);
+        for (const d of ["vsagenda", "prompt", "calculadora", "extensions", "entrenamiento", "downloads", "lib", "scripts", "blog"]) {
+          rmSync(join(out, d), { recursive: true, force: true });
+        }
+      },
       "astro:config:setup": ({ injectRoute, config }) => {
         for (const dir of dirs) {
           const absDir = new URL(dir + "/", config.root).pathname.replace(/^\/([A-Za-z]:)/, "$1");

@@ -9,6 +9,8 @@ export const GET: APIRoute = ({ site }) =>
       'Disallow: /movimiento/',
       'Disallow: /vsagenda/',
       'Disallow: /workspace-mapper/',
+      'Disallow: /es/cv/',
+      'Disallow: /en/cv/',
       '',
       `Sitemap: ${new URL('sitemap-index.xml', site)}`,
       '',

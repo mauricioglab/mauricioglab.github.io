@@ -27,12 +27,12 @@
     },
     "personal": [
       {
-        "badge": "Personal project",
+        "badge": "Data science",
         "title": "2026 World Cup Prediction",
         "description": "Elo + Poisson + Monte Carlo model, validated against the real tournament (22/32 bracket matches correct). Python, Pandas, Streamlit."
       },
       {
-        "badge": "Personal project",
+        "badge": "Data science",
         "title": "Student Dropout Prediction",
         "description": "Classification (logistic regression vs. Random Forest), evaluated with recall/AUC and a business trade-off on the decision threshold. Python, scikit-learn."
       }

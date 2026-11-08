@@ -27,12 +27,12 @@
     },
     "personal": [
       {
-        "badge": "Proyecto personal",
+        "badge": "Ciencia de datos",
         "title": "Predicción Mundial 2026",
         "description": "Modelo Elo + Poisson + Monte Carlo, validado contra el torneo real (22/32 aciertos de bracket). Python, Pandas, Streamlit."
       },
       {
-        "badge": "Proyecto personal",
+        "badge": "Ciencia de datos",
         "title": "Predicción de Abandono Estudiantil",
         "description": "Clasificación (regresión logística vs. Random Forest), evaluación con recall/AUC y trade-off de negocio en el umbral de decisión. Python, scikit-learn."
       }

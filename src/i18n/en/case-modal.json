@@ -143,7 +143,7 @@
     },
     "mundial-2026": {
       "title": "2026 World Cup prediction model",
-      "badge": "Personal project · Data science",
+      "badge": "Data science",
       "problem": "Estimate each team's probability with an honest model, using no information after the tournament started.",
       "solution": "Elo rating + Poisson + Monte Carlo simulation, validated against the real tournament.",
       "metrics": [
@@ -170,7 +170,7 @@
     },
     "abandono-estudiantil": {
       "title": "Student dropout prediction",
-      "badge": "Personal project · Data science",
+      "badge": "Data science",
       "problem": "Prioritize tutoring with limited resources: who to intervene with first and how early.",
       "solution": "Logistic regression vs. Random Forest, with the decision threshold as a business dial and a prioritized list.",
       "metrics": [
@@ -197,7 +197,7 @@
     },
     "caso-arquitectura": {
       "title": "Case Study: Systems Analyst",
-      "badge": "Education · Systems analysis",
+      "badge": "Systems analysis",
       "problem": "Full systems-analysis cycle for an architecture firm: requirements gathering, modeling and methodology.",
       "solution": "14 navigable chapters with UML, ERD, DFD and 13 documented Scrum sprints.",
       "metrics": [
@@ -220,7 +220,33 @@
         "DFD",
         "Event Storming",
         "Scrum"
-      ]
+      ],
+      "company": {
+        "title": "Systems analysis and design for an architecture firm",
+        "problem": "Define what a system must do for an architecture firm before building it: requirements gathering, modeling and methodology.",
+        "solution": "End-to-end documented analysis: requirements, UML models, ERD and DFD, and work planning in Scrum sprints.",
+        "metrics": [
+          {
+            "value": "14",
+            "label": "Documented chapters"
+          },
+          {
+            "value": "UML · ERD · DFD",
+            "label": "System models"
+          },
+          {
+            "value": "Scrum",
+            "label": "Sprint planning"
+          }
+        ]
+      }
     }
+  },
+  "company": {
+    "viewFull": "Full technical detail ↗",
+    "contact": "Let's talk about a similar project",
+    "demo": "View demo ↗",
+    "code": "Code ↗",
+    "own": "Live demo"
   }
 }

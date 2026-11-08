@@ -24,12 +24,22 @@ const categoryLabels: Record<string, string> = {
   desarrollo: lang === 'es' ? 'Desarrollo y Arquitectura' : 'Development & Architecture',
   analisis: lang === 'es' ? 'Análisis de Sistemas' : 'Systems Analysis',
 };
-const categoryOrder = ['ia', 'desarrollo', 'analisis'] as const;
+// En la empresa los grupos se nombran por servicio (no por "formación") y Mundial 2026 se muestra
+// como análisis de datos. El dominio personal conserva su agrupación.
+const companyLabels: Record<string, string> = {
+  desarrollo: lang === 'es' ? 'Desarrollo de software' : 'Software development',
+  ia: lang === 'es' ? 'IA y automatización' : 'AI & automation',
+  analisis: lang === 'es' ? 'Análisis de datos y sistemas' : 'Data & systems analysis',
+};
+const companyCategoryOverride: Record<string, 'ia' | 'desarrollo' | 'analisis'> = { 'mundial-2026': 'analisis' };
+const categoryOrder = isCompanyBuild ? (['desarrollo', 'ia', 'analisis'] as const) : (['ia', 'desarrollo', 'analisis'] as const);
+const categoryOf = (p: { id: string; category?: string }) =>
+  (isCompanyBuild && companyCategoryOverride[p.id]) || p.category || 'ia';
 const projectGroups = categoryOrder
   .map((cat) => ({
     category: cat,
-    label: categoryLabels[cat],
-    items: projects.filter((p) => (p.category || 'ia') === cat),
+    label: isCompanyBuild ? companyLabels[cat] : categoryLabels[cat],
+    items: projects.filter((p) => categoryOf(p) === cat),
   }))
   .filter((g) => g.items.length > 0);
 
@@ -73,7 +83,20 @@ const modalLabels = {
   problem: modalT.problem,
   solution: modalT.solution,
 };
-const modalCases = modalT.cases;
+// En la empresa se mezclan los textos `company` de cada caso y se agregan los links de demo/código.
+const modalCases: Record<string, any> = {};
+for (const project of projects) {
+  const base = modalT.cases[project.id];
+  if (!base) continue;
+  const { company: companyOverride, ...rest } = base;
+  const merged = isCompanyBuild ? { ...rest, ...(companyOverride || {}) } : rest;
+  if (isCompanyBuild) {
+    const demo = project.links.demo;
+    merged.demo = demo && /^https?:/.test(demo) ? demo : null;
+    merged.code = project.links.github || null;
+  }
+  modalCases[project.id] = merged;
+}
 
 const caseStudyUrls: Record<string, string | undefined> = {
   'validacion-biometrica': '/proyectos/validacion-biometrica',
@@ -90,7 +113,7 @@ const caseStudyUrls: Record<string, string | undefined> = {
 const singleLanguageCaseStudies = new Set(['caso-arquitectura']);
 
 // Los casos /proyectos/<id> viven solo en el dominio personal (detalle técnico completo);
-// caso-arquitectura es compartido y se queda relativo en los dos dominios.
+// caso-arquitectura también es solo del dominio personal (en la empresa se enlaza al origen personal).
 
 // Stack técnico: cada tecnología con su slug oficial de Simple Icons (isologotipo)
 // Los slugs sin logo se marcan con "" (chip de solo texto)
@@ -230,6 +253,10 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
       font-family: var(--font-head); font-size: .7rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
       color: #d4af37; background: #082d3a; border: 1px solid #082d3a; padding: 5px 12px; border-radius: 999px; width: fit-content;
     }
+    .pf-card .badge-own {
+      font-family: var(--font-head); font-size: .68rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--teal-deep); background: #e6fafc; padding: 4px 10px; border-radius: 999px; width: fit-content;
+    }
     @media (max-width: 820px) {
       .pf-card--featured { flex-direction: column; align-items: flex-start; }
     }
@@ -309,13 +336,15 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
                 const caseStudyPath = caseStudyUrls[project.id];
                 const caseStudyUrl = caseStudyPath
                   ? (singleLanguageCaseStudies.has(project.id)
-                      ? caseStudyPath
+                      ? (isCompanyBuild ? `${PERSONAL_ORIGIN}${caseStudyPath}` : caseStudyPath)
                       : (isCompanyBuild ? `${PERSONAL_ORIGIN}/${lang}${caseStudyPath}` : `/${lang}${caseStudyPath}`))
                   : null;
-                const isFeaturedCard = project.category === 'analisis';
+                const isFeaturedCard = !isCompanyBuild && project.category === 'analisis';
+                const hasLiveDemo = isCompanyBuild && /^https?:/.test(project.links.demo || '');
                 return (
                   <div class:list={['pf-card', isFeaturedCard && 'pf-card--featured']} data-case={project.id} data-case-full={caseStudyUrl || ''} role="button" tabindex="0" aria-haspopup="dialog">
                     <div class="body">
+                      {hasLiveDemo && <span class="badge-own">{modalT.company.own}</span>}
                       {isFeaturedCard && <span class="badge-featured">{lang === 'es' ? 'Caso de estudio · 14 capítulos' : 'Case study · 14 chapters'}</span>}
                       <h3>{title}</h3>
                       <p>{shortDescription}</p>
@@ -373,7 +402,7 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
     </section>
   </div>
 
-  <CaseStudyModal lang={lang} cases={modalCases} labels={modalLabels} />
+  <CaseStudyModal lang={lang} cases={modalCases} labels={modalLabels} company={isCompanyBuild ? modalT.company : null} />
 
   <script is:inline>
     document.addEventListener('click', function (e) {

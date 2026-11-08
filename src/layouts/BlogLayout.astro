@@ -13,6 +13,7 @@ interface Props {
   blogTitle?: string;
   blogSubtitle?: string;
   lang?: string;
+  titleAsH1?: boolean;
 }
 
 const {
@@ -22,7 +23,9 @@ const {
   blogTitle = SITE_CONFIG.blogName,
   blogSubtitle = "Artículos y pensamientos",
   lang = "es",
+  titleAsH1 = false,
 } = Astro.props;
+const TitleTag = titleAsH1 ? "h1" : "div";
 const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
 
 // Get all categories dynamically from posts
@@ -142,14 +145,14 @@ const allCategories = Array.from(
         </div>
         <div class="wrap max-w-[1140px] mx-auto px-5 relative z-10">
           <div class="title-area mx-auto">
-            <h1
+            <TitleTag
               class="site-title text-[28px] md:text-4xl font-semibold tracking-tight text-white m-0"
             >
               <a
                 href={`${normalizedBase}blog/`}
                 class="text-white hover:text-vcl-cian">{blogTitle}</a
               >
-            </h1>
+            </TitleTag>
             <p
               class="site-description mt-2 text-base font-normal italic text-vcl-cian/80 m-0"
             >

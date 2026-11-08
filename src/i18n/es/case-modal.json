@@ -143,7 +143,7 @@
     },
     "mundial-2026": {
       "title": "Modelo predictivo del Mundial 2026",
-      "badge": "Proyecto personal · Ciencia de datos",
+      "badge": "Ciencia de datos",
       "problem": "Estimar la probabilidad de cada selección con un modelo honesto, sin usar información posterior al torneo.",
       "solution": "Rating Elo + Poisson + simulación Monte Carlo, validado contra el torneo real.",
       "metrics": [
@@ -170,7 +170,7 @@
     },
     "abandono-estudiantil": {
       "title": "Predicción de abandono estudiantil",
-      "badge": "Proyecto personal · Ciencia de datos",
+      "badge": "Ciencia de datos",
       "problem": "Priorizar tutorías con recursos limitados: a quién intervenir primero y con qué anticipación.",
       "solution": "Regresión logística vs. Random Forest, con umbral de decisión como dial de negocio y lista priorizada.",
       "metrics": [
@@ -197,7 +197,7 @@
     },
     "caso-arquitectura": {
       "title": "Caso de Estudio: Analista de Sistemas",
-      "badge": "Formación · Análisis de sistemas",
+      "badge": "Análisis de sistemas",
       "problem": "Ciclo completo de análisis de sistemas para un estudio de arquitectura: relevamiento, modelado y metodología.",
       "solution": "14 capítulos navegables con UML, DER, DFD y 13 sprints Scrum documentados.",
       "metrics": [
@@ -220,7 +220,33 @@
         "DFD",
         "Event Storming",
         "Scrum"
-      ]
+      ],
+      "company": {
+        "title": "Análisis y diseño de sistemas para un estudio de arquitectura",
+        "problem": "Definir qué debe hacer un sistema para un estudio de arquitectura antes de construirlo: relevamiento, modelado y metodología.",
+        "solution": "Análisis documentado de punta a punta: requerimientos, modelos UML, DER y DFD, y planificación del trabajo en sprints Scrum.",
+        "metrics": [
+          {
+            "value": "14",
+            "label": "Capítulos documentados"
+          },
+          {
+            "value": "UML · DER · DFD",
+            "label": "Modelos del sistema"
+          },
+          {
+            "value": "Scrum",
+            "label": "Planificación en sprints"
+          }
+        ]
+      }
     }
+  },
+  "company": {
+    "viewFull": "Detalle técnico completo ↗",
+    "contact": "Conversemos sobre un proyecto similar",
+    "demo": "Ver demo ↗",
+    "code": "Código ↗",
+    "own": "Demo en vivo"
   }
 }
