@@ -33,37 +33,84 @@ if (!isOfficeDoc) {
 const iframeSrc = isOfficeDoc ? `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}` : url;
 ---
 
-<div class="mb-8 rounded-xl overflow-hidden border border-[#e4e8f0] shadow-sm">
-  <div class="relative w-full aspect-video bg-slate-100">
-    {
-      htmlContent ? (
-        <iframe
-          srcdoc={htmlContent}
-          class="absolute inset-0 w-full h-full"
-          frameborder="0"
-          allowfullscreen
-          sandbox="allow-scripts allow-popups"
-        />
-      ) : (
-        <iframe
-          src={iframeSrc}
-          class="absolute inset-0 w-full h-full"
-          frameborder="0"
-          allowfullscreen
-          loading="lazy"
-          sandbox="allow-scripts allow-same-origin allow-popups"
-        />
-      )
-    }
-  </div>
-  <div class="px-4 py-2 bg-[#f7f9fc] text-right">
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener"
-      class="text-xs font-semibold text-vcl-turquesa hover:underline"
-    >
-      Abrir en una pestaña nueva ↗
-    </a>
-  </div>
+<div class="mb-8 rounded-xl overflow-hidden border border-[#e4e8f0] shadow-sm" data-presentation>
+  {
+    htmlContent ? (
+      <>
+        {/* Se renderiza a 1280x720 (layout de escritorio del deck) y se escala al ancho disponible. */}
+        <div class="pv-stage relative w-full aspect-video overflow-hidden bg-[#0d1422]" data-stage>
+          <iframe
+            srcdoc={htmlContent}
+            title="Presentación"
+            class="absolute top-0 left-0 border-0"
+            style="width:1280px;height:720px;transform-origin:0 0;"
+            allowfullscreen
+            sandbox="allow-scripts allow-popups"
+            data-frame
+          />
+        </div>
+        <div class="px-4 py-2 bg-[#f7f9fc] text-right">
+          <button
+            type="button"
+            data-fullscreen
+            class="text-xs font-semibold text-vcl-turquesa hover:underline"
+          >
+            Pantalla completa ⛶
+          </button>
+        </div>
+      </>
+    ) : (
+      <>
+        <div class="relative w-full aspect-video bg-slate-100">
+          <iframe
+            src={iframeSrc}
+            title="Presentación"
+            class="absolute inset-0 w-full h-full"
+            frameborder="0"
+            allowfullscreen
+            loading="lazy"
+            sandbox="allow-scripts allow-same-origin allow-popups"
+          />
+        </div>
+        <div class="px-4 py-2 bg-[#f7f9fc] text-right">
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener"
+            class="text-xs font-semibold text-vcl-turquesa hover:underline"
+          >
+            Abrir en una pestaña nueva ↗
+          </a>
+        </div>
+      </>
+    )
+  }
 </div>
+
+<script>
+  const DESIGN_W = 1280;
+  const DESIGN_H = 720;
+
+  document.querySelectorAll<HTMLElement>('[data-presentation]').forEach((root) => {
+    const stage = root.querySelector<HTMLElement>('[data-stage]');
+    const frame = root.querySelector<HTMLElement>('[data-frame]');
+    if (!stage || !frame) return;
+
+    const fit = () => {
+      const w = stage.clientWidth;
+      const h = stage.clientHeight;
+      const scale = Math.min(w / DESIGN_W, h / DESIGN_H);
+      const x = (w - DESIGN_W * scale) / 2;
+      const y = (h - DESIGN_H * scale) / 2;
+      frame.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+    };
+
+    new ResizeObserver(fit).observe(stage);
+    fit();
+
+    root.querySelector('[data-fullscreen]')?.addEventListener('click', () => {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else stage.requestFullscreen?.();
+    });
+  });
+</script>
