@@ -63,6 +63,7 @@ interface Disertacion {
   cover_url?: string;
   certificate_url?: string;
   gallery_urls?: string[];
+  display_photos?: string[];
 }
 
 interface OpHistoryEntry {
@@ -97,6 +98,7 @@ export default function DisertacionesAdminPreact() {
   const [certificateUrl, setCertificateUrl] = useState('');
   const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+  const [displayPhotos, setDisplayPhotos] = useState<string[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [disertaciones, setDisertaciones] = useState<Disertacion[]>([]);
   const [opHistory, setOpHistory] = useState<OpHistoryEntry[]>([]);
@@ -121,6 +123,7 @@ export default function DisertacionesAdminPreact() {
     setCertificateUrl('');
     setGalleryUrls([]);
     setGalleryFiles([]);
+    setDisplayPhotos([]);
     setPptFile(null);
     setCertFile(null);
     setCoverFile(null);
@@ -180,7 +183,41 @@ export default function DisertacionesAdminPreact() {
   }
 
   function removeGallery(index: number) {
+    const removed = galleryUrls[index];
     setGalleryUrls((g) => g.filter((_, i) => i !== index));
+    if (removed) setDisplayPhotos((d) => d.filter((u) => u !== removed));
+  }
+
+  function removeSlide(index: number) {
+    const removed = slideUrls[index];
+    setSlideUrls((s) => s.filter((_, i) => i !== index));
+    if (selectedCoverIndex === index) {
+      setSelectedCoverIndex(-1);
+      setCoverUrl('');
+    } else if (selectedCoverIndex > index) {
+      setSelectedCoverIndex((i) => i - 1);
+    }
+    if (removed) setDisplayPhotos((d) => d.filter((u) => u !== removed));
+  }
+
+  function quitarCertificado() {
+    if (certificateUrl) setDisplayPhotos((d) => d.filter((u) => u !== certificateUrl));
+    setCertificateUrl('');
+    setCertFile(null);
+  }
+
+  function quitarPortada() {
+    setCoverUrl('');
+    setSelectedCoverIndex(-1);
+    setCoverFile(null);
+  }
+
+  function toggleDisplayPhoto(url: string) {
+    setDisplayPhotos((d) => {
+      if (d.includes(url)) return d.filter((u) => u !== url);
+      if (d.length >= 2) return d;
+      return [...d, url];
+    });
   }
 
   function setCover(index: number) {
@@ -408,6 +445,7 @@ export default function DisertacionesAdminPreact() {
         certificate_url: certificateUrl || null,
         slides_urls: slideUrls,
         gallery_urls: galleryUrls,
+        display_photos: displayPhotos,
         draft,
       };
       if (editingId) {
@@ -459,6 +497,7 @@ export default function DisertacionesAdminPreact() {
     setCertificateUrl(p.certificate_url || '');
     setGalleryUrls(Array.isArray(p.gallery_urls) ? p.gallery_urls : []);
     setGalleryFiles([]);
+    setDisplayPhotos(Array.isArray(p.display_photos) ? p.display_photos : []);
     setSelectedCoverIndex(cover ? slides.indexOf(cover) : -1);
     wizardStep.value = 3;
     wizardOpen.value = true;
@@ -694,6 +733,14 @@ export default function DisertacionesAdminPreact() {
                       }
                     >
                       <img src={s} class="w-full aspect-video object-cover" alt={`Slide ${i + 1}`} />
+                      <button
+                        onClick={() => removeSlide(i)}
+                        type="button"
+                        class="absolute top-1 right-1 text-[10px] font-bold text-white bg-red-600 hover:bg-red-500 rounded px-1.5 py-0.5"
+                        title="Borrar esta diapositiva"
+                      >
+                        ✕
+                      </button>
                       <div class="absolute inset-0 flex items-end justify-between bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition">
                         <button
                           onClick={() => setCover(i)}
@@ -783,8 +830,16 @@ export default function DisertacionesAdminPreact() {
                     {certificateUrl ? 'Reemplazar' : 'Subir'}
                   </button>
                   {certificateUrl && (
-                    <div class="rounded-lg overflow-hidden border border-slate-600">
+                    <div class="relative rounded-lg overflow-hidden border border-slate-600">
                       <img src={certificateUrl} alt="Certificado" class="w-full aspect-video object-cover" />
+                      <button
+                        onClick={quitarCertificado}
+                        type="button"
+                        class="absolute top-1 right-1 text-[10px] font-bold text-white bg-red-600 hover:bg-red-500 rounded px-1.5 py-0.5"
+                        title="Quitar certificado"
+                      >
+                        ✕
+                      </button>
                     </div>
                   )}
                 </div>
@@ -812,8 +867,16 @@ export default function DisertacionesAdminPreact() {
                     {coverUrl ? 'Reemplazar' : 'Subir'}
                   </button>
                   {coverUrl && (
-                    <div class="rounded-lg overflow-hidden border border-slate-600">
+                    <div class="relative rounded-lg overflow-hidden border border-slate-600">
                       <img src={coverUrl} alt="Portada" class="w-full aspect-video object-cover" />
+                      <button
+                        onClick={quitarPortada}
+                        type="button"
+                        class="absolute top-1 right-1 text-[10px] font-bold text-white bg-red-600 hover:bg-red-500 rounded px-1.5 py-0.5"
+                        title="Quitar portada"
+                      >
+                        ✕
+                      </button>
                     </div>
                   )}
                 </div>
@@ -861,6 +924,42 @@ export default function DisertacionesAdminPreact() {
                 </div>
               </div>
             </div>
+
+            {(certificateUrl || galleryUrls.length > 0 || slideUrls.length > 0) && (
+              <div class="border-t border-slate-700 pt-4 space-y-2">
+                <label class="block text-xs font-bold text-slate-300">
+                  Fotos a mostrar en la tarjeta <span class="font-normal text-slate-500">(elegí hasta 2, junto a la portada)</span>
+                </label>
+                <p class="text-[10px] text-slate-500">
+                  Si no elegís ninguna, se usa automáticamente certificado/galería + 1ra diapositiva.
+                </p>
+                <div class="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
+                  {[certificateUrl, ...galleryUrls, ...slideUrls]
+                    .filter((u) => u && u !== coverUrl)
+                    .map((u, i) => {
+                      const order = displayPhotos.indexOf(u);
+                      const selected = order !== -1;
+                      return (
+                        <div
+                          key={`${u}-${i}`}
+                          onClick={() => toggleDisplayPhoto(u)}
+                          class={
+                            'relative rounded-lg overflow-hidden border cursor-pointer ' +
+                            (selected ? 'border-indigo-400 ring-2 ring-indigo-500' : 'border-slate-600 hover:border-slate-400')
+                          }
+                        >
+                          <img src={u} class="w-full aspect-video object-cover" alt="" />
+                          {selected && (
+                            <span class="absolute top-0.5 left-0.5 text-[10px] font-bold text-white bg-indigo-600 rounded-full w-4 h-4 flex items-center justify-center">
+                              {order + 1}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            )}
 
             <div class="flex justify-end">
               <button onClick={() => (wizardStep.value = 4)} class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 text-white text-sm font-bold rounded-lg">

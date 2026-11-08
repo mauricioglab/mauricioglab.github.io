@@ -9,10 +9,15 @@ interface Props {
 
 const { disertacion, lang = 'es' } = Astro.props;
 const cover = disertacion.coverUrl || disertacion.slidesUrls[0];
-const secondary: string[] = [];
-if (disertacion.certificateUrl) secondary.push(disertacion.certificateUrl);
-else secondary.push(...disertacion.galleryUrls);
-secondary.push(...disertacion.slidesUrls.filter((s) => s !== cover));
+let secondary: string[] = [];
+if (disertacion.displayPhotos?.length) {
+  // Selección manual: respeta el orden elegido en el admin.
+  secondary = disertacion.displayPhotos.filter((s) => s && s !== cover);
+} else {
+  if (disertacion.certificateUrl) secondary.push(disertacion.certificateUrl);
+  else secondary.push(...disertacion.galleryUrls);
+  secondary.push(...disertacion.slidesUrls.filter((s) => s !== cover));
+}
 const shown = secondary.filter(Boolean).slice(0, 2);
 const certPhoto = shown[0];
 const slidePhoto = shown[1];

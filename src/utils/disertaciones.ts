@@ -23,6 +23,8 @@ export interface Disertacion {
   slidesUrls: string[];
   /** Fotos adicionales del álbum (se usan si no hay certificado). */
   galleryUrls: string[];
+  /** Hasta 2 fotos elegidas a mano para mostrar junto a la portada en la tarjeta. */
+  displayPhotos: string[];
   draft: boolean;
 }
 
@@ -33,7 +35,7 @@ export async function getDisertaciones(): Promise<Disertacion[]> {
     const { data, error } = await db
       .from('disertaciones')
       .select(
-        'id, slug, title, event_date, event_name, author, categories, description, bullets, cover_url, certificate_url, slides_urls, gallery_urls, draft'
+        'id, slug, title, event_date, event_name, author, categories, description, bullets, cover_url, certificate_url, slides_urls, gallery_urls, display_photos, draft'
       )
       .eq('draft', false)
       .order('event_date', { ascending: false });
@@ -54,6 +56,7 @@ export async function getDisertaciones(): Promise<Disertacion[]> {
           certificateUrl: row.certificate_url ?? undefined,
           slidesUrls: Array.isArray(row.slides_urls) ? row.slides_urls : [],
           galleryUrls: Array.isArray(row.gallery_urls) ? row.gallery_urls : [],
+          displayPhotos: Array.isArray(row.display_photos) ? row.display_photos : [],
           draft: row.draft ?? false,
         });
       }
