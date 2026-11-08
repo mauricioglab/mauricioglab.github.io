@@ -7,21 +7,54 @@ interface Props {
 const { url, type } = Astro.props;
 const normalizedType = (type || '').toLowerCase();
 const isOfficeDoc = normalizedType === 'ppt' || normalizedType === 'pptx';
-const iframeSrc = isOfficeDoc
-  ? `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`
-  : url;
+
+// Para HTML, traemos el contenido en build time y lo embebemos con `srcdoc` en vez de
+// apuntar el iframe a la URL externa: así el navegador nunca navega hacia el storage
+// (que sirve los archivos con Content-Disposition: attachment + X-Frame-Options), solo
+// se lee el contenido una vez acá, como un fetch normal que esos headers no bloquean.
+let htmlContent: string | null = null;
+if (!isOfficeDoc) {
+  try {
+    const res = await fetch(url);
+    if (res.ok) {
+      let html = await res.text();
+      // Para que recursos relativos (si los hubiera) sigan resolviendo contra el storage.
+      const baseTag = `<base href="${url}">`;
+      html = /<head[^>]*>/i.test(html)
+        ? html.replace(/<head([^>]*)>/i, `<head$1>${baseTag}`)
+        : baseTag + html;
+      htmlContent = html;
+    }
+  } catch {
+    htmlContent = null;
+  }
+}
+
+const iframeSrc = isOfficeDoc ? `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}` : url;
 ---
 
 <div class="mb-8 rounded-xl overflow-hidden border border-[#e4e8f0] shadow-sm">
   <div class="relative w-full aspect-video bg-slate-100">
-    <iframe
-      src={iframeSrc}
-      class="absolute inset-0 w-full h-full"
-      frameborder="0"
-      allowfullscreen
-      loading="lazy"
-      sandbox="allow-scripts allow-same-origin allow-popups"
-    ></iframe>
+    {
+      htmlContent ? (
+        <iframe
+          srcdoc={htmlContent}
+          class="absolute inset-0 w-full h-full"
+          frameborder="0"
+          allowfullscreen
+          sandbox="allow-scripts allow-popups"
+        />
+      ) : (
+        <iframe
+          src={iframeSrc}
+          class="absolute inset-0 w-full h-full"
+          frameborder="0"
+          allowfullscreen
+          loading="lazy"
+          sandbox="allow-scripts allow-same-origin allow-popups"
+        />
+      )
+    }
   </div>
   <div class="px-4 py-2 bg-[#f7f9fc] text-right">
     <a
