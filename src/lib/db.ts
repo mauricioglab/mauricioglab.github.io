@@ -333,7 +333,10 @@ export const db = {
             });
             if (!res.ok) throw new Error(`Upload failed: ${res.status}`);
             const json = await res.json();
-            return { data: { path: json.path }, error: null };
+            // Some server versions return `path` already prefixed with the bucket
+            // name; strip it so callers can always build `${bucket}/${path}` safely.
+            const path = String(json.path || '').replace(new RegExp(`^${bucket}/`), '');
+            return { data: { path }, error: null };
           } catch (error) {
             return { data: null, error };
           }
