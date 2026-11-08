@@ -21,6 +21,10 @@ export interface BlogPost {
   coverUrl?: string;
   /** Imagen local (astro:assets) cuando el post es markdown legacy. */
   localImage?: CollectionEntry<'blog'>['data']['image'];
+  /** URL del archivo de presentación (PPT/PPTX o HTML) adjunto al post. */
+  presentationUrl?: string;
+  /** Tipo del archivo adjunto: 'pptx' | 'ppt' | 'html'. */
+  presentationType?: string;
   source: 'local' | 'db';
 }
 
@@ -53,7 +57,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
     const { data, error } = await db
       .from('blogs')
       .select(
-        'slug, title, pub_date, author, categories, topicos, description, body_markdown, cover_url'
+        'slug, title, pub_date, author, categories, topicos, description, body_markdown, cover_url, presentation_url, presentation_type'
       )
       .eq('draft', false);
 
@@ -69,6 +73,8 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
           description: row.description ?? '',
           body: row.body_markdown ?? '',
           coverUrl: row.cover_url ?? undefined,
+          presentationUrl: row.presentation_url ?? undefined,
+          presentationType: row.presentation_type ?? undefined,
           source: 'db',
         });
       }

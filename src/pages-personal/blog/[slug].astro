@@ -1,6 +1,7 @@
 ---
 import BlogLayout from "../../layouts/BlogLayout.astro";
 import ShareButtons from "../../components/blog/ShareButtons.astro";
+import PresentationViewer from "../../components/blog/PresentationViewer.astro";
 import ModoBanner from "../../components/shared/ModoBanner.astro";
 import { calculateReadingTime, getBlogPosts, normalizeBaseUrl, type BlogPost } from "../../utils/blog";
 import { SITE_CONFIG } from "../../data/config";
@@ -135,6 +136,12 @@ const bannerUltimos = ultimosRecursos.map((r) => ({
         )
       }
     </header>
+
+    {
+      post.presentationUrl && (
+        <PresentationViewer url={post.presentationUrl} type={post.presentationType} />
+      )
+    }
 
     <div class="entry-content" itemprop="articleBody">
       <Fragment set:html={contentHtml} />

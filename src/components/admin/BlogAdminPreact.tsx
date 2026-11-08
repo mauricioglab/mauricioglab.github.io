@@ -176,6 +176,8 @@ interface Post {
   body_markdown?: string;
   topicos?: string[];
   cover_url?: string;
+  presentation_url?: string;
+  presentation_type?: string;
 }
 
 interface OpHistoryEntry {
@@ -212,6 +214,9 @@ export default function BlogAdminPreact() {
   const [temasHistory, setTemasHistory] = useState<TemaHistoryEntry[]>([]);
   const [coverPrompt, setCoverPrompt] = useState('');
   const [coverUrl, setCoverUrl] = useState('');
+  const [presentationUrl, setPresentationUrl] = useState('');
+  const [presentationType, setPresentationType] = useState('');
+  const [presentationUploading, setPresentationUploading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [previewHtml, setPreviewHtml] = useState('');
@@ -284,6 +289,8 @@ export default function BlogAdminPreact() {
     setCorreccionPrompt('');
     setCoverUrl('');
     setCoverPrompt('');
+    setPresentationUrl('');
+    setPresentationType('');
     setPropuestas([]);
     setPropuestaIndex(-1);
     setShowPreview(false);
@@ -565,6 +572,34 @@ export default function BlogAdminPreact() {
     }
   }
 
+  async function subirPresentacion(file: File) {
+    const ext = (file.name.split('.').pop() || '').toLowerCase();
+    if (!['ppt', 'pptx', 'html', 'htm'].includes(ext)) {
+      status.value = 'Elegí un archivo .ppt, .pptx o .html.';
+      return;
+    }
+    setPresentationUploading(true);
+    status.value = 'Subiendo presentación…';
+    try {
+      const path = `${slugify(borrador.title || 'post')}-${Date.now()}.${ext}`;
+      const { data, error } = await db.storage.from('blog-files').upload(path, file, { upsert: true });
+      if (error) throw new Error(error.message);
+      const pbUrl = ((import.meta.env.PUBLIC_POCKETBASE_URL as string) || 'https://spa-depot.46-225-2-192.nip.io').replace(/\/$/, '');
+      setPresentationUrl(`${pbUrl}/storage/blog-files/${data.path}`);
+      setPresentationType(ext === 'htm' ? 'html' : ext);
+      status.value = 'Presentación subida.';
+    } catch (e) {
+      status.value = `Error al subir la presentación: ${(e as Error).message}`;
+    } finally {
+      setPresentationUploading(false);
+    }
+  }
+
+  function quitarPresentacion() {
+    setPresentationUrl('');
+    setPresentationType('');
+  }
+
   async function uniqueSlug(base: string) {
     const { data } = await db.from('blogs').select('slug');
     const existing = new Set((data || []).map((r: any) => r.slug));
@@ -590,6 +625,8 @@ export default function BlogAdminPreact() {
         description: borrador.description,
         body_markdown: borrador.bodyMarkdown,
         cover_url: coverUrl || null,
+        presentation_url: presentationUrl || null,
+        presentation_type: presentationUrl ? presentationType : null,
         draft,
       };
       if (editingId) {
@@ -634,6 +671,8 @@ export default function BlogAdminPreact() {
     setCorreccionPrompt('');
     setCoverUrl(p.cover_url || '');
     setCoverPrompt('');
+    setPresentationUrl(p.presentation_url || '');
+    setPresentationType(p.presentation_type || '');
     setShowPreview(false);
     wizardStep.value = 3;
     wizardOpen.value = true;
@@ -982,6 +1021,37 @@ export default function BlogAdminPreact() {
                     dangerouslySetInnerHTML={{ __html: previewHtml }}
                   />
                 )}
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">
+                  Presentación (PPT/PPTX o HTML) <span class="font-normal text-slate-500">(opcional, se muestra online dentro del post)</span>
+                </label>
+                {presentationUrl ? (
+                  <div class="flex flex-wrap items-center gap-3 bg-slate-900 border border-slate-700 rounded-lg p-3">
+                    <span class="text-xs text-slate-300 truncate max-w-xs font-mono">{presentationUrl}</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-bold uppercase">{presentationType}</span>
+                    <a href={presentationUrl} target="_blank" rel="noopener" class="text-xs text-indigo-400 hover:text-indigo-300 font-bold">
+                      Ver →
+                    </a>
+                    <button type="button" onClick={quitarPresentacion} class="text-xs text-red-400 hover:text-red-300 font-bold">
+                      Quitar
+                    </button>
+                  </div>
+                ) : (
+                  <input
+                    type="file"
+                    accept=".ppt,.pptx,.html,.htm,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/html"
+                    disabled={presentationUploading}
+                    onChange={(e) => {
+                      const input = e.target as HTMLInputElement;
+                      const file = input.files && input.files[0];
+                      if (file) subirPresentacion(file);
+                      input.value = '';
+                    }}
+                    class="w-full text-sm text-slate-300 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-slate-700 file:text-slate-200 file:text-sm file:font-bold hover:file:bg-slate-600"
+                  />
+                )}
+                {presentationUploading && <p class="text-xs text-slate-400 mt-1">Subiendo…</p>}
               </div>
             </div>
 
