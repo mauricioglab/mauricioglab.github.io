@@ -1,0 +1,10 @@
+{
+  // Despliegue del dominio de la empresa (velocitylab.com.ar) en Cloudflare.
+  // El build se hace con `npm run build:company` y se publica la carpeta dist/.
+  "name": "mauricioglab-github-io",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}
