@@ -1,30 +1,6 @@
 ---
-import { Image } from 'astro:assets';
-import BaseTailwind from '@layouts/BaseTailwind.astro';
-import SocialLinks from '@components/shared/SocialLinks.astro';
-import PtContactForm from '@components/shared/PtContactForm.astro';
-import { SITE_CONFIG } from '@data/config';
-import retrato from '../../assets/mauricio/retrato.png';
+import ContactPage from '../../components/pages/ContactPage.astro';
 
 export const prerender = true;
 ---
-
-<BaseTailwind title="Contáctame | Mauricio González" description="Contacto profesional de Mauricio González: docencia, desarrollo de software e IA aplicada." current="contacto" showMateGame={false}>
-  <div class="pt">
-    <h1 class="pt-page-title">¡Hablemos!</h1>
-    <div class="pt-contact-intro">
-      <p>Escribime si querés conversar sobre docencia, desarrollo de software o IA aplicada. Te respondo lo antes posible.</p>
-    </div>
-    <div class="pt-contact">
-      <div class="pt-contact-photo">
-        <Image src={retrato} alt="Mauricio González en su despacho" widths={[640, 1000]} sizes="(max-width: 899px) 100vw, 700px" format="webp" style="object-position: 50% 20%" />
-      </div>
-      <div>
-        <h2>Enviame un mensaje:</h2>
-        <PtContactForm id="contacto" />
-        <p class="pt-contact-side">También podés escribirme por <a class="pt-link-gold" href={SITE_CONFIG.linkedin} rel="noopener">LinkedIn</a>.</p>
-        <nav class="pt-social pt-social-inline" aria-label="Redes sociales"><SocialLinks /></nav>
-      </div>
-    </div>
-  </div>
-</BaseTailwind>
+<ContactPage lang="es" />

@@ -1,0 +1,158 @@
+- generic [active] [ref=f7e1]:
+  - generic [ref=f7e2]:
+    - link "Saltar al contenido" [ref=f7e3] [cursor=pointer]:
+      - /url: "#content"
+    - banner [ref=f7e4]:
+      - generic [ref=f7e5]:
+        - paragraph [ref=f7e6]:
+          - link "MARCELA LÓPEZ" [ref=f7e7] [cursor=pointer]:
+            - /url: https://marcelalopez.co/
+        - paragraph [ref=f7e8]: Estratega de marca personal
+      - navigation "Navegación principal" [ref=f7e9]:
+        - button "Menú + expandido cerrado" [ref=f7e10]
+        - generic [ref=f7e11] [cursor=pointer]:
+          - text: Menú +
+          - generic [ref=f7e12]: expandido
+          - generic [ref=f7e13]: cerrado
+      - navigation "Menú de enlaces sociales" [ref=f7e14]:
+        - list [ref=f7e16]:
+          - listitem [ref=f7e17]:
+            - link "x" [ref=f7e18] [cursor=pointer]:
+              - /url: https://twitter.com/marce_lp
+          - listitem [ref=f7e22]:
+            - link "Instagram" [ref=f7e23] [cursor=pointer]:
+              - /url: https://instagram.com/marce_lp
+          - listitem [ref=f7e27]:
+            - link "LinkedIn" [ref=f7e28] [cursor=pointer]:
+              - /url: https://www.linkedin.com/in/marcelp/
+    - main [ref=f7e34]:
+      - article [ref=f7e35]:
+        - heading "Mi experiencia, tu ventaja" [level=1] [ref=f7e37]
+        - generic [ref=f7e38]:
+          - generic [ref=f7e41]:
+            - generic [ref=f7e42]:
+              - generic [ref=f7e44]:
+                - generic:
+                  - paragraph
+              - generic [ref=f7e46]:
+                - heading "Estratega de marca personal para c-levels, emprendedores y directivos" [level=2] [ref=f7e47]
+                - paragraph
+                - paragraph [ref=f7e48]: Desde hace 15 años desarrollo estrategias digitales que posicionan.
+                - paragraph [ref=f7e49]:
+                  - text: Luego de 8 años trabajando con marcas personales de emprendedores, fundé
+                  - strong [ref=f7e50]: Top Personal Brands
+                  - text: para ayudar a más líderes a salir del anonimato y convertir su experiencia en visibilidad estratégica y rentable.
+                - paragraph [ref=f7e51]:
+                  - text: Soy
+                  - strong [ref=f7e52]: Doctora en Comunicación
+                  - text: por la Universidad de Sevilla (España). Amo enseñar y compartir lo que he aprendido —tanto de los aciertos como de los errores— en esta trayectoria. He capacitado equipos de marketing y he sido speaker en espacios como
+                  - strong [ref=f7e53]: PlatziConf
+                  - text: ", además de liderar talleres para"
+                  - strong [ref=f7e54]: Endeavor Colombia, Chiper, Torre, Universidad de Sevilla, Universidad de la Costa, Universidad del Norte
+                  - text: "y"
+                  - strong [ref=f7e55]: Universidad Don Bosco de El Salvador
+                  - text: .
+                - paragraph [ref=f7e56]:
+                  - text: En 2019, recibí el premio
+                  - strong [ref=f7e57]: "#LatamDigital"
+                  - text: a la mejor estrategia de marca personal en Latinoamérica en Instagram, por el trabajo realizado con
+                  - strong [ref=f7e58]: Alexander Torrenegra
+                  - text: ", CEO de Torre e inversionista en Shark Tank Colombia (Sony Channel)."
+                - paragraph [ref=f7e59]:
+                  - text: He formado a más de
+                  - strong [ref=f7e60]: 10.000 estudiantes
+                  - text: como docente de los cursos de marca personal en
+                  - strong [ref=f7e61]: Platzi
+                  - text: y en programas de posgrado en universidades de Latinoamérica.
+                - paragraph [ref=f7e62]:
+                  - text: Además, he gestionado y/o asesorado las marcas personales de líderes de
+                  - strong [ref=f7e63]: Latitud, Endeavor Colombia, Torre.ai, Bunny Studio, Baubap, Scrum Network, AlleyCorp Sur, Green SQ, Rapicredit, Kleta, Banana Script, Lodging, Chiper
+                  - text: "y"
+                  - strong [ref=f7e64]: Tools2Power
+                  - text: ; así como a emprendedores reconocidos por
+                  - strong [ref=f7e65]: Endeavor
+                  - text: ","
+                  - strong [ref=f7e66]: MIT
+                  - text: "y"
+                  - strong [ref=f7e67]: Forbes
+                  - text: .
+            - list [ref=f7e68]:
+              - listitem [ref=f7e69]:
+                - link "Instagram" [ref=f7e70] [cursor=pointer]:
+                  - /url: https://www.instagram.com/marce_lp/
+              - listitem [ref=f7e74]:
+                - link "Twitter" [ref=f7e75] [cursor=pointer]:
+                  - /url: https://www.twitter.com/marce_lp/
+              - listitem [ref=f7e79]:
+                - link "LinkedIn" [ref=f7e80] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/in/marcelp/
+          - generic [ref=f7e88]:
+            - figure [ref=f7e90]:
+              - button "Abrir la imagen 1 de 3 en pantalla completa" [ref=f7e91] [cursor=pointer]
+            - generic [ref=f7e92]:
+              - figure [ref=f7e93]:
+                - button "Abrir la imagen 2 de 3 en pantalla completa" [ref=f7e94] [cursor=pointer]
+              - figure [ref=f7e95]:
+                - button "Abrir la imagen 3 de 3 en pantalla completa" [ref=f7e96] [cursor=pointer]
+          - figure [ref=f7e97]:
+            - 'figure "Premio #LatamDigital 2019 a 2da mejor campaña en Instagram en Latinoamérica" [ref=f7e98]'
+            - figure "Conferencia en Cumbre Iberoamericana de Comunicación Política. República Dominicana." [ref=f7e100]
+            - figure "Ponencia en Congreso Revista Latina de Comunicación. Tenerife/España." [ref=f7e102]
+            - figure "Workshop Marketing de Contenidos. Universidad de Sevilla/ España" [ref=f7e104]
+            - figure "Conferencia Marca Personal para emprendedores. Universidad de la Costa. Colombia." [ref=f7e106]
+            - figure "Conferencia uso de redes sociales. Universidad de la Costa. Colombia." [ref=f7e108]
+            - 'figure "Workshop: marketing de contenidos para emprendedores. Alcaldía de Barranquilla." [ref=f7e110]'
+            - figure "Worshop Marca Personal. Laboratorio de Emprendimiento UniSevilla/España." [ref=f7e112]
+            - figure "Conferencia Narrativas Transmedia. Universidad NUR. Sucre-Bolivia." [ref=f7e114]
+            - figure "Docente Diplomado Emprendimiento Digital. Universidad del Norte. Colombia." [ref=f7e116]
+          - paragraph
+          - generic [ref=f7e118]: Cargando...
+    - contentinfo [ref=f7e121]:
+      - complementary "Pie de página" [ref=f7e122]:
+        - generic [ref=f7e123]:
+          - heading "Entradas recientes" [level=2] [ref=f7e124]
+          - list [ref=f7e125]:
+            - listitem [ref=f7e126]:
+              - link "¿Lideras, pero nadie lo sabe? Tu marca personal está fallando." [ref=f7e127] [cursor=pointer]:
+                - /url: https://marcelalopez.co/2025/04/12/lideras-pero-nadie-lo-sabe-tu-marca-personal-esta-fallando/
+            - listitem [ref=f7e128]:
+              - link "No necesitas ser influencer. Necesitas ser visible para los que toman decisiones." [ref=f7e129] [cursor=pointer]:
+                - /url: https://marcelalopez.co/2025/04/12/no-necesitas-ser-influencer-necesitas-ser-visible-para-los-que-toman-decisiones/
+            - listitem [ref=f7e130]:
+              - link "Marca personal en las stories de Instagram" [ref=f7e131] [cursor=pointer]:
+                - /url: https://marcelalopez.co/2022/07/14/marca-personal-en-las-stories-de-instagram/
+            - listitem [ref=f7e132]:
+              - link "No te desmotives con tu marca personal" [ref=f7e133] [cursor=pointer]:
+                - /url: https://marcelalopez.co/2022/07/14/no-te-desmotives-con-tu-marca-personal/
+            - listitem [ref=f7e134]:
+              - link "Usa tu trabajo para construir tu marca personal" [ref=f7e135] [cursor=pointer]:
+                - /url: https://marcelalopez.co/2022/07/14/usa-tu-trabajo-para-construir-tu-marca-personal/
+      - navigation "Menú a pie de página" [ref=f7e136]:
+        - list [ref=f7e138]:
+          - listitem [ref=f7e139]:
+            - link "Inicio I" [ref=f7e140] [cursor=pointer]:
+              - /url: https://marcelalopez.co/
+          - listitem [ref=f7e141]:
+            - link "sobre mí |" [ref=f7e142] [cursor=pointer]:
+              - /url: https://marcelalopez.co/about/
+          - listitem [ref=f7e143]:
+            - link "portafolio |" [ref=f7e144] [cursor=pointer]:
+              - /url: https://marcelalopez.co/portafolio/
+          - listitem [ref=f7e145]:
+            - link "blog |" [ref=f7e146] [cursor=pointer]:
+              - /url: https://marcelalopez.co/blog-2/
+          - listitem [ref=f7e147]:
+            - link "contáctame" [ref=f7e148] [cursor=pointer]:
+              - /url: https://marcelalopez.co/contact/
+      - generic [ref=f7e149]:
+        - link "MARCELA LÓPEZ" [ref=f7e150] [cursor=pointer]:
+          - /url: https://marcelalopez.co/
+        - text: ","
+        - link "Blog de WordPress.com." [ref=f7e151] [cursor=pointer]:
+          - /url: https://wordpress.com/es/?ref=footer_blog
+  - region "Acciones del sitio" [ref=f7e152]:
+    - list [ref=f7e154]:
+      - listitem [ref=f7e155]:
+        - button "Suscribirse" [ref=f7e156] [cursor=pointer]
+      - listitem [ref=f7e160]:
+        - button "Más opciones" [ref=f7e161] [cursor=pointer]

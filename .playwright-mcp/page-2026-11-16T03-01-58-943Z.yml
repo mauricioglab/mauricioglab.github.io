@@ -1,0 +1,96 @@
+- generic [active] [ref=f23e1]:
+  - banner [ref=f23e2]:
+    - link "Mauricio González" [ref=f23e3] [cursor=pointer]:
+      - /url: /
+    - paragraph [ref=f23e4]: Docente y desarrollador · IA aplicada
+    - navigation "Principal" [ref=f23e5]:
+      - link "Inicio" [ref=f23e6] [cursor=pointer]:
+        - /url: /
+      - link "Sobre mí" [ref=f23e7] [cursor=pointer]:
+        - /url: /es/sobre-mi/
+      - link "Portafolio" [ref=f23e8] [cursor=pointer]:
+        - /url: /es/portfolio/
+      - link "Blog" [ref=f23e9] [cursor=pointer]:
+        - /url: /blog/
+      - link "Contáctame" [ref=f23e10] [cursor=pointer]:
+        - /url: /es/contacto/
+    - navigation "Redes sociales" [ref=f23e11]:
+      - link "LinkedIn" [ref=f23e12] [cursor=pointer]:
+        - /url: https://linkedin.com/in/mauricioglab
+        - text: in
+      - link "GitHub" [ref=f23e13] [cursor=pointer]:
+        - /url: https://github.com/mauricioglab
+  - main [ref=f23e14]:
+    - generic [ref=f23e15]:
+      - generic [ref=f23e17]:
+        - generic [ref=f23e18]:
+          - heading "Aprender tecnología empieza por entender cómo funciona." [level=1] [ref=f23e19]
+          - link "Leé mi blog" [ref=f23e20] [cursor=pointer]:
+            - /url: /blog/
+        - img "Mauricio junto a una pizarra y una presentación sobre IA en la educación" [ref=f23e21]
+      - region "Entre el aula y el código" [ref=f23e22]:
+        - figure [ref=f23e23]:
+          - img "Mauricio González en su despacho" [ref=f23e24]
+        - generic [ref=f23e25]:
+          - heading "Entre el aula y el código" [level=2] [ref=f23e26]
+          - paragraph [ref=f23e27]:
+            - text: Soy
+            - strong [ref=f23e28]: docente y desarrollador
+            - text: . Enseño programación e IA aplicada a futuros analistas y desarrolladores, incluidos quienes están cambiando de carrera.
+          - paragraph [ref=f23e29]: La filosofía me enseñó a hacer preguntas. Ahora llevo esas preguntas al aula y a los proyectos de software. Cuando usamos IA, me interesa que podamos explicar qué hizo y comprobar si el resultado sirve.
+          - paragraph [ref=f23e30]:
+            - link "Conocé mi trayectoria" [ref=f23e31] [cursor=pointer]:
+              - /url: /es/sobre-mi/
+      - region "Portafolio" [ref=f23e32]:
+        - heading "Portafolio" [level=2] [ref=f23e33]
+        - generic [ref=f23e34]:
+          - article [ref=f23e35]:
+            - heading [level=3] [ref=f23e36]:
+              - link "Proyectos de software" [ref=f23e37] [cursor=pointer]:
+                - /url: /es/portfolio/
+            - paragraph [ref=f23e38]: Casos de desarrollo, análisis de sistemas e IA aplicada.
+          - article [ref=f23e39]:
+            - heading [level=3] [ref=f23e40]:
+              - link "Charlas y disertaciones" [ref=f23e41] [cursor=pointer]:
+                - /url: /es/disertaciones/
+            - paragraph [ref=f23e42]: Docencia, tecnología e inteligencia artificial.
+          - article [ref=f23e43]:
+            - heading [level=3] [ref=f23e44]:
+              - link "Recursos y herramientas" [ref=f23e45] [cursor=pointer]:
+                - /url: /zona-lab/
+            - paragraph [ref=f23e46]: Material de estudio y aplicaciones.
+            - list [ref=f23e47]:
+              - listitem [ref=f23e48]:
+                - link "Zona Lab" [ref=f23e49] [cursor=pointer]:
+                  - /url: /zona-lab/
+              - listitem [ref=f23e50]:
+                - link "Teleprompter" [ref=f23e51] [cursor=pointer]:
+                  - /url: /prompt/
+              - listitem [ref=f23e52]:
+                - link "Video Organizer" [ref=f23e53] [cursor=pointer]:
+                  - /url: /videos/
+              - listitem [ref=f23e54]:
+                - link "Extensiones" [ref=f23e55] [cursor=pointer]:
+                  - /url: /extensions/
+              - listitem [ref=f23e56]:
+                - link "Calculadora 3D" [ref=f23e57] [cursor=pointer]:
+                  - /url: /calculadora/
+              - listitem [ref=f23e58]:
+                - link "URLs útiles" [ref=f23e59] [cursor=pointer]:
+                  - /url: /urls/
+              - listitem [ref=f23e60]:
+                - link "Rincón retro" [ref=f23e61] [cursor=pointer]:
+                  - /url: /main/
+      - region "Contáctame" [ref=f23e62]:
+        - generic [ref=f23e63]:
+          - heading "Contáctame" [level=2] [ref=f23e64]
+          - link "Escribime" [ref=f23e66] [cursor=pointer]:
+            - /url: /es/contacto/
+  - contentinfo [ref=f23e67]:
+    - paragraph [ref=f23e68]:
+      - text: © 2026 Mauricio González · Córdoba, Argentina ·
+      - link "Contacto" [ref=f23e69] [cursor=pointer]:
+        - /url: "#contacto"
+      - text: ·
+      - link "Privacidad" [ref=f23e70] [cursor=pointer]:
+        - /url: /blog/privacy/

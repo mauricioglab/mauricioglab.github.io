@@ -1,0 +1,64 @@
+- generic [active] [ref=f30e1]:
+  - banner [ref=f30e2]:
+    - link "Fernanda Tárraga" [ref=f30e3] [cursor=pointer]:
+      - /url: ./
+    - paragraph [ref=f30e4]: Analista Funcional de Sistemas · Data Analyst
+    - navigation "Principal" [ref=f30e5]:
+      - link "Inicio" [ref=f30e6] [cursor=pointer]:
+        - /url: ./
+      - link "Sobre mí" [ref=f30e7] [cursor=pointer]:
+        - /url: sobre-mi/
+      - link "Portafolio" [ref=f30e8] [cursor=pointer]:
+        - /url: "#proyectos"
+      - link "Contáctame" [ref=f30e9] [cursor=pointer]:
+        - /url: contacto/
+    - navigation "Redes sociales" [ref=f30e10]:
+      - link "LinkedIn" [ref=f30e11] [cursor=pointer]:
+        - /url: https://www.linkedin.com/in/iristarraga/
+        - text: in
+  - main [ref=f30e12]:
+    - generic [ref=f30e14]:
+      - generic [ref=f30e15]:
+        - heading "Entender el proceso ayuda a mejorar sus datos." [level=1] [ref=f30e16]
+        - link "Mirá mi CV" [ref=f30e17] [cursor=pointer]:
+          - /url: cv/
+      - img "Fernanda Tárraga en su escritorio" [ref=f30e18]
+    - region "Entre los datos y el negocio" [ref=f30e19]:
+      - figure [ref=f30e20]:
+        - img "Fernanda Tárraga junto a la ventana" [ref=f30e21]
+      - generic [ref=f30e22]:
+        - heading "Entre los datos y el negocio" [level=2] [ref=f30e23]
+        - paragraph [ref=f30e24]:
+          - text: Soy
+          - strong [ref=f30e25]: analista funcional de sistemas y analista de datos
+          - text: . En seguros trabajé con información de pólizas y facturación.
+        - paragraph [ref=f30e26]: Me interesa entender qué produce un dato, qué decisión depende de él y cómo detectar a tiempo una inconsistencia. También desarrollé una aplicación con calendario y gestión de turnos para GM Nails.
+        - paragraph [ref=f30e27]:
+          - link "Conocé mi trayectoria" [ref=f30e28] [cursor=pointer]:
+            - /url: sobre-mi/
+    - region "Mi enfoque" [ref=f30e29]:
+      - generic [ref=f30e30]:
+        - blockquote [ref=f30e31]: Para saber si un dato sirve, primero hay que entender qué decisión depende de él.
+        - generic [ref=f30e32]: Foto de trabajo pendiente
+    - region "Portafolio" [ref=f30e33]:
+      - heading "Portafolio" [level=2] [ref=f30e34]
+      - generic [ref=f30e35]:
+        - article [ref=f30e36]:
+          - heading "Interaxios · Calidad de datos en seguros" [level=3] [ref=f30e37]
+          - paragraph [ref=f30e38]: Un proceso se demoraba al incorporar fechas. Validé las reglas con el negocio, normalicé datos inconsistentes por lotes y trabajé con triggers de seguimiento. La corrección resolvió las demoras recurrentes.
+        - article [ref=f30e39]:
+          - heading "GM Nails · Sistema de turnos" [level=3] [ref=f30e40]
+          - paragraph [ref=f30e41]: Aplicación web para consultar el calendario y gestionar turnos de manicura y cosmetología.
+        - article [ref=f30e42]:
+          - heading "Tres chequeos antes de analizar datos" [level=3] [ref=f30e43]
+          - list [ref=f30e44]:
+            - listitem [ref=f30e45]: Definí qué identifica a cada registro y buscá duplicados.
+            - listitem [ref=f30e46]: Revisá si faltan campos que necesita el proceso.
+            - listitem [ref=f30e47]: Contrastá los valores con las reglas del negocio.
+    - region "Contáctame" [ref=f30e48]:
+      - generic [ref=f30e49]:
+        - heading "Contáctame" [level=2] [ref=f30e50]
+        - link "Escribime" [ref=f30e52] [cursor=pointer]:
+          - /url: contacto/
+  - contentinfo [ref=f30e53]:
+    - generic [ref=f30e54]: Fernanda Tárraga

@@ -1,0 +1,47 @@
+- generic [active] [ref=f24e1]:
+  - banner [ref=f24e2]:
+    - generic [ref=f24e3]:
+      - link "Iris Tárraga" [ref=f24e4] [cursor=pointer]:
+        - /url: ../
+      - navigation "Principal" [ref=f24e5]:
+        - link "Inicio" [ref=f24e6] [cursor=pointer]:
+          - /url: ../
+        - link "Sobre mí" [ref=f24e7] [cursor=pointer]:
+          - /url: ../sobre-mi/
+        - link "CV" [ref=f24e8] [cursor=pointer]:
+          - /url: ./
+  - main [ref=f24e9]:
+    - generic [ref=f24e10]:
+      - generic [ref=f24e11]:
+        - heading "Iris Tárraga" [level=1] [ref=f24e12]
+        - paragraph [ref=f24e13]: Analista Funcional de Sistemas | Data Analyst
+        - paragraph [ref=f24e14]: Mi experiencia combina la calidad de datos con el análisis de los procesos que los generan. Trabajé con información de pólizas y facturación en el sector asegurador.
+      - img "Retrato de Iris Tárraga" [ref=f24e15]
+    - generic [ref=f24e16]:
+      - region "Experiencia profesional" [ref=f24e17]:
+        - heading "Experiencia profesional" [level=2] [ref=f24e18]
+        - article [ref=f24e19]:
+          - paragraph [ref=f24e20]: Interaxios · Seguros
+          - heading "Analista de Datos | Data Quality Analyst" [level=3] [ref=f24e21]
+          - paragraph [ref=f24e22]: Febrero de 2024 a marzo de 2025 · Remoto
+          - list [ref=f24e23]:
+            - listitem [ref=f24e24]:
+              - strong [ref=f24e25]: Control diario.
+              - text: Revisé datos de pólizas y facturación para detectar duplicados, campos incompletos e inconsistencias.
+            - listitem [ref=f24e26]:
+              - strong [ref=f24e27]: Preparación de datos.
+              - text: Consulté y validé registros del Data Warehouse. Preparé y transformé información para su procesamiento.
+            - listitem [ref=f24e28]:
+              - strong [ref=f24e29]: Análisis funcional.
+              - text: Analicé cómo los procesos y sistemas del negocio gestionaban la información e interpreté dashboards y reportes existentes.
+      - region "Herramientas" [ref=f24e30]:
+        - heading "Herramientas" [level=2] [ref=f24e31]
+        - generic [ref=f24e32]:
+          - term [ref=f24e33]: SQL
+          - definition [ref=f24e34]: Consulta y validación de datos.
+          - term [ref=f24e35]: Python, Databricks y Snowflake
+          - definition [ref=f24e36]: Preparación y transformación de datos.
+          - term [ref=f24e37]: Power BI
+          - definition [ref=f24e38]: Consulta e interpretación de reportes.
+  - contentinfo [ref=f24e39]:
+    - generic [ref=f24e40]: Iris Tárraga

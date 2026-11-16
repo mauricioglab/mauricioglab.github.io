@@ -1,6 +1,7 @@
 // Módulos del administrador de Mauricio: un solo lugar para el gestor anterior y el CMS de contenido.
 import AdminShell, { type AdminModule } from './AdminShell';
 import AbmResource from './AbmResource';
+import SocialsEditor from './SocialsEditor';
 import ResumenPanel from './ResumenPanel';
 import BlogModule from './BlogModule';
 import DisertacionesAdminPreact from './DisertacionesAdminPreact';
@@ -19,6 +20,7 @@ const modules: AdminModule[] = [
   { id: 'disertaciones', group: 'Publicaciones', label: 'Eventos', render: () => <DisertacionesAdminPreact /> },
   { id: 'recursos', group: 'Publicaciones', label: 'Zona Lab', render: () => <RecursosAdminPreact /> },
   { id: 'movimiento', group: 'Herramientas', label: 'Movimiento', render: () => <MovimientoAdminPreact /> },
+  { id: 'redes', group: 'Contenido del sitio', label: 'Redes sociales', render: () => <SocialsEditor siteId={SITE_CONFIG.siteId} /> },
   ...RESOURCES.map((r) => ({
     id: r.table,
     group: GROUP_OF[r.table] ?? 'Contenido del sitio',

@@ -1,0 +1,116 @@
+- generic [active] [ref=f4e1]:
+  - banner [ref=f4e2]:
+    - generic [ref=f4e3]:
+      - link "Mauricio González" [ref=f4e4] [cursor=pointer]:
+        - /url: /
+      - navigation "Sitio" [ref=f4e6]:
+        - text: ▾
+        - group [ref=f4e7]:
+          - generic "Menú" [ref=f4e8] [cursor=pointer]
+  - main [ref=f4e9]:
+    - generic [ref=f4e11]:
+      - navigation "Secciones principales" [ref=f4e13]:
+        - generic [ref=f4e14]:
+          - heading "Profesional" [level=2] [ref=f4e16]
+          - list [ref=f4e17]:
+            - listitem [ref=f4e18]:
+              - link "Portfolio Proyectos y casos" [ref=f4e19] [cursor=pointer]:
+                - /url: /es/portfolio/
+                - generic [ref=f4e20]: Portfolio
+                - generic [ref=f4e21]: Proyectos y casos
+            - listitem [ref=f4e22]:
+              - link "Disertaciones Charlas y workshops" [ref=f4e23] [cursor=pointer]:
+                - /url: /es/disertaciones/
+                - generic [ref=f4e24]: Disertaciones
+                - generic [ref=f4e25]: Charlas y workshops
+        - generic [ref=f4e26]:
+          - generic [ref=f4e27]:
+            - heading "Parece que fue ayer" [level=2] [ref=f4e28]
+            - generic [ref=f4e29]: 2 páginas
+          - list [ref=f4e30]:
+            - listitem [ref=f4e31]:
+              - link "Parece que fue ayer (Blog) Artículos y pensamientos" [ref=f4e32] [cursor=pointer]:
+                - /url: /blog/
+                - generic [ref=f4e33]:
+                  - generic [ref=f4e34]: Parece que fue ayer (Blog)
+                  - generic [ref=f4e35]: Artículos y pensamientos
+                - generic [aria-hidden] [ref=f4e36]: →
+            - listitem [ref=f4e37]:
+              - link "Zona Lab Recursos de estudio" [ref=f4e38] [cursor=pointer]:
+                - /url: /zona-lab/
+                - generic [ref=f4e39]:
+                  - generic [ref=f4e40]: Zona Lab
+                  - generic [ref=f4e41]: Recursos de estudio
+                - generic [aria-hidden] [ref=f4e42]: →
+        - generic [ref=f4e43]:
+          - generic [ref=f4e44]:
+            - heading "Recursos" [level=2] [ref=f4e45]
+            - generic [ref=f4e46]: 1 página
+          - list [ref=f4e47]:
+            - listitem [ref=f4e48]:
+              - link "URLs útiles Dev tools y apps" [ref=f4e49] [cursor=pointer]:
+                - /url: /urls/
+                - generic [ref=f4e50]:
+                  - generic [ref=f4e51]: URLs útiles
+                  - generic [ref=f4e52]: Dev tools y apps
+                - generic [aria-hidden] [ref=f4e53]: →
+        - generic [ref=f4e54]:
+          - generic [ref=f4e55]:
+            - heading "Apps" [level=2] [ref=f4e56]
+            - generic [ref=f4e57]: 4 páginas
+          - list [ref=f4e58]:
+            - listitem [ref=f4e59]:
+              - link "Teleprompter Ingeniería de prompts" [ref=f4e60] [cursor=pointer]:
+                - /url: /prompt/
+                - generic [ref=f4e61]:
+                  - generic [ref=f4e62]: Teleprompter
+                  - generic [ref=f4e63]: Ingeniería de prompts
+                - generic [aria-hidden] [ref=f4e64]: →
+            - listitem [ref=f4e65]:
+              - link "Video Organizer YouTube + Udemy" [ref=f4e66] [cursor=pointer]:
+                - /url: /videos/
+                - generic [ref=f4e67]:
+                  - generic [ref=f4e68]: Video Organizer
+                  - generic [ref=f4e69]: YouTube + Udemy
+                - generic [aria-hidden] [ref=f4e70]: →
+            - listitem [ref=f4e71]:
+              - link "Extensiones Chrome / Firefox" [ref=f4e72] [cursor=pointer]:
+                - /url: /extensions/
+                - generic [ref=f4e73]:
+                  - generic [ref=f4e74]: Extensiones
+                  - generic [ref=f4e75]: Chrome / Firefox
+                - generic [aria-hidden] [ref=f4e76]: →
+            - listitem [ref=f4e77]:
+              - link "Calculadora 3D Costos de impresión" [ref=f4e78] [cursor=pointer]:
+                - /url: /calculadora/
+                - generic [ref=f4e79]:
+                  - generic [ref=f4e80]: Calculadora 3D
+                  - generic [ref=f4e81]: Costos de impresión
+                - generic [aria-hidden] [ref=f4e82]: →
+        - generic [ref=f4e83]:
+          - generic [ref=f4e84]:
+            - heading "Retro" [level=2] [ref=f4e85]
+            - generic [ref=f4e86]: 1 página
+          - list [ref=f4e87]:
+            - listitem [ref=f4e88]:
+              - link "Rincón retro Widgets, GIFs y curiosidades" [ref=f4e89] [cursor=pointer]:
+                - /url: /main/
+                - generic [ref=f4e90]:
+                  - generic [ref=f4e91]: Rincón retro
+                  - generic [ref=f4e92]: Widgets, GIFs y curiosidades
+                - generic [aria-hidden] [ref=f4e93]: →
+      - generic [ref=f4e96]:
+        - paragraph [aria-hidden] [ref=f4e97]: "\"Hola...\""
+        - generic [ref=f4e98]:
+          - heading "Soy Mauricio González" [level=1] [ref=f4e99]
+          - paragraph [ref=f4e100]: Software Engineer · IA & Automatización
+        - paragraph [ref=f4e101]: Proyectos, blog y herramientas para aprender y construir.
+  - contentinfo [ref=f4e102]:
+    - paragraph [ref=f4e103]:
+      - text: © 2026 Mauricio González · Córdoba, Argentina ·
+      - link "Contacto" [ref=f4e104] [cursor=pointer]:
+        - /url: "#contacto"
+      - text: ·
+      - link "Privacidad" [ref=f4e105] [cursor=pointer]:
+        - /url: /blog/privacy/
+  - button "🧉" [ref=f4e106] [cursor=pointer]

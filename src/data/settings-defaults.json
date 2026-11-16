@@ -1,13 +1,30 @@
 {
   "tagline": "Docente y desarrollador · IA aplicada",
-  "networks": {
-    "x": "",
-    "instagram": "",
-    "linkedin": "https://linkedin.com/in/mauricioglab",
-    "github": "https://github.com/mauricioglab"
-  },
+  "networks": [
+    {
+      "key": "x",
+      "url": "",
+      "show": true
+    },
+    {
+      "key": "instagram",
+      "url": "",
+      "show": true
+    },
+    {
+      "key": "linkedin",
+      "url": "https://linkedin.com/in/mauricioglab",
+      "show": true
+    },
+    {
+      "key": "github",
+      "url": "https://github.com/mauricioglab",
+      "show": true
+    }
+  ],
   "sections": {
     "eventos": true,
     "recursos": true
-  }
+  },
+  "tagline_en": "Teacher and developer · Applied AI"
 }

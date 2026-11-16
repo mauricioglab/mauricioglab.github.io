@@ -1,0 +1,75 @@
+- generic [active] [ref=f14e1]:
+  - banner [ref=f14e2]:
+    - generic [ref=f14e3]:
+      - link "Mauricio González" [ref=f14e4] [cursor=pointer]:
+        - /url: /
+      - navigation "Sitio" [ref=f14e6]:
+        - list [ref=f14e7]:
+          - listitem [ref=f14e8]: Sobre mí
+          - listitem [ref=f14e9]:
+            - link "Charlas" [ref=f14e10] [cursor=pointer]:
+              - /url: /es/disertaciones/
+          - listitem [ref=f14e11]:
+            - link "Proyectos" [ref=f14e12] [cursor=pointer]:
+              - /url: /es/portfolio/
+          - listitem [ref=f14e13]:
+            - link "Blog" [ref=f14e14] [cursor=pointer]:
+              - /url: /blog/
+          - listitem [ref=f14e15]:
+            - link "Recursos" [ref=f14e16] [cursor=pointer]:
+              - /url: /#recursos
+          - listitem [ref=f14e17]:
+            - link "Contacto" [ref=f14e18] [cursor=pointer]:
+              - /url: "#contacto"
+  - main [ref=f14e19]:
+    - generic [ref=f14e20]:
+      - heading "Sobre mí" [level=1] [ref=f14e21]
+      - region "Docencia, desarrollo de software e IA aplicada" [ref=f14e22]:
+        - figure [ref=f14e23]:
+          - img "Mauricio González en su despacho" [ref=f14e24]
+        - generic [ref=f14e25]:
+          - heading "Docencia, desarrollo de software e IA aplicada" [level=2] [ref=f14e26]
+          - paragraph [ref=f14e27]: Soy Mauricio González, profesor de Filosofía y Analista de Sistemas de Computación. La filosofía me enseñó a hacer buenas preguntas y el desarrollo de software me dio herramientas para explorar algunas respuestas.
+          - paragraph [ref=f14e28]: En el Instituto Cervantes enseño sobre ciencia de datos e inteligencia artificial. También trabajo como desarrollador y referente técnico. Lo que aprendo en los proyectos vuelve al aula, y las preguntas de mis estudiantes me hacen revisar cómo desarrollo.
+          - paragraph [ref=f14e29]: Me interesa que quienes empiezan en tecnología puedan explicar cómo funciona una solución, comprobar sus resultados y decidir cuándo tiene sentido usarla.
+      - region "Trayectoria en la práctica" [ref=f14e30]:
+        - heading "Trayectoria en la práctica" [level=2] [ref=f14e31]
+        - generic [ref=f14e32]:
+          - article [ref=f14e33]:
+            - heading [level=3] [ref=f14e34]:
+              - link "Charlas y disertaciones" [ref=f14e35] [cursor=pointer]:
+                - /url: /es/disertaciones/
+            - paragraph [ref=f14e36]: Presentaciones sobre tecnología, educación e inteligencia artificial.
+          - article [ref=f14e37]:
+            - heading [level=3] [ref=f14e38]:
+              - link "Proyectos de software" [ref=f14e39] [cursor=pointer]:
+                - /url: /es/portfolio/
+            - paragraph [ref=f14e40]: Trabajos de arquitectura, análisis de sistemas, datos e IA aplicada.
+          - article [ref=f14e41]:
+            - heading [level=3] [ref=f14e42]:
+              - link "Materiales para aprender" [ref=f14e43] [cursor=pointer]:
+                - /url: /zona-lab/
+            - paragraph [ref=f14e44]: Recursos de estudio para acompañar lo que trabajamos en clase.
+      - region "CV y contacto" [ref=f14e45]:
+        - generic [ref=f14e46]:
+          - heading "CV y contacto" [level=2] [ref=f14e47]
+          - generic [ref=f14e48]:
+            - link "Ver mi CV" [ref=f14e49] [cursor=pointer]:
+              - /url: /es/cv/
+            - link "LinkedIn" [ref=f14e50] [cursor=pointer]:
+              - /url: https://linkedin.com/in/mauricioglab
+            - link "Contactarme" [ref=f14e51] [cursor=pointer]:
+              - /url: "#contacto"
+  - contentinfo [ref=f14e52]:
+    - paragraph [ref=f14e53]:
+      - text: © 2026 Mauricio González · Córdoba, Argentina ·
+      - link "Contacto" [ref=f14e54] [cursor=pointer]:
+        - /url: "#contacto"
+      - text: ·
+      - link "Privacidad" [ref=f14e55] [cursor=pointer]:
+        - /url: /blog/privacy/
+  - generic [ref=f14e58]:
+    - button "Menu" [ref=f14e59]
+    - button "Inspect" [ref=f14e65]
+    - button "Audit" [ref=f14e69]
+    - button "Settings" [ref=f14e74]

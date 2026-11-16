@@ -1,0 +1,27 @@
+- generic [active] [ref=f3e1]:
+  - banner [ref=f3e2]:
+    - generic [ref=f3e3]:
+      - link "Iris Tárraga" [ref=f3e4] [cursor=pointer]:
+        - /url: ./
+      - navigation "Principal" [ref=f3e5]:
+        - link "Sobre mí" [ref=f3e6] [cursor=pointer]:
+          - /url: "#sobre-mi"
+        - link "CV" [ref=f3e7] [cursor=pointer]:
+          - /url: cv/
+  - main [ref=f3e8]:
+    - generic [ref=f3e10]:
+      - generic [ref=f3e11]:
+        - heading "Soy Iris Tárraga." [level=1] [ref=f3e12]
+        - paragraph [ref=f3e13]: Este es mi espacio para compartir mi trayectoria profesional.
+        - link "Ver mi CV" [ref=f3e14] [cursor=pointer]:
+          - /url: cv/
+          - text: Ver mi CV
+          - generic [aria-hidden] [ref=f3e15]: ↗
+      - img "Iris Tárraga en su escritorio, con blazer azul" [ref=f3e16]
+    - generic [ref=f3e17]:
+      - generic [ref=f3e18]:
+        - heading "Sobre mí" [level=2] [ref=f3e19]
+        - paragraph [ref=f3e20]: La presentación profesional está en preparación. Acá voy a compartir mi formación, experiencia y los proyectos en los que trabajé.
+      - img "Iris sentada junto a la ventana, con su cuaderno y computadora" [ref=f3e21]
+  - contentinfo [ref=f3e22]:
+    - generic [ref=f3e23]: Iris Tárraga

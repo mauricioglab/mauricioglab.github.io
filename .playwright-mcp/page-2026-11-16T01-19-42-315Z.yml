@@ -1,0 +1,118 @@
+- generic [active] [ref=f10e1]:
+  - banner [ref=f10e2]:
+    - generic [ref=f10e3]:
+      - link "Mauricio González" [ref=f10e4] [cursor=pointer]:
+        - /url: /
+      - navigation "Sitio" [ref=f10e6]:
+        - list [ref=f10e7]:
+          - listitem [ref=f10e8]:
+            - link "Sobre mí" [ref=f10e9] [cursor=pointer]:
+              - /url: /#sobre-mi
+          - listitem [ref=f10e10]:
+            - link "Charlas" [ref=f10e11] [cursor=pointer]:
+              - /url: /es/disertaciones/
+          - listitem [ref=f10e12]:
+            - link "Proyectos" [ref=f10e13] [cursor=pointer]:
+              - /url: /es/portfolio/
+          - listitem [ref=f10e14]:
+            - link "Blog" [ref=f10e15] [cursor=pointer]:
+              - /url: /blog/
+          - listitem [ref=f10e16]:
+            - link "Recursos" [ref=f10e17] [cursor=pointer]:
+              - /url: /#recursos
+          - listitem [ref=f10e18]:
+            - link "Contacto" [ref=f10e19] [cursor=pointer]:
+              - /url: "#contacto"
+  - main [ref=f10e20]:
+    - generic [ref=f10e22]:
+      - generic [ref=f10e23]:
+        - paragraph [ref=f10e24]: Docente y desarrollador
+        - heading "Enseño desarrollo de software e IA aplicada." [level=1] [ref=f10e25]
+        - paragraph [ref=f10e26]: Soy Mauricio González. Acompaño a futuros analistas y desarrolladores a entender la tecnología, probarla y decidir cuándo vale la pena usarla.
+        - link "Ver charlas" [ref=f10e27] [cursor=pointer]:
+          - /url: /es/disertaciones/
+          - text: Ver charlas
+          - generic [aria-hidden] [ref=f10e28]: ↗
+      - img "Mauricio frente a un grupo, junto a una pizarra y una presentación sobre IA en la educación" [ref=f10e29]
+    - region "Entre el aula y el código" [ref=f10e30]:
+      - heading "Entre el aula y el código" [level=2] [ref=f10e31]
+      - generic [ref=f10e32]:
+        - article [ref=f10e33]:
+          - paragraph [ref=f10e34]: Docencia
+          - heading [level=3] [ref=f10e35]:
+            - link "Charlas y disertaciones" [ref=f10e36] [cursor=pointer]:
+              - /url: /es/disertaciones/
+              - text: Charlas y disertaciones ↗
+          - paragraph [ref=f10e37]: Presentaciones y conversaciones sobre tecnología, educación e inteligencia artificial.
+        - article [ref=f10e38]:
+          - paragraph [ref=f10e39]: Desarrollo
+          - heading [level=3] [ref=f10e40]:
+            - link "Proyectos y casos" [ref=f10e41] [cursor=pointer]:
+              - /url: /es/portfolio/
+              - text: Proyectos y casos ↗
+          - paragraph [ref=f10e42]: Decisiones de arquitectura, análisis de sistemas y aplicaciones de IA en proyectos concretos.
+        - article [ref=f10e43]:
+          - paragraph [ref=f10e44]: Blog
+          - heading [level=3] [ref=f10e45]:
+            - link "Parece que fue ayer" [ref=f10e46] [cursor=pointer]:
+              - /url: /blog/
+              - text: Parece que fue ayer ↗
+          - paragraph [ref=f10e47]: Escribo sobre tecnología, filosofía y las preguntas que aparecen entre el aula y el código.
+    - region "Sobre mí" [ref=f10e48]:
+      - generic [ref=f10e49]:
+        - img "Retrato de Mauricio González en su despacho" [ref=f10e50]
+        - generic [ref=f10e51]:
+          - heading "Sobre mí" [level=2] [ref=f10e52]
+          - paragraph [ref=f10e53]: La filosofía me enseñó a hacer buenas preguntas. El desarrollo de software me dio herramientas para explorar algunas respuestas. En el aula se encuentran esas dos formas de trabajar.
+          - paragraph [ref=f10e54]: Enseño programación, desarrollo web e IA. También trabajo como desarrollador y referente técnico. Lo que aprendo en los proyectos vuelve al aula, y las preguntas de mis estudiantes me hacen repensar cómo desarrollo.
+          - generic [ref=f10e55]:
+            - link "Mi trayectoria" [ref=f10e56] [cursor=pointer]:
+              - /url: /blog/about/
+              - text: Mi trayectoria ↗
+            - link "Ver mi CV" [ref=f10e57] [cursor=pointer]:
+              - /url: /es/cv/
+              - text: Ver mi CV ↗
+    - generic [ref=f10e58]:
+      - region "Recursos y herramientas" [ref=f10e59]:
+        - heading "Recursos y herramientas" [level=2] [ref=f10e60]
+        - list [ref=f10e61]:
+          - listitem [ref=f10e62]:
+            - link "Zona Lab" [ref=f10e63] [cursor=pointer]:
+              - /url: /zona-lab/
+          - listitem [ref=f10e64]:
+            - link "Teleprompter" [ref=f10e65] [cursor=pointer]:
+              - /url: /prompt/
+          - listitem [ref=f10e66]:
+            - link "Video Organizer" [ref=f10e67] [cursor=pointer]:
+              - /url: /videos/
+          - listitem [ref=f10e68]:
+            - link "Extensiones" [ref=f10e69] [cursor=pointer]:
+              - /url: /extensions/
+          - listitem [ref=f10e70]:
+            - link "Calculadora 3D" [ref=f10e71] [cursor=pointer]:
+              - /url: /calculadora/
+          - listitem [ref=f10e72]:
+            - link "URLs útiles" [ref=f10e73] [cursor=pointer]:
+              - /url: /urls/
+          - listitem [ref=f10e74]:
+            - link "Rincón retro" [ref=f10e75] [cursor=pointer]:
+              - /url: /main/
+      - region "¿Conversamos?" [ref=f10e76]:
+        - heading "¿Conversamos?" [level=2] [ref=f10e77]
+        - paragraph [ref=f10e78]: Si estás organizando una charla o querés conversar sobre docencia y tecnología, escribime.
+        - link "Contactame" [ref=f10e79] [cursor=pointer]:
+          - /url: mailto:mauriciogcode@gmail.com
+          - text: Contactame ↗
+  - contentinfo [ref=f10e80]:
+    - paragraph [ref=f10e81]:
+      - text: © 2026 Mauricio González · Córdoba, Argentina ·
+      - link "Contacto" [ref=f10e82] [cursor=pointer]:
+        - /url: "#contacto"
+      - text: ·
+      - link "Privacidad" [ref=f10e83] [cursor=pointer]:
+        - /url: /blog/privacy/
+  - generic [ref=f10e86]:
+    - button "Menu" [ref=f10e87]
+    - button "Inspect" [ref=f10e93]
+    - button "Audit" [ref=f10e97]
+    - button "Settings" [ref=f10e102]

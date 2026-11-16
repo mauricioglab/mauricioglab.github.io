@@ -1,0 +1,68 @@
+---
+// Sobre mí de Mauricio en español o inglés.
+import { Image } from 'astro:assets';
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+import SocialLinks from '../shared/SocialLinks.astro';
+import { c, md } from '../../utils/content';
+import { getGallery } from '../../utils/portal-data';
+import oficina from '../../assets/mauricio/retrato-oficina.png';
+
+interface Props { lang?: 'es' | 'en' }
+const { lang = 'es' } = Astro.props;
+const en = lang === 'en';
+const L = (es: string, enText: string) => (en ? enText : es);
+
+const gallery = await getGallery(lang);
+const mosaic = [1, 2, 3].map((n) => gallery.get(`mosaico-${n}`)!);
+const trail = Array.from({ length: 10 }, (_, i) => gallery.get(`trayectoria-${i + 1}`)!);
+const t = (k: string) => c('sobre-mi', k, lang);
+const pageTitle = await t('page_title');
+const subtitle = await t('subtitle');
+const bio = await Promise.all([1, 2, 3, 4].map((n) => t(`bio_p${n}`)));
+const bioLinks = await t('bio_links');
+const contactButton = await t('contact_button');
+---
+
+<BaseTailwind
+  title={L('Sobre mí | Mauricio González', 'About | Mauricio González')}
+  description={L('Trayectoria de Mauricio González como docente y desarrollador: desarrollo de software, ciencia de datos e inteligencia artificial aplicada.', 'Background of Mauricio González as a teacher and developer: software development, data science and applied artificial intelligence.')}
+  lang={lang}
+  current="sobre-mi"
+  showMateGame={false}
+>
+  <div class="pt">
+    <h1 class="pt-page-title">{pageTitle}</h1>
+
+    <section class="pt-about" aria-labelledby="profesion">
+      <div class="pt-about-portrait">
+        <Image src={oficina} alt={L('Mauricio González sonriendo en su escritorio, con libros de inteligencia artificial y desarrollo de software', 'Mauricio González smiling at his desk, with books on artificial intelligence and software development')} widths={[640, 900, 1199]} sizes="(max-width: 899px) 100vw, 640px" format="webp" loading="eager" fetchpriority="high" style="object-position: 45% 25%" />
+      </div>
+      <div class="pt-about-bio">
+        <h2 id="profesion">{subtitle}</h2>
+        {bio.map((p) => <p set:html={md(p)} />)}
+        <p set:html={md(bioLinks)} />
+        <nav class="pt-social pt-social-inline" aria-label={L('Redes sociales', 'Social networks')}><SocialLinks lang={lang} /></nav>
+        <div class="pt-about-links">
+          <a class="pt-button pt-button-cv" href={en ? '/en/contact/' : '/es/contacto/'}>{contactButton}</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="pt-mosaic" aria-label={L('Mosaico de fotos', 'Photo mosaic')}>
+      {mosaic.map((m) => (
+        <figure>
+          {m.image_url ? <img src={m.image_url} alt={m.alt} loading="lazy" /> : <div class="pt-ph">{L('Foto pendiente', 'Photo pending')}</div>}
+        </figure>
+      ))}
+    </div>
+
+    <div class="pt-trail" aria-label={L('Trayectoria', 'Background')}>
+      {trail.map((tr, i) => (
+        <figure class:list={{ 'pt-trail-wide': i >= 8 }}>
+          <div class="pt-trail-img">{tr.image_url ? <img src={tr.image_url} alt={tr.alt} loading="lazy" /> : <div class="pt-ph">{L('Foto pendiente', 'Photo pending')}</div>}</div>
+          <figcaption>{tr.caption}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</BaseTailwind>

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { db } from '../../lib/db';
 
-export type FieldType = 'text' | 'textarea' | 'markdown' | 'date' | 'checkbox' | 'number' | 'json' | 'tags' | 'select' | 'image' | 'images';
+export type FieldType = 'text' | 'textarea' | 'markdown' | 'date' | 'checkbox' | 'number' | 'json' | 'tags' | 'select' | 'image' | 'images' | 'text-i18n' | 'textarea-i18n';
 export interface Field {
   name: string;
   label: string;
@@ -12,6 +12,7 @@ export interface Field {
   options?: string[];
   bucket?: string; // para type 'image'
   help?: string;
+  nameEn?: string; // para text-i18n / textarea-i18n: columna del inglés (name es la del español)
 }
 export interface Resource {
   table: string;
@@ -30,6 +31,7 @@ const toForm = (fields: Field[], row: Row | null, defaults: Record<string, unkno
   const out: Row = {};
   for (const f of fields) {
     const v = row ? row[f.name] : defaults[f.name];
+    if (f.nameEn) out[f.nameEn] = (row ? row[f.nameEn] : defaults[f.nameEn]) ?? '';
     if (f.type === 'tags') out[f.name] = Array.isArray(v) ? v.join(', ') : '';
     else if (f.type === 'images') out[f.name] = Array.isArray(v) ? v : [];
     else if (f.type === 'json') out[f.name] = v == null ? '' : JSON.stringify(v, null, 2);
@@ -44,6 +46,7 @@ const fromForm = (fields: Field[], form: Row): Row => {
   const out: Row = {};
   for (const f of fields) {
     const v = form[f.name];
+    if (f.nameEn) out[f.nameEn] = String(form[f.nameEn] ?? '').trim() || null;
     if (f.type === 'tags') out[f.name] = String(v).split(',').map((s) => s.trim()).filter(Boolean);
     else if (f.type === 'images') out[f.name] = Array.isArray(v) ? v : [];
     else if (f.type === 'json') out[f.name] = String(v).trim() ? JSON.parse(String(v)) : null;
@@ -88,6 +91,12 @@ export default function AbmResource({ siteId, resource: res }: { siteId: string;
   const [form, setForm] = useState<Row>({});
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
+  const [view, setViewState] = useState<'both' | 'es' | 'en'>(() => {
+    try { return (localStorage.getItem('pt_admin_lang_view') as 'both' | 'es' | 'en') || 'both'; } catch { return 'both'; }
+  });
+  const setView = (v: 'both' | 'es' | 'en') => { setViewState(v); try { localStorage.setItem('pt_admin_lang_view', v); } catch { /* ignore */ } };
+  const [translating, setTranslating] = useState('');
+  const hasI18n = res.fields.some((f) => f.nameEn);
 
   async function load() {
     let q: any = db.from(res.table).select('*');
@@ -143,6 +152,17 @@ export default function AbmResource({ siteId, resource: res }: { siteId: string;
     setForm({ ...form, [field.name]: urls });
   }
 
+  async function translate(f: Field, from: 'es' | 'en') {
+    const src = String(form[from === 'es' ? f.name : f.nameEn!] ?? '').trim();
+    if (!src) { setStatus('Escribí primero el texto que querés traducir.'); return; }
+    setTranslating(`${f.name}-${from}`);
+    setStatus('');
+    const { data, error } = await db.functions.invoke('blog-translate', { body: { text: src, from, to: from === 'es' ? 'en' : 'es' } });
+    setTranslating('');
+    if (error || !data?.text) { setStatus(`No se pudo traducir: ${error?.message ?? 'sin respuesta'}`); return; }
+    setForm({ ...form, [from === 'es' ? f.nameEn! : f.name]: data.text });
+  }
+
   async function upload(field: Field, file: File) {
     const bucket = field.bucket || 'blog-images';
     const ext = (file.name.split('.').pop() || 'png').toLowerCase();
@@ -174,10 +194,39 @@ export default function AbmResource({ siteId, resource: res }: { siteId: string;
       ) : (
         <form class="pt-form" onSubmit={save}>
           <h3>{editing.id ? 'Editar' : 'Nuevo'}</h3>
+          {hasI18n && (
+            <div class="pt-lang-view" role="group" aria-label="Idiomas que se muestran">
+              <span>Ver:</span>
+              {([['both', 'Ambos'], ['es', 'Español'], ['en', 'English']] as const).map(([v, label]) => (
+                <button type="button" class={view === v ? 'is-on' : ''} aria-pressed={view === v} onClick={() => setView(v)}>{label}</button>
+              ))}
+            </div>
+          )}
           {res.fields.map((f) => (
             <div class="pt-field">
               <label for={`f-${f.name}`}>{f.label}{f.required && <span class="pt-req">(obligatorio)</span>}</label>
-              {f.type === 'textarea' || f.type === 'json' ? (
+              {f.type === 'text-i18n' || f.type === 'textarea-i18n' ? (
+                <div class={'pt-i18n pt-i18n-' + view}>
+                  {view !== 'en' && (
+                    <div class="pt-i18n-col">
+                      <span class="pt-i18n-tag">Español</span>
+                      {f.type === 'text-i18n'
+                        ? <input id={`f-${f.name}`} type="text" value={form[f.name]} required={f.required} onInput={(e) => setForm({ ...form, [f.name]: (e.target as HTMLInputElement).value })} />
+                        : <textarea id={`f-${f.name}`} value={form[f.name]} required={f.required} onInput={(e) => setForm({ ...form, [f.name]: (e.target as HTMLTextAreaElement).value })} />}
+                      {view === 'both' && <button type="button" class="pt-admin-link" disabled={translating !== ''} onClick={() => translate(f, 'es')}>{translating === `${f.name}-es` ? 'Traduciendo…' : 'Traducir al inglés →'}</button>}
+                    </div>
+                  )}
+                  {view !== 'es' && (
+                    <div class="pt-i18n-col">
+                      <span class="pt-i18n-tag">English</span>
+                      {f.type === 'text-i18n'
+                        ? <input id={`f-${f.nameEn}`} type="text" value={form[f.nameEn!]} onInput={(e) => setForm({ ...form, [f.nameEn!]: (e.target as HTMLInputElement).value })} />
+                        : <textarea id={`f-${f.nameEn}`} value={form[f.nameEn!]} onInput={(e) => setForm({ ...form, [f.nameEn!]: (e.target as HTMLTextAreaElement).value })} />}
+                      {view === 'both' && <button type="button" class="pt-admin-link" disabled={translating !== ''} onClick={() => translate(f, 'en')}>{translating === `${f.name}-en` ? 'Traduciendo…' : '← Traducir al español'}</button>}
+                    </div>
+                  )}
+                </div>
+              ) : f.type === 'textarea' || f.type === 'json' ? (
                 <textarea id={`f-${f.name}`} value={form[f.name]} required={f.required} onInput={(e) => setForm({ ...form, [f.name]: (e.target as HTMLTextAreaElement).value })} />
               ) : f.type === 'markdown' ? (
                 <textarea id={`f-${f.name}`} class="pt-admin-md" value={form[f.name]} required={f.required} onInput={(e) => setForm({ ...form, [f.name]: (e.target as HTMLTextAreaElement).value })} />

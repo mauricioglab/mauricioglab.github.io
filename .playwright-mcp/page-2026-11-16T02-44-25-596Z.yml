@@ -1,0 +1,88 @@
+- generic [ref=f6e2]:
+  - banner [ref=f6e3]:
+    - generic [ref=f6e4]:
+      - link "Mauricio González" [ref=f6e5] [cursor=pointer]:
+        - /url: /
+      - navigation "Sitio" [ref=f6e7]:
+        - group [ref=f6e8]:
+          - generic "Menú" [ref=f6e9] [cursor=pointer]
+  - navigation "Navegación principal" [ref=f6e10]:
+    - generic [ref=f6e11]:
+      - list "Sección principal" [ref=f6e12]:
+        - listitem [ref=f6e13]:
+          - link "Lista de artículos" [ref=f6e14] [cursor=pointer]:
+            - /url: /blog/
+            - text: Artículos
+      - list "Sobre el blog" [ref=f6e15]:
+        - listitem [ref=f6e16]:
+          - link "Acerca del blog" [ref=f6e17] [cursor=pointer]:
+            - /url: /blog/about/
+            - text: Acerca de
+        - listitem [ref=f6e18]:
+          - link "Archivo" [ref=f6e19] [cursor=pointer]:
+            - /url: /blog/archives/
+        - listitem [ref=f6e20]:
+          - link "Buscar" [ref=f6e21] [cursor=pointer]:
+            - /url: /blog/search/
+    - list "Filtrar por etiqueta" [ref=f6e23]:
+      - listitem [ref=f6e24]:
+        - link "Artículos de la categoría Inteligencia Artificial" [ref=f6e25] [cursor=pointer]:
+          - /url: /blog/category/inteligencia-artificial/
+          - text: "# Inteligencia Artificial"
+      - listitem [ref=f6e26]:
+        - link "Artículos de la categoría Libros" [ref=f6e27] [cursor=pointer]:
+          - /url: /blog/category/libros/
+          - text: "# Libros"
+      - listitem [ref=f6e28]:
+        - link "Artículos de la categoría Reflexiones" [ref=f6e29] [cursor=pointer]:
+          - /url: /blog/category/reflexiones/
+          - text: "# Reflexiones"
+      - listitem [ref=f6e30]:
+        - link "Artículos de la categoría Tecnología" [ref=f6e31] [cursor=pointer]:
+          - /url: /blog/category/tecnología/
+          - text: "# Tecnología"
+  - banner [ref=f6e32]:
+    - generic [ref=f6e35]:
+      - link "Parece que fue ayer" [ref=f6e37] [cursor=pointer]:
+        - /url: /blog/
+      - paragraph [ref=f6e38]: Artículos y pensamientos
+  - main [ref=f6e41]:
+    - article [ref=f6e42]:
+      - heading "Acerca de mí" [level=1] [ref=f6e44]
+      - generic [ref=f6e45]:
+        - paragraph [ref=f6e46]:
+          - text: Hola, soy
+          - strong [ref=f6e47]: Mauricio González
+          - text: .
+        - paragraph [ref=f6e48]: "Soy profesor de Filosofía y Técnico Analista en Computación. Pueden parecer dos caminos bastante distintos, pero para mí siempre tuvieron algo en común: la filosofía me enseñó a hacer buenas preguntas y la tecnología me dio herramientas para intentar responderlas."
+        - paragraph [ref=f6e49]: "Hace más de cinco años que trabajo entre el aula y el desarrollo de software. Ambos mundos se fueron mezclando naturalmente: lo que aprendo desarrollando cambia mi forma de enseñar, y muchas preguntas que aparecen en el aula me hacen repensar lo que hago como desarrollador."
+        - heading "Qué hago" [level=2] [ref=f6e50]
+        - paragraph [ref=f6e51]:
+          - text: Soy
+          - strong [ref=f6e52]: docente en carreras vinculadas con tecnología
+          - text: ", donde enseño programación, desarrollo web, proyectos y temas relacionados con datos e inteligencia artificial."
+        - paragraph [ref=f6e53]:
+          - text: También trabajo como
+          - strong [ref=f6e54]: desarrollador y referente técnico
+          - text: ", participando en proyectos donde además de programar hay que entender problemas, evaluar alternativas y tomar decisiones."
+        - paragraph [ref=f6e55]: Me interesa especialmente aprender haciendo. Muchas veces eso significa probar algo, equivocarme, descubrir por qué no funcionó y volver a intentarlo. Algunas de esas experiencias terminan convirtiéndose en proyectos y otras simplemente en aprendizaje.
+        - heading "Sobre este blog" [level=2] [ref=f6e56]
+        - paragraph [ref=f6e57]: Este espacio nace de esa misma idea.
+        - paragraph [ref=f6e58]: Acá comparto cosas que estoy aprendiendo, haciendo o pensando. No como respuestas definitivas, sino como una forma de ordenar ideas, dejar registro del proceso y, con suerte, que algo de eso también le sirva a alguien más.
+        - heading "Contacto" [level=2] [ref=f6e59]
+        - paragraph [ref=f6e60]:
+          - text: Si querés escribirme, podés hacerlo en
+          - link "mauriciogcode@gmail.com" [ref=f6e61] [cursor=pointer]:
+            - /url: mailto:mauriciogcode@gmail.com
+          - text: o encontrarme en
+          - link "LinkedIn" [ref=f6e62] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/mauricioglab/
+          - text: .
+  - contentinfo [ref=f6e63]:
+    - paragraph [ref=f6e64]:
+      - text: © 2026 Mauricio González · Córdoba, Argentina ·
+      - link "Contacto" [ref=f6e65] [cursor=pointer]:
+        - /url: "#contacto"
+      - text: ·
+      - link "Privacidad" [ref=f6e66] [cursor=pointer]:
+        - /url: /blog/privacy/

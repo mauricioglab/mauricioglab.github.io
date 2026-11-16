@@ -1,0 +1,136 @@
+- generic [active] [ref=f12e1]:
+  - banner [ref=f12e2]:
+    - generic [ref=f12e3]:
+      - link "Mauricio González" [ref=f12e4] [cursor=pointer]:
+        - /url: /
+      - navigation "Sitio" [ref=f12e6]:
+        - list [ref=f12e7]:
+          - listitem [ref=f12e8]:
+            - link "Sobre mí" [ref=f12e9] [cursor=pointer]:
+              - /url: /sobre-mi/
+          - listitem [ref=f12e10]:
+            - link "Charlas" [ref=f12e11] [cursor=pointer]:
+              - /url: /es/disertaciones/
+          - listitem [ref=f12e12]:
+            - link "Proyectos" [ref=f12e13] [cursor=pointer]:
+              - /url: /es/portfolio/
+          - listitem [ref=f12e14]:
+            - link "Blog" [ref=f12e15] [cursor=pointer]:
+              - /url: /blog/
+          - listitem [ref=f12e16]:
+            - link "Recursos" [ref=f12e17] [cursor=pointer]:
+              - /url: /#recursos
+          - listitem [ref=f12e18]:
+            - link "Contacto" [ref=f12e19] [cursor=pointer]:
+              - /url: "#contacto"
+  - main [ref=f12e20]:
+    - generic [ref=f12e22]:
+      - navigation "Secciones principales" [ref=f12e24]:
+        - generic [ref=f12e25]:
+          - heading "Profesional" [level=2] [ref=f12e27]
+          - list [ref=f12e28]:
+            - listitem [ref=f12e29]:
+              - link "Portfolio Proyectos y casos" [ref=f12e30] [cursor=pointer]:
+                - /url: /es/portfolio/
+                - generic [ref=f12e31]: Portfolio
+                - generic [ref=f12e32]: Proyectos y casos
+            - listitem [ref=f12e33]:
+              - link "Disertaciones Charlas y workshops" [ref=f12e34] [cursor=pointer]:
+                - /url: /es/disertaciones/
+                - generic [ref=f12e35]: Disertaciones
+                - generic [ref=f12e36]: Charlas y workshops
+        - generic [ref=f12e37]:
+          - generic [ref=f12e38]:
+            - heading "Parece que fue ayer" [level=2] [ref=f12e39]
+            - generic [ref=f12e40]: 2 páginas
+          - list [ref=f12e41]:
+            - listitem [ref=f12e42]:
+              - link "Parece que fue ayer (Blog) Artículos y pensamientos" [ref=f12e43] [cursor=pointer]:
+                - /url: /blog/
+                - generic [ref=f12e44]:
+                  - generic [ref=f12e45]: Parece que fue ayer (Blog)
+                  - generic [ref=f12e46]: Artículos y pensamientos
+                - generic [aria-hidden] [ref=f12e47]: →
+            - listitem [ref=f12e48]:
+              - link "Zona Lab Recursos de estudio" [ref=f12e49] [cursor=pointer]:
+                - /url: /zona-lab/
+                - generic [ref=f12e50]:
+                  - generic [ref=f12e51]: Zona Lab
+                  - generic [ref=f12e52]: Recursos de estudio
+                - generic [aria-hidden] [ref=f12e53]: →
+        - generic [ref=f12e54]:
+          - generic [ref=f12e55]:
+            - heading "Recursos" [level=2] [ref=f12e56]
+            - generic [ref=f12e57]: 1 página
+          - list [ref=f12e58]:
+            - listitem [ref=f12e59]:
+              - link "URLs útiles Dev tools y apps" [ref=f12e60] [cursor=pointer]:
+                - /url: /urls/
+                - generic [ref=f12e61]:
+                  - generic [ref=f12e62]: URLs útiles
+                  - generic [ref=f12e63]: Dev tools y apps
+                - generic [aria-hidden] [ref=f12e64]: →
+        - generic [ref=f12e65]:
+          - generic [ref=f12e66]:
+            - heading "Apps" [level=2] [ref=f12e67]
+            - generic [ref=f12e68]: 4 páginas
+          - list [ref=f12e69]:
+            - listitem [ref=f12e70]:
+              - link "Teleprompter Ingeniería de prompts" [ref=f12e71] [cursor=pointer]:
+                - /url: /prompt/
+                - generic [ref=f12e72]:
+                  - generic [ref=f12e73]: Teleprompter
+                  - generic [ref=f12e74]: Ingeniería de prompts
+                - generic [aria-hidden] [ref=f12e75]: →
+            - listitem [ref=f12e76]:
+              - link "Video Organizer YouTube + Udemy" [ref=f12e77] [cursor=pointer]:
+                - /url: /videos/
+                - generic [ref=f12e78]:
+                  - generic [ref=f12e79]: Video Organizer
+                  - generic [ref=f12e80]: YouTube + Udemy
+                - generic [aria-hidden] [ref=f12e81]: →
+            - listitem [ref=f12e82]:
+              - link "Extensiones Chrome / Firefox" [ref=f12e83] [cursor=pointer]:
+                - /url: /extensions/
+                - generic [ref=f12e84]:
+                  - generic [ref=f12e85]: Extensiones
+                  - generic [ref=f12e86]: Chrome / Firefox
+                - generic [aria-hidden] [ref=f12e87]: →
+            - listitem [ref=f12e88]:
+              - link "Calculadora 3D Costos de impresión" [ref=f12e89] [cursor=pointer]:
+                - /url: /calculadora/
+                - generic [ref=f12e90]:
+                  - generic [ref=f12e91]: Calculadora 3D
+                  - generic [ref=f12e92]: Costos de impresión
+                - generic [aria-hidden] [ref=f12e93]: →
+        - generic [ref=f12e94]:
+          - generic [ref=f12e95]:
+            - heading "Retro" [level=2] [ref=f12e96]
+            - generic [ref=f12e97]: 1 página
+          - list [ref=f12e98]:
+            - listitem [ref=f12e99]:
+              - link "Rincón retro Widgets, GIFs y curiosidades" [ref=f12e100] [cursor=pointer]:
+                - /url: /main/
+                - generic [ref=f12e101]:
+                  - generic [ref=f12e102]: Rincón retro
+                  - generic [ref=f12e103]: Widgets, GIFs y curiosidades
+                - generic [aria-hidden] [ref=f12e104]: →
+      - generic [ref=f12e107]:
+        - generic [ref=f12e108]: "404"
+        - generic [ref=f12e109]:
+          - heading "Página no encontrada" [level=1] [ref=f12e110]
+          - paragraph [ref=f12e111]: El contenido que buscás no está acá o cambió de lugar.
+        - generic [ref=f12e112]:
+          - link "← Volver al inicio" [ref=f12e113] [cursor=pointer]:
+            - /url: /
+          - link "Parece que fue ayer (Blog)" [ref=f12e114] [cursor=pointer]:
+            - /url: /blog/
+  - contentinfo [ref=f12e115]:
+    - paragraph [ref=f12e116]:
+      - text: © 2026 Mauricio González · Córdoba, Argentina ·
+      - link "Contacto" [ref=f12e117] [cursor=pointer]:
+        - /url: "#contacto"
+      - text: ·
+      - link "Privacidad" [ref=f12e118] [cursor=pointer]:
+        - /url: /blog/privacy/
+  - button "🧉" [ref=f12e119] [cursor=pointer]

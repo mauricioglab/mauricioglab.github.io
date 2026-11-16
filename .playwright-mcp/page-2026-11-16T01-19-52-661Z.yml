@@ -1,0 +1,19 @@
+- generic [active] [ref=f11e1]:
+  - banner [ref=f11e2]:
+    - generic [ref=f11e3]:
+      - link "Iris Tárraga" [ref=f11e4] [cursor=pointer]:
+        - /url: ../
+      - navigation "Principal" [ref=f11e5]:
+        - link "Inicio" [ref=f11e6] [cursor=pointer]:
+          - /url: ../
+        - link "Sobre mí" [ref=f11e7] [cursor=pointer]:
+          - /url: ../sobre-mi/
+        - link "CV" [ref=f11e8] [cursor=pointer]:
+          - /url: ./
+  - main [ref=f11e9]:
+    - link "← Volver al portal" [ref=f11e10] [cursor=pointer]:
+      - /url: ../
+    - heading "Currículum de Iris Tárraga" [level=1] [ref=f11e11]
+    - paragraph [ref=f11e12]: El CV está en preparación.
+  - contentinfo [ref=f11e13]:
+    - generic [ref=f11e14]: Iris Tárraga

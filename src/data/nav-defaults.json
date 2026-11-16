@@ -1,26 +1,38 @@
 [
   {
     "label": "Inicio",
-    "href": "/"
+    "href": "/",
+    "label_en": "Home",
+    "href_en": "/en/"
   },
   {
     "label": "Sobre mí",
-    "href": "/es/sobre-mi/"
+    "href": "/es/sobre-mi/",
+    "label_en": "About",
+    "href_en": "/en/about/"
   },
   {
     "label": "Portafolio",
-    "href": "/es/portfolio/"
+    "href": "/es/portfolio/",
+    "label_en": "Portfolio",
+    "href_en": "/en/portfolio/"
   },
   {
-    "label": "Disertaciones",
-    "href": "/es/disertaciones/"
+    "label": "Eventos",
+    "href": "/es/eventos/",
+    "label_en": "Events (ES)",
+    "href_en": "/es/eventos/"
   },
   {
     "label": "Blog",
-    "href": "/blog/"
+    "href": "/blog/",
+    "label_en": "Blog (ES)",
+    "href_en": "/blog/"
   },
   {
     "label": "Contáctame",
-    "href": "/es/contacto/"
+    "href": "/es/contacto/",
+    "label_en": "Contact",
+    "href_en": "/en/contact/"
   }
 ]

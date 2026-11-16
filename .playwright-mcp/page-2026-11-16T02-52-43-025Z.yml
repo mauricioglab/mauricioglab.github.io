@@ -1,0 +1,55 @@
+- generic [active] [ref=f18e1]:
+  - banner [ref=f18e2]:
+    - generic [ref=f18e3]:
+      - link "Mauricio González" [ref=f18e4] [cursor=pointer]:
+        - /url: /
+      - navigation "Sitio" [ref=f18e6]:
+        - group [ref=f18e7]:
+          - generic "Menú" [ref=f18e8] [cursor=pointer]
+  - main [ref=f18e9]:
+    - generic [ref=f18e10]:
+      - heading "Sobre mí" [level=1] [ref=f18e11]
+      - region "Docencia, desarrollo de software e IA aplicada" [ref=f18e12]:
+        - figure [ref=f18e13]:
+          - img "Mauricio González en su despacho" [ref=f18e14]
+        - generic [ref=f18e15]:
+          - heading "Docencia, desarrollo de software e IA aplicada" [level=2] [ref=f18e16]
+          - paragraph [ref=f18e17]: Soy Mauricio González, profesor de Filosofía y Analista de Sistemas de Computación. La filosofía me enseñó a hacer buenas preguntas y el desarrollo de software me dio herramientas para explorar algunas respuestas.
+          - paragraph [ref=f18e18]: En el Instituto Cervantes enseño sobre ciencia de datos e inteligencia artificial. También trabajo como desarrollador y referente técnico. Lo que aprendo en los proyectos vuelve al aula, y las preguntas de mis estudiantes me hacen revisar cómo desarrollo.
+          - paragraph [ref=f18e19]: Me interesa que quienes empiezan en tecnología puedan explicar cómo funciona una solución, comprobar sus resultados y decidir cuándo tiene sentido usarla.
+      - region "Trayectoria en la práctica" [ref=f18e20]:
+        - heading "Trayectoria en la práctica" [level=2] [ref=f18e21]
+        - generic [ref=f18e22]:
+          - article [ref=f18e23]:
+            - heading [level=3] [ref=f18e24]:
+              - link "Charlas y disertaciones" [ref=f18e25] [cursor=pointer]:
+                - /url: /es/disertaciones/
+            - paragraph [ref=f18e26]: Presentaciones sobre tecnología, educación e inteligencia artificial.
+          - article [ref=f18e27]:
+            - heading [level=3] [ref=f18e28]:
+              - link "Proyectos de software" [ref=f18e29] [cursor=pointer]:
+                - /url: /es/portfolio/
+            - paragraph [ref=f18e30]: Trabajos de arquitectura, análisis de sistemas, datos e IA aplicada.
+          - article [ref=f18e31]:
+            - heading [level=3] [ref=f18e32]:
+              - link "Materiales para aprender" [ref=f18e33] [cursor=pointer]:
+                - /url: /zona-lab/
+            - paragraph [ref=f18e34]: Recursos de estudio para acompañar lo que trabajamos en clase.
+      - region "CV y contacto" [ref=f18e35]:
+        - generic [ref=f18e36]:
+          - heading "CV y contacto" [level=2] [ref=f18e37]
+          - generic [ref=f18e38]:
+            - link "Ver mi CV" [ref=f18e39] [cursor=pointer]:
+              - /url: /es/cv/
+            - link "LinkedIn" [ref=f18e40] [cursor=pointer]:
+              - /url: https://linkedin.com/in/mauricioglab
+            - link "Contactarme" [ref=f18e41] [cursor=pointer]:
+              - /url: "#contacto"
+  - contentinfo [ref=f18e42]:
+    - paragraph [ref=f18e43]:
+      - text: © 2026 Mauricio González · Córdoba, Argentina ·
+      - link "Contacto" [ref=f18e44] [cursor=pointer]:
+        - /url: "#contacto"
+      - text: ·
+      - link "Privacidad" [ref=f18e45] [cursor=pointer]:
+        - /url: /blog/privacy/

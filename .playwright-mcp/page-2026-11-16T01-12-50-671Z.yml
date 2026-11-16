@@ -1,0 +1,96 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Mauricio González" [ref=e4] [cursor=pointer]:
+        - /url: /
+      - navigation "Sitio" [ref=e6]:
+        - group [ref=e7]:
+          - generic "Menú" [ref=e8] [cursor=pointer]
+  - main [ref=e9]:
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - paragraph [ref=e13]: Docente y desarrollador
+        - heading "Enseño desarrollo de software e IA aplicada." [level=1] [ref=e14]
+        - paragraph [ref=e15]: Soy Mauricio González. Acompaño a futuros analistas y desarrolladores a entender la tecnología, probarla y decidir cuándo vale la pena usarla.
+        - link "Ver charlas" [ref=e16] [cursor=pointer]:
+          - /url: /es/disertaciones/
+          - text: Ver charlas
+          - generic [aria-hidden] [ref=e17]: ↗
+      - img "Mauricio frente a un grupo, junto a una pizarra y una presentación sobre IA en la educación" [ref=e18]
+    - region "Entre el aula y el código" [ref=e19]:
+      - heading "Entre el aula y el código" [level=2] [ref=e20]
+      - generic [ref=e21]:
+        - article [ref=e22]:
+          - paragraph [ref=e23]: Docencia
+          - heading [level=3] [ref=e24]:
+            - link "Charlas y disertaciones" [ref=e25] [cursor=pointer]:
+              - /url: /es/disertaciones/
+              - text: Charlas y disertaciones ↗
+          - paragraph [ref=e26]: Presentaciones y conversaciones sobre tecnología, educación e inteligencia artificial.
+        - article [ref=e27]:
+          - paragraph [ref=e28]: Desarrollo
+          - heading [level=3] [ref=e29]:
+            - link "Un caso de arquitectura" [ref=e30] [cursor=pointer]:
+              - /url: /caso-arquitectura/
+              - text: Un caso de arquitectura ↗
+          - paragraph [ref=e31]: Del relevamiento a las pruebas, con las decisiones que dieron forma al sistema.
+        - article [ref=e32]:
+          - paragraph [ref=e33]: Blog
+          - heading [level=3] [ref=e34]:
+            - link "Parece que fue ayer" [ref=e35] [cursor=pointer]:
+              - /url: /blog/
+              - text: Parece que fue ayer ↗
+          - paragraph [ref=e36]: Escribo sobre tecnología, filosofía y las preguntas que aparecen entre el aula y el código.
+    - region "Sobre mí" [ref=e37]:
+      - generic [ref=e38]:
+        - img "Retrato de Mauricio González en su despacho" [ref=e39]
+        - generic [ref=e40]:
+          - heading "Sobre mí" [level=2] [ref=e41]
+          - paragraph [ref=e42]: La filosofía me enseñó a hacer buenas preguntas. El desarrollo de software me dio herramientas para explorar algunas respuestas. En el aula se encuentran esas dos formas de trabajar.
+          - paragraph [ref=e43]: Enseño programación, desarrollo web e IA. También trabajo como desarrollador y referente técnico. Lo que aprendo en los proyectos vuelve al aula, y las preguntas de mis estudiantes me hacen repensar cómo desarrollo.
+          - generic [ref=e44]:
+            - link "Ver mi CV" [ref=e45] [cursor=pointer]:
+              - /url: /es/cv/
+              - text: Ver mi CV ↗
+            - link "VeloCityLab" [ref=e46] [cursor=pointer]:
+              - /url: https://velocitylab.com.ar
+              - text: VeloCityLab ↗
+    - generic [ref=e47]:
+      - region "Recursos y herramientas" [ref=e48]:
+        - heading "Recursos y herramientas" [level=2] [ref=e49]
+        - list [ref=e50]:
+          - listitem [ref=e51]:
+            - link "Zona Lab" [ref=e52] [cursor=pointer]:
+              - /url: /zona-lab/
+          - listitem [ref=e53]:
+            - link "Teleprompter" [ref=e54] [cursor=pointer]:
+              - /url: /prompt/
+          - listitem [ref=e55]:
+            - link "Video Organizer" [ref=e56] [cursor=pointer]:
+              - /url: /videos/
+          - listitem [ref=e57]:
+            - link "Extensiones" [ref=e58] [cursor=pointer]:
+              - /url: /extensions/
+          - listitem [ref=e59]:
+            - link "Calculadora 3D" [ref=e60] [cursor=pointer]:
+              - /url: /calculadora/
+          - listitem [ref=e61]:
+            - link "URLs útiles" [ref=e62] [cursor=pointer]:
+              - /url: /urls/
+          - listitem [ref=e63]:
+            - link "Rincón retro" [ref=e64] [cursor=pointer]:
+              - /url: /main/
+      - region "¿Conversamos?" [ref=e65]:
+        - heading "¿Conversamos?" [level=2] [ref=e66]
+        - paragraph [ref=e67]: Si estás organizando una charla o querés conversar sobre docencia y tecnología, escribime.
+        - link "Contactame" [ref=e68] [cursor=pointer]:
+          - /url: mailto:mauriciogcode@gmail.com
+          - text: Contactame ↗
+  - contentinfo [ref=e69]:
+    - paragraph [ref=e70]:
+      - text: © 2026 Mauricio González · Córdoba, Argentina ·
+      - link "Contacto" [ref=e71] [cursor=pointer]:
+        - /url: "#contacto"
+      - text: ·
+      - link "Privacidad" [ref=e72] [cursor=pointer]:
+        - /url: /blog/privacy/

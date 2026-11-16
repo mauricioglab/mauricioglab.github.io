@@ -1,0 +1,50 @@
+- generic [active] [ref=f13e1]:
+  - banner [ref=f13e2]:
+    - generic [ref=f13e3]:
+      - link "Fernanda Tárraga" [ref=f13e4] [cursor=pointer]:
+        - /url: ../
+      - navigation "Principal" [ref=f13e5]:
+        - link "Inicio" [ref=f13e6] [cursor=pointer]:
+          - /url: ../
+        - link "Sobre mí" [ref=f13e7] [cursor=pointer]:
+          - /url: ./
+        - link "Charlas" [ref=f13e8] [cursor=pointer]:
+          - /url: ../#charlas
+        - link "Proyectos" [ref=f13e9] [cursor=pointer]:
+          - /url: ../#proyectos
+        - link "Recursos" [ref=f13e10] [cursor=pointer]:
+          - /url: ../#recursos
+        - link "Contacto" [ref=f13e11] [cursor=pointer]:
+          - /url: ../#contacto
+        - link "CV" [ref=f13e12] [cursor=pointer]:
+          - /url: ../cv/
+  - main [ref=f13e13]:
+    - heading "Sobre mí" [level=1] [ref=f13e14]
+    - region "Análisis funcional y calidad de datos en seguros" [ref=f13e15]:
+      - figure [ref=f13e16]:
+        - img "Fernanda Tárraga junto a la ventana" [ref=f13e17]
+      - generic [ref=f13e18]:
+        - heading "Análisis funcional y calidad de datos en seguros" [level=2] [ref=f13e19]
+        - paragraph [ref=f13e20]: "Soy Fernanda Tárraga, analista funcional de sistemas y analista de datos. Mi experiencia en el sector asegurador me llevó a trabajar con la información que sostiene dos operaciones del negocio: pólizas y facturación."
+        - paragraph [ref=f13e21]: En Interaxios revisaba a diario la calidad de esos registros. Detectar duplicados, datos incompletos e inconsistencias era parte del trabajo, junto con entender cómo los procesos y sistemas producían y usaban esa información.
+        - paragraph [ref=f13e22]: "Me interesa ese cruce entre el dato y el proceso: entender qué necesita el negocio y cómo comprobar si la información disponible sirve para esa tarea."
+    - region "Trayectoria en la práctica" [ref=f13e23]:
+      - heading "Trayectoria en la práctica" [level=2] [ref=f13e24]
+      - generic [ref=f13e25]:
+        - article [ref=f13e26]:
+          - heading [level=3] [ref=f13e27]:
+            - link "Calidad de datos en Interaxios" [ref=f13e28] [cursor=pointer]:
+              - /url: ../#proyectos
+          - paragraph [ref=f13e29]: Controles de información de pólizas y facturación en el sector asegurador.
+        - article [ref=f13e30]:
+          - heading [level=3] [ref=f13e31]:
+            - link "Tres chequeos antes de analizar datos" [ref=f13e32] [cursor=pointer]:
+              - /url: ../#recursos
+          - paragraph [ref=f13e33]: Una guía breve para revisar duplicados, campos obligatorios y reglas del negocio.
+    - region "Currículum" [ref=f13e34]:
+      - generic [ref=f13e35]:
+        - heading "Currículum" [level=2] [ref=f13e36]
+        - link "Ver mi CV" [ref=f13e38] [cursor=pointer]:
+          - /url: ../cv/
+  - contentinfo [ref=f13e39]:
+    - generic [ref=f13e40]: Fernanda Tárraga

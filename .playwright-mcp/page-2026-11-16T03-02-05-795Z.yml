@@ -1,0 +1,60 @@
+- generic [active] [ref=f24e1]:
+  - banner [ref=f24e2]:
+    - link "Fernanda Tárraga" [ref=f24e3] [cursor=pointer]:
+      - /url: ./
+    - paragraph [ref=f24e4]: Analista Funcional de Sistemas · Data Analyst
+    - navigation "Principal" [ref=f24e5]:
+      - link "Inicio" [ref=f24e6] [cursor=pointer]:
+        - /url: ./
+      - link "Sobre mí" [ref=f24e7] [cursor=pointer]:
+        - /url: sobre-mi/
+      - link "Portafolio" [ref=f24e8] [cursor=pointer]:
+        - /url: "#proyectos"
+      - link "Contáctame" [ref=f24e9] [cursor=pointer]:
+        - /url: contacto/
+    - navigation "Redes sociales" [ref=f24e10]:
+      - link "LinkedIn" [ref=f24e11] [cursor=pointer]:
+        - /url: https://www.linkedin.com/in/iristarraga/
+        - text: in
+  - main [ref=f24e12]:
+    - generic [ref=f24e14]:
+      - generic [ref=f24e15]:
+        - heading "Entender el proceso ayuda a mejorar sus datos." [level=1] [ref=f24e16]
+        - link "Mirá mi CV" [ref=f24e17] [cursor=pointer]:
+          - /url: cv/
+      - img "Fernanda Tárraga en su escritorio" [ref=f24e18]
+    - region "Entre los datos y el negocio" [ref=f24e19]:
+      - figure [ref=f24e20]:
+        - img "Fernanda Tárraga junto a la ventana" [ref=f24e21]
+      - generic [ref=f24e22]:
+        - heading "Entre los datos y el negocio" [level=2] [ref=f24e23]
+        - paragraph [ref=f24e24]:
+          - text: Soy
+          - strong [ref=f24e25]: analista funcional de sistemas y analista de datos
+          - text: . En seguros trabajé con información de pólizas y facturación.
+        - paragraph [ref=f24e26]: Me interesa entender qué produce un dato, qué decisión depende de él y cómo detectar a tiempo una inconsistencia. También desarrollé una aplicación con calendario y gestión de turnos para GM Nails.
+        - paragraph [ref=f24e27]:
+          - link "Conocé mi trayectoria" [ref=f24e28] [cursor=pointer]:
+            - /url: sobre-mi/
+    - region "Portafolio" [ref=f24e29]:
+      - heading "Portafolio" [level=2] [ref=f24e30]
+      - generic [ref=f24e31]:
+        - article [ref=f24e32]:
+          - heading "Interaxios · Calidad de datos en seguros" [level=3] [ref=f24e33]
+          - paragraph [ref=f24e34]: Un proceso se demoraba al incorporar fechas. Validé las reglas con el negocio, normalicé datos inconsistentes por lotes y trabajé con triggers de seguimiento. La corrección resolvió las demoras recurrentes.
+        - article [ref=f24e35]:
+          - heading "GM Nails · Sistema de turnos" [level=3] [ref=f24e36]
+          - paragraph [ref=f24e37]: Aplicación web para consultar el calendario y gestionar turnos de manicura y cosmetología.
+        - article [ref=f24e38]:
+          - heading "Tres chequeos antes de analizar datos" [level=3] [ref=f24e39]
+          - list [ref=f24e40]:
+            - listitem [ref=f24e41]: Definí qué identifica a cada registro y buscá duplicados.
+            - listitem [ref=f24e42]: Revisá si faltan campos que necesita el proceso.
+            - listitem [ref=f24e43]: Contrastá los valores con las reglas del negocio.
+    - region "Contáctame" [ref=f24e44]:
+      - generic [ref=f24e45]:
+        - heading "Contáctame" [level=2] [ref=f24e46]
+        - link "Escribime" [ref=f24e48] [cursor=pointer]:
+          - /url: contacto/
+  - contentinfo [ref=f24e49]:
+    - generic [ref=f24e50]: Fernanda Tárraga

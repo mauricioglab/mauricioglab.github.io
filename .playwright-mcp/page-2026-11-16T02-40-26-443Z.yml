@@ -1,0 +1,63 @@
+- generic [active] [ref=f25e1]:
+  - banner [ref=f25e2]:
+    - generic [ref=f25e3]:
+      - link "Iris Tárraga" [ref=f25e4] [cursor=pointer]:
+        - /url: ./
+      - navigation "Principal" [ref=f25e5]:
+        - link "Inicio" [ref=f25e6] [cursor=pointer]:
+          - /url: ./
+        - link "Sobre mí" [ref=f25e7] [cursor=pointer]:
+          - /url: sobre-mi/
+        - link "Charlas" [ref=f25e8] [cursor=pointer]:
+          - /url: "#charlas"
+        - link "Proyectos" [ref=f25e9] [cursor=pointer]:
+          - /url: "#proyectos"
+        - link "Recursos" [ref=f25e10] [cursor=pointer]:
+          - /url: "#recursos"
+        - link "Contacto" [ref=f25e11] [cursor=pointer]:
+          - /url: "#contacto"
+        - link "CV" [ref=f25e12] [cursor=pointer]:
+          - /url: cv/
+  - main [ref=f25e13]:
+    - generic [ref=f25e15]:
+      - generic [ref=f25e16]:
+        - heading "Soy Iris Tárraga." [level=1] [ref=f25e17]
+        - paragraph [ref=f25e18]: Analista Funcional de Sistemas | Data Analyst
+        - paragraph [ref=f25e19]: Tengo experiencia en calidad de datos de seguros, desde la validación hasta la transformación de información de pólizas y facturación.
+        - link "Ver mi CV" [ref=f25e20] [cursor=pointer]:
+          - /url: cv/
+          - text: Ver mi CV
+          - generic [aria-hidden] [ref=f25e21]: ↗
+      - img "Iris Tárraga en su escritorio, con blazer azul" [ref=f25e22]
+    - region "Sobre mí" [ref=f25e23]:
+      - img "Iris junto a la ventana con su cuaderno y computadora" [ref=f25e24]
+      - generic [ref=f25e25]:
+        - heading "Sobre mí" [level=2] [ref=f25e26]
+        - paragraph [ref=f25e27]: Mi experiencia combina el control de calidad de datos con el análisis de los procesos que los generan y utilizan.
+        - link "Conocé más sobre mí" [ref=f25e28] [cursor=pointer]:
+          - /url: sobre-mi/
+          - text: Conocé más sobre mí ↗
+    - generic [ref=f25e30]:
+      - region "Proyectos" [ref=f25e31]:
+        - heading "Proyectos" [level=2] [ref=f25e32]
+        - article [ref=f25e33]:
+          - heading "Calidad de datos en seguros" [level=3] [ref=f25e34]
+          - paragraph [ref=f25e35]: En Interaxios trabajé con registros de pólizas y facturación. Parte del trabajo consistía en identificar inconsistencias y revisar cómo los procesos del negocio generaban y utilizaban esos datos.
+          - link "Ver experiencia en Interaxios" [ref=f25e36] [cursor=pointer]:
+            - /url: cv/#experiencia
+            - text: Ver experiencia en Interaxios ↗
+      - region "Recursos" [ref=f25e37]:
+        - heading "Recursos" [level=2] [ref=f25e38]
+        - heading "Tres chequeos antes de analizar datos" [level=3] [ref=f25e39]
+        - list [ref=f25e40]:
+          - listitem [ref=f25e41]: Definí qué identifica de forma única a cada registro y buscá duplicados.
+          - listitem [ref=f25e42]: Revisá si faltan campos que el proceso necesita para funcionar.
+          - listitem [ref=f25e43]: Contrastá valores con las reglas del negocio, como fechas o importes esperados.
+      - region "Charlas" [ref=f25e44]:
+        - heading "Charlas" [level=2] [ref=f25e45]
+        - paragraph [ref=f25e46]: Sección en preparación.
+      - region "Contacto" [ref=f25e47]:
+        - heading "Contacto" [level=2] [ref=f25e48]
+        - paragraph [ref=f25e49]: Datos de contacto pendientes de confirmación.
+  - contentinfo [ref=f25e50]:
+    - generic [ref=f25e51]: Iris Tárraga

@@ -2,30 +2,33 @@
 // Formulario de la plantilla personal. Mismo diseño que el de Fernanda (cambia solo el botón y el destino).
 import { SITE_CONFIG } from '@data/config';
 
-interface Props { id?: string }
-const { id = 'contacto-form' } = Astro.props;
+interface Props { id?: string; lang?: 'es' | 'en' }
+const { id = 'contacto-form', lang = 'es' } = Astro.props;
+const L = lang === 'en'
+  ? { name: 'Name', email: 'Email', subject: 'Subject', message: 'Message', req: '(required)', send: 'Send' }
+  : { name: 'Nombre', email: 'Correo electrónico', subject: 'Asunto', message: 'Mensaje', req: '(obligatorio)', send: 'Enviar' };
 const siteKey = SITE_CONFIG.recaptchaSiteKey;
 ---
 
 <div class="pt-form-wrap">
   <form class="pt-form" data-pt-form action={SITE_CONFIG.formspreeEndpoint} method="post" novalidate>
     <div class="pt-field">
-      <label for={`${id}-name`}>Nombre<span class="pt-req">(obligatorio)</span></label>
+      <label for={`${id}-name`}>{L.name}<span class="pt-req">{L.req}</span></label>
       <input id={`${id}-name`} name="name" type="text" autocomplete="name" required aria-describedby={`${id}-name-err`} />
       <div class="pt-error" id={`${id}-name-err`} role="alert"></div>
     </div>
     <div class="pt-field">
-      <label for={`${id}-email`}>Correo electrónico<span class="pt-req">(obligatorio)</span></label>
+      <label for={`${id}-email`}>{L.email}<span class="pt-req">{L.req}</span></label>
       <input id={`${id}-email`} name="email" type="email" autocomplete="email" required aria-describedby={`${id}-email-err`} />
       <div class="pt-error" id={`${id}-email-err`} role="alert"></div>
     </div>
     <div class="pt-field">
-      <label for={`${id}-subject`}>Asunto<span class="pt-req">(obligatorio)</span></label>
+      <label for={`${id}-subject`}>{L.subject}<span class="pt-req">{L.req}</span></label>
       <input id={`${id}-subject`} name="subject" type="text" required aria-describedby={`${id}-subject-err`} />
       <div class="pt-error" id={`${id}-subject-err`} role="alert"></div>
     </div>
     <div class="pt-field">
-      <label for={`${id}-message`}>Mensaje<span class="pt-req">(obligatorio)</span></label>
+      <label for={`${id}-message`}>{L.message}<span class="pt-req">{L.req}</span></label>
       <textarea id={`${id}-message`} name="message" required aria-describedby={`${id}-message-err`}></textarea>
       <div class="pt-error" id={`${id}-message-err`} role="alert"></div>
     </div>
@@ -37,7 +40,7 @@ const siteKey = SITE_CONFIG.recaptchaSiteKey;
       </div>
     )}
     <div class="pt-form-actions">
-      <button class="pt-button" type="submit">Enviar</button>
+      <button class="pt-button" type="submit">{L.send}</button>
       <p class="pt-form-status" role="status"></p>
     </div>
   </form>
@@ -45,12 +48,11 @@ const siteKey = SITE_CONFIG.recaptchaSiteKey;
 {siteKey && <script is:inline src="https://www.google.com/recaptcha/api.js" async defer></script>}
 
 <script>
-  const messages: Record<string, string> = {
-    name: 'Escribí tu nombre.',
-    email: 'Escribí un correo electrónico válido.',
-    subject: 'Escribí el asunto.',
-    message: 'Escribí tu mensaje.',
+  const MESSAGES: Record<string, Record<string, string>> = {
+    es: { name: 'Escribí tu nombre.', email: 'Escribí un correo electrónico válido.', subject: 'Escribí el asunto.', message: 'Escribí tu mensaje.', captcha: tr().captcha, sending: 'Enviando…' },
+    en: { name: 'Please enter your name.', email: 'Please enter a valid email address.', subject: 'Please enter a subject.', message: 'Please enter your message.', captcha: 'Please tick “I’m not a robot”.', sending: 'Sending…' },
   };
+  const tr = () => MESSAGES[document.documentElement.lang === 'en' ? 'en' : 'es'];
 
   function validate(form: HTMLFormElement): boolean {
     let first: HTMLElement | null = null;
@@ -58,13 +60,13 @@ const siteKey = SITE_CONFIG.recaptchaSiteKey;
       const err = form.querySelector<HTMLElement>(`#${el.id}-err`);
       const ok = el.value.trim() !== '' && el.checkValidity();
       el.setAttribute('aria-invalid', ok ? 'false' : 'true');
-      if (err) err.textContent = ok ? '' : messages[el.name] ?? 'Completá este campo.';
+      if (err) err.textContent = ok ? '' : tr()[el.name] ?? '—';
       if (!ok && !first) first = el;
     });
     const captchaErr = form.querySelector<HTMLElement>('[data-captcha-err]');
     if (captchaErr) {
       const solved = !!(form.querySelector<HTMLTextAreaElement>('[name="g-recaptcha-response"]')?.value);
-      captchaErr.textContent = solved ? '' : 'Marcá la casilla «No soy un robot».';
+      captchaErr.textContent = solved ? '' : tr().captcha;
       if (!solved && !first) first = captchaErr;
     }
     (first as HTMLElement | null)?.focus?.();
@@ -78,7 +80,7 @@ const siteKey = SITE_CONFIG.recaptchaSiteKey;
       status.textContent = '';
       if (!validate(form)) return;
       // Envío normal: Formspree aplica su propia verificación anti-spam antes de aceptar el mensaje.
-      status.textContent = 'Enviando…';
+      status.textContent = tr().sending;
       form.submit();
     });
   });

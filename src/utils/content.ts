@@ -1,18 +1,22 @@
-// Contenido editable (tabla `site_content`) con valores por defecto en `content-defaults.json`.
-// Si la base no responde, el build NO falla: usa los textos por defecto y avisa en el log.
+// Contenido editable (tabla `site_content`) con valores por defecto en `content-defaults.json`, en español e inglés.
+// Los textos en inglés se guardan en la misma fila (`value_en`). Si falta el inglés se usa el valor por defecto en inglés
+// (clave `página.clave@en`) y, en última instancia, el español. Si la base no responde, el build NO falla.
 import { db } from '../lib/db';
 import defaults from '../data/content-defaults.json';
 import { SITE_ID } from '../data/site-id';
 
-let cache: Promise<Map<string, string>> | null = null;
+export type Lang = 'es' | 'en';
+const D = defaults as Record<string, string>;
 
-async function load(): Promise<Map<string, string>> {
-  const map = new Map<string, string>();
+let cache: Promise<Map<string, { es: string; en: string }>> | null = null;
+
+async function load() {
+  const map = new Map<string, { es: string; en: string }>();
   try {
-    const { data, error } = await db.from('site_content').select('page, key, lang, value').eq('site', SITE_ID);
+    const { data, error } = await db.from('site_content').select('page, key, value, value_en').eq('site', SITE_ID);
     if (error) throw error;
-    for (const r of (data ?? []) as { page: string; key: string; lang: string; value: string }[]) {
-      map.set(`${r.page}.${r.key}.${r.lang}`, r.value);
+    for (const r of (data ?? []) as { page: string; key: string; value: string; value_en: string | null }[]) {
+      map.set(`${r.page}.${r.key}`, { es: r.value ?? '', en: r.value_en ?? '' });
     }
   } catch (e) {
     console.warn('No se pudo cargar site_content; se usan los textos por defecto:', (e as Error).message ?? e);
@@ -20,12 +24,14 @@ async function load(): Promise<Map<string, string>> {
   return map;
 }
 
-/** Texto editable de una página: `c('home', 'banner_title')`. */
-export async function c(page: string, key: string, lang = 'es'): Promise<string> {
+/** Texto editable de una página: `c('home', 'banner_title', 'en')`. */
+export async function c(page: string, key: string, lang: Lang = 'es'): Promise<string> {
   cache ??= load();
-  const v = (await cache).get(`${page}.${key}.${lang}`);
-  if (v && v.trim()) return v;
-  return (defaults as Record<string, string>)[`${page}.${key}`] ?? '';
+  const row = (await cache).get(`${page}.${key}`);
+  const id = `${page}.${key}`;
+  const es = row?.es?.trim() ? row.es : D[id] ?? '';
+  if (lang === 'es') return es;
+  return row?.en?.trim() ? row.en : D[`${id}@en`] ?? es;
 }
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

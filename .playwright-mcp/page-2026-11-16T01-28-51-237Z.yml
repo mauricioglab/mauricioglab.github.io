@@ -1,0 +1,40 @@
+- generic [active] [ref=f22e1]:
+  - banner [ref=f22e2]:
+    - generic [ref=f22e3]:
+      - link "Iris Tárraga" [ref=f22e4] [cursor=pointer]:
+        - /url: ../
+      - navigation "Principal" [ref=f22e5]:
+        - link "Inicio" [ref=f22e6] [cursor=pointer]:
+          - /url: ../
+        - link "Sobre mí" [ref=f22e7] [cursor=pointer]:
+          - /url: ../sobre-mi/
+        - link "CV" [ref=f22e8] [cursor=pointer]:
+          - /url: ./
+  - main [ref=f22e9]:
+    - link "← Volver al portal" [ref=f22e10] [cursor=pointer]:
+      - /url: ../
+    - heading "Iris Tárraga" [level=1] [ref=f22e11]
+    - paragraph [ref=f22e12]: Analista Funcional de Sistemas | Data Analyst
+    - region "Perfil profesional" [ref=f22e13]:
+      - heading "Perfil profesional" [level=2] [ref=f22e14]
+      - paragraph [ref=f22e15]: Analista de datos con experiencia en calidad, validación y transformación de información en el sector asegurador. Realicé controles diarios de datos de pólizas y facturación, identifiqué inconsistencias y analicé procesos funcionales. Trabajé con SQL, Python, Databricks y Snowflake, y consulté reportes existentes en Power BI.
+    - region "Experiencia profesional" [ref=f22e16]:
+      - heading "Experiencia profesional" [level=2] [ref=f22e17]
+      - article [ref=f22e18]:
+        - heading "Analista de Datos | Data Quality Analyst" [level=3] [ref=f22e19]
+        - paragraph [ref=f22e20]: Interaxios · Febrero de 2024 a marzo de 2025 · Remoto · Seguros
+        - list [ref=f22e21]:
+          - listitem [ref=f22e22]: Realicé controles diarios de calidad de datos de pólizas y facturación para detectar registros duplicados, incompletos e inconsistentes.
+          - listitem [ref=f22e23]: Consulté y validé datos con SQL en entornos de Data Warehouse.
+          - listitem [ref=f22e24]: Preparé y transformé información con Python y notebooks en Databricks. También trabajé con Snowflake en tareas de preparación y transformación de datos.
+          - listitem [ref=f22e25]: Consulté e interpreté dashboards y reportes existentes en Power BI.
+          - listitem [ref=f22e26]: Analicé el funcionamiento de los procesos y sistemas de gestión de datos del negocio.
+    - region "Tecnologías y competencias" [ref=f22e27]:
+      - heading "Tecnologías y competencias" [level=2] [ref=f22e28]
+      - generic [ref=f22e29]:
+        - term [ref=f22e30]: Tecnologías
+        - definition [ref=f22e31]: SQL, Python, Databricks, Snowflake y Power BI
+        - term [ref=f22e32]: Competencias
+        - definition [ref=f22e33]: Calidad, validación, transformación y análisis de datos. Análisis funcional de procesos y sistemas.
+  - contentinfo [ref=f22e34]:
+    - generic [ref=f22e35]: Iris Tárraga

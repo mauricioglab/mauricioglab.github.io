@@ -75,3 +75,25 @@
 
 .pt-admin-thumbs { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
 .pt-admin-thumbs figure { margin: 0; display: grid; gap: 4px; justify-items: start; }
+
+/* Editor de redes sociales */
+.pt-social-rows { list-style: none; margin: 16px 0 24px; padding: 0; display: grid; gap: 8px; }
+.pt-social-row { display: grid; grid-template-columns: 24px 110px 1fr auto auto auto auto; gap: 12px; align-items: center; padding: 8px 12px; border: 1px solid var(--pt-line); background: #fff; }
+.pt-social-row svg { width: 24px; height: 24px; fill: currentColor; }
+.pt-social-row input[type="text"] { height: 44px; padding: 0 12px; border: 1px solid var(--pt-line); font: inherit; font-size: 15px; min-width: 0; }
+.pt-social-show { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; white-space: nowrap; }
+.pt-social-show input { width: 20px; height: 20px; }
+@media (max-width: 700px) { .pt-social-row { grid-template-columns: 24px 1fr; } .pt-social-row input[type="text"] { grid-column: 1 / -1; } }
+
+/* Campos en dos idiomas (Español | English) y selector de vista */
+.pt-lang-view { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.pt-lang-view span { color: var(--pt-muted); margin-right: 4px; }
+.pt-lang-view button { padding: 6px 12px; border: 1px solid var(--pt-line); background: #fff; font: inherit; font-size: 14px; cursor: pointer; }
+.pt-lang-view button.is-on { background: var(--pt-petroleo); border-color: var(--pt-petroleo); color: #fff; }
+.pt-i18n { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.pt-i18n-both { grid-template-columns: 1fr 1fr; }
+@media (max-width: 820px) { .pt-i18n-both { grid-template-columns: 1fr; } }
+.pt-i18n-col { display: grid; gap: 6px; align-content: start; }
+.pt-i18n-tag { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--pt-gold); }
+.pt-i18n-col input[type="text"] { height: 57px; padding: 12px 16px; border: 1px solid var(--pt-line); font: inherit; width: 100%; }
+.pt-i18n-col textarea { width: 100%; min-height: 160px; padding: 12px 16px; border: 1px solid var(--pt-line); font: inherit; resize: vertical; }

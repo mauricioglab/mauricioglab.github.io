@@ -3,78 +3,95 @@
     "slot": "mosaico-1",
     "image_url": "https://api.velocitylab.com.ar/storage/v1/object/public/blog-images/mauricio/galeria/audiencia-cervantes.jpg",
     "alt": "Auditorio del Instituto Cervantes con estudiantes y docentes",
-    "caption": ""
+    "caption": "",
+    "alt_en": "Instituto Cervantes auditorium with students and teachers"
   },
   {
     "slot": "mosaico-2",
     "image_url": "https://api.velocitylab.com.ar/storage/v1/object/public/blog-images/mauricio/galeria/charla-webcoding.jpg",
     "alt": "Charla sobre webcoding en un escenario con proyección",
-    "caption": ""
+    "caption": "",
+    "alt_en": "Webcoding talk on a stage with a projection"
   },
   {
     "slot": "mosaico-3",
     "image_url": "https://api.velocitylab.com.ar/storage/v1/object/public/blog-images/mauricio/galeria/entrega-certificados.jpg",
     "alt": "Entrega de certificados en un acto institucional",
-    "caption": ""
+    "caption": "",
+    "alt_en": "Certificate ceremony at an institutional event"
   },
   {
     "slot": "trayectoria-1",
     "image_url": "https://api.velocitylab.com.ar/storage/v1/object/public/blog-images/mauricio/galeria/jornada-carreras.jpg",
     "alt": "Entrega de un certificado en la Jornada de Carreras del Instituto Cervantes",
-    "caption": "Jornada de Carreras · Instituto Cervantes · fecha por confirmar"
+    "caption": "Jornada de Carreras · Instituto Cervantes · fecha por confirmar",
+    "caption_en": "Careers Day · Instituto Cervantes · date to be confirmed",
+    "alt_en": "Certificate handover at the Instituto Cervantes Careers Day"
   },
   {
     "slot": "trayectoria-2",
     "image_url": "https://api.velocitylab.com.ar/storage/v1/object/public/blog-images/mauricio/galeria/charla-aula.jpg",
     "alt": "Charla frente a estudiantes en un aula",
-    "caption": "Charla con estudiantes · institución y fecha por confirmar"
+    "caption": "Charla con estudiantes · institución y fecha por confirmar",
+    "caption_en": "Talk with students · institution and date to be confirmed",
+    "alt_en": "Talk in front of students in a classroom"
   },
   {
     "slot": "trayectoria-3",
     "image_url": "https://api.velocitylab.com.ar/storage/v1/object/public/blog-images/mauricio/galeria/charla-auditorio.jpg",
     "alt": "Charla con proyección frente a estudiantes",
-    "caption": "Charla con estudiantes · institución y fecha por confirmar"
+    "caption": "Charla con estudiantes · institución y fecha por confirmar",
+    "caption_en": "Talk with students · institution and date to be confirmed",
+    "alt_en": "Talk with a projection in front of students"
   },
   {
     "slot": "trayectoria-4",
     "image_url": "https://api.velocitylab.com.ar/storage/v1/object/public/blog-images/mauricio/galeria/globant.jpg",
     "alt": "Frente a la sede de Globant",
-    "caption": "Globant · tema y fecha por confirmar"
+    "caption": "Globant · tema y fecha por confirmar",
+    "caption_en": "Globant · topic and date to be confirmed",
+    "alt_en": "In front of the Globant office"
   },
   {
     "slot": "trayectoria-5",
     "image_url": "",
     "alt": "",
-    "caption": "Docencia en Analista de Sistemas, Desarrollo Web y Ciencia de Datos e IA · Instituto Cervantes · desde 2024"
+    "caption": "Docencia en Analista de Sistemas, Desarrollo Web y Ciencia de Datos e IA · Instituto Cervantes · desde 2024",
+    "caption_en": "Teaching in Systems Analyst, Web Development and Data Science & AI · Instituto Cervantes · since 2024"
   },
   {
     "slot": "trayectoria-6",
     "image_url": "",
     "alt": "",
-    "caption": "Taller · tema, institución y fecha por confirmar"
+    "caption": "Taller · tema, institución y fecha por confirmar",
+    "caption_en": "Workshop · topic, institution and date to be confirmed"
   },
   {
     "slot": "trayectoria-7",
     "image_url": "",
     "alt": "",
-    "caption": "Proyecto de software · cliente y fecha por confirmar"
+    "caption": "Proyecto de software · cliente y fecha por confirmar",
+    "caption_en": "Software project · client and date to be confirmed"
   },
   {
     "slot": "trayectoria-8",
     "image_url": "",
     "alt": "",
-    "caption": "Proyecto de software · cliente y fecha por confirmar"
+    "caption": "Proyecto de software · cliente y fecha por confirmar",
+    "caption_en": "Software project · client and date to be confirmed"
   },
   {
     "slot": "trayectoria-9",
     "image_url": "",
     "alt": "",
-    "caption": "Disertación · tema, institución y fecha por confirmar"
+    "caption": "Disertación · tema, institución y fecha por confirmar",
+    "caption_en": "Talk · topic, institution and date to be confirmed"
   },
   {
     "slot": "trayectoria-10",
     "image_url": "",
     "alt": "",
-    "caption": "Disertación · tema, institución y fecha por confirmar"
+    "caption": "Disertación · tema, institución y fecha por confirmar",
+    "caption_en": "Talk · topic, institution and date to be confirmed"
   }
 ]

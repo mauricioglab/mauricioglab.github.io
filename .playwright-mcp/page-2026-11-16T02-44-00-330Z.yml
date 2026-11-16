@@ -1,0 +1,33 @@
+- generic [active] [ref=f5e1]:
+  - banner [ref=f5e2]:
+    - generic [ref=f5e3]:
+      - link "Fernanda Tárraga" [ref=f5e4] [cursor=pointer]:
+        - /url: ../
+      - navigation "Principal" [ref=f5e5]:
+        - link "Inicio" [ref=f5e6] [cursor=pointer]:
+          - /url: ../
+        - link "Sobre mí" [ref=f5e7] [cursor=pointer]:
+          - /url: ./
+        - link "Charlas" [ref=f5e8] [cursor=pointer]:
+          - /url: ../#charlas
+        - link "Proyectos" [ref=f5e9] [cursor=pointer]:
+          - /url: ../#proyectos
+        - link "Recursos" [ref=f5e10] [cursor=pointer]:
+          - /url: ../#recursos
+        - link "Contacto" [ref=f5e11] [cursor=pointer]:
+          - /url: ../#contacto
+        - link "CV" [ref=f5e12] [cursor=pointer]:
+          - /url: ../cv/
+  - main [ref=f5e13]:
+    - heading "Sobre mí" [level=1] [ref=f5e14]
+    - region "Soy Fernanda Tárraga." [ref=f5e15]:
+      - img "Fernanda Tárraga junto a la ventana" [ref=f5e16]
+      - generic [ref=f5e17]:
+        - heading "Soy Fernanda Tárraga." [level=2] [ref=f5e18]
+        - paragraph [ref=f5e19]: Mi experiencia en análisis de datos viene del sector asegurador. En Interaxios trabajé con información de pólizas y facturación. Hacía controles diarios para detectar duplicados, registros incompletos e inconsistencias.
+        - paragraph [ref=f5e20]: Usé SQL para consultar y validar datos, y Python con Databricks para prepararlos y transformarlos. También analicé cómo funcionaban los procesos y sistemas que gestionaban esa información.
+        - link "Ver mi CV" [ref=f5e21] [cursor=pointer]:
+          - /url: ../cv/
+          - text: Ver mi CV ↗
+  - contentinfo [ref=f5e22]:
+    - generic [ref=f5e23]: Fernanda Tárraga

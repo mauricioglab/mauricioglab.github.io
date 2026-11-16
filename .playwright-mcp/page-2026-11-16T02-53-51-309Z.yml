@@ -1,0 +1,58 @@
+- generic [active] [ref=f19e1]:
+  - banner [ref=f19e2]:
+    - generic [ref=f19e3]:
+      - link "Fernanda Tárraga" [ref=f19e4] [cursor=pointer]:
+        - /url: ../
+      - navigation "Principal" [ref=f19e5]:
+        - link "Inicio" [ref=f19e6] [cursor=pointer]:
+          - /url: ../
+        - link "Sobre mí" [ref=f19e7] [cursor=pointer]:
+          - /url: ./
+        - link "Charlas" [ref=f19e8] [cursor=pointer]:
+          - /url: ../#charlas
+        - link "Proyectos" [ref=f19e9] [cursor=pointer]:
+          - /url: ../#proyectos
+        - link "Recursos" [ref=f19e10] [cursor=pointer]:
+          - /url: ../#recursos
+        - link "Contacto" [ref=f19e11] [cursor=pointer]:
+          - /url: ../#contacto
+        - link "CV" [ref=f19e12] [cursor=pointer]:
+          - /url: ../cv/
+  - main [ref=f19e13]:
+    - heading "Sobre mí" [level=1] [ref=f19e14]
+    - region "Análisis funcional y calidad de datos en seguros" [ref=f19e15]:
+      - figure [ref=f19e16]:
+        - img "Fernanda Tárraga junto a la ventana" [ref=f19e17]
+      - generic [ref=f19e18]:
+        - heading "Análisis funcional y calidad de datos en seguros" [level=2] [ref=f19e19]
+        - paragraph [ref=f19e20]: "Soy Fernanda Tárraga, analista funcional de sistemas y analista de datos. Mi experiencia en el sector asegurador me llevó a trabajar con la información que sostiene dos operaciones del negocio: pólizas y facturación."
+        - paragraph [ref=f19e21]: En Interaxios revisaba a diario la calidad de esos registros. Detectar duplicados, datos incompletos e inconsistencias era parte del trabajo, junto con entender cómo los procesos y sistemas producían y usaban esa información.
+        - paragraph [ref=f19e22]: "Me interesa ese cruce entre el dato y el proceso: entender qué necesita el negocio y cómo comprobar si la información disponible sirve para esa tarea."
+    - region "Trayectoria en la práctica" [ref=f19e23]:
+      - heading "Trayectoria en la práctica" [level=2] [ref=f19e24]
+      - generic [ref=f19e25]:
+        - article [ref=f19e26]:
+          - heading [level=3] [ref=f19e27]:
+            - link "Calidad de datos en Interaxios" [ref=f19e28] [cursor=pointer]:
+              - /url: ../#interaxios
+          - paragraph [ref=f19e29]: Validación de fechas con el negocio y normalización por lotes para resolver demoras recurrentes.
+        - article [ref=f19e30]:
+          - heading [level=3] [ref=f19e31]:
+            - link "Sistema de turnos para GM Nails" [ref=f19e32] [cursor=pointer]:
+              - /url: ../#gm-nails
+          - paragraph [ref=f19e33]: Aplicación web para consultar el calendario y gestionar turnos de manicura y cosmetología.
+        - article [ref=f19e34]:
+          - heading [level=3] [ref=f19e35]:
+            - link "Tres chequeos antes de analizar datos" [ref=f19e36] [cursor=pointer]:
+              - /url: ../#recursos
+          - paragraph [ref=f19e37]: Una guía breve para revisar duplicados, campos obligatorios y reglas del negocio.
+    - region "CV y contacto" [ref=f19e38]:
+      - generic [ref=f19e39]:
+        - heading "CV y contacto" [level=2] [ref=f19e40]
+        - generic [ref=f19e41]:
+          - link "Ver mi CV" [ref=f19e42] [cursor=pointer]:
+            - /url: ../cv/
+          - link "LinkedIn" [ref=f19e43] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/iristarraga/
+  - contentinfo [ref=f19e44]:
+    - generic [ref=f19e45]: Fernanda Tárraga

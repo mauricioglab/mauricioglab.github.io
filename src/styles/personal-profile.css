@@ -265,3 +265,9 @@
 @media (min-width: 700px) {
   .pt-event { grid-template-columns: 300px 1fr; gap: 24px; }
 }
+
+/* Botón de idioma (ES | EN) */
+.pt-langnav { margin-top: 8px; display: flex; justify-content: center; gap: 8px; font-size: 14px; letter-spacing: .1em; line-height: 1; color: var(--pt-muted); }
+.pt-langnav a { color: var(--pt-ink); text-decoration: none; font-weight: 700; }
+.pt-langnav a:hover { color: var(--pt-gold); text-decoration: underline; text-underline-offset: .25em; }
+.pt-langnav [aria-current] { font-weight: 300; color: var(--pt-muted); }

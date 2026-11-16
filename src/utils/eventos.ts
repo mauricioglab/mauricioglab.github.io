@@ -92,18 +92,19 @@ export function formatEventDate(d: Date | null): string {
   return d ? new Intl.DateTimeFormat('es-AR', { year: 'numeric', month: 'long', day: 'numeric' }).format(d) : 'fecha por confirmar';
 }
 
-const monthYear = (d: Date | null) => (d ? new Intl.DateTimeFormat('es-AR', { year: 'numeric', month: 'long' }).format(d) : 'fecha por confirmar');
+const monthYear = (d: Date | null, lang: 'es' | 'en' = 'es') =>
+  d ? new Intl.DateTimeFormat(lang === 'en' ? 'en-US' : 'es-AR', { year: 'numeric', month: 'long' }).format(d) : lang === 'en' ? 'date to be confirmed' : 'fecha por confirmar';
 
 export interface AboutItem { image_url: string; alt: string; caption: string }
 
 /** Eventos marcados «Aparece en Sobre mí», del más reciente al más antiguo. El epígrafe sale del propio evento. */
-export async function getAboutItems(): Promise<AboutItem[]> {
+export async function getAboutItems(lang: 'es' | 'en' = 'es'): Promise<AboutItem[]> {
   return (await getEventos())
     .filter((e) => e.showInAbout)
     .map((e) => ({
       image_url: photoOf(e),
       alt: e.title,
-      caption: [e.title, e.place, monthYear(e.date)].filter(Boolean).join(' · '),
+      caption: [e.title, e.place, monthYear(e.date, lang)].filter(Boolean).join(' · '),
     }));
 }
 

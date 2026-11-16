@@ -1,0 +1,97 @@
+---
+// Inicio de Mauricio en español o inglés. Los textos salen de site_content (con valores por defecto en los dos idiomas).
+import { Image } from 'astro:assets';
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+import PtContactForm from '../shared/PtContactForm.astro';
+import { c, md } from '../../utils/content';
+import { getHomePhoto } from '../../utils/eventos';
+import clase from '../../assets/mauricio/clase-ia.png';
+import retrato from '../../assets/mauricio/retrato.png';
+
+interface Props { lang?: 'es' | 'en' }
+const { lang = 'es' } = Astro.props;
+const en = lang === 'en';
+const L = (es: string, enText: string) => (en ? enText : es);
+
+const t = async (k: string) => c('home', k, lang);
+const [bannerTitle, bannerButton, introTitle, introLink, quote, bandTitle, bandLead, bandMore, contactTitle] = await Promise.all(
+  ['banner_title', 'banner_button', 'intro_title', 'intro_link', 'quote', 'band_title', 'band_lead', 'band_more', 'contact_title'].map(t),
+);
+const intro = await Promise.all([1, 2, 3, 4].map((n) => t(`intro_p${n}`)));
+const cols = await Promise.all([1, 2, 3].map(async (n) => ({ title: await t(`col${n}_title`), text: await t(`col${n}_text`) })));
+const homePhoto = await getHomePhoto();
+
+const paths = en
+  ? { about: '/en/about/', portfolio: '/en/portfolio/', blog: '/blog/', events: '/es/eventos/' }
+  : { about: '/es/sobre-mi/', portfolio: '/es/portfolio/', blog: '/blog/', events: '/es/eventos/' };
+
+const resources = [
+  { label: 'Zona Lab', href: '/zona-lab/' },
+  { label: 'Teleprompter', href: '/prompt/' },
+  { label: 'Video Organizer', href: '/videos/' },
+  { label: L('Extensiones', 'Extensions'), href: '/extensions/' },
+  { label: L('Calculadora 3D', '3D Calculator'), href: '/calculadora/' },
+  { label: L('URLs útiles', 'Useful URLs'), href: '/urls/' },
+  { label: L('Rincón retro', 'Retro corner'), href: '/main/' },
+];
+---
+
+<BaseTailwind
+  title={L('Mauricio González | Docencia, desarrollo e IA aplicada', 'Mauricio González | Teaching, development and applied AI')}
+  description={L('Docencia, desarrollo de software e inteligencia artificial aplicada. Charlas, proyectos y recursos de Mauricio González.', 'Teaching, software development and applied artificial intelligence. Talks, projects and resources by Mauricio González.')}
+  lang={lang}
+  layoutType="index"
+  current="inicio"
+  showMateGame={false}
+  showPromptModal={true}
+>
+  <div class="pt">
+    <section class="pt-banner" aria-label={L('Presentación', 'Introduction')}>
+      <div class="pt-banner-copy">
+        <h1>{bannerTitle}</h1>
+        <a class="pt-button" href={paths.blog}>{bannerButton}</a>
+      </div>
+      <div class="pt-banner-photo">
+        <Image src={clase} alt={L('Mauricio González explicando IA en la educación frente a una pizarra y una presentación', 'Mauricio González explaining AI in education in front of a whiteboard and a presentation')} widths={[480, 720, 1080]} sizes="(max-width: 899px) 100vw, 50vw" format="webp" loading="eager" fetchpriority="high" style="object-position: 35% center" />
+      </div>
+    </section>
+
+    <section class="pt-intro" id="sobre-mi" aria-labelledby="introduccion">
+      <div class="pt-intro-inner">
+        <div>
+          <h2 id="introduccion">{introTitle}</h2>
+          {intro.map((p) => <p set:html={md(p)} />)}
+          <p><a class="pt-link-gold" href={paths.about}>{introLink}</a></p>
+        </div>
+        <div class="pt-intro-photo">
+          <Image src={retrato} alt={L('Mauricio González en su despacho', 'Mauricio González in his office')} widths={[540, 800, 1200]} sizes="(max-width: 899px) 100vw, 800px" format="webp" />
+        </div>
+      </div>
+    </section>
+
+    <section class="pt-statement" aria-label={L('Mi enfoque', 'My approach')}>
+      <blockquote class="pt-quote"><p>{quote}</p></blockquote>
+      <div class="pt-statement-photo">{homePhoto ? <img src={homePhoto.url} alt={homePhoto.alt} loading="lazy" /> : <div class="pt-ph">{L('Foto de charla o clase pendiente', 'Talk or class photo pending')}</div>}</div>
+    </section>
+
+    <section class="pt-band" id="portafolio" aria-labelledby="trabajo">
+      <h2 id="trabajo">{bandTitle}</h2>
+      <p class="pt-band-lead">{bandLead}</p>
+      <div class="pt-band-cols">
+        <div><h3><a href={paths.portfolio}>{cols[0].title}</a></h3><p>{cols[0].text}</p></div>
+        <div><h3><a href={paths.events}>{cols[1].title}</a></h3><p>{cols[1].text}</p></div>
+        <div id="recursos"><h3><a href="/zona-lab/">{cols[2].title}</a></h3><p>{cols[2].text}</p>
+          <ul>{resources.map(({ label, href }) => <li><a href={href}>{label}</a></li>)}</ul>
+        </div>
+      </div>
+      <p class="pt-band-more"><a href={paths.portfolio}>{bandMore}</a></p>
+    </section>
+
+    <section class="pt-contact-home" id="hablemos" aria-labelledby="contacto-titulo">
+      <div class="pt-narrow">
+        <h2 id="contacto-titulo">{contactTitle}</h2>
+        <PtContactForm id="home" lang={lang} />
+      </div>
+    </section>
+  </div>
+</BaseTailwind>

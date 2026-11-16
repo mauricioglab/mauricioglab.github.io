@@ -1,0 +1,127 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Saltar al contenido" [ref=e3] [cursor=pointer]:
+      - /url: "#content"
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - paragraph [ref=e6]:
+          - link "MARCELA LÓPEZ" [ref=e7] [cursor=pointer]:
+            - /url: https://marcelalopez.co/
+        - paragraph [ref=e8]: Estratega de marca personal
+      - navigation "Navegación principal" [ref=e9]:
+        - button "Menú + × expandido cerrado" [ref=e10]
+        - list "submenu" [ref=e12]:
+          - listitem [ref=e13]:
+            - link "Inicio I" [ref=e14] [cursor=pointer]:
+              - /url: https://marcelalopez.co/
+          - listitem [ref=e15]:
+            - link "sobre mí |" [ref=e16] [cursor=pointer]:
+              - /url: https://marcelalopez.co/about/
+          - listitem [ref=e17]:
+            - link "portafolio |" [ref=e18] [cursor=pointer]:
+              - /url: https://marcelalopez.co/portafolio/
+          - listitem [ref=e19]:
+            - link "blog |" [ref=e20] [cursor=pointer]:
+              - /url: https://marcelalopez.co/blog-2/
+          - listitem [ref=e21]:
+            - link "contáctame" [ref=e22] [cursor=pointer]:
+              - /url: https://marcelalopez.co/contact/
+      - navigation "Menú de enlaces sociales" [ref=e23]:
+        - list [ref=e25]:
+          - listitem [ref=e26]:
+            - link "x" [ref=e27] [cursor=pointer]:
+              - /url: https://twitter.com/marce_lp
+          - listitem [ref=e31]:
+            - link "Instagram" [ref=e32] [cursor=pointer]:
+              - /url: https://instagram.com/marce_lp
+          - listitem [ref=e36]:
+            - link "LinkedIn" [ref=e37] [cursor=pointer]:
+              - /url: https://www.linkedin.com/in/marcelp/
+    - main [ref=e43]:
+      - article [ref=e44]:
+        - generic [ref=e45]:
+          - generic [ref=e51]:
+            - 'heading "El poder de una marca personal: que los clientes te busquen a ti." [level=3] [ref=e52]'
+            - link [ref=e54] [cursor=pointer]:
+              - /url: https://marcelalopez.co/blog-2/
+              - mark [ref=e55]: Lee mi blog
+            - paragraph
+          - generic [ref=e61]:
+            - generic [ref=e62]:
+              - heading "La pasión por impulsar marcas personales TOP." [level=2] [ref=e63]
+              - paragraph [ref=e64]: Tu marca personal ya existe, la estés gestionando o no. La diferencia está en si te está abriendo oportunidades… o dejándote fuera de la conversación.
+              - paragraph [ref=e65]: Soy estratega de marca personal para líderes que no quieren pasar desapercibidos.En los últimos 14 años he ayudado a CEO’s, founders y directivos a construir una reputación sólida, visibilizar su experiencia y convertir su presencia digital en una ventaja competitiva.
+              - paragraph [ref=e66]: He sido profesora de marca personal en Platzi, y asesora de emprendedores seleccionados por Forbes, el MIT y programas de aceleración en LATAM.
+              - paragraph [ref=e67]: "Trabajo con visión estratégica, enfocada en resultados. Eso significa más visibilidad, más autoridad, y más oportunidades para ti: nuevos clientes, alianzas o puertas que hoy no se están abriendo."
+              - paragraph [ref=e68]: Mi enfoque combina estrategia de negocios, narrativa de posicionamiento y conocimiento profundo del ecosistema corporativo y emprendedor.
+              - paragraph [ref=e69]: Mi misión hacer que más líderes salgan del anonimato, posicionen sus marcas y lideren la conversación en redes.
+            - figure [ref=e71]
+          - blockquote [ref=e74]:
+            - paragraph [ref=e75]: Si eres líder y no estás usando tus redes para atraer oportunidades, estás dejando negocios sobre la mesa.
+          - generic [ref=e79]:
+            - paragraph [ref=e80]:
+              - strong [ref=e81]: PORTAFOLIO
+            - paragraph [ref=e82]: Posicionar tu marca no es un lujo, es una decisión estratégica.Cuéntame qué estás buscando y te muestro cómo lo podemos lograr.
+            - generic [ref=e84]:
+              - generic [ref=e85]:
+                - heading "Consultorías" [level=5] [ref=e86]
+                - heading "Asesorías" [level=5] [ref=e87]
+              - generic [ref=e88]:
+                - heading "Conferencias" [level=5] [ref=e89]
+                - heading "Entrenamientos" [level=5] [ref=e90]
+              - generic [ref=e91]:
+                - heading "Gestión de redes" [level=5] [ref=e92]
+                - heading "Educación" [level=5] [ref=e93]
+            - paragraph [ref=e95]:
+              - link [ref=e96] [cursor=pointer]:
+                - /url: https://marcelalopez.co/portafolio/
+                - strong [ref=e97]: Conoce todos los servicio
+              - link [ref=e98] [cursor=pointer]:
+                - /url: https://marcelalopez.co/portafolio/
+                - strong [ref=e99]: s
+          - form "Inicio" [ref=e108]:
+            - generic [ref=e109]:
+              - generic [ref=e110]:
+                - generic [ref=e111]: Nombre(obligatorio)
+                - textbox "Nombre" [ref=e112]
+              - generic [ref=e117]:
+                - generic [ref=e118]: Correo electrónico(obligatorio)
+                - textbox "Correo electrónico" [ref=e119]
+              - generic [ref=e124]:
+                - generic [ref=e125]: Teléfono
+                - textbox "Teléfono" [ref=e126]
+              - generic [ref=e131]:
+                - generic [ref=e132]: Asunto(obligatorio)
+                - textbox "Asunto" [ref=e133]
+                - generic [ref=e134]: AAAA-MM-DD
+              - generic [ref=e140]:
+                - generic [ref=e141]: ¿En qué puedo ayudarte?
+                - textbox "¿En qué puedo ayudarte?" [ref=e142]
+            - paragraph
+            - button "Enviar" [ref=e147] [cursor=pointer]
+            - paragraph
+          - paragraph
+          - generic [ref=e149]:
+            - generic [ref=e151]:
+              - heading "Compártelo:" [level=3] [ref=e152]
+              - generic [ref=e153]:
+                - list [ref=e154]:
+                  - listitem [ref=e155]:
+                    - link " Compartir" [ref=e156] [cursor=pointer]:
+                      - /url: "#"
+                  - listitem
+                - generic:    
+            - generic [ref=e157]: Cargando...
+    - contentinfo [ref=e159]:
+      - generic [ref=e160]:
+        - link "MARCELA LÓPEZ" [ref=e161] [cursor=pointer]:
+          - /url: https://marcelalopez.co/
+        - text: ","
+        - link "Blog de WordPress.com." [ref=e162] [cursor=pointer]:
+          - /url: https://wordpress.com/es/?ref=footer_blog
+  - region "Acciones del sitio" [ref=e163]:
+    - list [ref=e165]:
+      - listitem [ref=e166]:
+        - button "Suscribirse" [ref=e167] [cursor=pointer]
+      - listitem [ref=e171]:
+        - button "Más opciones" [ref=e172] [cursor=pointer]

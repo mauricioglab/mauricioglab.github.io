@@ -17,7 +17,7 @@ export const db = createClient(supabaseUrl, supabaseAnonKey, {
 
 
 // Funciones de IA del blog: una sola Edge Function (`blog-ai`) con OpenRouter; el panel sigue llamando por los nombres de siempre.
-const BLOG_AI = new Set(['blog-fetch-url', 'blog-proposals', 'blog-write', 'blog-review', 'blog-revise', 'blog-cover']);
+const BLOG_AI = new Set(['blog-fetch-url', 'blog-proposals', 'blog-write', 'blog-review', 'blog-revise', 'blog-cover', 'blog-translate']);
 const invokeFunction = db.functions.invoke.bind(db.functions);
 async function invokeBlogAi(name: string, opts?: any) {
   const { data, error } = await invokeFunction('blog-ai', { ...opts, body: { ...(opts?.body ?? {}), action: name, site: SITE_ID } });

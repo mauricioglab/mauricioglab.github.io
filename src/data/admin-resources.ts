@@ -7,22 +7,20 @@ const LANGS = ['es', 'en'];
 export const RESOURCES: Resource[] = [
   {
     table: 'site_content', label: 'Textos', orderBy: { column: 'page' },
-    listColumns: ['page', 'key', 'lang', 'value'], defaults: { lang: 'es' },
+    listColumns: ['page', 'key', 'value'],
     fields: [
       { name: 'page', label: 'Página', type: 'select', options: PAGES, required: true },
       { name: 'key', label: 'Clave', type: 'text', required: true, help: 'Ej.: banner_title, banner_button, quote, about_title.' },
-      { name: 'lang', label: 'Idioma', type: 'select', options: LANGS, required: true },
-      { name: 'value', label: 'Texto', type: 'textarea', required: true },
+      { name: 'value', nameEn: 'value_en', label: 'Texto', type: 'textarea-i18n', required: true },
     ],
   },
   {
     table: 'projects', label: 'Proyectos', orderBy: { column: 'position' },
-    listColumns: ['title', 'category', 'lang', 'published'], defaults: { lang: 'es', published: true },
+    listColumns: ['title', 'category', 'published'], defaults: { lang: 'es', published: true },
     fields: [
       { name: 'slug', label: 'Identificador', type: 'text', required: true },
-      { name: 'lang', label: 'Idioma', type: 'select', options: LANGS, required: true },
-      { name: 'title', label: 'Título', type: 'text', required: true },
-      { name: 'summary', label: 'Resumen', type: 'textarea' },
+      { name: 'title', nameEn: 'title_en', label: 'Título', type: 'text-i18n', required: true },
+      { name: 'summary', nameEn: 'summary_en', label: 'Resumen', type: 'textarea-i18n' },
       { name: 'category', label: 'Categoría', type: 'text' },
       { name: 'tags', label: 'Etiquetas', type: 'tags' },
       { name: 'links', label: 'Enlaces (JSON)', type: 'json', help: 'Ej.: {"demo": "https://…"}' },
@@ -37,8 +35,8 @@ export const RESOURCES: Resource[] = [
     fields: [
       { name: 'slot', label: 'Espacio', type: 'text', required: true, help: 'Ej.: mosaico-1, trayectoria-1 … trayectoria-10.' },
       { name: 'image_url', label: 'Imagen', type: 'image', bucket: 'blog-images' },
-      { name: 'alt', label: 'Texto alternativo', type: 'text' },
-      { name: 'caption', label: 'Epígrafe (tema · institución · fecha)', type: 'text' },
+      { name: 'alt', nameEn: 'alt_en', label: 'Texto alternativo', type: 'text-i18n' },
+      { name: 'caption', nameEn: 'caption_en', label: 'Epígrafe (tema · institución · fecha)', type: 'text-i18n' },
       { name: 'position', label: 'Orden', type: 'number' },
       { name: 'published', label: 'Publicado', type: 'checkbox' },
     ],
@@ -58,8 +56,8 @@ export const RESOURCES: Resource[] = [
     listColumns: ['label', 'href', 'visible'], defaults: { area: 'menu', visible: true },
     fields: [
       { name: 'area', label: 'Zona', type: 'select', options: ['menu', 'recursos'], required: true },
-      { name: 'label', label: 'Etiqueta', type: 'text', required: true },
-      { name: 'href', label: 'Enlace', type: 'text', required: true },
+      { name: 'label', nameEn: 'label_en', label: 'Etiqueta', type: 'text-i18n', required: true },
+      { name: 'href', nameEn: 'href_en', label: 'Enlace', type: 'text-i18n', required: true },
       { name: 'position', label: 'Orden', type: 'number' },
       { name: 'visible', label: 'Visible', type: 'checkbox' },
     ],
@@ -68,7 +66,7 @@ export const RESOURCES: Resource[] = [
     table: 'site_settings', label: 'Ajustes', orderBy: { column: 'site' },
     listColumns: ['site', 'updated_at'],
     fields: [
-      { name: 'data', label: 'Ajustes (JSON)', type: 'json', required: true, help: 'Ej.: {"tagline": "…", "networks": {"x": "", "instagram": "https://…", "linkedin": "https://…", "github": ""}}. Una red vacía se muestra como marcador pendiente.' },
+      { name: 'data', label: 'Ajustes (JSON)', type: 'json', required: true, help: 'Ej.: {"tagline": "…", "tagline_en": "…", "sections": {"eventos": true, "recursos": false}}. Las redes se editan en «Redes sociales».' },
     ],
   },
   {

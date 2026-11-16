@@ -1,0 +1,100 @@
+- generic [active] [ref=f26e1]:
+  - banner [ref=f26e2]:
+    - link "Mauricio González" [ref=f26e3] [cursor=pointer]:
+      - /url: /
+    - paragraph [ref=f26e4]: Docente y desarrollador · IA aplicada
+    - navigation "Principal" [ref=f26e5]:
+      - link "Inicio" [ref=f26e6] [cursor=pointer]:
+        - /url: /
+      - link "Sobre mí" [ref=f26e7] [cursor=pointer]:
+        - /url: /es/sobre-mi/
+      - link "Portafolio" [ref=f26e8] [cursor=pointer]:
+        - /url: /es/portfolio/
+      - link "Blog" [ref=f26e9] [cursor=pointer]:
+        - /url: /blog/
+      - link "Contáctame" [ref=f26e10] [cursor=pointer]:
+        - /url: /es/contacto/
+    - navigation "Redes sociales" [ref=f26e11]:
+      - link "LinkedIn" [ref=f26e12] [cursor=pointer]:
+        - /url: https://linkedin.com/in/mauricioglab
+        - text: in
+      - link "GitHub" [ref=f26e13] [cursor=pointer]:
+        - /url: https://github.com/mauricioglab
+  - main [ref=f26e14]:
+    - generic [ref=f26e15]:
+      - generic [ref=f26e17]:
+        - generic [ref=f26e18]:
+          - heading "Aprender tecnología empieza por entender cómo funciona." [level=1] [ref=f26e19]
+          - link "Leé mi blog" [ref=f26e20] [cursor=pointer]:
+            - /url: /blog/
+        - img "Mauricio junto a una pizarra y una presentación sobre IA en la educación" [ref=f26e21]
+      - region "Entre el aula y el código" [ref=f26e22]:
+        - figure [ref=f26e23]:
+          - img "Mauricio González en su despacho" [ref=f26e24]
+        - generic [ref=f26e25]:
+          - heading "Entre el aula y el código" [level=2] [ref=f26e26]
+          - paragraph [ref=f26e27]:
+            - text: Soy
+            - strong [ref=f26e28]: docente y desarrollador
+            - text: . Enseño programación e IA aplicada a futuros analistas y desarrolladores, incluidos quienes están cambiando de carrera.
+          - paragraph [ref=f26e29]: La filosofía me enseñó a hacer preguntas. Ahora llevo esas preguntas al aula y a los proyectos de software. Cuando usamos IA, me interesa que podamos explicar qué hizo y comprobar si el resultado sirve.
+          - paragraph [ref=f26e30]:
+            - link "Conocé mi trayectoria" [ref=f26e31] [cursor=pointer]:
+              - /url: /es/sobre-mi/
+      - region "Mi enfoque" [ref=f26e32]:
+        - generic [ref=f26e33]:
+          - blockquote [ref=f26e34]: La IA puede ayudarnos a pensar mejor. Eso también hay que aprenderlo.
+          - generic [ref=f26e35]: Foto de trabajo pendiente
+      - region "Portafolio" [ref=f26e36]:
+        - heading "Portafolio" [level=2] [ref=f26e37]
+        - generic [ref=f26e38]:
+          - article [ref=f26e39]:
+            - heading [level=3] [ref=f26e40]:
+              - link "Proyectos de software" [ref=f26e41] [cursor=pointer]:
+                - /url: /es/portfolio/
+            - paragraph [ref=f26e42]: Casos de desarrollo, análisis de sistemas e IA aplicada.
+          - article [ref=f26e43]:
+            - heading [level=3] [ref=f26e44]:
+              - link "Charlas y disertaciones" [ref=f26e45] [cursor=pointer]:
+                - /url: /es/disertaciones/
+            - paragraph [ref=f26e46]: Docencia, tecnología e inteligencia artificial.
+          - article [ref=f26e47]:
+            - heading [level=3] [ref=f26e48]:
+              - link "Recursos y herramientas" [ref=f26e49] [cursor=pointer]:
+                - /url: /zona-lab/
+            - paragraph [ref=f26e50]: Material de estudio y aplicaciones.
+            - list [ref=f26e51]:
+              - listitem [ref=f26e52]:
+                - link "Zona Lab" [ref=f26e53] [cursor=pointer]:
+                  - /url: /zona-lab/
+              - listitem [ref=f26e54]:
+                - link "Teleprompter" [ref=f26e55] [cursor=pointer]:
+                  - /url: /prompt/
+              - listitem [ref=f26e56]:
+                - link "Video Organizer" [ref=f26e57] [cursor=pointer]:
+                  - /url: /videos/
+              - listitem [ref=f26e58]:
+                - link "Extensiones" [ref=f26e59] [cursor=pointer]:
+                  - /url: /extensions/
+              - listitem [ref=f26e60]:
+                - link "Calculadora 3D" [ref=f26e61] [cursor=pointer]:
+                  - /url: /calculadora/
+              - listitem [ref=f26e62]:
+                - link "URLs útiles" [ref=f26e63] [cursor=pointer]:
+                  - /url: /urls/
+              - listitem [ref=f26e64]:
+                - link "Rincón retro" [ref=f26e65] [cursor=pointer]:
+                  - /url: /main/
+      - region "Contáctame" [ref=f26e66]:
+        - generic [ref=f26e67]:
+          - heading "Contáctame" [level=2] [ref=f26e68]
+          - link "Escribime" [ref=f26e70] [cursor=pointer]:
+            - /url: /es/contacto/
+  - contentinfo [ref=f26e71]:
+    - paragraph [ref=f26e72]:
+      - text: © 2026 Mauricio González · Córdoba, Argentina ·
+      - link "Contacto" [ref=f26e73] [cursor=pointer]:
+        - /url: "#contacto"
+      - text: ·
+      - link "Privacidad" [ref=f26e74] [cursor=pointer]:
+        - /url: /blog/privacy/

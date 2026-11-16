@@ -1,0 +1,43 @@
+---
+// Contacto de Mauricio en español o inglés.
+import { Image } from 'astro:assets';
+import BaseTailwind from '../../layouts/BaseTailwind.astro';
+import PtContactForm from '../shared/PtContactForm.astro';
+import SocialLinks from '../shared/SocialLinks.astro';
+import { c, md } from '../../utils/content';
+import retrato from '../../assets/mauricio/retrato.png';
+
+interface Props { lang?: 'es' | 'en' }
+const { lang = 'es' } = Astro.props;
+const en = lang === 'en';
+const L = (es: string, enText: string) => (en ? enText : es);
+
+const t = (k: string) => c('contacto', k, lang);
+const [pageTitle, intro, formTitle, side] = await Promise.all(['page_title', 'intro', 'form_title', 'side'].map(t));
+---
+
+<BaseTailwind
+  title={L('Contáctame | Mauricio González', 'Contact | Mauricio González')}
+  description={L('Contacto profesional de Mauricio González: docencia, desarrollo de software e IA aplicada.', 'Professional contact for Mauricio González: teaching, software development and applied AI.')}
+  lang={lang}
+  current="contacto"
+  showMateGame={false}
+>
+  <div class="pt">
+    <h1 class="pt-page-title">{pageTitle}</h1>
+    <div class="pt-contact-intro">
+      <p>{intro}</p>
+    </div>
+    <div class="pt-contact">
+      <div class="pt-contact-photo">
+        <Image src={retrato} alt={L('Mauricio González en su despacho', 'Mauricio González in his office')} widths={[640, 1000]} sizes="(max-width: 899px) 100vw, 700px" format="webp" style="object-position: 50% 20%" />
+      </div>
+      <div>
+        <h2>{formTitle}</h2>
+        <PtContactForm id="contacto" lang={lang} />
+        <p class="pt-contact-side" set:html={md(side)} />
+        <nav class="pt-social pt-social-inline" aria-label={L('Redes sociales', 'Social networks')}><SocialLinks lang={lang} /></nav>
+      </div>
+    </div>
+  </div>
+</BaseTailwind>

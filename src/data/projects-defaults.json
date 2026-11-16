@@ -16,7 +16,9 @@
       "caseStudy": "/proyectos/validacion-biometrica"
     },
     "featured": true,
-    "position": 1
+    "position": 1,
+    "title_en": "AI-Powered Biometric Validation",
+    "summary_en": "Facial recognition + liveness detection with AWS Rekognition, integrated with RENAPER"
   },
   {
     "slug": "billetera-virtual",
@@ -36,7 +38,9 @@
       "caseStudy": "/proyectos/billetera-virtual"
     },
     "featured": true,
-    "position": 2
+    "position": 2,
+    "title_en": "Core API — TotalCoin virtual wallet",
+    "summary_en": "Core API and microservices for TotalCoin's virtual wallet and payment gateway"
   },
   {
     "slug": "monitoreo-agricola",
@@ -56,7 +60,9 @@
       "caseStudy": "/proyectos/monitoreo-agricola"
     },
     "featured": true,
-    "position": 3
+    "position": 3,
+    "title_en": "Agricultural monitoring with Machine Learning",
+    "summary_en": "Crop monitoring app with ML and IoT traceability on AWS QLDB (Spanish client)"
   },
   {
     "slug": "auditorias-datos",
@@ -75,7 +81,9 @@
       "caseStudy": "/proyectos/auditorias-datos"
     },
     "featured": true,
-    "position": 4
+    "position": 4,
+    "title_en": "Audits with data analysis",
+    "summary_en": "Interactive data analysis system for audits in the power sector (ISA CTEEP)"
   },
   {
     "slug": "coca-cola-embonor",
@@ -93,7 +101,9 @@
       "caseStudy": "/proyectos/coca-cola-embonor"
     },
     "featured": true,
-    "position": 5
+    "position": 5,
+    "title_en": "Corporate expense web system",
+    "summary_en": "User/permission management + SAP integration for Coca-Cola Embonor"
   },
   {
     "slug": "mundial-2026",
@@ -114,7 +124,9 @@
       "caseStudy": "/proyectos/mundial-2026"
     },
     "featured": true,
-    "position": 6
+    "position": 6,
+    "title_en": "2026 World Cup prediction model",
+    "summary_en": "Elo rating, Poisson and Monte Carlo simulation to estimate each team's probability, validated against the real tournament"
   },
   {
     "slug": "caso-arquitectura",
@@ -134,7 +146,9 @@
       "github": "https://github.com/mauricioglab/caso-estudio-arquitectura"
     },
     "featured": true,
-    "position": 7
+    "position": 7,
+    "title_en": "Case Study: Systems Analyst",
+    "summary_en": "Full systems-analysis cycle for an architecture firm: requirements gathering, UML, DFD and 13 Scrum sprints"
   },
   {
     "slug": "abandono-estudiantil",
@@ -155,6 +169,8 @@
       "caseStudy": "/proyectos/abandono-estudiantil"
     },
     "featured": true,
-    "position": 8
+    "position": 8,
+    "title_en": "Student dropout prediction",
+    "summary_en": "Risk model to prioritize tutoring: who to intervene with first when resources are limited"
   }
 ]
