@@ -3,6 +3,7 @@ import { useEffect, useState } from 'preact/hooks';
 import WizardModal from './shared/WizardModal';
 import type { OpState } from './shared/BusyOverlay';
 import { db } from '../../lib/db';
+import { SITE_ID, SITE_AUTHOR } from '../../data/site-id';
 import { BLOG_CATEGORIES, normalizeCategories } from '../../data/blog-categories';
 import { TEMAS, normalizeTemas } from '../../data/temas';
 
@@ -224,7 +225,7 @@ export default function BlogAdminPreact() {
   const [opHistory, setOpHistory] = useState<OpHistoryEntry[]>([]);
 
   async function loadPosts() {
-    const { data, error } = await db.from('blogs').select('*').order('pub_date', { ascending: false });
+    const { data, error } = await db.from('blogs').select('*').eq('site', SITE_ID).order('pub_date', { ascending: false });
     if (!error) setPosts(data || []);
   }
 
@@ -600,7 +601,7 @@ export default function BlogAdminPreact() {
   }
 
   async function uniqueSlug(base: string) {
-    const { data } = await db.from('blogs').select('slug');
+    const { data } = await db.from('blogs').select('slug').eq('site', SITE_ID);
     const existing = new Set((data || []).map((r: any) => r.slug));
     if (!existing.has(base)) return base;
     let i = 2;
@@ -618,7 +619,8 @@ export default function BlogAdminPreact() {
       const payload: any = {
         title: borrador.title,
         pub_date: new Date().toISOString().slice(0, 10),
-        author: 'Mauricio Gonzalez',
+        site: SITE_ID,
+        author: SITE_AUTHOR,
         categories: normalizeCategories(selectedCategories),
         topicos: normalizeTemas(selectedTemas),
         description: borrador.description,
@@ -639,7 +641,7 @@ export default function BlogAdminPreact() {
       }
       setEditingId(null);
       await loadPosts();
-      finishOp(draft ? 'Borrador guardado.' : '¡Publicado! Aparece en /blog tras el próximo build (cron 12 hs o deploy manual).');
+      finishOp(draft ? 'Borrador guardado.' : '¡Publicado! Aparece en /blog en 1 o 2 minutos (el sitio se reconstruye solo).');
       wizardOpen.value = false;
     } catch (e) {
       failOp((e as Error).message);
