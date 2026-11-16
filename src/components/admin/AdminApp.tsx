@@ -4,6 +4,7 @@ import AbmResource from './AbmResource';
 import SocialsEditor from './SocialsEditor';
 import ResumenPanel from './ResumenPanel';
 import BlogModule from './BlogModule';
+import CasesModule from './CasesModule';
 import DisertacionesAdminPreact from './DisertacionesAdminPreact';
 import RecursosAdminPreact from './RecursosAdminPreact';
 import MovimientoAdminPreact from './MovimientoAdminPreact';
@@ -17,6 +18,7 @@ const GROUP_OF: Record<string, string> = { cv_documents: 'Privado' };
 const modules: AdminModule[] = [
   { id: 'resumen', group: 'Inicio', label: 'Resumen y enlaces', render: () => <ResumenPanel go={go} /> },
   { id: 'blog', group: 'Publicaciones', label: 'Blog', render: () => <BlogModule /> },
+  { id: 'casos', group: 'Publicaciones', label: 'Casos de estudio', render: () => <CasesModule /> },
   { id: 'disertaciones', group: 'Publicaciones', label: 'Eventos', render: () => <DisertacionesAdminPreact /> },
   { id: 'recursos', group: 'Publicaciones', label: 'Zona Lab', render: () => <RecursosAdminPreact /> },
   { id: 'movimiento', group: 'Herramientas', label: 'Movimiento', render: () => <MovimientoAdminPreact /> },

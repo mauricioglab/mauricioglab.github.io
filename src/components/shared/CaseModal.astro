@@ -1,0 +1,97 @@
+---
+// Ventana pública de un caso de estudio: índice lateral + una sección a la vez, con enlace directo (?caso=slug&s=seccion).
+// Recibe los casos ya resueltos al idioma (utils/cases.ts). Archivo IDÉNTICO en Mauricio y Fernanda.
+import type { CaseStudy } from '../../data/case-model';
+import CaseBlock from './CaseBlock.astro';
+
+interface Props { cases: CaseStudy[]; lang?: 'es' | 'en' }
+const { cases, lang = 'es' } = Astro.props;
+const L = { close: lang === 'en' ? 'Close' : 'Cerrar', index: lang === 'en' ? 'Sections' : 'Secciones' };
+---
+{cases.length > 0 && (
+  <>
+    <dialog class="pt-case-dialog" id="pt-case" aria-label={lang === 'en' ? 'Case study' : 'Caso de estudio'} data-close={L.close}>
+      <div class="pt-case-box">
+        <button type="button" class="pt-case-close" data-case-close aria-label={L.close}>×</button>
+        <div class="pt-case-body" data-case-body></div>
+      </div>
+    </dialog>
+    {cases.map((c) => (
+      <template data-pt-case-tpl={c.slug}>
+        <header class="pt-case-head">
+          {c.badge && <p class="pt-case-badge">{c.badge}</p>}
+          <h2>{c.title}</h2>
+          {c.description && <p>{c.description}</p>}
+        </header>
+        <div class="pt-case-layout">
+          <nav class="pt-case-nav" aria-label={L.index}>
+            {c.sections.map((s, i) => <button type="button" data-sec={s.key} aria-current={i === 0 ? 'true' : undefined}>{s.title}</button>)}
+          </nav>
+          <div class="pt-case-sections">
+            {c.sections.map((s, i) => (
+              <section class="pt-case-sec" data-sec={s.key} hidden={i !== 0}>
+                <h3>{s.title}</h3>
+                {s.blocks.map((b) => <CaseBlock b={b} />)}
+              </section>
+            ))}
+          </div>
+        </div>
+      </template>
+    ))}
+    <script is:inline>
+      (function () {
+        var dlg = document.getElementById('pt-case');
+        if (!dlg) return;
+        var body = dlg.querySelector('[data-case-body]');
+        function show(sec, key) {
+          sec.querySelectorAll('[data-sec]').forEach(function (el) {
+            var on = el.getAttribute('data-sec') === key;
+            if (el.tagName === 'SECTION') el.hidden = !on;
+            else if (on) el.setAttribute('aria-current', 'true'); else el.removeAttribute('aria-current');
+          });
+        }
+        function open(slug, key) {
+          var tpl = document.querySelector('template[data-pt-case-tpl="' + slug + '"]');
+          if (!tpl) return false;
+          body.innerHTML = '';
+          body.appendChild(tpl.content.cloneNode(true));
+          var first = body.querySelector('.pt-case-nav button');
+          var k = key && body.querySelector('section[data-sec="' + key + '"]') ? key : first && first.getAttribute('data-sec');
+          if (k) show(body, k);
+          if (!dlg.open) dlg.showModal();
+          dlg.scrollTop = 0;
+          var u = new URL(location.href);
+          u.searchParams.set('caso', slug);
+          if (k) u.searchParams.set('s', k);
+          history.replaceState(null, '', u);
+          return true;
+        }
+        function closeDlg() { if (dlg.open) dlg.close(); }
+        dlg.addEventListener('close', function () {
+          var u = new URL(location.href);
+          u.searchParams.delete('caso'); u.searchParams.delete('s');
+          history.replaceState(null, '', u);
+        });
+        dlg.addEventListener('click', function (e) {
+          if (e.target === dlg) return closeDlg();
+          var btn = e.target.closest('.pt-case-nav button');
+          if (btn) {
+            var key = btn.getAttribute('data-sec');
+            show(body, key);
+            var u = new URL(location.href); u.searchParams.set('s', key); history.replaceState(null, '', u);
+            body.querySelector('.pt-case-sections').scrollIntoView({ block: 'nearest' });
+            return;
+          }
+          if (e.target.closest('[data-case-close]')) closeDlg();
+        });
+        document.addEventListener('click', function (e) {
+          var a = e.target.closest('[data-pt-case]');
+          if (!a) return;
+          if (open(a.getAttribute('data-pt-case'))) e.preventDefault();
+        });
+        var p = new URLSearchParams(location.search);
+        if (p.get('caso')) open(p.get('caso'), p.get('s'));
+      })();
+    </script>
+  </>
+)}

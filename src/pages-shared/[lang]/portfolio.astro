@@ -1,6 +1,8 @@
 ---
 import BaseTailwind from '@layouts/BaseTailwind.astro';
 import CaseStudyModal from '@components/case-study/CaseStudyModal.astro';
+import CaseModal from '@components/shared/CaseModal.astro';
+import { getCases } from '@utils/cases';
 import { getProjectsByProfile } from '@data/projects';
 import { getLanguagePaths } from '@utils/i18n-paths';
 import { type Lang, useTranslations, getAlternateUrl } from '@i18n/index';
@@ -46,16 +48,19 @@ const projectGroups = categoryOrder
 
 // Portafolio personal: los proyectos salen de la base (con valores por defecto). Si no hay filas para el idioma, se usa el código.
 const dbRows = isCompanyBuild ? [] : await getProjectRows(lang);
+// Casos de estudio cargados desde el panel (se abren en una ventana). La empresa conserva su resumen propio.
+const cases = isCompanyBuild ? [] : await getCases(lang);
+const caseSlugs = new Set(cases.map((c) => c.slug));
 const personalGroups = dbRows.length
   ? [...new Set(dbRows.map((r) => r.category))].map((cat) => ({
       label: categoryLabels[cat] ?? cat,
-      items: dbRows.filter((r) => r.category === cat).map((r) => ({ id: r.slug, title: r.title, description: r.summary, caseStudy: r.links?.caseStudy ?? null })),
+      items: dbRows.filter((r) => r.category === cat).map((r) => ({ id: r.slug, title: r.title, description: r.summary })),
     }))
   : projectGroups.map((g) => ({
       label: g.label,
       items: g.items.map((project) => {
         const p = projectsT[project.id];
-        return { id: project.id, title: p?.title || project.id, description: p?.shortDescription || p?.profiles?.engineer?.description || '', caseStudy: project.links?.caseStudy ?? null };
+        return { id: project.id, title: p?.title || project.id, description: p?.shortDescription || p?.profiles?.engineer?.description || '' };
       }),
     }));
 
@@ -114,22 +119,8 @@ for (const project of projects) {
   modalCases[project.id] = merged;
 }
 
-const caseStudyUrls: Record<string, string | undefined> = {
-  'validacion-biometrica': '/proyectos/validacion-biometrica',
-  'billetera-virtual': '/proyectos/billetera-virtual',
-  'monitoreo-agricola': '/proyectos/monitoreo-agricola',
-  'auditorias-datos': '/proyectos/auditorias-datos',
-  'coca-cola-embonor': '/proyectos/coca-cola-embonor',
-  'mundial-2026': '/proyectos/mundial-2026',
-  'abandono-estudiantil': '/proyectos/abandono-estudiantil',
-  'caso-arquitectura': '/caso-arquitectura',
-};
-
-// Estas páginas no tienen versión en otro idioma: no llevan prefijo /es ni /en.
-const singleLanguageCaseStudies = new Set(['caso-arquitectura']);
-
-// Los casos /proyectos/<id> viven solo en el dominio personal (detalle técnico completo);
-// caso-arquitectura también es solo del dominio personal (en la empresa se enlaza al origen personal).
+// Proyectos de la empresa que tienen caso en el portafolio personal (se abre allí en una ventana).
+const personalCaseIds = new Set(['validacion-biometrica', 'billetera-virtual', 'monitoreo-agricola', 'auditorias-datos', 'coca-cola-embonor', 'mundial-2026', 'abandono-estudiantil', 'caso-arquitectura']);
 
 // Stack técnico: cada tecnología con su slug oficial de Simple Icons (isologotipo)
 // Los slugs sin logo se marcan con "" (chip de solo texto)
@@ -347,15 +338,11 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
             <p class="pt-folio-group"><strong>{group.label}</strong></p>
             <ul>
               {group.items.map((item) => {
-                const caseStudyPath = caseStudyUrls[item.id] ?? item.caseStudy;
-                const caseStudyUrl = caseStudyPath
-                  ? (singleLanguageCaseStudies.has(item.id) ? caseStudyPath : `/${lang}${caseStudyPath}`)
-                  : null;
-                const hasModal = !!modalCases[item.id];
+                const hasCase = caseSlugs.has(item.id);
                 return (
                   <li>
-                    {hasModal || caseStudyUrl ? (
-                      <a class="pt-link-gold pt-folio-link" href={caseStudyUrl || '#proyectos'} data-case={hasModal ? item.id : undefined} data-case-full={caseStudyUrl || ''} aria-haspopup={hasModal ? 'dialog' : undefined}>{item.title}</a>
+                    {hasCase ? (
+                      <a class="pt-link-gold pt-folio-link" href={`?caso=${item.id}`} data-pt-case={item.id} aria-haspopup="dialog">{item.title}</a>
                     ) : (
                       <strong>{item.title}</strong>
                     )}
@@ -418,12 +405,7 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
                 const profile = project.profiles['engineer'];
                 const title = p?.title || project.id;
                 const shortDescription = p?.shortDescription || p?.profiles?.engineer?.description || '';
-                const caseStudyPath = caseStudyUrls[project.id];
-                const caseStudyUrl = caseStudyPath
-                  ? (singleLanguageCaseStudies.has(project.id)
-                      ? (isCompanyBuild ? `${PERSONAL_ORIGIN}${caseStudyPath}` : caseStudyPath)
-                      : (isCompanyBuild ? `${PERSONAL_ORIGIN}/${lang}${caseStudyPath}` : `/${lang}${caseStudyPath}`))
-                  : null;
+                const caseStudyUrl = personalCaseIds.has(project.id) ? `${PERSONAL_ORIGIN}/${lang}/portfolio/?caso=${project.id}` : null;
                 const isFeaturedCard = !isCompanyBuild && project.category === 'analisis';
                 const hasLiveDemo = isCompanyBuild && /^https?:/.test(project.links.demo || '');
                 return (
@@ -488,9 +470,9 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
   </div>
   )}
 
-  <CaseStudyModal lang={lang} cases={modalCases} labels={modalLabels} company={isCompanyBuild ? modalT.company : null} />
+  {isCompanyBuild ? <CaseStudyModal lang={lang} cases={modalCases} labels={modalLabels} company={modalT.company} /> : <CaseModal cases={cases} lang={lang} />}
 
-  <script is:inline>
+  {isCompanyBuild && <script is:inline>
     document.addEventListener('click', function (e) {
       var card = e.target.closest('.pf-card[data-case], .pt-folio-link[data-case]');
       if (!card) return;
@@ -504,5 +486,5 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
       e.preventDefault();
       window.openCaseModal(card.getAttribute('data-case'), card.getAttribute('data-case-full'));
     });
-  </script>
+  </script>}
 </BaseTailwind>

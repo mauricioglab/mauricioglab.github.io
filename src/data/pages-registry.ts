@@ -59,14 +59,14 @@ export const pagesRegistry: PageEntry[] = [
   // =====================
   // CASE STUDIES (solo en admin)
   // =====================
-  { id: 'project-validacion-biometrica', name: 'Case: Validación Biométrica', url: '/es/proyectos/validacion-biometrica/', category: 'project', icon: '🪪' },
-  { id: 'project-billetera-virtual', name: 'Case: Billetera Virtual', url: '/es/proyectos/billetera-virtual/', category: 'project', icon: '💳' },
-  { id: 'project-monitoreo-agricola', name: 'Case: Monitoreo Agrícola', url: '/es/proyectos/monitoreo-agricola/', category: 'project', icon: '🌱' },
-  { id: 'project-auditorias-datos', name: 'Case: Auditorías con Datos', url: '/es/proyectos/auditorias-datos/', category: 'project', icon: '📊' },
-  { id: 'project-coca-cola-embonor', name: 'Case: Coca-Cola Embonor', url: '/es/proyectos/coca-cola-embonor/', category: 'project', icon: '🥤' },
-  { id: 'project-mundial-2026', name: 'Case: Mundial 2026', url: '/es/proyectos/mundial-2026/', category: 'project', icon: '⚽' },
-  { id: 'project-abandono-estudiantil', name: 'Case: Abandono Estudiantil', url: '/es/proyectos/abandono-estudiantil/', category: 'project', icon: '🎓' },
-  { id: 'project-caso-arquitectura', name: 'Case: Analista de Sistemas (ArqStudio)', url: '/caso-arquitectura/', category: 'project', icon: '📐' },
+  { id: 'project-validacion-biometrica', name: 'Case: Validación Biométrica', url: '/es/portfolio/?caso=validacion-biometrica', category: 'project', icon: '🪪' },
+  { id: 'project-billetera-virtual', name: 'Case: Billetera Virtual', url: '/es/portfolio/?caso=billetera-virtual', category: 'project', icon: '💳' },
+  { id: 'project-monitoreo-agricola', name: 'Case: Monitoreo Agrícola', url: '/es/portfolio/?caso=monitoreo-agricola', category: 'project', icon: '🌱' },
+  { id: 'project-auditorias-datos', name: 'Case: Auditorías con Datos', url: '/es/portfolio/?caso=auditorias-datos', category: 'project', icon: '📊' },
+  { id: 'project-coca-cola-embonor', name: 'Case: Coca-Cola Embonor', url: '/es/portfolio/?caso=coca-cola-embonor', category: 'project', icon: '🥤' },
+  { id: 'project-mundial-2026', name: 'Case: Mundial 2026', url: '/es/portfolio/?caso=mundial-2026', category: 'project', icon: '⚽' },
+  { id: 'project-abandono-estudiantil', name: 'Case: Abandono Estudiantil', url: '/es/portfolio/?caso=abandono-estudiantil', category: 'project', icon: '🎓' },
+  { id: 'project-caso-arquitectura', name: 'Case: Analista de Sistemas (ArqStudio)', url: '/es/portfolio/?caso=caso-arquitectura', category: 'project', icon: '📐' },
 ];
 
 // =====================

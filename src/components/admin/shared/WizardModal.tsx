@@ -40,7 +40,7 @@ export default function WizardModal({
         if (e.target === e.currentTarget) close();
       }}
     >
-      <div class="bg-white text-[#141a2e] border border-[#d7dce5] shadow-2xl w-full max-w-3xl max-h-[85vh] flex flex-col">
+      <div class="bg-white text-[#141a2e] border border-[#d7dce5] shadow-2xl w-full max-w-5xl max-h-[85vh] flex flex-col">
         {/* Header */}
         <div class="flex items-center justify-between px-5 py-4 border-b border-[#d7dce5] shrink-0">
           <div>

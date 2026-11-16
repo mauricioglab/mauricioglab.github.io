@@ -47,12 +47,12 @@
 
 [[redirects]]
   from = "/es/proyectos/*"
-  to = "https://mauricio.expertotech.com.ar/es/proyectos/:splat"
+  to = "https://mauricio.expertotech.com.ar/es/portfolio/?caso=:splat"
   status = 301
 
 [[redirects]]
   from = "/en/proyectos/*"
-  to = "https://mauricio.expertotech.com.ar/en/proyectos/:splat"
+  to = "https://mauricio.expertotech.com.ar/en/portfolio/?caso=:splat"
   status = 301
 
 [[redirects]]
@@ -147,6 +147,6 @@
 
 [[redirects]]
   from = "/caso-arquitectura/*"
-  to = "https://mauricio.expertotech.com.ar/caso-arquitectura/:splat"
+  to = "https://mauricio.expertotech.com.ar/es/portfolio/?caso=caso-arquitectura"
   status = 301
   force = true

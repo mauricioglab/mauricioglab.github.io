@@ -97,3 +97,22 @@
 .pt-i18n-tag { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--pt-gold); }
 .pt-i18n-col input[type="text"] { height: 57px; padding: 12px 16px; border: 1px solid var(--pt-line); font: inherit; width: 100%; }
 .pt-i18n-col textarea { width: 100%; min-height: 160px; padding: 12px 16px; border: 1px solid var(--pt-line); font: inherit; resize: vertical; }
+
+/* Casos de estudio: asistente del panel */
+.pt-cs-wizard { display: grid; gap: 16px; }
+.pt-cs-wizard h3 { margin: 0; font-size: 1.25rem; }
+.pt-cs-next { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 16px; padding-top: 8px; }
+.pt-cs-block { border: 1px solid var(--pt-line); padding: 16px; display: grid; gap: 12px; }
+.pt-cs-blockbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.pt-cs-addblock { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; font-size: 14px; color: var(--pt-muted); }
+.pt-cs-rows { display: grid; gap: 12px; }
+.pt-cs-row { display: grid; gap: 8px; padding-bottom: 12px; border-bottom: 1px dashed var(--pt-line); }
+.pt-cs-card { display: grid; gap: 8px; padding: 12px; background: #f4f6fa; }
+.pt-cs-tablewrap { overflow-x: auto; }
+.pt-cs-table { border-collapse: collapse; min-width: 100%; }
+.pt-cs-table th, .pt-cs-table td { padding: 4px; border: 1px solid var(--pt-line); vertical-align: top; min-width: 160px; }
+.pt-cs-table input, .pt-cs-table textarea { width: 100%; padding: 6px 8px; font: inherit; font-size: 14px; border: 1px solid var(--pt-line); }
+.pt-cs-en { background: #f4f6fa; }
+.pt-cs-listrow { grid-template-columns: 2fr 1.4fr 1fr 1fr 2fr; cursor: default; }
+.pt-cs-actions { display: flex; flex-wrap: wrap; gap: 12px; overflow: visible; white-space: normal; }
+.pt-cs-preview { padding: 16px; border: 1px solid var(--pt-line); font-family: var(--pt-body); }

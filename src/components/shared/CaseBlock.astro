@@ -1,0 +1,42 @@
+---
+// Un bloque de un caso de estudio ya resuelto al idioma. Lo usa CaseModal. IDÉNTICO en Mauricio y Fernanda (salvo la ruta del import).
+import type { Block } from '../../data/case-model';
+interface Props { b: Block }
+const { b } = Astro.props;
+const paragraphs = b.kind === 'texto' ? b.text.split('\n\n') : [];
+---
+{b.kind === 'texto' && paragraphs.map((p) => <p>{p}</p>)}
+{b.kind === 'subtitulo' && <h4>{b.text}</h4>}
+{b.kind === 'lista' && <ul>{b.items.map((t) => <li>{t}</li>)}</ul>}
+{b.kind === 'pasos' && (
+  <ol class="pt-case-steps">
+    {b.steps.map((st) => (
+      <li>
+        {st.title && <strong>{st.title}</strong>}
+        {st.text && <p>{st.text}</p>}
+        {st.items.length > 0 && <ul>{st.items.map((t) => <li>{t}</li>)}</ul>}
+      </li>
+    ))}
+  </ol>
+)}
+{b.kind === 'metricas' && (
+  <dl class="pt-case-metrics">{b.items.map((m) => <div><dt>{m.value}</dt><dd>{m.label}</dd></div>)}</dl>
+)}
+{b.kind === 'tabla' && (
+  <div class="pt-case-table">
+    <table>
+      {b.caption && <caption>{b.caption}</caption>}
+      {b.columns.length > 0 && <thead><tr>{b.columns.map((h) => <th scope="col">{h}</th>)}</tr></thead>}
+      <tbody>{b.rows.map((r) => <tr>{r.map((cell) => <td>{cell}</td>)}</tr>)}</tbody>
+    </table>
+  </div>
+)}
+{b.kind === 'diagrama' && (
+  <figure class="pt-case-figure">
+    <img src={b.url} alt={b.alt} loading="lazy" />
+    {b.caption && <figcaption>{b.caption}</figcaption>}
+  </figure>
+)}
+{b.kind === 'enlaces' && (
+  <p class="pt-case-links">{b.items.map((l) => <a class="pt-link-gold" href={l.url} rel="noopener" target={l.url.startsWith('http') ? '_blank' : undefined}>{l.label || l.url}</a>)}</p>
+)}
