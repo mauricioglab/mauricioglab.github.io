@@ -1,0 +1,160 @@
+[
+  {
+    "slug": "validacion-biometrica",
+    "title": "Validación Biométrica con IA",
+    "summary": "Reconocimiento facial + prueba de vida con AWS Rekognition, integrado con RENAPER",
+    "category": "ia",
+    "tags": [
+      "AWS Rekognition",
+      "RENAPER",
+      "Node.js/NestJS",
+      "Angular",
+      "AWS QLDB",
+      "Reconocimiento facial"
+    ],
+    "links": {
+      "caseStudy": "/proyectos/validacion-biometrica"
+    },
+    "featured": true,
+    "position": 1
+  },
+  {
+    "slug": "billetera-virtual",
+    "title": "Core API — Billetera virtual TotalCoin",
+    "summary": "Core API y microservicios para la billetera virtual y pasarela de pagos de TotalCoin",
+    "category": "desarrollo",
+    "tags": [
+      ".NET Framework 4.5",
+      "DDD",
+      "CQRS",
+      "Mediator",
+      "Docker",
+      "Amazon ECS",
+      "Microservicios"
+    ],
+    "links": {
+      "caseStudy": "/proyectos/billetera-virtual"
+    },
+    "featured": true,
+    "position": 2
+  },
+  {
+    "slug": "monitoreo-agricola",
+    "title": "Monitoreo agrícola con Machine Learning",
+    "summary": "App de monitoreo de cultivos con ML y trazabilidad IoT en AWS QLDB (cliente España)",
+    "category": "ia",
+    "tags": [
+      "Python",
+      "Scikit-learn",
+      "Google Colab",
+      "AWS Lambda",
+      "AWS QLDB",
+      "Node.js",
+      "Angular"
+    ],
+    "links": {
+      "caseStudy": "/proyectos/monitoreo-agricola"
+    },
+    "featured": true,
+    "position": 3
+  },
+  {
+    "slug": "auditorias-datos",
+    "title": "Auditorías con análisis de datos",
+    "summary": "Sistema interactivo de análisis de datos para auditoría en el sector eléctrico (ISA CTEEP)",
+    "category": "desarrollo",
+    "tags": [
+      "Angular 17-18",
+      ".NET Core",
+      "C#",
+      "SQL Server",
+      "Entity Framework",
+      "Reportes PDF/Excel"
+    ],
+    "links": {
+      "caseStudy": "/proyectos/auditorias-datos"
+    },
+    "featured": true,
+    "position": 4
+  },
+  {
+    "slug": "coca-cola-embonor",
+    "title": "Sistema web de gastos empresariales",
+    "summary": "Gestión de usuarios/permisos + integración SAP para Coca-Cola Embonor",
+    "category": "desarrollo",
+    "tags": [
+      "ASP.NET",
+      "C#",
+      "SQL Server",
+      "Entity Framework",
+      "SAP API"
+    ],
+    "links": {
+      "caseStudy": "/proyectos/coca-cola-embonor"
+    },
+    "featured": true,
+    "position": 5
+  },
+  {
+    "slug": "mundial-2026",
+    "title": "Modelo predictivo del Mundial 2026",
+    "summary": "Rating Elo, Poisson y simulación Monte Carlo para estimar la probabilidad de cada selección, validado contra el torneo real",
+    "category": "ia",
+    "tags": [
+      "Python",
+      "Pandas",
+      "Statsmodels",
+      "Plotly",
+      "Streamlit",
+      "Monte Carlo"
+    ],
+    "links": {
+      "demo": "https://casosstudio-fkeqyq3uwpxvhtxvkthhsc.streamlit.app/",
+      "github": "https://github.com/mauricioglab/casos_studio",
+      "caseStudy": "/proyectos/mundial-2026"
+    },
+    "featured": true,
+    "position": 6
+  },
+  {
+    "slug": "caso-arquitectura",
+    "title": "Caso de Estudio: Analista de Sistemas",
+    "summary": "Ciclo completo de análisis de sistemas para un estudio de arquitectura: relevamiento, UML, DFD y 13 sprints Scrum",
+    "category": "analisis",
+    "tags": [
+      "UML",
+      "DER",
+      "DFD",
+      "Event Storming",
+      "Feasibility Study",
+      "Scrum"
+    ],
+    "links": {
+      "demo": "/caso-arquitectura",
+      "github": "https://github.com/mauricioglab/caso-estudio-arquitectura"
+    },
+    "featured": true,
+    "position": 7
+  },
+  {
+    "slug": "abandono-estudiantil",
+    "title": "Predicción de abandono estudiantil",
+    "summary": "Modelo de riesgo para priorizar tutorías: a quién intervenir primero con un recurso limitado",
+    "category": "ia",
+    "tags": [
+      "Python",
+      "Pandas",
+      "Scikit-learn",
+      "Plotly",
+      "Streamlit",
+      "Clasificación"
+    ],
+    "links": {
+      "demo": "https://casosstudio-hktsnxogexobqypet55po6.streamlit.app/",
+      "github": "https://github.com/mauricioglab/casos_studio",
+      "caseStudy": "/proyectos/abandono-estudiantil"
+    },
+    "featured": true,
+    "position": 8
+  }
+]

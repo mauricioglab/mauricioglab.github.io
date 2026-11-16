@@ -3,30 +3,19 @@ import { Image } from 'astro:assets';
 import BaseTailwind from '@layouts/BaseTailwind.astro';
 import SocialLinks from '@components/shared/SocialLinks.astro';
 import { c, md } from '@utils/content';
+import { getGallery } from '@utils/portal-data';
 import { SITE_CONFIG } from '@data/config';
 import oficina from '../../assets/mauricio/retrato-oficina.png';
-import clase from '../../assets/mauricio/clase-ia.png';
-import retrato from '../../assets/mauricio/retrato.png';
 
 export const prerender = true;
 
+const gallery = await getGallery();
+const mosaic = [1, 2, 3].map((n) => gallery.get(`mosaico-${n}`)!);
+const trail = Array.from({ length: 10 }, (_, i) => gallery.get(`trayectoria-${i + 1}`)!);
 const pageTitle = await c('sobre-mi', 'page_title');
 const subtitle = await c('sobre-mi', 'subtitle');
 const bio = await Promise.all([1, 2, 3, 4].map((n) => c('sobre-mi', `bio_p${n}`)));
 
-// Epígrafes: tema · institución · fecha. Lo no confirmado queda marcado como pendiente.
-const trail = [
-  'Docencia en Analista de Sistemas, Desarrollo Web y Ciencia de Datos e IA · Instituto Cervantes · desde 2024',
-  'Charla · tema, institución y fecha por confirmar',
-  'Charla · tema, institución y fecha por confirmar',
-  'Taller · tema, institución y fecha por confirmar',
-  'Clase · tema, institución y fecha por confirmar',
-  'Charla · tema, institución y fecha por confirmar',
-  'Proyecto de software · cliente y fecha por confirmar',
-  'Proyecto de software · cliente y fecha por confirmar',
-  'Disertación · tema, institución y fecha por confirmar',
-  'Disertación · tema, institución y fecha por confirmar',
-];
 ---
 
 <BaseTailwind
@@ -54,16 +43,18 @@ const trail = [
     </section>
 
     <div class="pt-mosaic" aria-label="Mosaico de fotos">
-      <figure><Image src={clase} alt="Mauricio González dando una clase sobre IA en la educación" widths={[534, 800, 1068]} sizes="(max-width: 599px) 100vw, 534px" format="webp" style="object-position: 35% center" /></figure>
-      <figure><Image src={retrato} alt="Mauricio González en su despacho" widths={[212, 424]} sizes="(max-width: 599px) 100vw, 212px" format="webp" style="object-position: 50% 20%" /></figure>
-      <figure><div class="pt-ph">Foto pendiente</div></figure>
+      {mosaic.map((m) => (
+        <figure>
+          {m.image_url ? <img src={m.image_url} alt={m.alt} loading="lazy" /> : <div class="pt-ph">Foto pendiente</div>}
+        </figure>
+      ))}
     </div>
 
     <div class="pt-trail" aria-label="Trayectoria">
-      {trail.map((caption, i) => (
+      {trail.map((t, i) => (
         <figure class:list={{ 'pt-trail-wide': i >= 8 }}>
-          <div class="pt-trail-img"><div class="pt-ph">Foto pendiente</div></div>
-          <figcaption>{caption}</figcaption>
+          <div class="pt-trail-img">{t.image_url ? <img src={t.image_url} alt={t.alt} loading="lazy" /> : <div class="pt-ph">Foto pendiente</div>}</div>
+          <figcaption>{t.caption}</figcaption>
         </figure>
       ))}
     </div>

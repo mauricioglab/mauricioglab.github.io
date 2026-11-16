@@ -5,6 +5,7 @@ import { getProjectsByProfile } from '@data/projects';
 import { getLanguagePaths } from '@utils/i18n-paths';
 import { type Lang, useTranslations, getAlternateUrl } from '@i18n/index';
 import { isCompanyBuild, PERSONAL_ORIGIN } from '@data/site-target';
+import { getProjectRows } from '@utils/portal-data';
 
 export const getStaticPaths = getLanguagePaths;
 
@@ -42,6 +43,21 @@ const projectGroups = categoryOrder
     items: projects.filter((p) => categoryOf(p) === cat),
   }))
   .filter((g) => g.items.length > 0);
+
+// Portafolio personal: los proyectos salen de la base (con valores por defecto). Si no hay filas para el idioma, se usa el código.
+const dbRows = isCompanyBuild ? [] : await getProjectRows(lang);
+const personalGroups = dbRows.length
+  ? [...new Set(dbRows.map((r) => r.category))].map((cat) => ({
+      label: categoryLabels[cat] ?? cat,
+      items: dbRows.filter((r) => r.category === cat).map((r) => ({ id: r.slug, title: r.title, description: r.summary, caseStudy: r.links?.caseStudy ?? null })),
+    }))
+  : projectGroups.map((g) => ({
+      label: g.label,
+      items: g.items.map((project) => {
+        const p = projectsT[project.id];
+        return { id: project.id, title: p?.title || project.id, description: p?.shortDescription || p?.profiles?.engineer?.description || '', caseStudy: project.links?.caseStudy ?? null };
+      }),
+    }));
 
 const startDate = new Date('2021-07-01');
 const years = Math.floor((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
@@ -326,22 +342,24 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
       <h1 class="pt-page-title">{lang === 'es' ? 'Portafolio' : 'Portfolio'}</h1>
       <div class="pt-folio" id="proyectos">
         <p>{content.projectsDescription}</p>
-        {projectGroups.map((group) => (
+        {personalGroups.map((group) => (
           <section>
             <p class="pt-folio-group"><strong>{group.label}</strong></p>
             <ul>
-              {group.items.map((project) => {
-                const p = projectsT[project.id];
-                const title = p?.title || project.id;
-                const shortDescription = p?.shortDescription || p?.profiles?.engineer?.description || '';
-                const caseStudyPath = caseStudyUrls[project.id];
+              {group.items.map((item) => {
+                const caseStudyPath = caseStudyUrls[item.id] ?? item.caseStudy;
                 const caseStudyUrl = caseStudyPath
-                  ? (singleLanguageCaseStudies.has(project.id) ? caseStudyPath : `/${lang}${caseStudyPath}`)
+                  ? (singleLanguageCaseStudies.has(item.id) ? caseStudyPath : `/${lang}${caseStudyPath}`)
                   : null;
+                const hasModal = !!modalCases[item.id];
                 return (
                   <li>
-                    <a class="pt-link-gold pt-folio-link" href={caseStudyUrl || '#proyectos'} data-case={project.id} data-case-full={caseStudyUrl || ''} aria-haspopup="dialog">{title}</a>
-                    {shortDescription && <span> · {shortDescription}</span>}
+                    {hasModal || caseStudyUrl ? (
+                      <a class="pt-link-gold pt-folio-link" href={caseStudyUrl || '#proyectos'} data-case={hasModal ? item.id : undefined} data-case-full={caseStudyUrl || ''} aria-haspopup={hasModal ? 'dialog' : undefined}>{item.title}</a>
+                    ) : (
+                      <strong>{item.title}</strong>
+                    )}
+                    {item.description && <span> · {item.description}</span>}
                   </li>
                 );
               })}

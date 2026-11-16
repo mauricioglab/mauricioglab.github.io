@@ -65,8 +65,15 @@ export const RESOURCES: Resource[] = [
     ],
   },
   {
+    table: 'site_settings', label: 'Ajustes', orderBy: { column: 'site' },
+    listColumns: ['site', 'updated_at'],
+    fields: [
+      { name: 'data', label: 'Ajustes (JSON)', type: 'json', required: true, help: 'Ej.: {"tagline": "…", "networks": {"x": "", "instagram": "https://…", "linkedin": "https://…", "github": ""}}. Una red vacía se muestra como marcador pendiente.' },
+    ],
+  },
+  {
     table: 'cv_documents', label: 'CV (es/en)', orderBy: { column: 'lang' },
-    listColumns: ['lang', 'updated_at'],
+    listColumns: ['lang', 'updated_at'], preview: true,
     fields: [
       { name: 'lang', label: 'Idioma', type: 'select', options: LANGS, required: true },
       { name: 'data', label: 'Contenido (JSON)', type: 'json', required: true, help: 'Privado: no se publica en el sitio.' },

@@ -1,0 +1,26 @@
+[
+  {
+    "label": "Inicio",
+    "href": "/"
+  },
+  {
+    "label": "Sobre mí",
+    "href": "/es/sobre-mi/"
+  },
+  {
+    "label": "Portafolio",
+    "href": "/es/portfolio/"
+  },
+  {
+    "label": "Disertaciones",
+    "href": "/es/disertaciones/"
+  },
+  {
+    "label": "Blog",
+    "href": "/blog/"
+  },
+  {
+    "label": "Contáctame",
+    "href": "/es/contacto/"
+  }
+]

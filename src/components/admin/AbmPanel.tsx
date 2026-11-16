@@ -21,6 +21,7 @@ export interface Resource {
   orderBy?: { column: string; ascending?: boolean };
   defaults?: Record<string, unknown>;
   siteScoped?: boolean; // por defecto true
+  preview?: boolean; // muestra una vista previa imprimible del campo JSON
 }
 
 interface Props { siteId: string; resources: Resource[]; siteName: string }
@@ -51,6 +52,36 @@ const fromForm = (fields: Field[], form: Row): Row => {
   }
   return out;
 };
+
+function JsonView({ value, level = 3 }: { value: unknown; level?: number }) {
+  if (value === null || value === undefined || value === '') return null;
+  if (Array.isArray(value)) {
+    return <ul>{value.map((v) => <li><JsonView value={v} level={level} /></li>)}</ul>;
+  }
+  if (typeof value === 'object') {
+    return (
+      <div>
+        {Object.entries(value as Record<string, unknown>).map(([k, v]) => (
+          typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean'
+            ? <p><strong>{k}:</strong> {String(v)}</p>
+            : <div><p><strong>{k}</strong></p><JsonView value={v} level={level + 1} /></div>
+        ))}
+      </div>
+    );
+  }
+  return <span>{String(value)}</span>;
+}
+
+function CvPreview({ text }: { text: string }) {
+  let parsed: unknown = null;
+  try { parsed = text.trim() ? JSON.parse(text) : null; } catch { return <p class="pt-error">El JSON no es válido: corregilo para ver la vista previa.</p>; }
+  return (
+    <div class="pt-cv-preview">
+      <div class="pt-form-actions"><strong>Vista previa (privada)</strong><button class="pt-admin-link" type="button" onClick={() => window.print()}>Imprimir / guardar como PDF</button></div>
+      <JsonView value={parsed} />
+    </div>
+  );
+}
 
 export default function AbmPanel({ siteId, resources, siteName }: Props) {
   const [ready, setReady] = useState(false);
@@ -208,6 +239,7 @@ export default function AbmPanel({ siteId, resources, siteName }: Props) {
               {f.help && <span class="pt-form-note">{f.help}</span>}
             </div>
           ))}
+          {res.preview && <CvPreview text={String(form.data ?? '')} />}
           <div class="pt-form-actions">
             <button class="pt-button" type="submit" disabled={busy}>Guardar</button>
             <button class="pt-admin-link" type="button" onClick={() => setEditing(null)}>Cancelar</button>

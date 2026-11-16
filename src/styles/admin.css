@@ -15,3 +15,12 @@
 .pt-admin-login { max-width: 480px; margin: 0 auto; }
 .pt .pt-field select { height: 57px; padding: 0 16px; border: 1px solid var(--pt-line); background: #fff; font: inherit; color: var(--pt-ink); }
 .pt .pt-field input[type="checkbox"] { width: 24px; height: 24px; }
+
+/* Vista previa de CV (privada) e impresión */
+.pt-cv-preview { padding: 24px; border: 1px solid var(--pt-line); background: #fff; font-size: 16px; line-height: 1.5; }
+.pt-cv-preview ul { margin: 8px 0 8px 1.2em; list-style: disc; }
+.pt-cv-preview p { margin: 4px 0; }
+@media print {
+  .pt-header, .pt-footer, .pt-page-title, .pt-admin-bar, .pt-admin-tabs, .pt-form > :not(.pt-cv-preview), .pt-cv-preview .pt-form-actions { display: none !important; }
+  .pt-cv-preview { border: 0; padding: 0; }
+}

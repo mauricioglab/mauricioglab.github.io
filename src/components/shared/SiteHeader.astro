@@ -4,6 +4,7 @@ import { isCompanyBuild } from '../../data/site-target';
 import { SITE_CONFIG } from '../../data/config';
 import '../../styles/personal-profile.css';
 import SocialLinks from './SocialLinks.astro';
+import { getNavItems, getSettings } from '../../utils/portal-data';
 
 interface Props {
   current?: string;
@@ -21,6 +22,10 @@ const path = Astro.url.pathname;
 const swapped = /^\/(es|en)\//.test(path) ? path.replace(/^\/(es|en)\//, `/${altLang}/`) : `/${altLang}/servicios/`;
 const langHref = altHref ?? swapped;
 
+const menuItems = isCompanyBuild ? [] : await getNavItems();
+const settings = isCompanyBuild ? null : await getSettings();
+const isHere = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+
 const isCurrent = (id: string, children?: { id: string }[]) =>
   id === current || (children ?? []).some((c) => c.id === current);
 ---
@@ -32,16 +37,12 @@ const isCurrent = (id: string, children?: { id: string }[]) =>
 {!isCompanyBuild ? (
   <header class="pt-header">
     <p class="pt-title"><a href="/">Mauricio González</a></p>
-    <p class="pt-tagline">Docente y desarrollador · IA aplicada</p>
+    <p class="pt-tagline">{settings?.tagline}</p>
     <nav class="pt-nav" aria-label="Principal">
       <input class="pt-toggle" type="checkbox" id="pt-menu-toggle" aria-label="Abrir o cerrar el menú" />
       <label class="pt-menu-button" for="pt-menu-toggle">Menú <span class="pt-plus" aria-hidden="true">+</span><span class="pt-x" aria-hidden="true">×</span></label>
       <ul class="pt-menu">
-        <li><a href="/" aria-current={current === 'inicio' ? 'page' : undefined}>Inicio</a></li>
-        {nav.items.map(({ id, label, href }) => (
-          <li><a href={href} aria-current={current === id ? 'page' : undefined}>{label}</a></li>
-        ))}
-        <li><a href="/es/contacto/" aria-current={current === 'contacto' ? 'page' : undefined}>Contáctame</a></li>
+        {menuItems.map((i) => <li><a href={i.href} aria-current={isHere(i.href) ? 'page' : undefined}>{i.label}</a></li>)}
       </ul>
     </nav>
     <nav class="pt-social" aria-label="Redes sociales"><SocialLinks /></nav>

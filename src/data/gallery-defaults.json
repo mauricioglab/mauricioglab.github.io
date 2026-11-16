@@ -1,0 +1,80 @@
+[
+  {
+    "slot": "mosaico-1",
+    "image_url": "https://api.velocitylab.com.ar/storage/v1/object/public/blog-images/mauricio/galeria/audiencia-cervantes.jpg",
+    "alt": "Auditorio del Instituto Cervantes con estudiantes y docentes",
+    "caption": ""
+  },
+  {
+    "slot": "mosaico-2",
+    "image_url": "https://api.velocitylab.com.ar/storage/v1/object/public/blog-images/mauricio/galeria/charla-webcoding.jpg",
+    "alt": "Charla sobre webcoding en un escenario con proyección",
+    "caption": ""
+  },
+  {
+    "slot": "mosaico-3",
+    "image_url": "https://api.velocitylab.com.ar/storage/v1/object/public/blog-images/mauricio/galeria/entrega-certificados.jpg",
+    "alt": "Entrega de certificados en un acto institucional",
+    "caption": ""
+  },
+  {
+    "slot": "trayectoria-1",
+    "image_url": "https://api.velocitylab.com.ar/storage/v1/object/public/blog-images/mauricio/galeria/jornada-carreras.jpg",
+    "alt": "Entrega de un certificado en la Jornada de Carreras del Instituto Cervantes",
+    "caption": "Jornada de Carreras · Instituto Cervantes · fecha por confirmar"
+  },
+  {
+    "slot": "trayectoria-2",
+    "image_url": "https://api.velocitylab.com.ar/storage/v1/object/public/blog-images/mauricio/galeria/charla-aula.jpg",
+    "alt": "Charla frente a estudiantes en un aula",
+    "caption": "Charla con estudiantes · institución y fecha por confirmar"
+  },
+  {
+    "slot": "trayectoria-3",
+    "image_url": "https://api.velocitylab.com.ar/storage/v1/object/public/blog-images/mauricio/galeria/charla-auditorio.jpg",
+    "alt": "Charla con proyección frente a estudiantes",
+    "caption": "Charla con estudiantes · institución y fecha por confirmar"
+  },
+  {
+    "slot": "trayectoria-4",
+    "image_url": "https://api.velocitylab.com.ar/storage/v1/object/public/blog-images/mauricio/galeria/globant.jpg",
+    "alt": "Frente a la sede de Globant",
+    "caption": "Globant · tema y fecha por confirmar"
+  },
+  {
+    "slot": "trayectoria-5",
+    "image_url": "",
+    "alt": "",
+    "caption": "Docencia en Analista de Sistemas, Desarrollo Web y Ciencia de Datos e IA · Instituto Cervantes · desde 2024"
+  },
+  {
+    "slot": "trayectoria-6",
+    "image_url": "",
+    "alt": "",
+    "caption": "Taller · tema, institución y fecha por confirmar"
+  },
+  {
+    "slot": "trayectoria-7",
+    "image_url": "",
+    "alt": "",
+    "caption": "Proyecto de software · cliente y fecha por confirmar"
+  },
+  {
+    "slot": "trayectoria-8",
+    "image_url": "",
+    "alt": "",
+    "caption": "Proyecto de software · cliente y fecha por confirmar"
+  },
+  {
+    "slot": "trayectoria-9",
+    "image_url": "",
+    "alt": "",
+    "caption": "Disertación · tema, institución y fecha por confirmar"
+  },
+  {
+    "slot": "trayectoria-10",
+    "image_url": "",
+    "alt": "",
+    "caption": "Disertación · tema, institución y fecha por confirmar"
+  }
+]
