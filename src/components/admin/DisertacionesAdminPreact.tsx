@@ -91,7 +91,7 @@ export default function DisertacionesAdminPreact() {
   const [bullets, setBullets] = useState<string[]>([]);
   const [pptFile, setPptFile] = useState<File | null>(null);
   const [certFile, setCertFile] = useState<File | null>(null);
-  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [slideFiles, setSlideFiles] = useState<File[]>([]);
   const [textResumen, setTextResumen] = useState('');
   const [slideUrls, setSlideUrls] = useState<string[]>([]);
   const [selectedCoverIndex, setSelectedCoverIndex] = useState(-1);
@@ -133,7 +133,7 @@ export default function DisertacionesAdminPreact() {
     setDisplayPhotos([]);
     setPptFile(null);
     setCertFile(null);
-    setCoverFile(null);
+    setSlideFiles([]);
     setTextResumen('');
   }
 
@@ -213,16 +213,10 @@ export default function DisertacionesAdminPreact() {
     setCertFile(null);
   }
 
-  function quitarPortada() {
-    setCoverUrl('');
-    setSelectedCoverIndex(-1);
-    setCoverFile(null);
-  }
-
   function toggleDisplayPhoto(url: string) {
     setDisplayPhotos((d) => {
       if (d.includes(url)) return d.filter((u) => u !== url);
-      if (d.length >= 2) return d;
+      if (d.length >= 3) return d;
       return [...d, url];
     });
   }
@@ -401,17 +395,19 @@ export default function DisertacionesAdminPreact() {
     }
   }
 
-  async function subirPortada() {
-    if (!coverFile) {
-      status.value = 'Elegí la imagen de portada.';
+  async function subirDiapositivas() {
+    if (!slideFiles.length) {
+      status.value = 'Elegí una o más imágenes de diapositivas.';
       return;
     }
     busy.value = true;
-    status.value = 'Subiendo portada…';
+    status.value = 'Subiendo diapositivas…';
     try {
-      setCoverUrl(await uploadImage(coverFile, 'portadas'));
-      setSelectedCoverIndex(-1);
-      status.value = 'Portada subida.';
+      const urls: string[] = [];
+      for (const f of slideFiles) urls.push(await uploadImage(f, 'slides'));
+      setSlideUrls((x) => [...x, ...urls]);
+      setSlideFiles([]);
+      status.value = 'Diapositivas subidas.';
     } catch (e) {
       status.value = (e as Error).message;
     } finally {
@@ -587,7 +583,7 @@ export default function DisertacionesAdminPreact() {
       </div>
 
       <WizardModal
-        steps={['Datos', 'PPT/Resumen', 'Certificado y portada', 'Publicar']}
+        steps={['Datos', 'PPT/Resumen', 'Imágenes', 'Publicar']}
         newLabel="Nuevo evento"
         editLabel="Editar evento"
         isEditing={!!editingId}
@@ -820,161 +816,88 @@ export default function DisertacionesAdminPreact() {
 
         {wizardStep.value === 3 && (
           <div class="space-y-4">
-            <h3 class="text-sm font-bold text-[#082D3A]">Certificado y portada</h3>
+            <h3 class="text-sm font-bold text-[#082D3A]">Imágenes del evento</h3>
+            <p class="text-xs text-[#5c6785]">
+              Cada imagen se sube según su tipo. En la tarjeta se muestran las fotos (hasta 3); si el evento no tiene fotos, se
+              muestran una diapositiva y el certificado. Las diapositivas no se usan en Sobre mí ni en el Inicio.
+            </p>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-[#082D3A] mb-1">Certificado</label>
-                <div class="flex flex-col gap-2">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const input = e.target as HTMLInputElement;
-                      setCertFile(input.files && input.files[0] ? input.files[0] : null);
-                    }}
-                    class="text-xs text-[#082D3A] file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#e9edf3] file:text-[#082D3A] file:text-xs file:font-bold hover:file:bg-[#d9dfe9]"
-                  />
-                  <button
-                    onClick={subirCertificado}
-                    disabled={busy.value || !certFile}
-                    class="px-3 py-1.5 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-xs font-bold rounded-lg"
-                  >
-                    {certificateUrl ? 'Reemplazar' : 'Subir'}
-                  </button>
-                  {certificateUrl && (
-                    <div class="relative rounded-lg overflow-hidden border border-[#c5ccd8]">
-                      <img src={certificateUrl} alt="Certificado" class="w-full aspect-video object-cover" />
-                      <button
-                        onClick={quitarCertificado}
-                        type="button"
-                        class="absolute top-1 right-1 text-[10px] font-bold text-white bg-[#b32d2e] hover:bg-[#8f2223] rounded px-1.5 py-0.5"
-                        title="Quitar certificado"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  )}
-                </div>
+              <div class="border border-[#d7dce5] p-3 space-y-2">
+                <label class="block text-xs font-bold text-[#082D3A]">📷 Fotos del evento</label>
+                <input type="file" accept="image/*" multiple onChange={(e) => { const i = e.target as HTMLInputElement; setGalleryFiles(i.files ? Array.from(i.files) : []); }} class="text-xs text-[#082D3A] file:mr-2 file:py-1.5 file:px-3 file:border-0 file:bg-[#e9edf3] file:text-[#082D3A] file:text-xs file:font-bold hover:file:bg-[#d9dfe9]" />
+                <button onClick={subirGaleria} disabled={busy.value || !galleryFiles.length} class="px-3 py-1.5 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-xs font-bold">
+                  {galleryUrls.length ? 'Agregar fotos' : 'Subir fotos'}
+                </button>
+                {galleryUrls.length > 0 && (
+                  <div class="grid grid-cols-3 gap-1.5">
+                    {galleryUrls.map((g, i) => (
+                      <div key={g} class="relative overflow-hidden border border-[#c5ccd8]">
+                        <img src={g} alt="Foto del evento" class="w-full aspect-square object-cover" />
+                        <button onClick={() => removeGallery(i)} type="button" class="absolute top-0.5 right-0.5 text-[9px] font-bold text-white bg-[#b32d2e] px-1" title="Quitar foto">✕</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              <div>
-                <label class="block text-xs font-bold text-[#082D3A] mb-1">
-                  Portada <span class="font-normal text-[#6b7490]">(si no elegís slide, se usa la 1ra)</span>
-                </label>
-                <div class="flex flex-col gap-2">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const input = e.target as HTMLInputElement;
-                      setCoverFile(input.files && input.files[0] ? input.files[0] : null);
-                    }}
-                    class="text-xs text-[#082D3A] file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#e9edf3] file:text-[#082D3A] file:text-xs file:font-bold hover:file:bg-[#d9dfe9]"
-                  />
-                  <button
-                    onClick={subirPortada}
-                    disabled={busy.value || !coverFile}
-                    class="px-3 py-1.5 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-xs font-bold rounded-lg"
-                  >
-                    {coverUrl ? 'Reemplazar' : 'Subir'}
-                  </button>
-                  {coverUrl && (
-                    <div class="relative rounded-lg overflow-hidden border border-[#c5ccd8]">
-                      <img src={coverUrl} alt="Portada" class="w-full aspect-video object-cover" />
-                      <button
-                        onClick={quitarPortada}
-                        type="button"
-                        class="absolute top-1 right-1 text-[10px] font-bold text-white bg-[#b32d2e] hover:bg-[#8f2223] rounded px-1.5 py-0.5"
-                        title="Quitar portada"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  )}
-                </div>
+              <div class="border border-[#d7dce5] p-3 space-y-2">
+                <label class="block text-xs font-bold text-[#082D3A]">🎓 Certificado</label>
+                <input type="file" accept="image/*" onChange={(e) => { const i = e.target as HTMLInputElement; setCertFile(i.files && i.files[0] ? i.files[0] : null); }} class="text-xs text-[#082D3A] file:mr-2 file:py-1.5 file:px-3 file:border-0 file:bg-[#e9edf3] file:text-[#082D3A] file:text-xs file:font-bold hover:file:bg-[#d9dfe9]" />
+                <button onClick={subirCertificado} disabled={busy.value || !certFile} class="px-3 py-1.5 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-xs font-bold">
+                  {certificateUrl ? 'Reemplazar' : 'Subir certificado'}
+                </button>
+                {certificateUrl && (
+                  <div class="relative overflow-hidden border border-[#c5ccd8]">
+                    <img src={certificateUrl} alt="Certificado" class="w-full aspect-square object-cover" />
+                    <button onClick={quitarCertificado} type="button" class="absolute top-1 right-1 text-[10px] font-bold text-white bg-[#b32d2e] px-1.5 py-0.5" title="Quitar certificado">✕</button>
+                  </div>
+                )}
               </div>
 
-              <div>
-                <label class="block text-xs font-bold text-[#082D3A] mb-1">
-                  Fotos adicionales <span class="font-normal text-[#6b7490]">(álbum si no hay certificado)</span>
-                </label>
-                <div class="flex flex-col gap-2">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={(e) => {
-                      const input = e.target as HTMLInputElement;
-                      setGalleryFiles(input.files ? Array.from(input.files) : []);
-                    }}
-                    class="text-xs text-[#082D3A] file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#e9edf3] file:text-[#082D3A] file:text-xs file:font-bold hover:file:bg-[#d9dfe9]"
-                  />
-                  <button
-                    onClick={subirGaleria}
-                    disabled={busy.value || !galleryFiles.length}
-                    class="px-3 py-1.5 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-xs font-bold rounded-lg"
-                  >
-                    {galleryUrls.length ? 'Agregar' : 'Subir fotos'}
-                  </button>
-                  {galleryUrls.length > 0 && (
-                    <div class="grid grid-cols-3 gap-1.5">
-                      {galleryUrls.map((g, i) => (
-                        <div key={i} class="relative rounded-lg overflow-hidden border border-[#c5ccd8] group">
-                          <img src={g} alt="Foto del álbum" class="w-full aspect-video object-cover" />
-                          <button
-                            onClick={() => removeGallery(i)}
-                            type="button"
-                            class="absolute top-0.5 right-0.5 text-[9px] font-bold text-white bg-[#b32d2e] hover:bg-[#8f2223] rounded px-1"
-                            title="Quitar foto"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+              <div class="border border-[#d7dce5] p-3 space-y-2">
+                <label class="block text-xs font-bold text-[#082D3A]">🖥️ Diapositivas (PPT)</label>
+                <p class="text-[10px] text-[#6b7490]">Las que salen de procesar el PPT en el paso anterior, más las que subas acá.</p>
+                <input type="file" accept="image/*" multiple onChange={(e) => { const i = e.target as HTMLInputElement; setSlideFiles(i.files ? Array.from(i.files) : []); }} class="text-xs text-[#082D3A] file:mr-2 file:py-1.5 file:px-3 file:border-0 file:bg-[#e9edf3] file:text-[#082D3A] file:text-xs file:font-bold hover:file:bg-[#d9dfe9]" />
+                <button onClick={subirDiapositivas} disabled={busy.value || !slideFiles.length} class="px-3 py-1.5 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-xs font-bold">
+                  Agregar diapositivas
+                </button>
+                {slideUrls.length > 0 && (
+                  <div class="grid grid-cols-3 gap-1.5">
+                    {slideUrls.map((u, i) => (
+                      <div key={u} class={'relative overflow-hidden border ' + (selectedCoverIndex === i ? 'border-[#16B6C9] ring-2 ring-[#16B6C9]' : 'border-[#c5ccd8]')}>
+                        <img src={u} alt={`Diapositiva ${i + 1}`} class="w-full aspect-video object-cover" />
+                        <button onClick={() => removeSlide(i)} type="button" class="absolute top-0.5 right-0.5 text-[9px] font-bold text-white bg-[#b32d2e] px-1" title="Quitar diapositiva">✕</button>
+                        <button onClick={() => setCover(i)} type="button" class="absolute bottom-0.5 left-0.5 text-[9px] font-bold text-white bg-[#082D3A] px-1" title="Usar como imagen de la tarjeta cuando no hay fotos">
+                          {selectedCoverIndex === i ? '★ portada' : 'portada'}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
-            {(certificateUrl || galleryUrls.length > 0 || slideUrls.length > 0) && (
+            {galleryUrls.length > 3 && (
               <div class="border-t border-[#d7dce5] pt-4 space-y-2">
                 <label class="block text-xs font-bold text-[#082D3A]">
-                  Fotos a mostrar en la tarjeta <span class="font-normal text-[#6b7490]">(elegí hasta 2, junto a la portada)</span>
+                  Fotos a mostrar en la tarjeta <span class="font-normal text-[#6b7490]">(elegí hasta 3; si no elegís, se usan las primeras)</span>
                 </label>
-                <p class="text-[10px] text-[#6b7490]">
-                  Si no elegís ninguna, se usa automáticamente certificado/galería + 1ra diapositiva.
-                </p>
                 <div class="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
-                  {[certificateUrl, ...galleryUrls, ...slideUrls]
-                    .filter((u) => u && u !== coverUrl)
-                    .map((u, i) => {
-                      const order = displayPhotos.indexOf(u);
-                      const selected = order !== -1;
-                      return (
-                        <div
-                          key={`${u}-${i}`}
-                          onClick={() => toggleDisplayPhoto(u)}
-                          class={
-                            'relative rounded-lg overflow-hidden border cursor-pointer ' +
-                            (selected ? 'border-[#16B6C9] ring-2 ring-[#16B6C9]' : 'border-[#c5ccd8] hover:border-[#16B6C9]')
-                          }
-                        >
-                          <img src={u} class="w-full aspect-video object-cover" alt="" />
-                          {selected && (
-                            <span class="absolute top-0.5 left-0.5 text-[10px] font-bold text-white bg-[#082D3A] rounded-full w-4 h-4 flex items-center justify-center">
-                              {order + 1}
-                            </span>
-                          )}
-                        </div>
-                      );
-                    })}
+                  {galleryUrls.map((u) => {
+                    const order = displayPhotos.indexOf(u);
+                    return (
+                      <div key={u} onClick={() => toggleDisplayPhoto(u)} class={'relative overflow-hidden border cursor-pointer ' + (order !== -1 ? 'border-[#16B6C9] ring-2 ring-[#16B6C9]' : 'border-[#c5ccd8] hover:border-[#16B6C9]')}>
+                        <img src={u} class="w-full aspect-square object-cover" alt="" />
+                        {order !== -1 && <span class="absolute top-0.5 left-0.5 text-[10px] font-bold text-white bg-[#082D3A] w-4 h-4 flex items-center justify-center">{order + 1}</span>}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
 
-            {(coverUrl || certificateUrl || galleryUrls.length > 0 || slideUrls.length > 0) && (
+            {(galleryUrls.length > 0 || certificateUrl) && (
               <div class="border-t border-[#d7dce5] pt-4 space-y-3">
                 <label class="block text-xs font-bold text-[#082D3A]">Dónde se usan las fotos de este evento</label>
                 <p class="text-[10px] text-[#6b7490]">Subís las fotos una sola vez acá. Si las marcás, también aparecen en Sobre mí y en el Inicio.</p>
@@ -986,26 +909,20 @@ export default function DisertacionesAdminPreact() {
                   <input type="checkbox" checked={featuredHome} onChange={(e) => setFeaturedHome((e.target as HTMLInputElement).checked)} />
                   Foto del Inicio (bloque de la frase destacada)
                 </label>
-                <label class="block text-xs font-bold text-[#082D3A]">Foto principal <span class="font-normal text-[#6b7490]">(si no elegís, se usa la primera foto del álbum)</span></label>
+                <label class="block text-xs font-bold text-[#082D3A]">Foto principal <span class="font-normal text-[#6b7490]">(si no elegís, se usa la primera foto)</span></label>
                 <div class="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
-                  {[...galleryUrls, certificateUrl, coverUrl, ...slideUrls]
-                    .filter((u, i, a) => u && a.indexOf(u) === i)
-                    .map((u) => (
-                      <div
-                        key={u}
-                        onClick={() => setMainPhoto(mainPhoto === u ? '' : u)}
-                        class={'relative overflow-hidden border cursor-pointer ' + (mainPhoto === u ? 'border-[#16B6C9] ring-2 ring-[#16B6C9]' : 'border-[#c5ccd8] hover:border-[#16B6C9]')}
-                      >
-                        <img src={u} class="w-full aspect-video object-cover" alt="" />
-                        {mainPhoto === u && <span class="absolute top-0.5 left-0.5 text-[10px] font-bold text-white bg-[#082D3A] px-1">Principal</span>}
-                      </div>
-                    ))}
+                  {[...galleryUrls, certificateUrl].filter((u, i, a) => u && a.indexOf(u) === i).map((u) => (
+                    <div key={u} onClick={() => setMainPhoto(mainPhoto === u ? '' : u)} class={'relative overflow-hidden border cursor-pointer ' + (mainPhoto === u ? 'border-[#16B6C9] ring-2 ring-[#16B6C9]' : 'border-[#c5ccd8] hover:border-[#16B6C9]')}>
+                      <img src={u} class="w-full aspect-square object-cover" alt="" />
+                      {mainPhoto === u && <span class="absolute top-0.5 left-0.5 text-[10px] font-bold text-white bg-[#082D3A] px-1">Principal</span>}
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
 
             <div class="flex justify-end">
-              <button onClick={() => (wizardStep.value = 4)} class="px-4 py-2 bg-[#082D3A] hover:bg-[#0b6e7d] text-white text-sm font-bold rounded-lg">
+              <button onClick={() => (wizardStep.value = 4)} class="px-4 py-2 bg-[#082D3A] hover:bg-[#0b6e7d] text-white text-sm font-bold">
                 Siguiente →
               </button>
             </div>

@@ -75,17 +75,11 @@ export function photoOf(e: Evento): string {
   return candidates.find((u): u is string => !!u && !isSlide(e, u)) ?? '';
 }
 
-/** Hasta 3 imágenes para la tarjeta de Eventos: portada + 2 más (elegidas a mano, o certificado/álbum y diapositivas). */
+/** Imágenes de la tarjeta: hasta 3 fotos (las elegidas a mano o las primeras del álbum); sin fotos, una diapositiva y el certificado. */
 export function cardPhotos(e: Evento): string[] {
-  const main = e.cover || e.slides[0] || e.gallery[0] || '';
-  let secondary: string[];
-  if (e.displayPhotos.length) {
-    secondary = e.displayPhotos.filter((u) => u && u !== main);
-  } else {
-    secondary = e.certificate ? [e.certificate] : [...e.gallery];
-    secondary.push(...e.slides.filter((u) => u !== main));
-  }
-  return [main, ...secondary.filter((u) => u && u !== main)].filter(Boolean).slice(0, 3);
+  const photos = (e.displayPhotos.length ? e.displayPhotos : e.gallery).filter((u) => u && !isSlide(e, u));
+  if (photos.length) return [...new Set(photos)].slice(0, 3);
+  return [...new Set([e.cover || e.slides[0], e.certificate].filter((u): u is string => !!u))];
 }
 
 export function formatEventDate(d: Date | null): string {

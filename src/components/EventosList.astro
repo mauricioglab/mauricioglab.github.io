@@ -18,7 +18,6 @@ const byYear = years.map((y) => ({ year: y, items: eventos.filter((e) => (e.date
         <h2>{g.year}</h2>
         {g.items.map((e) => {
           const photos = cardPhotos(e);
-          const extra = e.certificate ? [e.certificate] : e.slides.slice(0, 3);
           return (
             <article class="pt-event">
               <div class={`pt-event-photos pt-event-photos-${Math.max(photos.length, 1)}`}>
@@ -32,12 +31,6 @@ const byYear = years.map((y) => ({ year: y, items: eventos.filter((e) => (e.date
                 {e.categories.length > 0 && <p class="pt-event-cats">{e.categories.slice(0, 3).join(' · ')}</p>}
                 {e.description && <p>{e.description}</p>}
                 {e.bullets.length > 0 && <ul>{e.bullets.map((b) => <li>{b}</li>)}</ul>}
-                {extra.length > 0 && (
-                  <p class="pt-event-links">
-                    {e.certificate && <a class="pt-link-gold" href={e.certificate} rel="noopener">Ver certificado</a>}
-                    {!e.certificate && e.slides.length > 0 && <a class="pt-link-gold" href={e.slides[0]} rel="noopener">Ver material ({e.slides.length})</a>}
-                  </p>
-                )}
               </div>
             </article>
           );
