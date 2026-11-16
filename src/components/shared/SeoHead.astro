@@ -18,7 +18,7 @@ const siteName = getSiteNav(lang).brand.name;
 
 // Páginas bilingües (/es/… y /en/…): declarar la alternativa en el otro idioma.
 const path = Astro.url.pathname;
-const bilingual = /^\/(es|en)\//.test(path);
+const bilingual = /^\/(es|en)\//.test(path) && !/^\/es\/(?:sobre-mi|contacto)\/?$/.test(path);
 const alternates = bilingual
   ? (['es', 'en'] as const).map((l) => ({ lang: l, href: `${origin}${path.replace(/^\/(es|en)\//, `/${l}/`)}` }))
   : [];

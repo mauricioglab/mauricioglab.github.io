@@ -4,7 +4,7 @@ import { SITE_CONFIG } from '../../data/config';
 
 export async function GET(context: { site: string | undefined }) {
   const posts = await getBlogPosts();
-  const site = context.site || 'https://mauricioglab.github.io/';
+  const site = context.site || 'https://mauricio.expertotech.com.ar/';
   const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
 
   return rss({

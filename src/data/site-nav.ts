@@ -1,4 +1,4 @@
-import { isCompanyBuild, PERSONAL_ORIGIN, COMPANY_ORIGIN } from './site-target';
+import { isCompanyBuild, PERSONAL_ORIGIN } from './site-target';
 
 export type Lang = 'es' | 'en';
 
@@ -40,25 +40,11 @@ export function getSiteNav(lang: Lang = 'es'): SiteNav {
   return {
     brand: { name: 'Mauricio González', href: '/' },
     items: [
-      { id: 'portfolio', label: 'Portfolio', href: '/es/portfolio/' },
-      { id: 'disertaciones', label: 'Disertaciones', href: '/es/disertaciones/' },
+      { id: 'sobre-mi', label: 'Sobre mí', href: '/es/sobre-mi/' },
+      { id: 'portfolio', label: 'Portafolio', href: '/es/portfolio/' },
       { id: 'blog', label: 'Blog', href: '/blog/' },
-      { id: 'zona-lab', label: 'Zona Lab', href: '/zona-lab/' },
-      {
-        id: 'herramientas',
-        label: 'Herramientas',
-        href: '#',
-        children: [
-          { id: 'prompt', label: 'Teleprompter', href: '/prompt/' },
-          { id: 'videos', label: 'Video Organizer', href: '/videos/' },
-          { id: 'extensions', label: 'Extensiones', href: '/extensions/' },
-          { id: 'calculadora', label: 'Calculadora 3D', href: '/calculadora/' },
-          { id: 'urls', label: 'URLs útiles', href: '/urls/' },
-        ],
-      },
-      { id: 'estudio', label: 'VeloCityLab', href: `${COMPANY_ORIGIN}/`, external: true },
     ],
-    contact: { label: 'Contacto', kind: 'link' },
+    contact: { label: 'Contáctame', kind: 'link' },
     langSwitch: false,
   };
 }

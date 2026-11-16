@@ -5,11 +5,11 @@ import sitemap from "@astrojs/sitemap";
 import domainRoutes from "./src/integrations/domain-routes.mjs";
 
 // SITE_TARGET decide qué dominio se arma en este build:
-// "personal" (default) → mauricioglab.github.io, "company" → velocitylab.com.ar
+// "personal" (default) → mauricio.expertotech.com.ar, "company" → velocitylab.com.ar
 const SITE_TARGET = process.env.SITE_TARGET === "company" ? "company" : "personal";
 const SITE_URL = SITE_TARGET === "company"
   ? "https://velocitylab.com.ar/"
-  : "https://mauricioglab.github.io/";
+  : "https://mauricio.expertotech.com.ar/";
 
 export default defineConfig({
   site: SITE_URL,
@@ -21,6 +21,9 @@ export default defineConfig({
     "/disertaciones": "/es/disertaciones/",
     // El resto apunta a contenido exclusivo del dominio personal.
     ...(SITE_TARGET === "company" ? {} : {
+      "/sobre-mi": { status: 301, destination: "/es/sobre-mi/" },
+      "/blog/about": { status: 301, destination: "/es/sobre-mi/" },
+      "/contacto": { status: 301, destination: "/es/contacto/" },
       "/pausas-activas": "/movimiento/?modo=pausas",
       "/movilidad": "/movimiento/?modo=movilidad",
       "/entrenamiento": "/movimiento/?modo=entrenamiento",

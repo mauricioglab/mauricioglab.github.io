@@ -1,5 +1,9 @@
 ---
 import { getSiteNav, type Lang } from '../../data/site-nav';
+import { isCompanyBuild } from '../../data/site-target';
+import { SITE_CONFIG } from '../../data/config';
+import '../../styles/personal-profile.css';
+import SocialLinks from './SocialLinks.astro';
 
 interface Props {
   current?: string;
@@ -23,8 +27,26 @@ const isCurrent = (id: string, children?: { id: string }[]) =>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Raleway:wght@300;700&display=swap" rel="stylesheet" />
 
+{!isCompanyBuild ? (
+  <header class="pt-header">
+    <p class="pt-title"><a href="/">Mauricio González</a></p>
+    <p class="pt-tagline">Docente y desarrollador · IA aplicada</p>
+    <nav class="pt-nav" aria-label="Principal">
+      <input class="pt-toggle" type="checkbox" id="pt-menu-toggle" aria-label="Abrir o cerrar el menú" />
+      <label class="pt-menu-button" for="pt-menu-toggle">Menú <span class="pt-plus" aria-hidden="true">+</span><span class="pt-x" aria-hidden="true">×</span></label>
+      <ul class="pt-menu">
+        <li><a href="/" aria-current={current === 'inicio' ? 'page' : undefined}>Inicio</a></li>
+        {nav.items.map(({ id, label, href }) => (
+          <li><a href={href} aria-current={current === id ? 'page' : undefined}>{label}</a></li>
+        ))}
+        <li><a href="/es/contacto/" aria-current={current === 'contacto' ? 'page' : undefined}>Contáctame</a></li>
+      </ul>
+    </nav>
+    <nav class="pt-social" aria-label="Redes sociales"><SocialLinks /></nav>
+  </header>
+) : (
 <header class="site-header">
   <div class="sh-row">
     <a class="sh-brand" href={nav.brand.href}>
@@ -101,6 +123,7 @@ const isCurrent = (id: string, children?: { id: string }[]) =>
     </div>
   </div>
 </header>
+)}
 
 <style is:global>
   :root { --site-header-h: 64px; }

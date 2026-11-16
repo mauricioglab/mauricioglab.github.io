@@ -1,13 +1,13 @@
 {
   "meta": {
     "title": "About us | VeloCityLab",
-    "description": "VeloCityLab is the studio of Mauricio González and Iris: software, applied AI and process automation."
+    "description": "VeloCityLab is the studio of Mauricio González and Fernanda: software, applied AI and process automation."
   },
   "about": {
     "eyebrow": "Who we are",
     "title": "Technology, strategy, and results",
     "paragraphs": [
-      "VeloCityLab is the studio of Mauricio González and Iris.",
+      "VeloCityLab is the studio of Mauricio González and Fernanda.",
       "Our work is software, applied artificial intelligence and process automation."
     ]
   },
@@ -20,7 +20,7 @@
       },
       {
         "role": "Analyst",
-        "name": "Iris"
+        "name": "Fernanda"
       }
     ]
   },

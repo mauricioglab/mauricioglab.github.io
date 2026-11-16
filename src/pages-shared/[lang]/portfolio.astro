@@ -288,6 +288,32 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
     .pf-final .a-solid { background: var(--teal); color: #fff; font-weight: 600; padding: 12px 22px; border-radius: 999px; transition: opacity .15s; }
     .pf-final .a-solid:hover { opacity: .9; }
 
+    /* Variante personal: misma plantilla editorial que Inicio, Sobre mí y Contáctame (paleta Velocity, Raleway, 750/1006 px). */
+    :global(body:has(.pf-personal)) { background: #fff; }
+    .pf-personal { --paper: #fff; --ink: #082D3A; --ink-soft: #5c6785; --teal: #16B6C9; --teal-deep: #0b6e7d; --teal-tint: #e6fafc; --line: #ccc; --sand-deep: #0b6e7d; --font-head: Raleway, Montserrat, system-ui, sans-serif; font-weight: 300; font-size: 16.6667px; }
+    @media (min-width: 900px) { .pf-personal { font-size: 20px; } }
+    .pf-personal .wrap { max-width: 1038px; padding: 0 16px; }
+    .pf-personal .pf-hero { padding: 48px 0 24px; }
+    .pf-personal .pf-hero h1 { font-family: var(--font-head); font-weight: 300; letter-spacing: 0; font-size: clamp(2.2rem, 7vw, 59.7px); line-height: 1.1; max-width: 782px; }
+    .pf-personal .pf-hero p.sub { color: #082D3A; font-size: 1em; line-height: 1.6; max-width: 750px; }
+    .pf-personal .pf-badges span { border-radius: 0; background: transparent; border: 1px solid #0b6e7d; color: #0b6e7d; font-family: Montserrat, system-ui, sans-serif; }
+    .pf-personal h1, .pf-personal h2, .pf-personal h3 { font-family: var(--font-head); letter-spacing: 0; }
+    .pf-personal .pf-btn-solid, .pf-personal .pf-btn-ghost { border-radius: 5px; border: 1px solid #0b6e7d; min-height: 57px; padding: 0 28px; font-size: 16.6667px; font-weight: 700; }
+    .pf-personal .pf-btn-solid { background: #0b6e7d; color: #fff; }
+    .pf-personal .pf-btn-ghost { color: #0b6e7d; background: transparent; }
+    .pf-personal .pf-btn-ghost:hover { background: #0b6e7d; color: #fff; }
+    .pf-personal .pf-card { border-radius: 0; border: 1px solid #ccc; box-shadow: none; }
+    .pf-personal .pf-card:hover { transform: none; box-shadow: none; border-color: #0b6e7d; }
+    .pf-personal .pf-card h3 { font-weight: 700; font-size: 1.2em; }
+    .pf-personal .pf-card p { font-size: .83em; color: #5c6785; }
+    .pf-personal .pf-card .tags span, .pf-personal .pf-card .badge-own { border-radius: 0; color: #0b6e7d; background: #e6fafc; }
+    .pf-personal .pf-card--featured { background: #e6fafc; }
+    .pf-personal .pf-card--featured .badge-featured { background: #0b6e7d; border-color: #0b6e7d; color: #fff; border-radius: 0; }
+    .pf-personal .pf-card .more { color: #0b6e7d; }
+    .pf-personal .pf-skill { border-radius: 0; border-color: #ccc; }
+    .pf-personal .pf-final .box { background: #0A1E28; border-radius: 0; }
+    .pf-personal .pf-final .a-solid { background: #0b6e7d; border-radius: 5px; }
+
     @media (max-width: 820px) {
       .pf-grid { grid-template-columns: 1fr; }
       .pf-skill-row { grid-template-columns: 1fr; gap: .4rem; }
@@ -295,7 +321,7 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
     }
   </style>
 
-  <div>
+  <div class:list={['pf-root', { 'pf-personal': !isCompanyBuild }]}>
     <!-- Hero -->
     <section class="pf-hero">
       <div class="wrap">

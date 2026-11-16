@@ -1,71 +1,87 @@
 ---
+import { Image } from 'astro:assets';
 import BaseTailwind from '../layouts/BaseTailwind.astro';
-import HomeClusters from '../components/shared/HomeClusters.astro';
+import clase from '../assets/mauricio/clase-ia.png';
+import retrato from '../assets/mauricio/retrato.png';
+import PtContactForm from '../components/shared/PtContactForm.astro';
 
 export const prerender = true;
+
+const resources = [
+  { label: 'Zona Lab', href: '/zona-lab/' },
+  { label: 'Teleprompter', href: '/prompt/' },
+  { label: 'Video Organizer', href: '/videos/' },
+  { label: 'Extensiones', href: '/extensions/' },
+  { label: 'Calculadora 3D', href: '/calculadora/' },
+  { label: 'URLs útiles', href: '/urls/' },
+  { label: 'Rincón retro', href: '/main/' },
+];
 ---
 
 <BaseTailwind
-  title="Mauricio González | Software Engineer · IA y automatización"
-  description="Portfolio, disertaciones, blog y herramientas de Mauricio González, Software Engineer especializado en IA y automatización."
+  title="Mauricio González | Docencia, desarrollo e IA aplicada"
+  description="Docencia, desarrollo de software e inteligencia artificial aplicada. Charlas, proyectos y recursos de Mauricio González."
   layoutType="index"
+  current="inicio"
+  showMateGame={false}
   showPromptModal={true}
 >
-<div>
-    <div class="home-split mx-auto max-w-6xl h-[calc(100vh_-_var(--site-header-h)_-_80px)] min-h-[560px] flex flex-col md:flex-row">
+  <div class="pt">
+    <section class="pt-banner" aria-label="Presentación">
+      <div class="pt-banner-copy">
+        <h1 id="secretTrigger">Aprender tecnología empieza por entender cómo funciona.</h1>
+        <a class="pt-button" href="/blog/">Leé mi blog</a>
+      </div>
+      <div class="pt-banner-photo">
+        <Image src={clase} alt="Mauricio González explicando IA en la educación frente a una pizarra y una presentación" widths={[480, 720, 1080]} sizes="(max-width: 899px) 100vw, 50vw" format="webp" loading="eager" fetchpriority="high" style="object-position: 35% center" />
+      </div>
+    </section>
 
-      <!-- Left: Clusters -->
-      <section class="home-clusters md:w-1/2 px-6 sm:px-10 py-8 md:py-10 overflow-y-auto">
-        <HomeClusters />
-      </section>
-
-      <!-- Divider -->
-      <div class="hidden md:block w-px bg-vcl-turquesa/20"></div>
-
-      <!-- Right: Greeting + secret trigger -->
-      <section class="home-greeting md:w-1/2 px-6 sm:px-10 py-8 md:py-10 flex items-center justify-center">
-        <div class="text-center space-y-6 max-w-md">
-          <p
-            id="secretTrigger"
-            class="text-5xl sm:text-6xl text-vcl-petroleo cursor-default select-none font-vclHead font-semibold tracking-tight leading-none"
-            aria-hidden="true"
-          >
-            "Hola..."
-          </p>
-          <div class="space-y-2">
-            <h1 class="text-2xl sm:text-3xl font-vclHead font-semibold text-vcl-petroleo">
-              Soy Mauricio González
-            </h1>
-            <p class="text-base text-[#5c6785]">
-              Software Engineer &middot; IA &amp; Automatización
-            </p>
-          </div>
-          <p class="text-sm text-[#8b94ab]">
-            Proyectos, blog y herramientas para aprender y construir.
-          </p>
+    <section class="pt-intro" id="sobre-mi" aria-labelledby="introduccion">
+      <div class="pt-intro-inner">
+        <div>
+          <h2 id="introduccion">Entre el aula y el código</h2>
+          <p>Soy <strong>docente y desarrollador</strong>. Enseño <strong>desarrollo de software e IA aplicada</strong> a futuros analistas y desarrolladores, incluidas las personas que están cambiando de carrera.</p>
+          <p>Soy <strong>Profesor de Filosofía</strong> y <strong>Analista de Sistemas de Computación</strong>. La filosofía me enseñó a hacer buenas preguntas, y el software me dio herramientas para explorar algunas respuestas.</p>
+          <p>Desde 2024 soy docente en el <strong>Instituto Cervantes</strong> (Analista de Sistemas, Desarrollo Web y <strong>Ciencia de Datos e IA</strong>). También trabajo como <strong>desarrollador y referente técnico</strong>.</p>
+          <p>Mi postura es simple: <strong>entender los fundamentos</strong>, <strong>comprobar los resultados</strong> y <strong>usar la IA con criterio</strong>. Me interesa que quien aprende pueda explicar cómo funciona una solución y decidir cuándo tiene sentido usarla.</p>
+          <p><a class="pt-link-gold" href="/es/sobre-mi/">Conocé mi trayectoria</a></p>
         </div>
-      </section>
-    </div>
+        <div class="pt-intro-photo">
+          <Image src={retrato} alt="Mauricio González en su despacho" widths={[540, 800, 1200]} sizes="(max-width: 899px) 100vw, 800px" format="webp" />
+        </div>
+      </div>
+    </section>
+
+    <section class="pt-statement" aria-label="Mi enfoque">
+      <blockquote class="pt-quote"><p>La IA puede ayudarnos a pensar mejor. Eso también hay que aprenderlo.</p></blockquote>
+      <div class="pt-statement-photo"><div class="pt-ph">Foto de charla o clase pendiente</div></div>
+    </section>
+
+    <section class="pt-band" id="portafolio" aria-labelledby="trabajo">
+      <h2 id="trabajo">Portafolio</h2>
+      <p class="pt-band-lead">Proyectos de software, charlas y herramientas para aprender tecnología con criterio.</p>
+      <div class="pt-band-cols">
+        <div><h3><a href="/es/portfolio/">Proyectos de software</a></h3><p>Casos de desarrollo, análisis de sistemas e IA aplicada.</p></div>
+        <div><h3><a href="/es/disertaciones/">Charlas y disertaciones</a></h3><p>Docencia, tecnología e inteligencia artificial.</p></div>
+        <div id="recursos"><h3><a href="/zona-lab/">Recursos y herramientas</a></h3><p>Material de estudio y aplicaciones.</p>
+          <ul>{resources.map(({ label, href }) => <li><a href={href}>{label}</a></li>)}</ul>
+        </div>
+      </div>
+      <p class="pt-band-more"><a href="/es/portfolio/">Ver el portafolio completo</a></p>
+    </section>
+
+    <section class="pt-contact-home" id="hablemos" aria-labelledby="contacto-titulo">
+      <div class="pt-narrow">
+        <h2 id="contacto-titulo">¡Hablemos!</h2>
+        <PtContactForm id="home" />
+      </div>
+    </section>
   </div>
 </BaseTailwind>
 
-<style>
-  @media (max-width: 767px) {
-    .home-split { height: auto; min-height: calc(100vh - var(--site-header-h) - 80px); }
-    .home-clusters { overflow-y: visible; }
-    .home-greeting { min-height: 30vh; }
-  }
-</style>
-
-<script is:inline>
-(function() {
-  const trigger = document.getElementById('secretTrigger');
-  if (!trigger) return;
-
-  const base = document.querySelector('base')?.href || '/';
-
-  trigger.addEventListener('dblclick', function() {
-    window.location.href = base + 'admin/';
+<script>
+  document.getElementById('secretTrigger')?.addEventListener('dblclick', () => {
+    window.location.assign('/admin/');
   });
-})();
 </script>

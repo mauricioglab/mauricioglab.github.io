@@ -2,6 +2,7 @@
 import ContactModal from '../landing/ContactModal.astro';
 import { getSiteNav, type Lang } from '../../data/site-nav';
 import { isCompanyBuild, PERSONAL_ORIGIN } from '../../data/site-target';
+import '../../styles/personal-profile.css';
 
 interface Props {
   lang?: Lang;
@@ -13,13 +14,21 @@ const privacyHref = isCompanyBuild ? `${PERSONAL_ORIGIN}/blog/privacy/` : '/blog
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer">
-  <p>
-    &copy; {year} {nav.brand.name} &middot; Córdoba, Argentina &middot;
-    <a href="#contacto" data-contact-trigger>{lang === 'es' ? 'Contacto' : 'Contact'}</a> &middot;
-    <a href={privacyHref}>{lang === 'es' ? 'Privacidad' : 'Privacy'}</a>
-  </p>
-</footer>
+{isCompanyBuild ? (
+  <footer class="site-footer">
+    <p>
+      &copy; {year} {nav.brand.name} &middot; Córdoba, Argentina &middot;
+      <a href="#contacto" data-contact-trigger>{lang === 'es' ? 'Contacto' : 'Contact'}</a> &middot;
+      <a href={privacyHref}>{lang === 'es' ? 'Privacidad' : 'Privacy'}</a>
+    </p>
+  </footer>
+) : (
+  <footer class="pt-footer">
+    <p>
+      <a class="pt-footer-name" href="/">{nav.brand.name}</a>, &copy; {year}
+    </p>
+  </footer>
+)}
 
 <ContactModal lang={lang} />
 

@@ -1,0 +1,85 @@
+---
+// Formulario de la plantilla personal. Mismo diseño que el de Fernanda (cambia solo el botón y el destino).
+import { SITE_CONFIG } from '@data/config';
+
+interface Props { id?: string }
+const { id = 'contacto-form' } = Astro.props;
+const siteKey = SITE_CONFIG.recaptchaSiteKey;
+---
+
+<div class="pt-form-wrap">
+  <form class="pt-form" data-pt-form action={SITE_CONFIG.formspreeEndpoint} method="post" novalidate>
+    <div class="pt-field">
+      <label for={`${id}-name`}>Nombre<span class="pt-req">(obligatorio)</span></label>
+      <input id={`${id}-name`} name="name" type="text" autocomplete="name" required aria-describedby={`${id}-name-err`} />
+      <div class="pt-error" id={`${id}-name-err`} role="alert"></div>
+    </div>
+    <div class="pt-field">
+      <label for={`${id}-email`}>Correo electrónico<span class="pt-req">(obligatorio)</span></label>
+      <input id={`${id}-email`} name="email" type="email" autocomplete="email" required aria-describedby={`${id}-email-err`} />
+      <div class="pt-error" id={`${id}-email-err`} role="alert"></div>
+    </div>
+    <div class="pt-field">
+      <label for={`${id}-subject`}>Asunto<span class="pt-req">(obligatorio)</span></label>
+      <input id={`${id}-subject`} name="subject" type="text" required aria-describedby={`${id}-subject-err`} />
+      <div class="pt-error" id={`${id}-subject-err`} role="alert"></div>
+    </div>
+    <div class="pt-field">
+      <label for={`${id}-message`}>Mensaje<span class="pt-req">(obligatorio)</span></label>
+      <textarea id={`${id}-message`} name="message" required aria-describedby={`${id}-message-err`}></textarea>
+      <div class="pt-error" id={`${id}-message-err`} role="alert"></div>
+    </div>
+    <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px" />
+    {siteKey && (
+      <div class="pt-field">
+        <div class="g-recaptcha" data-sitekey={siteKey}></div>
+        <div class="pt-error" data-captcha-err role="alert"></div>
+      </div>
+    )}
+    <div class="pt-form-actions">
+      <button class="pt-button" type="submit">Enviar</button>
+      <p class="pt-form-status" role="status"></p>
+    </div>
+  </form>
+</div>
+{siteKey && <script is:inline src="https://www.google.com/recaptcha/api.js" async defer></script>}
+
+<script>
+  const messages: Record<string, string> = {
+    name: 'Escribí tu nombre.',
+    email: 'Escribí un correo electrónico válido.',
+    subject: 'Escribí el asunto.',
+    message: 'Escribí tu mensaje.',
+  };
+
+  function validate(form: HTMLFormElement): boolean {
+    let first: HTMLElement | null = null;
+    form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required]').forEach((el) => {
+      const err = form.querySelector<HTMLElement>(`#${el.id}-err`);
+      const ok = el.value.trim() !== '' && el.checkValidity();
+      el.setAttribute('aria-invalid', ok ? 'false' : 'true');
+      if (err) err.textContent = ok ? '' : messages[el.name] ?? 'Completá este campo.';
+      if (!ok && !first) first = el;
+    });
+    const captchaErr = form.querySelector<HTMLElement>('[data-captcha-err]');
+    if (captchaErr) {
+      const solved = !!(form.querySelector<HTMLTextAreaElement>('[name="g-recaptcha-response"]')?.value);
+      captchaErr.textContent = solved ? '' : 'Marcá la casilla «No soy un robot».';
+      if (!solved && !first) first = captchaErr;
+    }
+    (first as HTMLElement | null)?.focus?.();
+    return !first;
+  }
+
+  document.querySelectorAll<HTMLFormElement>('form[data-pt-form]').forEach((form) => {
+    const status = form.querySelector<HTMLElement>('.pt-form-status')!;
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      status.textContent = '';
+      if (!validate(form)) return;
+      // Envío normal: Formspree aplica su propia verificación anti-spam antes de aceptar el mensaje.
+      status.textContent = 'Enviando…';
+      form.submit();
+    });
+  });
+</script>

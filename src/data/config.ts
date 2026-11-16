@@ -22,6 +22,9 @@ export const SITE_CONFIG = {
   
   // Formspree endpoint para el formulario de contacto
   formspreeEndpoint: 'https://formspree.io/f/xlgbvgek',
+  // reCAPTCHA v2 (casilla) para el botón Enviar. Vacío = sin captcha. Requiere activar reCAPTCHA en el formulario de Formspree
+  // y pegar acá la clave del sitio (pública).
+  recaptchaSiteKey: '6LfpiyIuAAAAACTOrpQcfRBtWHCgvhkIahlSVnlD',
   
   phone: '',                                // Opcional: '+54 9 11 1234-5678'
   location: 'Córdoba, Argentina',
@@ -46,7 +49,7 @@ export const SITE_CONFIG = {
   // =====================
   siteName: 'Mauricio González',
   blogName: 'Parece que fue ayer',
-  siteUrl: 'https://mauricioglab.github.io/',  // URL de producción
+  siteUrl: 'https://mauricio.expertotech.com.ar/',  // URL de producción
   defaultDescription: 'Software Engineer especializado en IA y Automatización',
   
   // =====================
