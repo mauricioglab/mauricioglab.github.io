@@ -374,8 +374,7 @@ export default function DisertacionesAdminPreact() {
     const path = `${prefix}/${slugify(form.title || 'disertacion')}-${Date.now()}.${ext}`;
     const { data, error } = await db.storage.from('disertaciones-files').upload(path, file, { upsert: true });
     if (error) throw new Error(error.message);
-    const pbUrl = ((import.meta.env.PUBLIC_POCKETBASE_URL as string) || 'https://spa-depot.46-225-2-192.nip.io').replace(/\/$/, '');
-    return `${pbUrl}/storage/disertaciones-files/${data.path}`;
+    return db.storage.from('disertaciones-files').getPublicUrl(data.path).data.publicUrl;
   }
 
   async function subirCertificado() {

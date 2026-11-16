@@ -1,6 +1,7 @@
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import { db } from '../lib/db';
+import { SITE_CONFIG } from '../data/config';
 import { normalizeCategories } from '../data/blog-categories';
 
 /**
@@ -59,6 +60,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
       .select(
         'slug, title, pub_date, author, categories, topicos, description, body_markdown, cover_url, presentation_url, presentation_type'
       )
+      .eq('site', SITE_CONFIG.siteId)
       .eq('draft', false);
 
     if (!error && data) {

@@ -1,3 +1,4 @@
+import { SITE_CONFIG } from '../data/config';
 import { db } from '../lib/db';
 
 /**
@@ -37,6 +38,7 @@ export async function getDisertaciones(): Promise<Disertacion[]> {
       .select(
         'id, slug, title, event_date, event_name, author, categories, description, bullets, cover_url, certificate_url, slides_urls, gallery_urls, display_photos, draft'
       )
+      .eq('site', SITE_CONFIG.siteId)
       .eq('draft', false)
       .order('event_date', { ascending: false });
 

@@ -1,3 +1,4 @@
+import { SITE_CONFIG } from '../data/config';
 import { db } from '../lib/db';
 
 /**
@@ -30,6 +31,7 @@ export async function getRecursos(): Promise<Recurso[]> {
       .select(
         'id, slug, title, source_url, source_type, source_title, video_id, description, body_markdown, categories, topicos, cover_url, created, draft'
       )
+      .eq('site', SITE_CONFIG.siteId)
       .eq('draft', false)
       .order('created', { ascending: false });
 

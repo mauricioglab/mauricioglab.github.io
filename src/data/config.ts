@@ -10,6 +10,8 @@ export const SITE_CONFIG = {
   // INFORMACIÓN PERSONAL
   // =====================
   author: 'Mauricio González',
+  // Identificador del sitio en la base compartida (columna `site` de blogs, disertaciones, recursos, etc.).
+  siteId: 'mauricio',
 
   // =====================
   // CONTACTO

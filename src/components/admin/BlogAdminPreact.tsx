@@ -584,8 +584,7 @@ export default function BlogAdminPreact() {
       const path = `${slugify(borrador.title || 'post')}-${Date.now()}.${ext}`;
       const { data, error } = await db.storage.from('blog-files').upload(path, file, { upsert: true });
       if (error) throw new Error(error.message);
-      const pbUrl = ((import.meta.env.PUBLIC_POCKETBASE_URL as string) || 'https://spa-depot.46-225-2-192.nip.io').replace(/\/$/, '');
-      setPresentationUrl(`${pbUrl}/storage/blog-files/${data.path}`);
+      setPresentationUrl(db.storage.from('blog-files').getPublicUrl(data.path).data.publicUrl);
       setPresentationType(ext === 'htm' ? 'html' : ext);
       status.value = 'Presentación subida.';
     } catch (e) {

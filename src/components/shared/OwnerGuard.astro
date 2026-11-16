@@ -17,15 +17,15 @@
   html.owner-pending body { visibility: hidden; }
 </style>
 <script>
-  import { pb } from '../../lib/pb';
+  import { db } from '../../lib/db';
   import { SESSION_DURATION_MS } from '../../lib/session';
 
   const show = () => document.documentElement.classList.remove('owner-pending');
 
-  const toLogin = (clear: boolean) => {
+  const toLogin = async (clear: boolean) => {
     if (clear) {
       // Evita un bucle con el admin, que si ve un token "no vencido" volvería a mandar acá.
-      pb.authStore.clear();
+      try { await db.auth.signOut(); } catch { /* ignore */ }
       try { localStorage.removeItem('spa_session_start'); } catch { /* ignore */ }
     }
     location.replace('/admin/gestion/?next=' + encodeURIComponent(location.pathname + location.search));
@@ -34,19 +34,19 @@
   (async () => {
     let start = 0;
     try { start = Number(localStorage.getItem('spa_session_start') || 0); } catch { /* ignore */ }
-    const localOk = !!pb.authStore.token && start > 0 && Date.now() - start < SESSION_DURATION_MS;
+    const localOk = start > 0 && Date.now() - start < SESSION_DURATION_MS;
     if (!localOk) return toLogin(false);
 
     try {
-      const res = await pb.collection('users').authRefresh({ requestKey: null });
-      if (res?.record?.role !== 'admin') return toLogin(false);
+      const { data: { session } } = await db.auth.getSession();
+      if (!session) return toLogin(false);
+      const { data: perfil, error } = await db.from('profiles').select('role').eq('id', session.user.id).maybeSingle();
+      if (error) throw error;
+      if (perfil?.role !== 'admin') return toLogin(false);
       show();
-    } catch (e: any) {
-      // status 0 = sin red (p. ej. la PWA de vsagenda offline): se confía en la sesión local.
-      if (e?.status === 0) {
-        if ((pb.authStore.record as any)?.role === 'admin') return show();
-        return toLogin(false);
-      }
+    } catch {
+      // Sin red (p. ej. la PWA de vsagenda offline): se confía en la sesión local ya validada.
+      if (!navigator.onLine) return show();
       toLogin(true);
     }
   })();

@@ -22,7 +22,9 @@ jobs:
       - name: Install, build and upload site
         uses: withastro/action@v5
         env:
-          PUBLIC_POCKETBASE_URL: https://spa-depot.46-225-2-192.nip.io
+          # Claves públicas por diseño (la seguridad está en las políticas RLS de la base).
+          PUBLIC_SUPABASE_URL: https://api.velocitylab.com.ar
+          PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzk0Njk4MDQ5LCJleHAiOjE5NTIzNzgwNDl9.TCDVenmCAG31SHZzYF3izgqEiFgpbN7PzZFziabOQfk
 
   deploy:
     needs: build
