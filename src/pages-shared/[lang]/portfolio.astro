@@ -321,6 +321,47 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
     }
   </style>
 
+  {!isCompanyBuild ? (
+    <div class="pt">
+      <h1 class="pt-page-title">{lang === 'es' ? 'Portafolio' : 'Portfolio'}</h1>
+      <div class="pt-folio" id="proyectos">
+        <p>{content.projectsDescription}</p>
+        {projectGroups.map((group) => (
+          <section>
+            <p class="pt-folio-group"><strong>{group.label}</strong></p>
+            <ul>
+              {group.items.map((project) => {
+                const p = projectsT[project.id];
+                const title = p?.title || project.id;
+                const shortDescription = p?.shortDescription || p?.profiles?.engineer?.description || '';
+                const caseStudyPath = caseStudyUrls[project.id];
+                const caseStudyUrl = caseStudyPath
+                  ? (singleLanguageCaseStudies.has(project.id) ? caseStudyPath : `/${lang}${caseStudyPath}`)
+                  : null;
+                return (
+                  <li>
+                    <a class="pt-link-gold pt-folio-link" href={caseStudyUrl || '#proyectos'} data-case={project.id} data-case-full={caseStudyUrl || ''} aria-haspopup="dialog">{title}</a>
+                    {shortDescription && <span> · {shortDescription}</span>}
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        ))}
+        <blockquote class="pt-quote"><p>{lang === 'es' ? 'Entender los fundamentos, comprobar los resultados y usar la IA con criterio.' : 'Understand the fundamentals, check the results and use AI with judgment.'}</p></blockquote>
+        <div class="pt-folio-shot"><div class="pt-ph">{lang === 'es' ? 'Imagen de proyecto pendiente' : 'Project image pending'}</div></div>
+        <section id="skills">
+          <p class="pt-folio-group"><strong>{lang === 'es' ? 'Stack técnico' : 'Tech stack'}</strong></p>
+          <ul>
+            {skillGroups.map((group) => (
+              <li><strong>{group.label}:</strong> {group.items.map((i) => i.name).join(' · ')}</li>
+            ))}
+          </ul>
+        </section>
+        <p class="pt-folio-end"><a class="pt-link-gold" href="/es/contacto/">{lang === 'es' ? 'Contáctame' : 'Contact me'}</a> · <a class="pt-link-gold" href={`/${lang}/disertaciones/`}>{lang === 'es' ? 'Disertaciones' : 'Talks'}</a></p>
+      </div>
+    </div>
+  ) : (
   <div class:list={['pf-root', { 'pf-personal': !isCompanyBuild }]}>
     <!-- Hero -->
     <section class="pf-hero">
@@ -427,12 +468,13 @@ const skillGroups: { label: string; items: { name: string; slug: string }[] }[] 
       </div>
     </section>
   </div>
+  )}
 
   <CaseStudyModal lang={lang} cases={modalCases} labels={modalLabels} company={isCompanyBuild ? modalT.company : null} />
 
   <script is:inline>
     document.addEventListener('click', function (e) {
-      var card = e.target.closest('.pf-card[data-case]');
+      var card = e.target.closest('.pf-card[data-case], .pt-folio-link[data-case]');
       if (!card) return;
       e.preventDefault();
       window.openCaseModal(card.getAttribute('data-case'), card.getAttribute('data-case-full'));

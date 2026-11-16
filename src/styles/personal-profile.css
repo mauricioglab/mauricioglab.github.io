@@ -227,3 +227,10 @@
 .pt-social .pt-social-ph svg { outline: 1px dashed var(--pt-muted); outline-offset: 3px; }
 .pt-social-inline { margin-top: 32px; }
 .pt-social-inline ul { justify-content: flex-start; margin-left: -8px; }
+
+/* Portafolio: grupos «tipo de proyecto + lista» como en marcelalopez.co/portafolio */
+.pt-folio > p + section, .pt-folio > section + section { margin-top: 32px; }
+.pt-folio section + section { margin-top: 32px; }
+.pt-folio .pt-folio-group { margin-bottom: 0; }
+.pt-folio .pt-folio-end { margin-top: 64px; }
+.pt-folio > section:first-of-type { margin-top: 32px; }

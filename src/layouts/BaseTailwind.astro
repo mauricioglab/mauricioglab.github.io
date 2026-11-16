@@ -9,6 +9,7 @@ import { getLayoutFeatures } from '../data/layout-features';
 import { isCompanyBuild } from '../data/site-target';
 import { getSiteNav } from '../data/site-nav';
 import '../styles/brand.css';
+import '../styles/personal-skin.css';
 
 interface Props {
 	title?: string;
@@ -69,7 +70,7 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toStri
 		{!noindex && <SeoHead title={title} description={description} lang={lang === 'en' ? 'en' : 'es'} canonical={canonicalUrl} />}
 		<slot name="head" />
 	</head>
-	<body class="min-h-screen flex flex-col p-0 bg-white text-vcl-petroleo font-vclBody font-light">
+	<body class:list={["min-h-screen flex flex-col p-0 bg-white text-vcl-petroleo font-vclBody font-light", !isCompanyBuild && "pt-skin"]}>
 		{showHeader && <SiteHeader current={current} lang={lang === 'en' ? 'en' : 'es'} altHref={altHref} />}
 
 		<!-- Main Content -->

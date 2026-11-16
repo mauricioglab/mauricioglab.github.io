@@ -5,6 +5,7 @@ import { SITE_CONFIG } from "../data/config";
 import SiteHeader from "../components/shared/SiteHeader.astro";
 import SiteFooter from "../components/shared/SiteFooter.astro";
 import "../styles/brand.css";
+import "../styles/personal-skin.css";
 
 interface Props {
   title: string;
@@ -57,7 +58,7 @@ const allCategories = Array.from(
     <slot name="head" />
   </head>
   <body
-    class="min-h-screen flex flex-col bg-[#f4f6fa] text-vcl-petroleo antialiased"
+    class="pt-skin min-h-screen flex flex-col bg-white text-vcl-petroleo antialiased"
     style="font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 18px; line-height: 27px;"
   >
     <div class="site-container min-h-screen flex flex-col">

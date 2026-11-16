@@ -42,6 +42,7 @@ export function getSiteNav(lang: Lang = 'es'): SiteNav {
     items: [
       { id: 'sobre-mi', label: 'Sobre mí', href: '/es/sobre-mi/' },
       { id: 'portfolio', label: 'Portafolio', href: '/es/portfolio/' },
+      { id: 'disertaciones', label: 'Disertaciones', href: '/es/disertaciones/' },
       { id: 'blog', label: 'Blog', href: '/blog/' },
     ],
     contact: { label: 'Contáctame', kind: 'link' },

@@ -1,0 +1,38 @@
+/* Piel de la plantilla personal para las pantallas que ya existían (Blog, Zona Lab, Disertaciones).
+   Se activa con la clase `pt-skin` en <body> (solo en el dominio personal). No cambia contenido ni funciones:
+   solo tipografía, paleta Velocity, esquinas y encabezados, para que coincidan con Inicio, Sobre mí y Portafolio. */
+
+body.pt-skin {
+  --pt-turq: #16B6C9;
+  --pt-cian: #7DE3FF;
+  --pt-accent: #0b6e7d;
+  --pt-petroleo: #082D3A;
+  --pt-navy: #0A1E28;
+  --pt-head: Raleway, Montserrat, system-ui, sans-serif;
+  background: #fff;
+  color: var(--pt-petroleo);
+  font-weight: 300;
+}
+.pt-skin :is(h1, h2, h3, h4) { font-family: var(--pt-head); letter-spacing: 0; }
+
+/* Encabezados de sección claros: título grande, liviano y centrado, como el título de Sobre mí */
+.pt-skin .dz-hero { background: #fff; border-bottom: 0; padding: 48px 16px 16px; }
+.pt-skin .dz-hero h1 { font-weight: 300; font-size: clamp(2.2rem, 7vw, 59.7px); line-height: 1.1; letter-spacing: 0; }
+.pt-skin .dz-hero .sub { font-size: 1rem; line-height: 1.6; }
+
+/* Encabezados oscuros (Zona Lab, Blog): banda navy, mismo título liviano */
+.pt-skin .zl-hero { background: var(--pt-navy); }
+.pt-skin .zl-hero::before { opacity: .25; }
+.pt-skin .zl-hero h1 { font-family: var(--pt-head); font-weight: 300; font-size: clamp(2.2rem, 7vw, 59.7px); line-height: 1.1; letter-spacing: 0; }
+.pt-skin .blog-hero { background: var(--pt-navy); }
+.pt-skin .blog-hero .site-title { font-family: var(--pt-head); font-weight: 300; letter-spacing: 0; }
+
+/* Etiquetas y tarjetas: esquinas rectas y bordes finos */
+.pt-skin :is(.dz-badge, .zl-badge) { border-radius: 0; border: 1px solid var(--pt-turq); background: transparent; color: var(--pt-accent); }
+.pt-skin .zl-badge { color: var(--pt-cian); }
+.pt-skin :is(.dz-empty, .zl-empty, .zl-widget-item) { border-radius: 0; }
+.pt-skin .zl-widget-item { border-left-color: var(--pt-turq); }
+.pt-skin :is(.pf-card, .pf-btn-solid, .pf-btn-ghost, .pf-skill) { border-radius: 0; }
+
+/* Enlaces de lectura y acentos: turquesa oscuro legible sobre blanco */
+.pt-skin :is(.zl-widget-link, .more) { color: var(--pt-accent); }
