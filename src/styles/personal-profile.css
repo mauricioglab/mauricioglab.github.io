@@ -234,3 +234,14 @@
 .pt-folio .pt-folio-group { margin-bottom: 0; }
 .pt-folio .pt-folio-end { margin-top: 64px; }
 .pt-folio > section:first-of-type { margin-top: 32px; }
+
+/* Blog y artículos (columna de 750 px) */
+.pt-posts ul, .pt-article ul { list-style: none; }
+.pt-post { padding-bottom: 32px; margin-bottom: 32px; border-bottom: 1px solid var(--pt-line); }
+.pt-post h2 { margin-bottom: 8px; }
+.pt-post h2 a { text-decoration: none; }
+.pt-prose :where(p, ul, ol, blockquote, pre, h2, h3) { margin-top: 24px; }
+.pt-prose :where(ul, ol) { margin-left: 1.2em; list-style: disc; }
+.pt-prose img { max-width: 100%; height: auto; }
+.pt-prose a { color: var(--pt-gold); font-weight: 700; }
+.pt-prose blockquote { padding-left: 16px; border-left: 3px solid var(--pt-dorado); }

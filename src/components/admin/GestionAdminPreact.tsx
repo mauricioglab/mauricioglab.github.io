@@ -42,7 +42,7 @@ const CATEGORY_ICON: Record<PageCategory, string> = {
   tool: '🛠️',
 };
 
-const TABS = ['enlaces', 'blog', 'disertaciones', 'movimiento', 'recursos'] as const;
+const TABS = ['enlaces', 'blog', 'disertaciones', 'movimiento', 'recursos', 'contenido'] as const;
 type Tab = (typeof TABS)[number];
 
 interface DashboardCard {
@@ -256,6 +256,7 @@ export default function GestionAdminPreact() {
                 ['disertaciones', '🎤 Disertaciones'],
                 ['movimiento', '🤸 Movimiento'],
                 ['recursos', '📚 Zona Lab'],
+                ['contenido', '🧩 Contenido'],
               ] as [Tab, string][]
             ).map(([tab, label]) => (
               <button
@@ -331,6 +332,9 @@ export default function GestionAdminPreact() {
           {activeTab === 'disertaciones' && <DisertacionesAdminPreact />}
           {activeTab === 'movimiento' && <MovimientoAdminPreact />}
           {activeTab === 'recursos' && <RecursosAdminPreact />}
+          {activeTab === 'contenido' && (
+            <p class="text-slate-300">Textos, proyectos, galería, menú y CV del sitio: <a class="underline text-indigo-300" href="/admin/contenido/">abrir el editor de contenido</a>.</p>
+          )}
         </div>
       )}
 
