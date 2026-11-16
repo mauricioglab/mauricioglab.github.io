@@ -4,8 +4,16 @@ on:
   push:
     branches: [main, master]
   workflow_dispatch:
+  # Aviso del CMS: al guardar contenido, Supabase dispara este evento para reconstruir el sitio.
+  repository_dispatch:
+    types: [contenido-actualizado]
   schedule:
     - cron: '0 */12 * * *'  # cada 12 horas
+
+# Varias ediciones seguidas se juntan: queda una corrida en espera con el contenido más reciente.
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 permissions:
   contents: read
