@@ -507,10 +507,10 @@ export default function DisertacionesAdminPreact() {
       <div class="flex items-center justify-between mb-6">
         <h1 class="text-2xl font-bold">🎤 Disertaciones</h1>
         <div class="flex items-center gap-3">
-          <a href={`${DISERT_BASE}disertaciones/`} class="text-sm text-slate-400 hover:text-white">
+          <a href={`${DISERT_BASE}disertaciones/`} class="text-sm text-[#5c6785] hover:text-[#082D3A]">
             Ver sitio →
           </a>
-          <button onClick={abrirWizardNueva} class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 text-white text-sm font-bold rounded-lg">
+          <button onClick={abrirWizardNueva} class="px-4 py-2 bg-[#082D3A] hover:bg-[#0b6e7d] text-white text-sm font-bold rounded-lg">
             + Nueva disertación
           </button>
         </div>
@@ -518,13 +518,13 @@ export default function DisertacionesAdminPreact() {
 
       {opHistory.length > 0 && (
         <div class="mb-4">
-          <details class="group text-xs bg-slate-800 rounded-xl p-3">
-            <summary class="text-slate-400 hover:text-slate-200 cursor-pointer select-none font-bold">
+          <details class="group text-xs bg-[#f4f6fa] rounded-xl p-3">
+            <summary class="text-[#5c6785] hover:text-[#082D3A] cursor-pointer select-none font-bold">
               Actividad reciente ({opHistory.length})
             </summary>
             <div class="mt-1.5 space-y-1">
               {opHistory.map((h) => (
-                <div key={h.ts} class={'flex items-start gap-2 ' + (h.ok ? 'text-slate-400' : 'text-red-400')}>
+                <div key={h.ts} class={'flex items-start gap-2 ' + (h.ok ? 'text-[#5c6785]' : 'text-[#b32d2e]')}>
                   <span>{h.ok ? '✓' : '✗'}</span>
                   <span class="font-bold">{h.label}</span>
                   <span class="font-mono">{h.elapsed}</span>
@@ -536,34 +536,34 @@ export default function DisertacionesAdminPreact() {
         </div>
       )}
 
-      <div class="bg-slate-800 rounded-xl p-5">
+      <div class="bg-[#f4f6fa] rounded-xl p-5">
         <h2 class="text-base font-bold mb-3">Disertaciones existentes</h2>
-        {!disertaciones.length && <div class="text-sm text-slate-400">Sin disertaciones todavía.</div>}
+        {!disertaciones.length && <div class="text-sm text-[#5c6785]">Sin disertaciones todavía.</div>}
         <div class="space-y-2">
           {disertaciones.map((p) => (
-            <div key={p.id} class="bg-slate-900 border border-slate-700 rounded-lg p-3">
+            <div key={p.id} class="bg-white border border-[#d7dce5] rounded-lg p-3">
               <div class="flex items-start justify-between gap-2">
                 <p class="text-sm font-bold">{p.title}</p>
                 <span
                   class={
                     'text-[10px] px-2 py-0.5 rounded-full shrink-0 ' +
-                    (p.draft ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400')
+                    (p.draft ? 'bg-[#9a6b00]/10 text-[#9a6b00]' : 'bg-[#1f7a3d]/10 text-[#1f7a3d]')
                   }
                 >
                   {p.draft ? 'borrador' : 'publicado'}
                 </span>
               </div>
-              <p class="text-xs text-slate-400 mt-1">
+              <p class="text-xs text-[#5c6785] mt-1">
                 {p.event_date} · {p.event_name || '—'}
               </p>
               <div class="flex gap-2 mt-2 text-xs">
-                <button onClick={() => cargarDisertacion(p)} class="text-indigo-400 hover:text-indigo-300 font-bold">
+                <button onClick={() => cargarDisertacion(p)} class="text-[#0b6e7d] hover:text-[#16B6C9] font-bold">
                   Editar
                 </button>
-                <button onClick={() => toggleDraft(p)} class="text-slate-400 hover:text-white font-bold">
+                <button onClick={() => toggleDraft(p)} class="text-[#5c6785] hover:text-[#082D3A] font-bold">
                   {p.draft ? 'Publicar' : 'A borrador'}
                 </button>
-                <button onClick={() => borrarDisertacion(p)} class="text-red-400 hover:text-red-300 font-bold">
+                <button onClick={() => borrarDisertacion(p)} class="text-[#b32d2e] hover:text-[#8f2223] font-bold">
                   Eliminar
                 </button>
               </div>
@@ -585,52 +585,52 @@ export default function DisertacionesAdminPreact() {
       >
         {wizardStep.value === 1 && (
           <div class="space-y-3">
-            <h3 class="text-sm font-bold text-slate-200">Datos de la disertación</h3>
+            <h3 class="text-sm font-bold text-[#082D3A]">Datos de la disertación</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div class="md:col-span-2">
-                <label class="block text-xs font-bold text-slate-300 mb-1">Título *</label>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">Título *</label>
                 <input
                   value={form.title}
                   onInput={(e) => setForm({ ...form, title: (e.target as HTMLInputElement).value })}
                   type="text"
-                  class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                 />
               </div>
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Fecha de la charla</label>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">Fecha de la charla</label>
                 <input
                   value={form.eventDate}
                   onInput={(e) => setForm({ ...form, eventDate: (e.target as HTMLInputElement).value })}
                   type="date"
-                  class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                 />
               </div>
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Evento / Institución</label>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">Evento / Institución</label>
                 <input
                   value={form.eventName}
                   onInput={(e) => setForm({ ...form, eventName: (e.target as HTMLInputElement).value })}
                   type="text"
                   placeholder="Ej: Congreso de Informática 2026"
-                  class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                 />
               </div>
               <div class="md:col-span-2">
-                <label class="block text-xs font-bold text-slate-300 mb-1">Descripción (SEO)</label>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">Descripción (SEO)</label>
                 <input
                   value={form.description}
                   onInput={(e) => setForm({ ...form, description: (e.target as HTMLInputElement).value })}
                   type="text"
-                  class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                 />
               </div>
               <div class="md:col-span-2">
-                <label class="block text-xs font-bold text-slate-300 mb-1">Categorías</label>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">Categorías</label>
                 <div class="flex flex-col gap-2">
                   <select
                     value={selectedCategory}
                     onChange={(e) => addCategory((e.target as HTMLSelectElement).value)}
-                    class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                   >
                     <option value="">Elegí una categoría…</option>
                     {availableCategories.map((cat) => (
@@ -644,13 +644,13 @@ export default function DisertacionesAdminPreact() {
                       {selectedCategories.map((cat, i) => (
                         <span
                           key={i}
-                          class="inline-flex items-center gap-1.5 bg-slate-700 rounded-full px-3 py-1 text-xs font-bold text-slate-100"
+                          class="inline-flex items-center gap-1.5 bg-[#e9edf3] rounded-full px-3 py-1 text-xs font-bold text-[#082D3A]"
                         >
                           <span>{cat}</span>
                           <button
                             type="button"
                             onClick={() => removeCategory(i)}
-                            class="text-slate-300 hover:text-red-400 font-bold leading-none"
+                            class="text-[#082D3A] hover:text-[#8f2223] font-bold leading-none"
                             title="Quitar categoría"
                           >
                             ✕
@@ -666,7 +666,7 @@ export default function DisertacionesAdminPreact() {
               <button
                 onClick={() => (wizardStep.value = 2)}
                 disabled={!form.title}
-                class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-60 text-white text-sm font-bold rounded-lg"
+                class="px-4 py-2 bg-[#082D3A] hover:bg-[#0b6e7d] disabled:opacity-60 text-white text-sm font-bold rounded-lg"
               >
                 Siguiente →
               </button>
@@ -676,8 +676,8 @@ export default function DisertacionesAdminPreact() {
 
         {wizardStep.value === 2 && (
           <div class="space-y-3">
-            <h3 class="text-sm font-bold text-slate-200">Subí el PPT (.pptx) para generar el resumen</h3>
-            <p class="text-xs text-slate-400">
+            <h3 class="text-sm font-bold text-[#082D3A]">Subí el PPT (.pptx) para generar el resumen</h3>
+            <p class="text-xs text-[#5c6785]">
               Se extraen el texto y las imágenes de las diapositivas, se genera un resumen en bullets con IA y se arma la
               galería. Se toma la slide 1 como portada y la 2 como primer item de la galería.
             </p>
@@ -690,30 +690,30 @@ export default function DisertacionesAdminPreact() {
                   const input = e.target as HTMLInputElement;
                   setPptFile(input.files && input.files[0] ? input.files[0] : null);
                 }}
-                class="flex-1 text-sm text-slate-300 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-slate-700 file:text-slate-200 file:text-sm file:font-bold hover:file:bg-slate-600"
+                class="flex-1 text-sm text-[#082D3A] file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#e9edf3] file:text-[#082D3A] file:text-sm file:font-bold hover:file:bg-[#d9dfe9]"
               />
               <button
                 onClick={procesarPpt}
                 disabled={busy.value || !pptFile}
-                class="shrink-0 px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-60 text-sm font-bold rounded-lg"
+                class="shrink-0 px-4 py-2 bg-[#082D3A] hover:bg-[#0b6e7d] disabled:opacity-60 text-sm font-bold rounded-lg"
               >
                 ⚙️ Procesar PPT
               </button>
             </div>
 
-            <div class="border-t border-slate-700 pt-3 space-y-2">
-              <label class="block text-xs font-bold text-slate-300">¿No tenés el PPT? Escribí un resumen y la IA lo mejora</label>
+            <div class="border-t border-[#d7dce5] pt-3 space-y-2">
+              <label class="block text-xs font-bold text-[#082D3A]">¿No tenés el PPT? Escribí un resumen y la IA lo mejora</label>
               <textarea
                 value={textResumen}
                 onInput={(e) => setTextResumen((e.target as HTMLTextAreaElement).value)}
                 rows={5}
-                class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                 placeholder="Escribí con tus palabras de qué trató la charla: tema, puntos que tocaste, ejemplos, audiencia…"
               />
               <button
                 onClick={mejorarTexto}
                 disabled={busy.value || !textResumen}
-                class="px-4 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-sm font-bold rounded-lg"
+                class="px-4 py-2 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-sm font-bold rounded-lg"
               >
                 ✨ Mejorar con IA
               </button>
@@ -721,21 +721,21 @@ export default function DisertacionesAdminPreact() {
 
             {slideUrls.length > 0 && (
               <div class="space-y-3">
-                <p class="text-xs font-bold text-slate-300">Diapositivas extraídas ({slideUrls.length}):</p>
+                <p class="text-xs font-bold text-[#082D3A]">Diapositivas extraídas ({slideUrls.length}):</p>
                 <div class="grid grid-cols-3 sm:grid-cols-4 gap-2">
                   {slideUrls.map((s, i) => (
                     <div
                       key={i}
                       class={
                         'relative group rounded-lg overflow-hidden border ' +
-                        (selectedCoverIndex === i ? 'border-indigo-400 ring-2 ring-indigo-500' : 'border-slate-600')
+                        (selectedCoverIndex === i ? 'border-[#16B6C9] ring-2 ring-[#16B6C9]' : 'border-[#c5ccd8]')
                       }
                     >
                       <img src={s} class="w-full aspect-video object-cover" alt={`Slide ${i + 1}`} />
                       <button
                         onClick={() => removeSlide(i)}
                         type="button"
-                        class="absolute top-1 right-1 text-[10px] font-bold text-white bg-red-600 hover:bg-red-500 rounded px-1.5 py-0.5"
+                        class="absolute top-1 right-1 text-[10px] font-bold text-white bg-[#b32d2e] hover:bg-[#8f2223] rounded px-1.5 py-0.5"
                         title="Borrar esta diapositiva"
                       >
                         ✕
@@ -744,7 +744,7 @@ export default function DisertacionesAdminPreact() {
                         <button
                           onClick={() => setCover(i)}
                           type="button"
-                          class="text-[10px] font-bold text-white bg-indigo-600 hover:bg-indigo-500 m-1 px-2 py-1 rounded"
+                          class="text-[10px] font-bold text-white bg-[#082D3A] hover:bg-[#0b6e7d] m-1 px-2 py-1 rounded"
                           title="Usar como portada"
                         >
                           Portada
@@ -753,7 +753,7 @@ export default function DisertacionesAdminPreact() {
                           <button
                             onClick={() => setCover(i)}
                             type="button"
-                            class="text-[10px] font-bold text-white bg-slate-700 hover:bg-slate-600 m-1 px-2 py-1 rounded"
+                            class="text-[10px] font-bold text-[#082D3A] bg-[#e9edf3] hover:bg-[#d9dfe9] m-1 px-2 py-1 rounded"
                             title="Es la portada actual"
                           >
                             ★
@@ -761,22 +761,22 @@ export default function DisertacionesAdminPreact() {
                         )}
                       </div>
                       {selectedCoverIndex === i && (
-                        <span class="absolute top-1 left-1 text-[10px] font-bold text-white bg-indigo-600 px-1.5 py-0.5 rounded">
+                        <span class="absolute top-1 left-1 text-[10px] font-bold text-white bg-[#082D3A] px-1.5 py-0.5 rounded">
                           portada
                         </span>
                       )}
                     </div>
                   ))}
                 </div>
-                <p class="text-xs text-slate-400">Tip: la slide 1 suele ser la portada. Hacé clic en "Portada" sobre la que quieras.</p>
+                <p class="text-xs text-[#5c6785]">Tip: la slide 1 suele ser la portada. Hacé clic en "Portada" sobre la que quieras.</p>
               </div>
             )}
 
             {bullets.length > 0 && (
-              <div class="border-t border-slate-700 pt-3 space-y-2">
+              <div class="border-t border-[#d7dce5] pt-3 space-y-2">
                 <div class="flex items-center justify-between">
-                  <label class="block text-xs font-bold text-slate-300">Bullets "De qué trató la charla" (editables)</label>
-                  <button onClick={addBullet} type="button" class="text-xs text-indigo-400 hover:text-indigo-300 font-bold">
+                  <label class="block text-xs font-bold text-[#082D3A]">Bullets "De qué trató la charla" (editables)</label>
+                  <button onClick={addBullet} type="button" class="text-xs text-[#0b6e7d] hover:text-[#16B6C9] font-bold">
                     + agregar
                   </button>
                 </div>
@@ -786,9 +786,9 @@ export default function DisertacionesAdminPreact() {
                       value={b}
                       onInput={(e) => updateBullet(i, (e.target as HTMLInputElement).value)}
                       type="text"
-                      class="flex-1 px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      class="flex-1 px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                     />
-                    <button onClick={() => removeBullet(i)} type="button" class="text-red-400 hover:text-red-300 font-bold shrink-0" title="Quitar">
+                    <button onClick={() => removeBullet(i)} type="button" class="text-[#b32d2e] hover:text-[#8f2223] font-bold shrink-0" title="Quitar">
                       ✕
                     </button>
                   </div>
@@ -797,7 +797,7 @@ export default function DisertacionesAdminPreact() {
             )}
 
             <div class="flex justify-end">
-              <button onClick={() => (wizardStep.value = 3)} class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 text-white text-sm font-bold rounded-lg">
+              <button onClick={() => (wizardStep.value = 3)} class="px-4 py-2 bg-[#082D3A] hover:bg-[#0b6e7d] text-white text-sm font-bold rounded-lg">
                 Siguiente →
               </button>
             </div>
@@ -806,11 +806,11 @@ export default function DisertacionesAdminPreact() {
 
         {wizardStep.value === 3 && (
           <div class="space-y-4">
-            <h3 class="text-sm font-bold text-slate-200">Certificado y portada</h3>
+            <h3 class="text-sm font-bold text-[#082D3A]">Certificado y portada</h3>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Certificado</label>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">Certificado</label>
                 <div class="flex flex-col gap-2">
                   <input
                     type="file"
@@ -819,22 +819,22 @@ export default function DisertacionesAdminPreact() {
                       const input = e.target as HTMLInputElement;
                       setCertFile(input.files && input.files[0] ? input.files[0] : null);
                     }}
-                    class="text-xs text-slate-300 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-slate-700 file:text-slate-200 file:text-xs file:font-bold hover:file:bg-slate-600"
+                    class="text-xs text-[#082D3A] file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#e9edf3] file:text-[#082D3A] file:text-xs file:font-bold hover:file:bg-[#d9dfe9]"
                   />
                   <button
                     onClick={subirCertificado}
                     disabled={busy.value || !certFile}
-                    class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-xs font-bold rounded-lg"
+                    class="px-3 py-1.5 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-xs font-bold rounded-lg"
                   >
                     {certificateUrl ? 'Reemplazar' : 'Subir'}
                   </button>
                   {certificateUrl && (
-                    <div class="relative rounded-lg overflow-hidden border border-slate-600">
+                    <div class="relative rounded-lg overflow-hidden border border-[#c5ccd8]">
                       <img src={certificateUrl} alt="Certificado" class="w-full aspect-video object-cover" />
                       <button
                         onClick={quitarCertificado}
                         type="button"
-                        class="absolute top-1 right-1 text-[10px] font-bold text-white bg-red-600 hover:bg-red-500 rounded px-1.5 py-0.5"
+                        class="absolute top-1 right-1 text-[10px] font-bold text-white bg-[#b32d2e] hover:bg-[#8f2223] rounded px-1.5 py-0.5"
                         title="Quitar certificado"
                       >
                         ✕
@@ -845,8 +845,8 @@ export default function DisertacionesAdminPreact() {
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">
-                  Portada <span class="font-normal text-slate-500">(si no elegís slide, se usa la 1ra)</span>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">
+                  Portada <span class="font-normal text-[#6b7490]">(si no elegís slide, se usa la 1ra)</span>
                 </label>
                 <div class="flex flex-col gap-2">
                   <input
@@ -856,22 +856,22 @@ export default function DisertacionesAdminPreact() {
                       const input = e.target as HTMLInputElement;
                       setCoverFile(input.files && input.files[0] ? input.files[0] : null);
                     }}
-                    class="text-xs text-slate-300 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-slate-700 file:text-slate-200 file:text-xs file:font-bold hover:file:bg-slate-600"
+                    class="text-xs text-[#082D3A] file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#e9edf3] file:text-[#082D3A] file:text-xs file:font-bold hover:file:bg-[#d9dfe9]"
                   />
                   <button
                     onClick={subirPortada}
                     disabled={busy.value || !coverFile}
-                    class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-xs font-bold rounded-lg"
+                    class="px-3 py-1.5 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-xs font-bold rounded-lg"
                   >
                     {coverUrl ? 'Reemplazar' : 'Subir'}
                   </button>
                   {coverUrl && (
-                    <div class="relative rounded-lg overflow-hidden border border-slate-600">
+                    <div class="relative rounded-lg overflow-hidden border border-[#c5ccd8]">
                       <img src={coverUrl} alt="Portada" class="w-full aspect-video object-cover" />
                       <button
                         onClick={quitarPortada}
                         type="button"
-                        class="absolute top-1 right-1 text-[10px] font-bold text-white bg-red-600 hover:bg-red-500 rounded px-1.5 py-0.5"
+                        class="absolute top-1 right-1 text-[10px] font-bold text-white bg-[#b32d2e] hover:bg-[#8f2223] rounded px-1.5 py-0.5"
                         title="Quitar portada"
                       >
                         ✕
@@ -882,8 +882,8 @@ export default function DisertacionesAdminPreact() {
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">
-                  Fotos adicionales <span class="font-normal text-slate-500">(álbum si no hay certificado)</span>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">
+                  Fotos adicionales <span class="font-normal text-[#6b7490]">(álbum si no hay certificado)</span>
                 </label>
                 <div class="flex flex-col gap-2">
                   <input
@@ -894,24 +894,24 @@ export default function DisertacionesAdminPreact() {
                       const input = e.target as HTMLInputElement;
                       setGalleryFiles(input.files ? Array.from(input.files) : []);
                     }}
-                    class="text-xs text-slate-300 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-slate-700 file:text-slate-200 file:text-xs file:font-bold hover:file:bg-slate-600"
+                    class="text-xs text-[#082D3A] file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#e9edf3] file:text-[#082D3A] file:text-xs file:font-bold hover:file:bg-[#d9dfe9]"
                   />
                   <button
                     onClick={subirGaleria}
                     disabled={busy.value || !galleryFiles.length}
-                    class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-xs font-bold rounded-lg"
+                    class="px-3 py-1.5 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-xs font-bold rounded-lg"
                   >
                     {galleryUrls.length ? 'Agregar' : 'Subir fotos'}
                   </button>
                   {galleryUrls.length > 0 && (
                     <div class="grid grid-cols-3 gap-1.5">
                       {galleryUrls.map((g, i) => (
-                        <div key={i} class="relative rounded-lg overflow-hidden border border-slate-600 group">
+                        <div key={i} class="relative rounded-lg overflow-hidden border border-[#c5ccd8] group">
                           <img src={g} alt="Foto del álbum" class="w-full aspect-video object-cover" />
                           <button
                             onClick={() => removeGallery(i)}
                             type="button"
-                            class="absolute top-0.5 right-0.5 text-[9px] font-bold text-white bg-red-600 hover:bg-red-500 rounded px-1"
+                            class="absolute top-0.5 right-0.5 text-[9px] font-bold text-white bg-[#b32d2e] hover:bg-[#8f2223] rounded px-1"
                             title="Quitar foto"
                           >
                             ✕
@@ -925,11 +925,11 @@ export default function DisertacionesAdminPreact() {
             </div>
 
             {(certificateUrl || galleryUrls.length > 0 || slideUrls.length > 0) && (
-              <div class="border-t border-slate-700 pt-4 space-y-2">
-                <label class="block text-xs font-bold text-slate-300">
-                  Fotos a mostrar en la tarjeta <span class="font-normal text-slate-500">(elegí hasta 2, junto a la portada)</span>
+              <div class="border-t border-[#d7dce5] pt-4 space-y-2">
+                <label class="block text-xs font-bold text-[#082D3A]">
+                  Fotos a mostrar en la tarjeta <span class="font-normal text-[#6b7490]">(elegí hasta 2, junto a la portada)</span>
                 </label>
-                <p class="text-[10px] text-slate-500">
+                <p class="text-[10px] text-[#6b7490]">
                   Si no elegís ninguna, se usa automáticamente certificado/galería + 1ra diapositiva.
                 </p>
                 <div class="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
@@ -944,12 +944,12 @@ export default function DisertacionesAdminPreact() {
                           onClick={() => toggleDisplayPhoto(u)}
                           class={
                             'relative rounded-lg overflow-hidden border cursor-pointer ' +
-                            (selected ? 'border-indigo-400 ring-2 ring-indigo-500' : 'border-slate-600 hover:border-slate-400')
+                            (selected ? 'border-[#16B6C9] ring-2 ring-[#16B6C9]' : 'border-[#c5ccd8] hover:border-[#16B6C9]')
                           }
                         >
                           <img src={u} class="w-full aspect-video object-cover" alt="" />
                           {selected && (
-                            <span class="absolute top-0.5 left-0.5 text-[10px] font-bold text-white bg-indigo-600 rounded-full w-4 h-4 flex items-center justify-center">
+                            <span class="absolute top-0.5 left-0.5 text-[10px] font-bold text-white bg-[#082D3A] rounded-full w-4 h-4 flex items-center justify-center">
                               {order + 1}
                             </span>
                           )}
@@ -961,7 +961,7 @@ export default function DisertacionesAdminPreact() {
             )}
 
             <div class="flex justify-end">
-              <button onClick={() => (wizardStep.value = 4)} class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 text-white text-sm font-bold rounded-lg">
+              <button onClick={() => (wizardStep.value = 4)} class="px-4 py-2 bg-[#082D3A] hover:bg-[#0b6e7d] text-white text-sm font-bold rounded-lg">
                 Siguiente →
               </button>
             </div>
@@ -970,20 +970,20 @@ export default function DisertacionesAdminPreact() {
 
         {wizardStep.value === 4 && (
           <div class="space-y-4">
-            <h3 class="text-sm font-bold text-slate-200">Publicar</h3>
-            <p class="text-xs text-slate-400">Revisá los datos en los pasos anteriores y publicá cuando esté listo.</p>
+            <h3 class="text-sm font-bold text-[#082D3A]">Publicar</h3>
+            <p class="text-xs text-[#5c6785]">Revisá los datos en los pasos anteriores y publicá cuando esté listo.</p>
             <div class="flex flex-wrap gap-3">
               <button
                 onClick={() => publicar(false)}
                 disabled={busy.value}
-                class="px-5 py-2 bg-green-700 hover:bg-green-800 disabled:opacity-60 text-sm font-bold rounded-lg"
+                class="px-5 py-2 bg-[#1f7a3d] hover:bg-[#17602f] disabled:opacity-60 text-sm font-bold rounded-lg"
               >
                 {editingId ? 'Actualizar y publicar' : 'Publicar'}
               </button>
               <button
                 onClick={() => publicar(true)}
                 disabled={busy.value}
-                class="px-5 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-sm font-bold rounded-lg"
+                class="px-5 py-2 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-sm font-bold rounded-lg"
               >
                 Guardar borrador
               </button>

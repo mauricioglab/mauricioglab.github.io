@@ -220,9 +220,9 @@ export default function MovimientoAdminPreact() {
         <h1 class="text-2xl font-bold">🤸 Movimiento</h1>
       </div>
 
-      <div class="flex gap-1 border-b border-slate-700 mb-6">
+      <div class="flex gap-1 border-b border-[#d7dce5] mb-6">
         <button
-          class={'px-4 py-2 text-sm font-bold border-b-2 -mb-px transition ' + (vista === 'programas' ? 'border-indigo-500 text-white' : 'border-transparent text-slate-400 hover:text-slate-200')}
+          class={'px-4 py-2 text-sm font-bold border-b-2 -mb-px transition ' + (vista === 'programas' ? 'border-[#16B6C9] text-[#082D3A]' : 'border-transparent text-[#5c6785] hover:text-[#082D3A]')}
           onClick={() => {
             setVista('programas');
             loadProgramas();
@@ -231,7 +231,7 @@ export default function MovimientoAdminPreact() {
           Programas
         </button>
         <button
-          class={'px-4 py-2 text-sm font-bold border-b-2 -mb-px transition ' + (vista === 'sesiones' ? 'border-indigo-500 text-white' : 'border-transparent text-slate-400 hover:text-slate-200')}
+          class={'px-4 py-2 text-sm font-bold border-b-2 -mb-px transition ' + (vista === 'sesiones' ? 'border-[#16B6C9] text-[#082D3A]' : 'border-transparent text-[#5c6785] hover:text-[#082D3A]')}
           onClick={() => {
             setVista('sesiones');
             loadSesiones();
@@ -245,7 +245,7 @@ export default function MovimientoAdminPreact() {
         <div class="flex flex-col gap-6">
           <div class="flex flex-wrap items-center gap-2">
             <select
-              class="px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              class="px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
               value={filtro}
               onChange={(e) => setFiltro((e.target as HTMLSelectElement).value)}
             >
@@ -256,22 +256,22 @@ export default function MovimientoAdminPreact() {
                 </option>
               ))}
             </select>
-            <button class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-bold rounded-lg" onClick={nuevo}>
+            <button class="px-4 py-2 bg-[#e9edf3] hover:bg-[#d9dfe9] text-[#082D3A] text-sm font-bold rounded-lg" onClick={nuevo}>
               + Nuevo programa
             </button>
-            <button class="px-4 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-white text-sm font-bold rounded-lg" onClick={seedModalidad} disabled={!filtro}>
+            <button class="px-4 py-2 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-[#082D3A] text-sm font-bold rounded-lg" onClick={seedModalidad} disabled={!filtro}>
               {'Sembrar ' + (filtro || '').toUpperCase()}
             </button>
           </div>
 
           {form && (
-            <div class="bg-slate-800 rounded-xl p-5 space-y-4">
+            <div class="bg-[#f4f6fa] rounded-xl p-5 space-y-4">
               <h2 class="text-base font-bold">Identificación</h2>
               <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                 <div>
-                  <label class="block text-xs font-bold text-slate-300 mb-1">Modalidad</label>
+                  <label class="block text-xs font-bold text-[#082D3A] mb-1">Modalidad</label>
                   <select
-                    class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                     value={f.modalidad}
                     onChange={(e) => setF({ ...f, modalidad: (e.target as HTMLSelectElement).value })}
                   >
@@ -283,18 +283,18 @@ export default function MovimientoAdminPreact() {
                   </select>
                 </div>
                 <div>
-                  <label class="block text-xs font-bold text-slate-300 mb-1">Selector (clave)</label>
+                  <label class="block text-xs font-bold text-[#082D3A] mb-1">Selector (clave)</label>
                   <input
-                    class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                     value={f.selector}
                     onInput={(e) => setF({ ...f, selector: (e.target as HTMLInputElement).value })}
                     placeholder="11 / night / d1 / 2026-09-14"
                   />
                 </div>
                 <div>
-                  <label class="block text-xs font-bold text-slate-300 mb-1">Nombre</label>
+                  <label class="block text-xs font-bold text-[#082D3A] mb-1">Nombre</label>
                   <input
-                    class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                     value={f.nombre}
                     onInput={(e) => setF({ ...f, nombre: (e.target as HTMLInputElement).value })}
                     placeholder="11 hs / Noche / DÍA 1"
@@ -302,40 +302,40 @@ export default function MovimientoAdminPreact() {
                 </div>
                 <div class="flex gap-3">
                   <div class="w-20">
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Orden</label>
+                    <label class="block text-xs font-bold text-[#082D3A] mb-1">Orden</label>
                     <input
-                      class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                       type="number"
                       value={f.orden}
                       onInput={(e) => setF({ ...f, orden: Number((e.target as HTMLInputElement).value) || 0 })}
                     />
                   </div>
-                  <label class="flex items-center gap-2 text-xs text-slate-300 mt-6 cursor-pointer">
+                  <label class="flex items-center gap-2 text-xs text-[#082D3A] mt-6 cursor-pointer">
                     <input type="checkbox" checked={f.draft} onChange={(e) => setF({ ...f, draft: (e.target as HTMLInputElement).checked })} /> Borrador
                   </label>
                 </div>
               </div>
 
-              <div class="border-t border-slate-700 pt-4 space-y-3">
-                <h3 class="text-sm font-bold text-slate-200">Configuración avanzada (JSON)</h3>
+              <div class="border-t border-[#d7dce5] pt-4 space-y-3">
+                <h3 class="text-sm font-bold text-[#082D3A]">Configuración avanzada (JSON)</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">
-                      Config {errorConfig && <span class="text-red-400">· JSON inválido</span>}
+                    <label class="block text-xs font-bold text-[#082D3A] mb-1">
+                      Config {errorConfig && <span class="text-[#b32d2e]">· JSON inválido</span>}
                     </label>
                     <textarea
-                      class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm font-mono min-h-[140px] focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm font-mono min-h-[140px] focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                       value={f.configText}
                       onInput={(e) => setF({ ...f, configText: (e.target as HTMLTextAreaElement).value })}
                       spellcheck={false}
                     />
                   </div>
                   <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">
-                      Ejercicios {errorEjercicios && <span class="text-red-400">· JSON inválido</span>}
+                    <label class="block text-xs font-bold text-[#082D3A] mb-1">
+                      Ejercicios {errorEjercicios && <span class="text-[#b32d2e]">· JSON inválido</span>}
                     </label>
                     <textarea
-                      class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm font-mono min-h-[140px] focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm font-mono min-h-[140px] focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                       value={f.ejerciciosText}
                       onInput={(e) => setF({ ...f, ejerciciosText: (e.target as HTMLTextAreaElement).value })}
                       spellcheck={false}
@@ -344,16 +344,16 @@ export default function MovimientoAdminPreact() {
                 </div>
               </div>
 
-              {mensaje && <p class="text-xs text-slate-400">{mensaje}</p>}
-              <div class="border-t border-slate-700 pt-4 flex gap-3">
-                <button class="px-5 py-2 bg-green-700 hover:bg-green-800 disabled:opacity-60 text-sm font-bold rounded-lg" disabled={busy} onClick={guardar}>
+              {mensaje && <p class="text-xs text-[#5c6785]">{mensaje}</p>}
+              <div class="border-t border-[#d7dce5] pt-4 flex gap-3">
+                <button class="px-5 py-2 bg-[#1f7a3d] hover:bg-[#17602f] disabled:opacity-60 text-sm font-bold rounded-lg" disabled={busy} onClick={guardar}>
                   {busy ? 'Guardando…' : 'Guardar'}
                 </button>
-                <button class="px-5 py-2 border border-slate-600 hover:border-slate-500 text-sm font-bold rounded-lg" onClick={() => setForm(false)}>
+                <button class="px-5 py-2 border border-[#c5ccd8] hover:border-[#16B6C9] text-sm font-bold rounded-lg" onClick={() => setForm(false)}>
                   Cancelar
                 </button>
                 {editando && (
-                  <button class="px-5 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-bold rounded-lg" onClick={borrar}>
+                  <button class="px-5 py-2 bg-[#b32d2e] hover:bg-[#8f2223] text-white text-sm font-bold rounded-lg" onClick={borrar}>
                     Eliminar
                   </button>
                 )}
@@ -361,17 +361,17 @@ export default function MovimientoAdminPreact() {
             </div>
           )}
 
-          <div class="bg-slate-800 rounded-xl p-5">
-            {!programas.length && <p class="text-sm text-slate-400">No hay programas en la DB. Usá "Sembrar" para precargar los datos locales de una modalidad.</p>}
+          <div class="bg-[#f4f6fa] rounded-xl p-5">
+            {!programas.length && <p class="text-sm text-[#5c6785]">No hay programas en la DB. Usá "Sembrar" para precargar los datos locales de una modalidad.</p>}
             <div class="space-y-2">
               {programasFiltrados.map((r) => (
-                <div key={r.modalidad + r.selector} class="bg-slate-900 border border-slate-700 rounded-lg p-3 flex items-center gap-3 text-sm">
-                  <span class="rounded-md border border-slate-600 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-slate-400">{r.modalidad}</span>
+                <div key={r.modalidad + r.selector} class="bg-white border border-[#d7dce5] rounded-lg p-3 flex items-center gap-3 text-sm">
+                  <span class="rounded-md border border-[#c5ccd8] px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-[#5c6785]">{r.modalidad}</span>
                   <span class="font-bold">{r.nombre || r.selector}</span>
-                  <span class="text-slate-400">{r.selector}</span>
-                  {r.draft && <span class="rounded-md border border-amber-500/40 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-amber-400">Borrador</span>}
+                  <span class="text-[#5c6785]">{r.selector}</span>
+                  {r.draft && <span class="rounded-md border border-[#9a6b00]/30 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-[#9a6b00]">Borrador</span>}
                   <span class="ml-auto">
-                    <button class="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-xs font-bold rounded-lg" onClick={() => editar(r)}>
+                    <button class="px-3 py-1 bg-[#e9edf3] hover:bg-[#d9dfe9] text-xs font-bold rounded-lg" onClick={() => editar(r)}>
                       Editar
                     </button>
                   </span>
@@ -383,16 +383,16 @@ export default function MovimientoAdminPreact() {
       )}
 
       {vista === 'sesiones' && (
-        <div class="bg-slate-800 rounded-xl p-5">
-          {!sesiones.length && <p class="text-sm text-slate-400">Sin sesiones registradas todavía.</p>}
+        <div class="bg-[#f4f6fa] rounded-xl p-5">
+          {!sesiones.length && <p class="text-sm text-[#5c6785]">Sin sesiones registradas todavía.</p>}
           <div class="space-y-2">
             {sesiones.map((s) => (
-              <div key={s.id} class="bg-slate-900 border border-slate-700 rounded-lg p-3 flex items-center gap-3 text-sm">
-                <span class="rounded-md border border-slate-600 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-slate-400">{s.fecha}</span>
-                <span class="rounded-md border border-slate-600 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-slate-400">{s.modalidad}</span>
+              <div key={s.id} class="bg-white border border-[#d7dce5] rounded-lg p-3 flex items-center gap-3 text-sm">
+                <span class="rounded-md border border-[#c5ccd8] px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-[#5c6785]">{s.fecha}</span>
+                <span class="rounded-md border border-[#c5ccd8] px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-[#5c6785]">{s.modalidad}</span>
                 <span class="font-bold">{s.programa_nombre}</span>
-                <span class="text-slate-400">{s.nota}</span>
-                <span class="ml-auto text-slate-500 text-xs">{(s.usuario_email || s.user_id || '').slice(0, 18)}</span>
+                <span class="text-[#5c6785]">{s.nota}</span>
+                <span class="ml-auto text-[#6b7490] text-xs">{(s.usuario_email || s.user_id || '').slice(0, 18)}</span>
               </div>
             ))}
           </div>

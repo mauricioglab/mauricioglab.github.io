@@ -170,7 +170,7 @@ export default function RecursosAdminPreact() {
   const [opHistory, setOpHistory] = useState<OpHistoryEntry[]>([]);
 
   useEffect(() => {
-    // No repetimos el chequeo de auth/rol acá: GestionAdminPreact ya lo hace
+    // No repetimos el chequeo de auth/rol acá: AdminShell ya lo hace
     // y solo muestra este tab una vez confirmado admin.
     loadRecursos();
   }, []);
@@ -459,12 +459,12 @@ export default function RecursosAdminPreact() {
       <div class="flex items-center justify-between mb-6">
         <h1 class="text-2xl font-bold">📚 Zona Lab</h1>
         <div class="flex items-center gap-3">
-          <a href={`${RECURSOS_BASE}zona-lab/`} class="text-sm text-slate-400 hover:text-white">
+          <a href={`${RECURSOS_BASE}zona-lab/`} class="text-sm text-[#5c6785] hover:text-[#082D3A]">
             Ver sitio →
           </a>
           <button
             onClick={abrirWizardNuevo}
-            class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 text-white text-sm font-bold rounded-lg"
+            class="px-4 py-2 bg-[#082D3A] hover:bg-[#0b6e7d] text-white text-sm font-bold rounded-lg"
           >
             + Nuevo recurso
           </button>
@@ -474,13 +474,13 @@ export default function RecursosAdminPreact() {
       {/* Actividad reciente */}
       {opHistory.length > 0 && (
         <div class="mb-4">
-          <details class="group text-xs bg-slate-800 rounded-xl p-3">
-            <summary class="text-slate-400 hover:text-slate-200 cursor-pointer select-none font-bold">
+          <details class="group text-xs bg-[#f4f6fa] rounded-xl p-3">
+            <summary class="text-[#5c6785] hover:text-[#082D3A] cursor-pointer select-none font-bold">
               Actividad reciente ({opHistory.length})
             </summary>
             <div class="mt-1.5 space-y-1">
               {opHistory.map((h) => (
-                <div key={h.ts} class={'flex items-start gap-2 ' + (h.ok ? 'text-slate-400' : 'text-red-400')}>
+                <div key={h.ts} class={'flex items-start gap-2 ' + (h.ok ? 'text-[#5c6785]' : 'text-[#b32d2e]')}>
                   <span>{h.ok ? '✓' : '✗'}</span>
                   <span class="font-bold">{h.label}</span>
                   <span class="font-mono">{h.elapsed}</span>
@@ -493,35 +493,35 @@ export default function RecursosAdminPreact() {
       )}
 
       {/* Lista */}
-      <div class="bg-slate-800 rounded-xl p-5">
+      <div class="bg-[#f4f6fa] rounded-xl p-5">
         <h2 class="text-base font-bold mb-3">Recursos existentes</h2>
-        {!recursos.length && <div class="text-sm text-slate-400">Sin recursos todavía.</div>}
+        {!recursos.length && <div class="text-sm text-[#5c6785]">Sin recursos todavía.</div>}
         <div class="space-y-2">
           {recursos.map((p) => (
-            <div key={p.id} class="bg-slate-900 border border-slate-700 rounded-lg p-3">
+            <div key={p.id} class="bg-white border border-[#d7dce5] rounded-lg p-3">
               <div class="flex items-start justify-between gap-2">
                 <p class="text-sm font-bold">{p.title}</p>
                 <span
                   class={
                     'text-[10px] px-2 py-0.5 rounded-full shrink-0 ' +
-                    (p.draft ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400')
+                    (p.draft ? 'bg-[#9a6b00]/10 text-[#9a6b00]' : 'bg-[#1f7a3d]/10 text-[#1f7a3d]')
                   }
                 >
                   {p.draft ? 'borrador' : 'publicado'}
                 </span>
               </div>
-              <p class="text-xs text-slate-400 mt-1">
+              <p class="text-xs text-[#5c6785] mt-1">
                 {p.source_type === 'youtube' ? '🎬 ' : '🌐 '}
                 {new Date(p.created).toLocaleDateString('es-ES')}
               </p>
               <div class="flex gap-2 mt-2 text-xs">
-                <button onClick={() => cargarRecurso(p)} class="text-indigo-400 hover:text-indigo-300 font-bold">
+                <button onClick={() => cargarRecurso(p)} class="text-[#0b6e7d] hover:text-[#16B6C9] font-bold">
                   Editar
                 </button>
-                <button onClick={() => toggleDraft(p)} class="text-slate-400 hover:text-white font-bold">
+                <button onClick={() => toggleDraft(p)} class="text-[#5c6785] hover:text-[#082D3A] font-bold">
                   {p.draft ? 'Publicar' : 'A borrador'}
                 </button>
-                <button onClick={() => borrarRecurso(p)} class="text-red-400 hover:text-red-300 font-bold">
+                <button onClick={() => borrarRecurso(p)} class="text-[#b32d2e] hover:text-[#8f2223] font-bold">
                   Eliminar
                 </button>
               </div>
@@ -545,26 +545,26 @@ export default function RecursosAdminPreact() {
         {/* Paso 1: Link + frase */}
         {wizardStep.value === 1 && (
           <div class="space-y-3">
-            <h3 class="text-sm font-bold text-slate-200">Link + frase → recurso</h3>
+            <h3 class="text-sm font-bold text-[#082D3A]">Link + frase → recurso</h3>
             <div>
-              <label class="block text-xs font-bold text-slate-300 mb-1">Link de YouTube o reporte *</label>
+              <label class="block text-xs font-bold text-[#082D3A] mb-1">Link de YouTube o reporte *</label>
               <input
                 value={url}
                 onInput={(e) => setUrl((e.target as HTMLInputElement).value)}
                 type="url"
                 placeholder="https://www.youtube.com/watch?v=... o https://..."
-                class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
               />
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-300 mb-1">
-                Frase / idea semilla * <span class="font-normal text-slate-500">(la IA la mejora)</span>
+              <label class="block text-xs font-bold text-[#082D3A] mb-1">
+                Frase / idea semilla * <span class="font-normal text-[#6b7490]">(la IA la mejora)</span>
               </label>
               <textarea
                 value={frase}
                 onInput={(e) => setFrase((e.target as HTMLTextAreaElement).value)}
                 rows={4}
-                class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                 placeholder="Ej: 'Esto explica por qué no conviene usar la misma contraseña en todos lados y cómo se roban las cuentas'"
               />
             </div>
@@ -572,7 +572,7 @@ export default function RecursosAdminPreact() {
               <button
                 onClick={generar}
                 disabled={busy.value || !url || !frase}
-                class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-60 text-sm font-bold rounded-lg"
+                class="px-4 py-2 bg-[#082D3A] hover:bg-[#0b6e7d] disabled:opacity-60 text-sm font-bold rounded-lg"
               >
                 ⚡ Generar recurso →
               </button>
@@ -583,42 +583,42 @@ export default function RecursosAdminPreact() {
         {/* Paso 2: Revisar y publicar */}
         {wizardStep.value === 2 && (
           <div class="space-y-3">
-            <h3 class="text-sm font-bold text-slate-200">Revisá y ajustá el recurso</h3>
+            <h3 class="text-sm font-bold text-[#082D3A]">Revisá y ajustá el recurso</h3>
 
             {sourceUrl && (
-              <div class="text-xs text-slate-400 bg-slate-900 border border-slate-700 rounded-lg p-3 flex flex-wrap items-center gap-2">
-                <span class="font-bold text-slate-200">Fuente:</span>
+              <div class="text-xs text-[#5c6785] bg-white border border-[#d7dce5] rounded-lg p-3 flex flex-wrap items-center gap-2">
+                <span class="font-bold text-[#082D3A]">Fuente:</span>
                 <span class="font-mono truncate max-w-full">{sourceUrl}</span>
                 <span
                   class={
                     'px-2 py-0.5 rounded-full text-[10px] font-bold ' +
-                    (sourceType === 'youtube' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400')
+                    (sourceType === 'youtube' ? 'bg-[#b32d2e]/10 text-[#b32d2e]' : 'bg-[#0b6e7d]/10 text-[#0b6e7d]')
                   }
                 >
                   {sourceType === 'youtube' ? 'YouTube' : 'Web'}
                 </span>
-                {!hadSource && <span class="text-amber-300">(sin transcripción — se usó solo tu frase)</span>}
+                {!hadSource && <span class="text-[#9a6b00]">(sin transcripción — se usó solo tu frase)</span>}
               </div>
             )}
 
             <div>
-              <label class="block text-xs font-bold text-slate-300 mb-1">Título</label>
+              <label class="block text-xs font-bold text-[#082D3A] mb-1">Título</label>
               <input
                 value={borrador.title}
                 onInput={(e) => setBorrador({ ...borrador, title: (e.target as HTMLInputElement).value })}
                 type="text"
-                class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
               />
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Categorías</label>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">Categorías</label>
                 <div class="flex flex-col gap-2">
                   <select
                     value={selectedCategory}
                     onChange={(e) => addCategory((e.target as HTMLSelectElement).value)}
-                    class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                   >
                     <option value="">Elegí una categoría…</option>
                     {availableCategories.map((cat) => (
@@ -632,13 +632,13 @@ export default function RecursosAdminPreact() {
                       {selectedCategories.map((cat, i) => (
                         <span
                           key={i}
-                          class="inline-flex items-center gap-1.5 bg-slate-700 rounded-full px-3 py-1 text-xs font-bold text-slate-100"
+                          class="inline-flex items-center gap-1.5 bg-[#e9edf3] rounded-full px-3 py-1 text-xs font-bold text-[#082D3A]"
                         >
                           <span>{cat}</span>
                           <button
                             type="button"
                             onClick={() => removeCategory(i)}
-                            class="text-slate-300 hover:text-red-400 font-bold leading-none"
+                            class="text-[#082D3A] hover:text-[#8f2223] font-bold leading-none"
                             title="Quitar categoría"
                           >
                             ✕
@@ -650,12 +650,12 @@ export default function RecursosAdminPreact() {
                 </div>
               </div>
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Temas (puente con el Blog)</label>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">Temas (puente con el Blog)</label>
                 <div class="flex flex-col gap-2">
                   <select
                     value={selectedTema}
                     onChange={(e) => addTema((e.target as HTMLSelectElement).value)}
-                    class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                   >
                     <option value="">Elegí un tema…</option>
                     {availableTemas.map((tema) => (
@@ -669,13 +669,13 @@ export default function RecursosAdminPreact() {
                       {selectedTemas.map((tema, i) => (
                         <span
                           key={i}
-                          class="inline-flex items-center gap-1.5 bg-indigo-600/30 border border-indigo-500/40 rounded-full px-3 py-1 text-xs font-bold text-indigo-200"
+                          class="inline-flex items-center gap-1.5 bg-[#16B6C9]/15 border border-[#16B6C9]/40 rounded-full px-3 py-1 text-xs font-bold text-[#0b6e7d]"
                         >
                           <span>{tema}</span>
                           <button
                             type="button"
                             onClick={() => removeTema(i)}
-                            class="text-indigo-300 hover:text-red-400 font-bold leading-none"
+                            class="text-[#0b6e7d] hover:text-[#8f2223] font-bold leading-none"
                             title="Quitar tema"
                           >
                             ✕
@@ -684,30 +684,30 @@ export default function RecursosAdminPreact() {
                       ))}
                     </div>
                   )}
-                  <p class="text-[10px] text-slate-500">Estos temas matchean este recurso con los posts del Blog.</p>
+                  <p class="text-[10px] text-[#6b7490]">Estos temas matchean este recurso con los posts del Blog.</p>
                 </div>
               </div>
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-300 mb-1">Descripción (SEO)</label>
+              <label class="block text-xs font-bold text-[#082D3A] mb-1">Descripción (SEO)</label>
               <input
                 value={borrador.description}
                 onInput={(e) => setBorrador({ ...borrador, description: (e.target as HTMLInputElement).value })}
                 type="text"
-                class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
               />
             </div>
 
             <div>
               <div class="flex items-center justify-between mb-1">
-                <label class="block text-xs font-bold text-slate-300">Contenido (Markdown)</label>
+                <label class="block text-xs font-bold text-[#082D3A]">Contenido (Markdown)</label>
                 <div class="flex gap-2">
-                  <button onClick={togglePreview} type="button" class="text-xs text-indigo-400 hover:text-indigo-300 font-bold">
+                  <button onClick={togglePreview} type="button" class="text-xs text-[#0b6e7d] hover:text-[#16B6C9] font-bold">
                     {showPreview ? 'Editar' : 'Vista previa'}
                   </button>
                   {showPreview && (
-                    <span onClick={() => setShowPreview(false)} class="text-xs text-slate-500 cursor-pointer">
+                    <span onClick={() => setShowPreview(false)} class="text-xs text-[#6b7490] cursor-pointer">
                       ✕
                     </span>
                   )}
@@ -718,35 +718,35 @@ export default function RecursosAdminPreact() {
                   value={borrador.bodyMarkdown}
                   onInput={(e) => setBorrador({ ...borrador, bodyMarkdown: (e.target as HTMLTextAreaElement).value })}
                   rows={12}
-                  class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                 />
               )}
               {showPreview && (
                 <div
-                  class="bg-slate-900 border border-slate-600 rounded-lg p-4 text-sm max-h-[420px] overflow-y-auto markdown-preview"
+                  class="bg-white border border-[#c5ccd8] rounded-lg p-4 text-sm max-h-[420px] overflow-y-auto markdown-preview"
                   dangerouslySetInnerHTML={{ __html: previewHtml }}
                 />
               )}
             </div>
 
             {coverUrl && (
-              <div class="rounded-lg overflow-hidden border border-slate-600 max-w-sm">
+              <div class="rounded-lg overflow-hidden border border-[#c5ccd8] max-w-sm">
                 <img src={coverUrl} alt="Portada" class="w-full aspect-video object-cover" />
               </div>
             )}
 
-            <div class="border-t border-slate-700 pt-4 flex flex-wrap gap-3">
+            <div class="border-t border-[#d7dce5] pt-4 flex flex-wrap gap-3">
               <button
                 onClick={() => publicar(false)}
                 disabled={busy.value}
-                class="px-5 py-2 bg-green-700 hover:bg-green-800 disabled:opacity-60 text-sm font-bold rounded-lg"
+                class="px-5 py-2 bg-[#1f7a3d] hover:bg-[#17602f] disabled:opacity-60 text-sm font-bold rounded-lg"
               >
                 {editingId ? 'Actualizar y publicar' : 'Publicar'}
               </button>
               <button
                 onClick={() => publicar(true)}
                 disabled={busy.value}
-                class="px-5 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-sm font-bold rounded-lg"
+                class="px-5 py-2 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-sm font-bold rounded-lg"
               >
                 Guardar borrador
               </button>

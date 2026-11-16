@@ -14,6 +14,16 @@ export const db = createClient(supabaseUrl, supabaseAnonKey, {
   auth: { persistSession: inBrowser, autoRefreshToken: inBrowser, detectSessionInUrl: false },
 });
 
+// Funciones de IA del panel (blog, disertaciones, recursos): vivían en el servidor anterior y todavía no existen en Supabase.
+// Mientras `AI_FUNCTIONS_ENABLED` sea false, los botones muestran un aviso claro en vez de un error técnico.
+const AI_FUNCTIONS_ENABLED = false;
+const AI_FUNCTIONS = new Set(['blog-fetch-url', 'blog-proposals', 'blog-write', 'blog-review', 'blog-revise', 'blog-cover', 'disertacion-parse', 'recurso-generate']);
+const invokeFunction = db.functions.invoke.bind(db.functions);
+(db.functions as any).invoke = (name: string, opts?: any) =>
+  !AI_FUNCTIONS_ENABLED && AI_FUNCTIONS.has(name)
+    ? Promise.resolve({ data: null, error: new Error('Las funciones de IA todavía no están disponibles en el servidor nuevo.') })
+    : invokeFunction(name, opts);
+
 export {
   SESSION_DURATION_MS,
   DEFAULT_USER_EMAIL,

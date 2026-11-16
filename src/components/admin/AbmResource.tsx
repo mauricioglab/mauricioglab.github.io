@@ -1,5 +1,5 @@
-// Panel ABM genérico del CMS: lista + formulario generado desde un esquema de campos.
-// Mismo componente en el sitio de Mauricio y en el de Fernanda; cambia solo `siteId` y la lista de recursos.
+// ABM genérico de un recurso (tabla): lista + formulario generado desde un esquema de campos.
+// Archivo IDÉNTICO en los sitios de Mauricio y de Fernanda. La carcasa (AdminShell) pone el login y el menú.
 import { useEffect, useState } from 'preact/hooks';
 import { db } from '../../lib/db';
 
@@ -21,10 +21,9 @@ export interface Resource {
   orderBy?: { column: string; ascending?: boolean };
   defaults?: Record<string, unknown>;
   siteScoped?: boolean; // por defecto true
-  preview?: boolean; // muestra una vista previa imprimible del campo JSON
+  preview?: boolean; // muestra una vista previa imprimible del campo JSON (CV)
 }
 
-interface Props { siteId: string; resources: Resource[]; siteName: string }
 type Row = Record<string, any>;
 
 const toForm = (fields: Field[], row: Row | null, defaults: Record<string, unknown> = {}): Row => {
@@ -53,18 +52,16 @@ const fromForm = (fields: Field[], form: Row): Row => {
   return out;
 };
 
-function JsonView({ value, level = 3 }: { value: unknown; level?: number }) {
+function JsonView({ value }: { value: unknown }) {
   if (value === null || value === undefined || value === '') return null;
-  if (Array.isArray(value)) {
-    return <ul>{value.map((v) => <li><JsonView value={v} level={level} /></li>)}</ul>;
-  }
+  if (Array.isArray(value)) return <ul>{value.map((v) => <li><JsonView value={v} /></li>)}</ul>;
   if (typeof value === 'object') {
     return (
       <div>
         {Object.entries(value as Record<string, unknown>).map(([k, v]) => (
           typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean'
             ? <p><strong>{k}:</strong> {String(v)}</p>
-            : <div><p><strong>{k}</strong></p><JsonView value={v} level={level + 1} /></div>
+            : <div><p><strong>{k}</strong></p><JsonView value={v} /></div>
         ))}
       </div>
     );
@@ -83,31 +80,14 @@ function CvPreview({ text }: { text: string }) {
   );
 }
 
-export default function AbmPanel({ siteId, resources, siteName }: Props) {
-  const [ready, setReady] = useState(false);
-  const [admin, setAdmin] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loginError, setLoginError] = useState('');
-  const [tab, setTab] = useState(0);
+export default function AbmResource({ siteId, resource: res }: { siteId: string; resource: Resource }) {
   const [rows, setRows] = useState<Row[]>([]);
-  const [editing, setEditing] = useState<Row | null>(null); // fila original (o {} si es nueva)
+  const [editing, setEditing] = useState<Row | null>(null); // fila original ({} si es nueva)
   const [form, setForm] = useState<Row>({});
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
-  const res = resources[tab];
-
-  async function checkSession() {
-    const { data: { session } } = await db.auth.getSession();
-    if (!session) { setAdmin(false); setReady(true); return; }
-    const { data: perfil } = await db.from('profiles').select('role, site').eq('id', session.user.id).maybeSingle();
-    setAdmin(perfil?.role === 'admin' && (perfil.site === siteId || perfil.site === '*'));
-    setReady(true);
-  }
-  useEffect(() => { checkSession(); }, []);
 
   async function load() {
-    if (!admin) return;
     let q: any = db.from(res.table).select('*');
     if (res.siteScoped !== false) q = q.eq('site', siteId);
     if (res.orderBy) q = q.order(res.orderBy.column, { ascending: res.orderBy.ascending ?? true });
@@ -115,18 +95,7 @@ export default function AbmPanel({ siteId, resources, siteName }: Props) {
     if (error) { setStatus(`No se pudo cargar: ${error.message}`); setRows([]); return; }
     setRows(data ?? []);
   }
-  useEffect(() => { setEditing(null); setStatus(''); load(); }, [tab, admin]);
-
-  async function login(e: Event) {
-    e.preventDefault();
-    setLoginError('');
-    const { error } = await db.auth.signInWithPassword({ email, password });
-    if (error) { setLoginError('Correo o contraseña incorrectos.'); return; }
-    try { localStorage.setItem('spa_session_start', String(Date.now())); } catch { /* ignore */ }
-    setPassword('');
-    await checkSession();
-  }
-  async function logout() { await db.auth.signOut(); setAdmin(false); }
+  useEffect(() => { setEditing(null); setStatus(''); load(); }, [res.table]);
 
   function startNew() { setEditing({}); setForm(toForm(res.fields, null, res.defaults)); setStatus(''); }
   function startEdit(row: Row) { setEditing(row); setForm(toForm(res.fields, row)); setStatus(''); }
@@ -143,7 +112,7 @@ export default function AbmPanel({ siteId, resources, siteName }: Props) {
         : await db.from(res.table).insert(payload);
       if (error) throw error;
       setEditing(null);
-      setStatus('Guardado. El sitio muestra el cambio en la próxima publicación.');
+      setStatus('Guardado. El sitio se actualiza solo en 1 o 2 minutos.');
       await load();
     } catch (err) {
       setStatus(`No se pudo guardar: ${(err as Error).message}`);
@@ -168,33 +137,10 @@ export default function AbmPanel({ siteId, resources, siteName }: Props) {
     setForm({ ...form, [field.name]: db.storage.from(bucket).getPublicUrl(path).data.publicUrl });
   }
 
-  if (!ready) return <p>Cargando…</p>;
-
-  if (!admin) {
-    return (
-      <form class="pt-form pt-admin-login" onSubmit={login}>
-        <h2>Ingresar al panel</h2>
-        <div class="pt-field"><label for="a-mail">Correo electrónico</label><input id="a-mail" type="email" value={email} onInput={(e) => setEmail((e.target as HTMLInputElement).value)} autocomplete="username" required /></div>
-        <div class="pt-field"><label for="a-pass">Contraseña</label><input id="a-pass" type="password" value={password} onInput={(e) => setPassword((e.target as HTMLInputElement).value)} autocomplete="current-password" required /></div>
-        {loginError && <p class="pt-error" role="alert">{loginError}</p>}
-        <div class="pt-form-actions"><button class="pt-button" type="submit">Entrar</button></div>
-      </form>
-    );
-  }
-
   return (
-    <div class="pt-admin">
-      <div class="pt-admin-bar">
-        <strong>Panel de {siteName}</strong>
-        <button class="pt-admin-link" type="button" onClick={logout}>Salir</button>
-      </div>
-      <div class="pt-admin-tabs" role="tablist">
-        {resources.map((r, i) => (
-          <button role="tab" aria-selected={i === tab} class={i === tab ? 'is-on' : ''} onClick={() => setTab(i)} type="button">{r.label}</button>
-        ))}
-      </div>
+    <div class="pt-abm">
+      <h2>{res.label}</h2>
       {status && <p class="pt-form-status" role="status">{status}</p>}
-
       {editing === null ? (
         <>
           <div class="pt-admin-actions"><button class="pt-button" type="button" onClick={startNew}>Nuevo</button></div>
@@ -212,7 +158,7 @@ export default function AbmPanel({ siteId, resources, siteName }: Props) {
         </>
       ) : (
         <form class="pt-form" onSubmit={save}>
-          <h2>{editing.id ? 'Editar' : 'Nuevo'}: {res.label}</h2>
+          <h3>{editing.id ? 'Editar' : 'Nuevo'}</h3>
           {res.fields.map((f) => (
             <div class="pt-field">
               <label for={`f-${f.name}`}>{f.label}{f.required && <span class="pt-req">(obligatorio)</span>}</label>

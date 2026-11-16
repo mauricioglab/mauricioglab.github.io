@@ -27,7 +27,6 @@ export default defineConfig({
       "/pausas-activas": "/movimiento/?modo=pausas",
       "/movilidad": "/movimiento/?modo=movilidad",
       "/entrenamiento": "/movimiento/?modo=entrenamiento",
-      "/admin": "/admin/gestion/",
       "/es/videos": "/videos/",
       "/en/videos": "/videos/",
     }),

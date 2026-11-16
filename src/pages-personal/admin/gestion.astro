@@ -1,18 +1,21 @@
 ---
 import BaseTailwind from '../../layouts/BaseTailwind.astro';
-import GestionAdminPreact from '../../components/admin/GestionAdminPreact';
+import AdminApp from '../../components/admin/AdminApp';
+import '../../styles/admin.css';
 
 export const prerender = true;
 ---
 
 <BaseTailwind
-  title="Panel de Gestión"
-  description="Enlaces del sitio, Blog, Disertaciones, Movimiento y Zona Lab en un solo panel"
+  title="Panel de administración"
+  description="Contenido, publicaciones y herramientas del sitio"
   lang="es"
   layoutType="admin"
   showMateGame={false}
   showPromptModal={true}
   noindex
 >
-  <GestionAdminPreact client:load />
+  <div class="pt pt-admin-page">
+    <AdminApp client:load />
+  </div>
 </BaseTailwind>

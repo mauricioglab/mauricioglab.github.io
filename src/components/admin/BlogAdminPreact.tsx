@@ -687,10 +687,10 @@ export default function BlogAdminPreact() {
       <div class="flex items-center justify-between mb-6">
         <h1 class="text-2xl font-bold">📝 Blog</h1>
         <div class="flex items-center gap-3">
-          <a href={`${BLOG_BASE}blog/`} class="text-sm text-slate-400 hover:text-white">
+          <a href={`${BLOG_BASE}blog/`} class="text-sm text-[#5c6785] hover:text-[#082D3A]">
             Ver blog →
           </a>
-          <button onClick={abrirWizardNuevo} class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 text-white text-sm font-bold rounded-lg">
+          <button onClick={abrirWizardNuevo} class="px-4 py-2 bg-[#082D3A] hover:bg-[#0b6e7d] text-white text-sm font-bold rounded-lg">
             + Nuevo post
           </button>
         </div>
@@ -698,13 +698,13 @@ export default function BlogAdminPreact() {
 
       {opHistory.length > 0 && (
         <div class="mb-4">
-          <details class="group text-xs bg-slate-800 rounded-xl p-3">
-            <summary class="text-slate-400 hover:text-slate-200 cursor-pointer select-none font-bold">
+          <details class="group text-xs bg-[#f4f6fa] rounded-xl p-3">
+            <summary class="text-[#5c6785] hover:text-[#082D3A] cursor-pointer select-none font-bold">
               Actividad reciente ({opHistory.length})
             </summary>
             <div class="mt-1.5 space-y-1">
               {opHistory.map((h) => (
-                <div key={h.ts} class={'flex items-start gap-2 ' + (h.ok ? 'text-slate-400' : 'text-red-400')}>
+                <div key={h.ts} class={'flex items-start gap-2 ' + (h.ok ? 'text-[#5c6785]' : 'text-[#b32d2e]')}>
                   <span>{h.ok ? '✓' : '✗'}</span>
                   <span class="font-bold">{h.label}</span>
                   <span class="font-mono">{h.elapsed}</span>
@@ -716,34 +716,34 @@ export default function BlogAdminPreact() {
         </div>
       )}
 
-      <div class="bg-slate-800 rounded-xl p-5">
+      <div class="bg-[#f4f6fa] rounded-xl p-5">
         <h2 class="text-base font-bold mb-3">Posts existentes</h2>
-        {!posts.length && <div class="text-sm text-slate-400">Sin posts todavía.</div>}
+        {!posts.length && <div class="text-sm text-[#5c6785]">Sin posts todavía.</div>}
         <div class="space-y-2">
           {posts.map((p) => (
-            <div key={p.id} class="bg-slate-900 border border-slate-700 rounded-lg p-3">
+            <div key={p.id} class="bg-white border border-[#d7dce5] rounded-lg p-3">
               <div class="flex items-start justify-between gap-2">
                 <p class="text-sm font-bold">{p.title}</p>
                 <span
                   class={
                     'text-[10px] px-2 py-0.5 rounded-full shrink-0 ' +
-                    (p.draft ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400')
+                    (p.draft ? 'bg-[#9a6b00]/10 text-[#9a6b00]' : 'bg-[#1f7a3d]/10 text-[#1f7a3d]')
                   }
                 >
                   {p.draft ? 'borrador' : 'publicado'}
                 </span>
               </div>
-              <p class="text-xs text-slate-400 mt-1">
+              <p class="text-xs text-[#5c6785] mt-1">
                 {p.pub_date} · {(p.categories || []).join(', ')}
               </p>
               <div class="flex gap-2 mt-2 text-xs">
-                <button onClick={() => cargarPost(p)} class="text-indigo-400 hover:text-indigo-300 font-bold">
+                <button onClick={() => cargarPost(p)} class="text-[#0b6e7d] hover:text-[#16B6C9] font-bold">
                   Editar
                 </button>
-                <button onClick={() => toggleDraft(p)} class="text-slate-400 hover:text-white font-bold">
+                <button onClick={() => toggleDraft(p)} class="text-[#5c6785] hover:text-[#082D3A] font-bold">
                   {p.draft ? 'Publicar' : 'A borrador'}
                 </button>
-                <button onClick={() => borrarPost(p)} class="text-red-400 hover:text-red-300 font-bold">
+                <button onClick={() => borrarPost(p)} class="text-[#b32d2e] hover:text-[#8f2223] font-bold">
                   Eliminar
                 </button>
               </div>
@@ -765,14 +765,14 @@ export default function BlogAdminPreact() {
       >
         {wizardStep.value === 1 && (
           <div class="space-y-3">
-            <h3 class="text-sm font-bold text-slate-200">Tema del post</h3>
+            <h3 class="text-sm font-bold text-[#082D3A]">Tema del post</h3>
             <div>
-              <label class="block text-xs font-bold text-slate-300 mb-1">Tema *</label>
+              <label class="block text-xs font-bold text-[#082D3A] mb-1">Tema *</label>
               <input
                 value={form.tema}
                 onInput={(e) => setForm({ ...form, tema: (e.target as HTMLInputElement).value })}
                 type="text"
-                class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
               />
             </div>
             <div class="flex flex-col sm:flex-row gap-2">
@@ -781,42 +781,42 @@ export default function BlogAdminPreact() {
                 onInput={(e) => setUrlRef((e.target as HTMLInputElement).value)}
                 type="text"
                 placeholder="Pegá la URL de un reportaje o artículo para traer su texto..."
-                class="flex-1 px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                class="flex-1 px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
               />
-              <button onClick={traerTextoUrl} disabled={busy.value} class="shrink-0 px-4 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-sm font-bold rounded-lg">
+              <button onClick={traerTextoUrl} disabled={busy.value} class="shrink-0 px-4 py-2 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-sm font-bold rounded-lg">
                 ⬇ Traer texto
               </button>
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-300 mb-1">
-                Frase / idea semilla o referencia <span class="font-normal text-slate-500">(acepta varios párrafos)</span>
+              <label class="block text-xs font-bold text-[#082D3A] mb-1">
+                Frase / idea semilla o referencia <span class="font-normal text-[#6b7490]">(acepta varios párrafos)</span>
               </label>
               <textarea
                 value={form.fraseClave}
                 onInput={(e) => setForm({ ...form, fraseClave: (e.target as HTMLTextAreaElement).value })}
                 rows={6}
-                class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
               />
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">
-                  Enfoque <span class="font-normal text-slate-500">(opcional)</span>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">
+                  Enfoque <span class="font-normal text-[#6b7490]">(opcional)</span>
                 </label>
                 <input
                   value={form.enfoque}
                   onInput={(e) => setForm({ ...form, enfoque: (e.target as HTMLInputElement).value })}
                   type="text"
                   placeholder="Ej: el caso real detrás del tema"
-                  class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                 />
               </div>
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Tono</label>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">Tono</label>
                 <select
                   value={form.tono}
                   onChange={(e) => setForm({ ...form, tono: (e.target as HTMLSelectElement).value })}
-                  class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                 >
                   <option value="Cercano y directo">Cercano y directo</option>
                   <option value="Técnico y profesional">Técnico y profesional</option>
@@ -827,40 +827,40 @@ export default function BlogAdminPreact() {
                 </select>
               </div>
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Min. lectura</label>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">Min. lectura</label>
                 <input
                   value={form.tiempoLecturaMin}
                   onInput={(e) => setForm({ ...form, tiempoLecturaMin: (e.target as HTMLInputElement).value })}
                   type="number"
                   min="1"
-                  class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                 />
               </div>
             </div>
             <div class="flex justify-end">
-              <button onClick={generarPropuestas} disabled={busy.value} class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-60 text-sm font-bold rounded-lg">
+              <button onClick={generarPropuestas} disabled={busy.value} class="px-4 py-2 bg-[#082D3A] hover:bg-[#0b6e7d] disabled:opacity-60 text-sm font-bold rounded-lg">
                 Generar propuestas →
               </button>
             </div>
             {temasHistory.length > 0 && (
-              <div class="border-t border-slate-700 pt-3 space-y-1.5">
-                <p class="text-xs font-bold text-slate-400">
-                  Historial de temas <span class="font-normal text-slate-500">(últimos {temasHistory.length}/10)</span>
+              <div class="border-t border-[#d7dce5] pt-3 space-y-1.5">
+                <p class="text-xs font-bold text-[#5c6785]">
+                  Historial de temas <span class="font-normal text-[#6b7490]">(últimos {temasHistory.length}/10)</span>
                 </p>
                 <div class="space-y-1">
                   {temasHistory.map((e) => (
-                    <div key={e.id} class="flex items-start gap-2 bg-slate-900 rounded-lg p-2 text-xs">
+                    <div key={e.id} class="flex items-start gap-2 bg-white rounded-lg p-2 text-xs">
                       <div class="flex-1 min-w-0">
-                        <p class="text-slate-200 truncate">{e.tema}</p>
-                        <p class="text-slate-500 text-[10px] mt-0.5">
+                        <p class="text-[#082D3A] truncate">{e.tema}</p>
+                        <p class="text-[#6b7490] text-[10px] mt-0.5">
                           {e.enfoque && `enfoque: ${e.enfoque} · `}
                           {new Date(e.savedAt).toLocaleString()}
                         </p>
                       </div>
-                      <button onClick={() => useTemaEntry(e.id)} class="text-indigo-400 hover:text-indigo-300 font-bold shrink-0">
+                      <button onClick={() => useTemaEntry(e.id)} class="text-[#0b6e7d] hover:text-[#16B6C9] font-bold shrink-0">
                         Usar
                       </button>
-                      <button onClick={() => deleteTemaEntry(e.id)} class="text-red-400 hover:text-red-300 font-bold shrink-0" title="Borrar">
+                      <button onClick={() => deleteTemaEntry(e.id)} class="text-[#b32d2e] hover:text-[#8f2223] font-bold shrink-0" title="Borrar">
                         ✕
                       </button>
                     </div>
@@ -873,7 +873,7 @@ export default function BlogAdminPreact() {
 
         {wizardStep.value === 2 && (
           <div class="space-y-3">
-            <h3 class="text-sm font-bold text-slate-200">Elegí un ángulo</h3>
+            <h3 class="text-sm font-bold text-[#082D3A]">Elegí un ángulo</h3>
             {op.value?.id === 'propuestas' ? (
               <div class="space-y-2">
                 {[0, 1, 2].map((n) => (
@@ -887,14 +887,14 @@ export default function BlogAdminPreact() {
                     <div
                       class={
                         'p-3 rounded-lg border transition flex gap-3 items-start ' +
-                        (propuestaIndex === i ? 'border-indigo-500 bg-indigo-600/20' : 'border-slate-600 bg-slate-900 hover:border-slate-500')
+                        (propuestaIndex === i ? 'border-[#16B6C9] bg-[#16B6C9]/15' : 'border-[#c5ccd8] bg-white hover:border-[#16B6C9]')
                       }
                     >
                       <input type="radio" name="propuesta" checked={propuestaIndex === i} onChange={() => setPropuestaIndex(i)} class="mt-1" />
                       <div>
                         <p class="font-bold text-sm">{prop.tituloSugerido}</p>
-                        <p class="text-xs text-indigo-300 italic">{prop.angulo}</p>
-                        <p class="text-sm text-slate-300 mt-1">{prop.resumen}</p>
+                        <p class="text-xs text-[#0b6e7d] italic">{prop.angulo}</p>
+                        <p class="text-sm text-[#082D3A] mt-1">{prop.resumen}</p>
                       </div>
                     </div>
                   </label>
@@ -902,7 +902,7 @@ export default function BlogAdminPreact() {
               </div>
             )}
             <div class="flex justify-end">
-              <button onClick={redactar} disabled={busy.value || propuestaIndex < 0} class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-60 text-sm font-bold rounded-lg">
+              <button onClick={redactar} disabled={busy.value || propuestaIndex < 0} class="px-4 py-2 bg-[#082D3A] hover:bg-[#0b6e7d] disabled:opacity-60 text-sm font-bold rounded-lg">
                 Redactar post →
               </button>
             </div>
@@ -911,26 +911,26 @@ export default function BlogAdminPreact() {
 
         {wizardStep.value === 3 && (
           <div class="space-y-4">
-            <h3 class="text-sm font-bold text-slate-200">Revisá y ajustá el borrador</h3>
+            <h3 class="text-sm font-bold text-[#082D3A]">Revisá y ajustá el borrador</h3>
 
             <div class="space-y-3">
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Título</label>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">Título</label>
                 <input
                   value={borrador.title}
                   onInput={(e) => setBorrador({ ...borrador, title: (e.target as HTMLInputElement).value })}
                   type="text"
-                  class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                 />
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label class="block text-xs font-bold text-slate-300 mb-1">Categorías</label>
+                  <label class="block text-xs font-bold text-[#082D3A] mb-1">Categorías</label>
                   <div class="flex flex-col gap-2">
                     <select
                       value={selectedCategory}
                       onChange={(e) => addCategory((e.target as HTMLSelectElement).value)}
-                      class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                     >
                       <option value="">Elegí una categoría…</option>
                       {availableCategories.map((cat) => (
@@ -942,9 +942,9 @@ export default function BlogAdminPreact() {
                     {selectedCategories.length > 0 && (
                       <div class="flex flex-wrap gap-2">
                         {selectedCategories.map((cat, i) => (
-                          <span key={i} class="inline-flex items-center gap-1.5 bg-slate-700 rounded-full px-3 py-1 text-xs font-bold text-slate-100">
+                          <span key={i} class="inline-flex items-center gap-1.5 bg-[#e9edf3] rounded-full px-3 py-1 text-xs font-bold text-[#082D3A]">
                             <span>{cat}</span>
-                            <button type="button" onClick={() => removeCategory(i)} class="text-slate-300 hover:text-red-400 font-bold leading-none" title="Quitar categoría">
+                            <button type="button" onClick={() => removeCategory(i)} class="text-[#082D3A] hover:text-[#8f2223] font-bold leading-none" title="Quitar categoría">
                               ✕
                             </button>
                           </span>
@@ -954,12 +954,12 @@ export default function BlogAdminPreact() {
                   </div>
                 </div>
                 <div>
-                  <label class="block text-xs font-bold text-slate-300 mb-1">Temas (puente con la Zona Lab)</label>
+                  <label class="block text-xs font-bold text-[#082D3A] mb-1">Temas (puente con la Zona Lab)</label>
                   <div class="flex flex-col gap-2">
                     <select
                       value={selectedTema}
                       onChange={(e) => addTema((e.target as HTMLSelectElement).value)}
-                      class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                      class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                     >
                       <option value="">Elegí un tema…</option>
                       {availableTemas.map((tema) => (
@@ -971,9 +971,9 @@ export default function BlogAdminPreact() {
                     {selectedTemas.length > 0 && (
                       <div class="flex flex-wrap gap-2">
                         {selectedTemas.map((tema, i) => (
-                          <span key={i} class="inline-flex items-center gap-1.5 bg-indigo-600/30 border border-indigo-500/40 rounded-full px-3 py-1 text-xs font-bold text-indigo-200">
+                          <span key={i} class="inline-flex items-center gap-1.5 bg-[#16B6C9]/15 border border-[#16B6C9]/40 rounded-full px-3 py-1 text-xs font-bold text-[#0b6e7d]">
                             <span>{tema}</span>
-                            <button type="button" onClick={() => removeTema(i)} class="text-indigo-300 hover:text-red-400 font-bold leading-none" title="Quitar tema">
+                            <button type="button" onClick={() => removeTema(i)} class="text-[#0b6e7d] hover:text-[#8f2223] font-bold leading-none" title="Quitar tema">
                               ✕
                             </button>
                           </span>
@@ -984,23 +984,23 @@ export default function BlogAdminPreact() {
                 </div>
               </div>
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Descripción (SEO)</label>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">Descripción (SEO)</label>
                 <input
                   value={borrador.description}
                   onInput={(e) => setBorrador({ ...borrador, description: (e.target as HTMLInputElement).value })}
                   type="text"
-                  class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                 />
               </div>
               <div>
                 <div class="flex items-center justify-between mb-1">
-                  <label class="block text-xs font-bold text-slate-300">Contenido (Markdown)</label>
+                  <label class="block text-xs font-bold text-[#082D3A]">Contenido (Markdown)</label>
                   <div class="flex gap-2">
-                    <button onClick={togglePreview} type="button" class="text-xs text-indigo-400 hover:text-indigo-300 font-bold">
+                    <button onClick={togglePreview} type="button" class="text-xs text-[#0b6e7d] hover:text-[#16B6C9] font-bold">
                       {showPreview ? 'Editar' : 'Vista previa'}
                     </button>
                     {showPreview && (
-                      <span onClick={() => setShowPreview(false)} class="text-xs text-slate-500 cursor-pointer">
+                      <span onClick={() => setShowPreview(false)} class="text-xs text-[#6b7490] cursor-pointer">
                         ✕
                       </span>
                     )}
@@ -1011,28 +1011,28 @@ export default function BlogAdminPreact() {
                     value={borrador.bodyMarkdown}
                     onInput={(e) => setBorrador({ ...borrador, bodyMarkdown: (e.target as HTMLTextAreaElement).value })}
                     rows={12}
-                    class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                   />
                 )}
                 {showPreview && (
                   <div
-                    class="prose-pre:bg-slate-950 bg-slate-900 border border-slate-600 rounded-lg p-4 text-sm max-h-[420px] overflow-y-auto markdown-preview"
+                    class="prose-pre:bg-[#f4f6fa] bg-white border border-[#c5ccd8] rounded-lg p-4 text-sm max-h-[420px] overflow-y-auto markdown-preview"
                     dangerouslySetInnerHTML={{ __html: previewHtml }}
                   />
                 )}
               </div>
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">
-                  Presentación (PPT/PPTX o HTML) <span class="font-normal text-slate-500">(opcional, se muestra online dentro del post)</span>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">
+                  Presentación (PPT/PPTX o HTML) <span class="font-normal text-[#6b7490]">(opcional, se muestra online dentro del post)</span>
                 </label>
                 {presentationUrl ? (
-                  <div class="flex flex-wrap items-center gap-3 bg-slate-900 border border-slate-700 rounded-lg p-3">
-                    <span class="text-xs text-slate-300 truncate max-w-xs font-mono">{presentationUrl}</span>
-                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-bold uppercase">{presentationType}</span>
-                    <a href={presentationUrl} target="_blank" rel="noopener" class="text-xs text-indigo-400 hover:text-indigo-300 font-bold">
+                  <div class="flex flex-wrap items-center gap-3 bg-white border border-[#d7dce5] rounded-lg p-3">
+                    <span class="text-xs text-[#082D3A] truncate max-w-xs font-mono">{presentationUrl}</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-[#16B6C9]/15 text-[#0b6e7d] font-bold uppercase">{presentationType}</span>
+                    <a href={presentationUrl} target="_blank" rel="noopener" class="text-xs text-[#0b6e7d] hover:text-[#16B6C9] font-bold">
                       Ver →
                     </a>
-                    <button type="button" onClick={quitarPresentacion} class="text-xs text-red-400 hover:text-red-300 font-bold">
+                    <button type="button" onClick={quitarPresentacion} class="text-xs text-[#b32d2e] hover:text-[#8f2223] font-bold">
                       Quitar
                     </button>
                   </div>
@@ -1047,78 +1047,78 @@ export default function BlogAdminPreact() {
                       if (file) subirPresentacion(file);
                       input.value = '';
                     }}
-                    class="w-full text-sm text-slate-300 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-slate-700 file:text-slate-200 file:text-sm file:font-bold hover:file:bg-slate-600"
+                    class="w-full text-sm text-[#082D3A] file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#e9edf3] file:text-[#082D3A] file:text-sm file:font-bold hover:file:bg-[#d9dfe9]"
                   />
                 )}
-                {presentationUploading && <p class="text-xs text-slate-400 mt-1">Subiendo…</p>}
+                {presentationUploading && <p class="text-xs text-[#5c6785] mt-1">Subiendo…</p>}
               </div>
             </div>
 
-            <div class="border-t border-slate-700 pt-4 space-y-3">
-              <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wide">
-                Herramientas de IA <span class="font-normal normal-case text-slate-500">(opcional)</span>
+            <div class="border-t border-[#d7dce5] pt-4 space-y-3">
+              <h4 class="text-xs font-bold text-[#5c6785] uppercase tracking-wide">
+                Herramientas de IA <span class="font-normal normal-case text-[#6b7490]">(opcional)</span>
               </h4>
               <div class="flex flex-wrap items-center gap-3">
-                <button onClick={revisar} disabled={busy.value} class="px-4 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-sm font-bold rounded-lg">
+                <button onClick={revisar} disabled={busy.value} class="px-4 py-2 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-sm font-bold rounded-lg">
                   {review ? 'Volver a revisar' : '🔍 Revisar con IA'}
                 </button>
-                {iteracion > 0 && <span class="text-xs text-slate-500">Correcciones aplicadas: {iteracion}/2</span>}
+                {iteracion > 0 && <span class="text-xs text-[#6b7490]">Correcciones aplicadas: {iteracion}/2</span>}
               </div>
               {review && (
-                <div class={'rounded-lg border p-4 space-y-3 ' + (review.aprobado ? 'bg-green-600/10 border-green-500/30' : 'bg-amber-600/10 border-amber-500/30')}>
+                <div class={'rounded-lg border p-4 space-y-3 ' + (review.aprobado ? 'bg-[#1f7a3d]/10 border-[#1f7a3d]/30' : 'bg-[#9a6b00]/10 border-[#9a6b00]/30')}>
                   <div class="flex items-center justify-between gap-2">
-                    <p class={'text-sm font-bold ' + (review.aprobado ? 'text-green-300' : 'text-amber-300')}>
+                    <p class={'text-sm font-bold ' + (review.aprobado ? 'text-[#1f7a3d]' : 'text-[#9a6b00]')}>
                       {review.aprobado ? '✓ Aprobado por el crítico' : '✗ Necesita ajustes'}
                     </p>
                     {review.nota != null && <span class="text-xs opacity-80">Nota {review.nota}/10</span>}
                   </div>
-                  {review.resumen && <p class="text-xs text-slate-300">{review.resumen}</p>}
+                  {review.resumen && <p class="text-xs text-[#082D3A]">{review.resumen}</p>}
                   {review.problemas && review.problemas.length > 0 && (
                     <div class="space-y-1.5">
-                      <p class="text-xs font-bold text-slate-300">Problemas a corregir:</p>
+                      <p class="text-xs font-bold text-[#082D3A]">Problemas a corregir:</p>
                       {review.problemas.map((prob, i) => (
-                        <div key={i} class="text-xs bg-slate-900 rounded-lg p-2">
+                        <div key={i} class="text-xs bg-white rounded-lg p-2">
                           <p>
-                            <span class="font-bold text-indigo-300">{prob.tipo}</span>
-                            {prob.donde && <span class="text-slate-500"> · {prob.donde}</span>}
+                            <span class="font-bold text-[#0b6e7d]">{prob.tipo}</span>
+                            {prob.donde && <span class="text-[#6b7490]"> · {prob.donde}</span>}
                           </p>
-                          {prob.fixSugerido && <p class="text-slate-300 mt-0.5">{prob.fixSugerido}</p>}
+                          {prob.fixSugerido && <p class="text-[#082D3A] mt-0.5">{prob.fixSugerido}</p>}
                         </div>
                       ))}
                     </div>
                   )}
-                  {review.aprobado && <p class="text-xs text-green-300">El crítico lo aprobó. Si igual querés, pedile un ajuste abajo.</p>}
+                  {review.aprobado && <p class="text-xs text-[#1f7a3d]">El crítico lo aprobó. Si igual querés, pedile un ajuste abajo.</p>}
                   {!review.aprobado && iteracion >= 2 && (
-                    <p class="text-xs text-amber-300">Tope de revisiones alcanzado. Editá a mano o publicá el borrador.</p>
+                    <p class="text-xs text-[#9a6b00]">Tope de revisiones alcanzado. Editá a mano o publicá el borrador.</p>
                   )}
                 </div>
               )}
-              <div class="bg-slate-900 border border-slate-700 rounded-lg p-3 space-y-2">
-                <label class="block text-xs font-bold text-slate-300">
-                  Pedile una corrección al IA <span class="font-normal text-slate-500">(opcional)</span>
+              <div class="bg-white border border-[#d7dce5] rounded-lg p-3 space-y-2">
+                <label class="block text-xs font-bold text-[#082D3A]">
+                  Pedile una corrección al IA <span class="font-normal text-[#6b7490]">(opcional)</span>
                 </label>
                 <textarea
                   value={correccionPrompt}
                   onInput={(e) => setCorreccionPrompt((e.target as HTMLTextAreaElement).value)}
                   rows={2}
-                  class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  class="w-full px-3 py-2 bg-[#f4f6fa] border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                   placeholder="Ej: 'Hacelo más corto (5 min)', 'Agregá una sección sobre deploy', 'Cambiá el tono a más formal', 'Reescribí el hook'"
                 />
                 <div class="flex flex-wrap items-center gap-3">
                   <button
                     onClick={aplicarCorrecciones}
                     disabled={busy.value || iteracion >= 2}
-                    class="px-4 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-sm font-bold rounded-lg"
+                    class="px-4 py-2 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-sm font-bold rounded-lg"
                   >
                     ✨ Aplicar corrección
                   </button>
-                  {iteracion >= 2 && <span class="text-xs text-amber-300">Tope de 2 correcciones alcanzado.</span>}
+                  {iteracion >= 2 && <span class="text-xs text-[#9a6b00]">Tope de 2 correcciones alcanzado.</span>}
                 </div>
               </div>
             </div>
 
             <div class="flex justify-end">
-              <button onClick={() => (wizardStep.value = 4)} class="px-4 py-2 bg-indigo-700 hover:bg-indigo-800 text-white text-sm font-bold rounded-lg">
+              <button onClick={() => (wizardStep.value = 4)} class="px-4 py-2 bg-[#082D3A] hover:bg-[#0b6e7d] text-white text-sm font-bold rounded-lg">
                 Siguiente: Imagen →
               </button>
             </div>
@@ -1128,38 +1128,38 @@ export default function BlogAdminPreact() {
         {wizardStep.value === 4 && (
           <div class="space-y-4">
             <div class="space-y-3">
-              <h3 class="text-sm font-bold text-slate-200">Imagen de tapa (800x450)</h3>
+              <h3 class="text-sm font-bold text-[#082D3A]">Imagen de tapa (800x450)</h3>
               {op.value?.id === 'imagen' ? (
-                <div class="rounded-lg overflow-hidden border border-slate-700">
+                <div class="rounded-lg overflow-hidden border border-[#d7dce5]">
                   <div class="skeleton aspect-video w-full"></div>
                 </div>
               ) : (
                 coverUrl && (
-                  <div class="rounded-lg overflow-hidden border border-slate-600">
+                  <div class="rounded-lg overflow-hidden border border-[#c5ccd8]">
                     <img src={coverUrl} alt="Tapa generada" class="w-full aspect-video object-cover" />
                   </div>
                 )
               )}
               <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Prompt de la tapa (generado por DeepSeek, editable)</label>
+                <label class="block text-xs font-bold text-[#082D3A] mb-1">Prompt de la tapa (generado por DeepSeek, editable)</label>
                 <textarea
                   value={coverPrompt}
                   onInput={(e) => setCoverPrompt((e.target as HTMLTextAreaElement).value)}
                   rows={2}
-                  class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  class="w-full px-3 py-2 bg-white border border-[#c5ccd8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16B6C9]"
                   placeholder="Dejalo vacío para que DeepSeek lo genere solo."
                 />
               </div>
-              <button onClick={generarImagen} disabled={busy.value} class="px-4 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-sm font-bold rounded-lg">
+              <button onClick={generarImagen} disabled={busy.value} class="px-4 py-2 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-sm font-bold rounded-lg">
                 {coverUrl ? 'Regenerar imagen' : 'Generar imagen'}
               </button>
             </div>
 
-            <div class="border-t border-slate-700 pt-4 flex flex-wrap gap-3">
-              <button onClick={() => publicar(false)} disabled={busy.value} class="px-5 py-2 bg-green-700 hover:bg-green-800 disabled:opacity-60 text-sm font-bold rounded-lg">
+            <div class="border-t border-[#d7dce5] pt-4 flex flex-wrap gap-3">
+              <button onClick={() => publicar(false)} disabled={busy.value} class="px-5 py-2 bg-[#1f7a3d] hover:bg-[#17602f] disabled:opacity-60 text-sm font-bold rounded-lg">
                 {editingId ? 'Actualizar y publicar' : 'Publicar'}
               </button>
-              <button onClick={() => publicar(true)} disabled={busy.value} class="px-5 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-60 text-sm font-bold rounded-lg">
+              <button onClick={() => publicar(true)} disabled={busy.value} class="px-5 py-2 bg-[#e9edf3] hover:bg-[#d9dfe9] disabled:opacity-60 text-sm font-bold rounded-lg">
                 Guardar borrador
               </button>
             </div>

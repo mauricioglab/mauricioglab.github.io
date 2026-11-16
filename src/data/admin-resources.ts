@@ -1,5 +1,5 @@
 // Recursos editables del CMS de Mauricio (el blog, las disertaciones y los recursos usan sus paneles propios) (tablas de Supabase). Para sumar uno: agregar una entrada acá.
-import type { Resource } from '../components/admin/AbmPanel';
+import type { Resource } from '../components/admin/AbmResource';
 
 const PAGES = ['home', 'sobre-mi', 'portafolio', 'contacto'];
 const LANGS = ['es', 'en'];
