@@ -1,11 +1,18 @@
 ---
 import { Image } from 'astro:assets';
 import BaseTailwind from '../layouts/BaseTailwind.astro';
+import { c, md } from '../utils/content';
 import clase from '../assets/mauricio/clase-ia.png';
 import retrato from '../assets/mauricio/retrato.png';
 import PtContactForm from '../components/shared/PtContactForm.astro';
 
 export const prerender = true;
+
+const bannerTitle = await c('home', 'banner_title');
+const bannerButton = await c('home', 'banner_button');
+const introTitle = await c('home', 'intro_title');
+const intro = await Promise.all([1, 2, 3, 4].map((n) => c('home', `intro_p${n}`)));
+const quote = await c('home', 'quote');
 
 const resources = [
   { label: 'Zona Lab', href: '/zona-lab/' },
@@ -29,8 +36,8 @@ const resources = [
   <div class="pt">
     <section class="pt-banner" aria-label="Presentación">
       <div class="pt-banner-copy">
-        <h1 id="secretTrigger">Aprender tecnología empieza por entender cómo funciona.</h1>
-        <a class="pt-button" href="/blog/">Leé mi blog</a>
+        <h1 id="secretTrigger">{bannerTitle}</h1>
+        <a class="pt-button" href="/blog/">{bannerButton}</a>
       </div>
       <div class="pt-banner-photo">
         <Image src={clase} alt="Mauricio González explicando IA en la educación frente a una pizarra y una presentación" widths={[480, 720, 1080]} sizes="(max-width: 899px) 100vw, 50vw" format="webp" loading="eager" fetchpriority="high" style="object-position: 35% center" />
@@ -40,11 +47,8 @@ const resources = [
     <section class="pt-intro" id="sobre-mi" aria-labelledby="introduccion">
       <div class="pt-intro-inner">
         <div>
-          <h2 id="introduccion">Entre el aula y el código</h2>
-          <p>Soy <strong>docente y desarrollador</strong>. Enseño <strong>desarrollo de software e IA aplicada</strong> a futuros analistas y desarrolladores, incluidas las personas que están cambiando de carrera.</p>
-          <p>Soy <strong>Profesor de Filosofía</strong> y <strong>Analista de Sistemas de Computación</strong>. La filosofía me enseñó a hacer buenas preguntas, y el software me dio herramientas para explorar algunas respuestas.</p>
-          <p>Desde 2024 soy docente en el <strong>Instituto Cervantes</strong> (Analista de Sistemas, Desarrollo Web y <strong>Ciencia de Datos e IA</strong>). También trabajo como <strong>desarrollador y referente técnico</strong>.</p>
-          <p>Mi postura es simple: <strong>entender los fundamentos</strong>, <strong>comprobar los resultados</strong> y <strong>usar la IA con criterio</strong>. Me interesa que quien aprende pueda explicar cómo funciona una solución y decidir cuándo tiene sentido usarla.</p>
+          <h2 id="introduccion">{introTitle}</h2>
+          {intro.map((p) => <p set:html={md(p)} />)}
           <p><a class="pt-link-gold" href="/es/sobre-mi/">Conocé mi trayectoria</a></p>
         </div>
         <div class="pt-intro-photo">
@@ -54,7 +58,7 @@ const resources = [
     </section>
 
     <section class="pt-statement" aria-label="Mi enfoque">
-      <blockquote class="pt-quote"><p>La IA puede ayudarnos a pensar mejor. Eso también hay que aprenderlo.</p></blockquote>
+      <blockquote class="pt-quote"><p>{quote}</p></blockquote>
       <div class="pt-statement-photo"><div class="pt-ph">Foto de charla o clase pendiente</div></div>
     </section>
 

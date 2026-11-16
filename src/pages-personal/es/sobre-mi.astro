@@ -2,12 +2,17 @@
 import { Image } from 'astro:assets';
 import BaseTailwind from '@layouts/BaseTailwind.astro';
 import SocialLinks from '@components/shared/SocialLinks.astro';
+import { c, md } from '@utils/content';
 import { SITE_CONFIG } from '@data/config';
 import oficina from '../../assets/mauricio/retrato-oficina.png';
 import clase from '../../assets/mauricio/clase-ia.png';
 import retrato from '../../assets/mauricio/retrato.png';
 
 export const prerender = true;
+
+const pageTitle = await c('sobre-mi', 'page_title');
+const subtitle = await c('sobre-mi', 'subtitle');
+const bio = await Promise.all([1, 2, 3, 4].map((n) => c('sobre-mi', `bio_p${n}`)));
 
 // Epígrafes: tema · institución · fecha. Lo no confirmado queda marcado como pendiente.
 const trail = [
@@ -31,18 +36,15 @@ const trail = [
   showMateGame={false}
 >
   <div class="pt">
-    <h1 class="pt-page-title">Preguntas, código y aula</h1>
+    <h1 class="pt-page-title">{pageTitle}</h1>
 
     <section class="pt-about" aria-labelledby="profesion">
       <div class="pt-about-portrait">
         <Image src={oficina} alt="Mauricio González sonriendo en su escritorio, con libros de inteligencia artificial y desarrollo de software" widths={[640, 900, 1199]} sizes="(max-width: 899px) 100vw, 640px" format="webp" loading="eager" fetchpriority="high" style="object-position: 45% 25%" />
       </div>
       <div class="pt-about-bio">
-        <h2 id="profesion">Docente y desarrollador: enseño desarrollo de software e IA aplicada</h2>
-        <p>Soy <strong>Mauricio González</strong>, <strong>Profesor de Filosofía</strong> y <strong>Analista de Sistemas de Computación</strong>. La filosofía me enseñó a hacer buenas preguntas, y el desarrollo de software me dio herramientas para explorar algunas respuestas.</p>
-        <p>Enseño <strong>desarrollo de software e inteligencia artificial aplicada</strong> a futuros analistas y desarrolladores, incluidas las personas que se reconvierten. Desde 2024 soy docente en el <strong>Instituto Cervantes</strong>, en las carreras de <strong>Analista de Sistemas</strong>, <strong>Desarrollo Web</strong> y <strong>Ciencia de Datos e IA</strong>. Mi título de Analista de Sistemas de Computación también es de esa institución (Cuadro de Honor).</p>
-        <p>También trabajo como <strong>desarrollador y referente técnico</strong>.</p>
-        <p>Mi postura editorial tiene tres partes: <strong>entender los fundamentos</strong>, <strong>comprobar los resultados</strong> y <strong>usar la IA con criterio</strong>. Me interesa que quienes empiezan puedan explicar cómo funciona una solución y decidir cuándo tiene sentido usarla.</p>
+        <h2 id="profesion">{subtitle}</h2>
+        {bio.map((p) => <p set:html={md(p)} />)}
         <p>Podés ver mis <a class="pt-link-gold" href="/es/portfolio/">proyectos</a> y <a class="pt-link-gold" href="/es/disertaciones/">charlas</a>, o leer el <a class="pt-link-gold" href="/blog/">blog</a>.</p>
         <nav class="pt-social pt-social-inline" aria-label="Redes sociales"><SocialLinks /></nav>
         <div class="pt-about-links">

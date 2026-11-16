@@ -1,0 +1,16 @@
+{
+  "home.banner_title": "Aprender tecnología empieza por entender cómo funciona.",
+  "home.banner_button": "Leé mi blog",
+  "home.intro_title": "Entre el aula y el código",
+  "home.intro_p1": "Soy **docente y desarrollador**. Enseño **desarrollo de software e IA aplicada** a futuros analistas y desarrolladores, incluidas las personas que están cambiando de carrera.",
+  "home.intro_p2": "Soy **Profesor de Filosofía** y **Analista de Sistemas de Computación**. La filosofía me enseñó a hacer buenas preguntas, y el software me dio herramientas para explorar algunas respuestas.",
+  "home.intro_p3": "Desde 2024 soy docente en el **Instituto Cervantes** (Analista de Sistemas, Desarrollo Web y **Ciencia de Datos e IA**). También trabajo como **desarrollador y referente técnico**.",
+  "home.intro_p4": "Mi postura es simple: **entender los fundamentos**, **comprobar los resultados** y **usar la IA con criterio**. Me interesa que quien aprende pueda explicar cómo funciona una solución y decidir cuándo tiene sentido usarla.",
+  "home.quote": "La IA puede ayudarnos a pensar mejor. Eso también hay que aprenderlo.",
+  "sobre-mi.page_title": "Preguntas, código y aula",
+  "sobre-mi.subtitle": "Docente y desarrollador: enseño desarrollo de software e IA aplicada",
+  "sobre-mi.bio_p1": "Soy **Mauricio González**, **Profesor de Filosofía** y **Analista de Sistemas de Computación**. La filosofía me enseñó a hacer buenas preguntas, y el desarrollo de software me dio herramientas para explorar algunas respuestas.",
+  "sobre-mi.bio_p2": "Enseño **desarrollo de software e inteligencia artificial aplicada** a futuros analistas y desarrolladores, incluidas las personas que se reconvierten. Desde 2024 soy docente en el **Instituto Cervantes**, en las carreras de **Analista de Sistemas**, **Desarrollo Web** y **Ciencia de Datos e IA**. Mi título de Analista de Sistemas de Computación también es de esa institución (Cuadro de Honor).",
+  "sobre-mi.bio_p3": "También trabajo como **desarrollador y referente técnico**.",
+  "sobre-mi.bio_p4": "Mi postura editorial tiene tres partes: **entender los fundamentos**, **comprobar los resultados** y **usar la IA con criterio**. Me interesa que quienes empiezan puedan explicar cómo funciona una solución y decidir cuándo tiene sentido usarla."
+}
