@@ -1,7 +1,7 @@
 ---
 // Lista de eventos con la plantilla personal (columna de 750 px, fotos cuadradas, sin píldoras).
 // Archivo IDÉNTICO en los sitios de Mauricio y de Fernanda.
-import { photoOf, formatEventDate, type Evento } from '../utils/eventos';
+import { cardPhotos, formatEventDate, type Evento } from '../utils/eventos';
 
 interface Props { eventos: Evento[]; empty?: string }
 const { eventos, empty = 'Todavía no hay eventos publicados.' } = Astro.props;
@@ -17,12 +17,14 @@ const byYear = years.map((y) => ({ year: y, items: eventos.filter((e) => (e.date
       <section class="pt-events-year" aria-label={`Eventos de ${g.year}`}>
         <h2>{g.year}</h2>
         {g.items.map((e) => {
-          const photo = photoOf(e);
+          const photos = cardPhotos(e);
           const extra = e.certificate ? [e.certificate] : e.slides.slice(0, 3);
           return (
             <article class="pt-event">
-              <div class="pt-event-photo">
-                {photo ? <img src={photo} alt={e.title} loading="lazy" /> : <div class="pt-ph">Foto pendiente</div>}
+              <div class={`pt-event-photos pt-event-photos-${Math.max(photos.length, 1)}`}>
+                {photos.length === 0
+                  ? <div class="pt-event-photo pt-event-photo-main"><div class="pt-ph">Foto pendiente</div></div>
+                  : photos.map((u, i) => <div class={i === 0 ? 'pt-event-photo pt-event-photo-main' : 'pt-event-photo'}><img src={u} alt={i === 0 ? e.title : ''} loading="lazy" /></div>)}
               </div>
               <div class="pt-event-body">
                 <h3>{e.title}</h3>

@@ -64,9 +64,28 @@ export function getEventos(): Promise<Evento[]> {
   return cache;
 }
 
-/** Foto principal de un evento: la elegida a mano, si no una foto real del álbum y, al final, la portada o una diapositiva. */
+/** ¿La imagen es una diapositiva (de una presentación)? Esas no van a Sobre mí ni al Inicio. */
+export function isSlide(e: Evento, url: string): boolean {
+  return e.slides.includes(url) || /\/slides\//i.test(url);
+}
+
+/** Foto real del evento (nunca una diapositiva): la elegida a mano, el álbum, la portada o el certificado. */
 export function photoOf(e: Evento): string {
-  return e.mainPhoto || e.displayPhotos[0] || e.gallery[0] || e.cover || e.slides[0] || '';
+  const candidates = [e.mainPhoto, ...e.displayPhotos, ...e.gallery, e.cover, e.certificate];
+  return candidates.find((u): u is string => !!u && !isSlide(e, u)) ?? '';
+}
+
+/** Hasta 3 imágenes para la tarjeta de Eventos: portada + 2 más (elegidas a mano, o certificado/álbum y diapositivas). */
+export function cardPhotos(e: Evento): string[] {
+  const main = e.cover || e.slides[0] || e.gallery[0] || '';
+  let secondary: string[];
+  if (e.displayPhotos.length) {
+    secondary = e.displayPhotos.filter((u) => u && u !== main);
+  } else {
+    secondary = e.certificate ? [e.certificate] : [...e.gallery];
+    secondary.push(...e.slides.filter((u) => u !== main));
+  }
+  return [main, ...secondary.filter((u) => u && u !== main)].filter(Boolean).slice(0, 3);
 }
 
 export function formatEventDate(d: Date | null): string {

@@ -251,7 +251,10 @@
 .pt-events-year + .pt-events-year { margin-top: 48px; }
 .pt-events-year > h2 { margin-bottom: 24px; padding-bottom: 8px; border-bottom: 1px solid var(--pt-line); }
 .pt-event { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 40px; }
-.pt-event-photo { aspect-ratio: 4 / 3; overflow: hidden; }
+.pt-event-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; align-content: start; }
+.pt-event-photo { aspect-ratio: 1 / 1; overflow: hidden; }
+.pt-event-photo-main { grid-column: 1 / -1; aspect-ratio: 4 / 3; }
+.pt-event-photos-2 .pt-event-photo:not(.pt-event-photo-main) { grid-column: 1 / -1; aspect-ratio: 4 / 3; }
 .pt-event-photo img { width: 100%; height: 100%; object-fit: cover; }
 .pt-event-body > * + * { margin-top: 12px; }
 .pt-event h3 { font-size: 1.3rem; }
@@ -260,5 +263,5 @@
 .pt-event ul { margin-left: 1.2em; list-style: disc; font-size: .9em; }
 .pt-event li + li { margin-top: 6px; }
 @media (min-width: 700px) {
-  .pt-event { grid-template-columns: 250px 1fr; gap: 24px; }
+  .pt-event { grid-template-columns: 300px 1fr; gap: 24px; }
 }
