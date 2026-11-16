@@ -24,6 +24,8 @@ export default defineConfig({
       "/sobre-mi": { status: 301, destination: "/es/sobre-mi/" },
       "/blog/about": { status: 301, destination: "/es/sobre-mi/" },
       "/contacto": { status: 301, destination: "/es/contacto/" },
+      "/es/disertaciones": { status: 301, destination: "/es/eventos/" },
+      "/disertaciones": { status: 301, destination: "/es/eventos/" },
       "/pausas-activas": "/movimiento/?modo=pausas",
       "/movilidad": "/movimiento/?modo=movilidad",
       "/entrenamiento": "/movimiento/?modo=entrenamiento",

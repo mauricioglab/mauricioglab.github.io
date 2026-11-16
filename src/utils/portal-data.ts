@@ -2,6 +2,7 @@
 // Si la base no responde, el build NO falla: usa los valores por defecto y avisa en el log.
 import { db } from '../lib/db';
 import { SITE_ID } from '../data/site-id';
+import { getAboutItems } from './eventos';
 import galleryDefaults from '../data/gallery-defaults.json';
 import navDefaults from '../data/nav-defaults.json';
 import settingsDefaults from '../data/settings-defaults.json';
@@ -9,6 +10,18 @@ import projectsDefaults from '../data/projects-defaults.json';
 
 export interface GalleryItem { slot: string; image_url: string; alt: string; caption: string }
 
+const SLOTS = [
+  'mosaico-1', 'mosaico-2', 'mosaico-3',
+  ...Array.from({ length: 10 }, (_, i) => `trayectoria-${i + 1}`),
+];
+
+/**
+ * Galería de Sobre mí (13 espacios). Prioridad por espacio:
+ *   1) imagen cargada a mano en `gallery_items`;
+ *   2) fotos de los eventos marcados «Aparece en Sobre mí» (se suben una sola vez, en Eventos);
+ *   3) valor por defecto del código (marcador con epígrafe).
+ * Los eventos sin foto ocupan espacios de la trayectoria con su epígrafe.
+ */
 export async function getGallery(): Promise<Map<string, GalleryItem>> {
   const map = new Map<string, GalleryItem>((galleryDefaults as GalleryItem[]).map((g) => [g.slot, g]));
   try {
@@ -21,12 +34,24 @@ export async function getGallery(): Promise<Map<string, GalleryItem>> {
   } catch (e) {
     console.warn('No se pudo cargar gallery_items; se usan los valores por defecto:', (e as Error).message ?? e);
   }
+  const auto = await getAboutItems();
+  const withPhoto = auto.filter((a) => a.image_url);
+  const withoutPhoto = auto.filter((a) => !a.image_url);
+  const empty = SLOTS.filter((s) => !map.get(s)?.image_url);
+  empty.slice(0, withPhoto.length).forEach((slot, i) => {
+    const a = withPhoto[i];
+    map.set(slot, { slot, image_url: a.image_url, alt: a.alt, caption: a.caption });
+  });
+  empty.slice(withPhoto.length).filter((s) => s.startsWith('trayectoria-')).slice(0, withoutPhoto.length).forEach((slot, i) => {
+    const a = withoutPhoto[i];
+    map.set(slot, { slot, image_url: '', alt: a.alt, caption: a.caption });
+  });
   return map;
 }
 
 
 export interface NavLink { label: string; href: string }
-export interface SiteSettings { tagline: string; networks: Record<string, string> }
+export interface SiteSettings { tagline: string; networks: Record<string, string>; sections: { eventos: boolean; recursos: boolean } }
 
 let navCache: Promise<NavLink[]> | null = null;
 export function getNavItems(): Promise<NavLink[]> {
@@ -51,7 +76,7 @@ export function getSettings(): Promise<SiteSettings> {
       const { data, error } = await db.from('site_settings').select('data').eq('site', SITE_ID).maybeSingle();
       if (error) throw error;
       const d = (data?.data ?? {}) as Partial<SiteSettings>;
-      return { tagline: d.tagline || base.tagline, networks: { ...base.networks, ...(d.networks ?? {}) } };
+      return { tagline: d.tagline || base.tagline, networks: { ...base.networks, ...(d.networks ?? {}) }, sections: { ...base.sections, ...(d.sections ?? {}) } };
     } catch (e) {
       console.warn('No se pudo cargar site_settings; se usan los ajustes por defecto:', (e as Error).message ?? e);
       return base;

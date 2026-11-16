@@ -14,6 +14,9 @@ export const DISERTACION_CATEGORIES = [
   'Panel',
   'Moderador',
   'Webinar',
+  'Hackatón',
+  'Participante',
+  'Premio',
 ] as const;
 
 export function normalizeCategories(list: string[]): string[] {

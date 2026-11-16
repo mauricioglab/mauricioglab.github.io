@@ -12,5 +12,7 @@
   "sobre-mi.bio_p1": "Soy **Mauricio González**, **Profesor de Filosofía** y **Analista de Sistemas de Computación**. La filosofía me enseñó a hacer buenas preguntas, y el desarrollo de software me dio herramientas para explorar algunas respuestas.",
   "sobre-mi.bio_p2": "Enseño **desarrollo de software e inteligencia artificial aplicada** a futuros analistas y desarrolladores, incluidas las personas que se reconvierten. Desde 2024 soy docente en el **Instituto Cervantes**, en las carreras de **Analista de Sistemas**, **Desarrollo Web** y **Ciencia de Datos e IA**. Mi título de Analista de Sistemas de Computación también es de esa institución (Cuadro de Honor).",
   "sobre-mi.bio_p3": "También trabajo como **desarrollador y referente técnico**.",
-  "sobre-mi.bio_p4": "Mi postura editorial tiene tres partes: **entender los fundamentos**, **comprobar los resultados** y **usar la IA con criterio**. Me interesa que quienes empiezan puedan explicar cómo funciona una solución y decidir cuándo tiene sentido usarla."
+  "sobre-mi.bio_p4": "Mi postura editorial tiene tres partes: **entender los fundamentos**, **comprobar los resultados** y **usar la IA con criterio**. Me interesa que quienes empiezan puedan explicar cómo funciona una solución y decidir cuándo tiene sentido usarla.",
+  "eventos.page_title": "Eventos",
+  "eventos.intro": "Charlas, talleres y otras participaciones, con su material."
 }

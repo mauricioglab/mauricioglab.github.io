@@ -1,5 +1,6 @@
 ---
 import BaseTailwind from '../../layouts/BaseTailwind.astro';
+import BlogTabs from '../../components/blog/BlogTabs.astro';
 import RecursoCard from '../../components/recursos/RecursoCard.astro';
 import { getRecursos } from '../../utils/recursos';
 import { getUltimosPosts } from '../../utils/relacionados';
@@ -21,8 +22,10 @@ const blogBase = import.meta.env.BASE_URL.endsWith('/')
   description="Recursos de estudio para alumnos: videos y reportes con su resumen."
   lang="es"
   layoutType="public"
-  current="zona-lab"
+  current="blog"
 >
+  <BlogTabs />
+
 
   <style>
     :root {

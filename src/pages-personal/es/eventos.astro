@@ -1,0 +1,25 @@
+---
+import BaseTailwind from '@layouts/BaseTailwind.astro';
+import EventosList from '@components/EventosList.astro';
+import { getEventos } from '@utils/eventos';
+import { c } from '@utils/content';
+
+export const prerender = true;
+
+const eventos = await getEventos();
+const pageTitle = await c('eventos', 'page_title');
+const intro = await c('eventos', 'intro');
+---
+
+<BaseTailwind
+  title="Eventos | Mauricio González"
+  description="Charlas, talleres y otras participaciones de Mauricio González, con su material."
+  current="eventos"
+  showMateGame={false}
+>
+  <div class="pt">
+    <h1 class="pt-page-title">{pageTitle}</h1>
+    <div class="pt-contact-intro"><p>{intro}</p></div>
+    <EventosList eventos={eventos} />
+  </div>
+</BaseTailwind>

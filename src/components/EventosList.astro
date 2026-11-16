@@ -1,0 +1,46 @@
+---
+// Lista de eventos con la plantilla personal (columna de 750 px, fotos cuadradas, sin píldoras).
+// Archivo IDÉNTICO en los sitios de Mauricio y de Fernanda.
+import { photoOf, formatEventDate, type Evento } from '../utils/eventos';
+
+interface Props { eventos: Evento[]; empty?: string }
+const { eventos, empty = 'Todavía no hay eventos publicados.' } = Astro.props;
+
+const years = [...new Set(eventos.map((e) => (e.date ? String(e.date.getFullYear()) : 'Sin fecha')))];
+const byYear = years.map((y) => ({ year: y, items: eventos.filter((e) => (e.date ? String(e.date.getFullYear()) : 'Sin fecha') === y) }));
+---
+<div class="pt-events">
+  {eventos.length === 0 ? (
+    <p class="pt-sample">{empty}</p>
+  ) : (
+    byYear.map((g) => (
+      <section class="pt-events-year" aria-label={`Eventos de ${g.year}`}>
+        <h2>{g.year}</h2>
+        {g.items.map((e) => {
+          const photo = photoOf(e);
+          const extra = e.certificate ? [e.certificate] : e.slides.slice(0, 3);
+          return (
+            <article class="pt-event">
+              <div class="pt-event-photo">
+                {photo ? <img src={photo} alt={e.title} loading="lazy" /> : <div class="pt-ph">Foto pendiente</div>}
+              </div>
+              <div class="pt-event-body">
+                <h3>{e.title}</h3>
+                <p class="pt-event-meta">{formatEventDate(e.date)}{e.place ? ` · ${e.place}` : ''}</p>
+                {e.categories.length > 0 && <p class="pt-event-cats">{e.categories.slice(0, 3).join(' · ')}</p>}
+                {e.description && <p>{e.description}</p>}
+                {e.bullets.length > 0 && <ul>{e.bullets.map((b) => <li>{b}</li>)}</ul>}
+                {extra.length > 0 && (
+                  <p class="pt-event-links">
+                    {e.certificate && <a class="pt-link-gold" href={e.certificate} rel="noopener">Ver certificado</a>}
+                    {!e.certificate && e.slides.length > 0 && <a class="pt-link-gold" href={e.slides[0]} rel="noopener">Ver material ({e.slides.length})</a>}
+                  </p>
+                )}
+              </div>
+            </article>
+          );
+        })}
+      </section>
+    ))
+  )}
+</div>

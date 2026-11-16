@@ -3,6 +3,7 @@ import { useEffect, useState } from 'preact/hooks';
 import WizardModal from './shared/WizardModal';
 import type { OpState } from './shared/BusyOverlay';
 import { db } from '../../lib/db';
+import { SITE_ID, SITE_AUTHOR } from '../../data/site-id';
 import { DISERTACION_CATEGORIES } from '../../data/disertacion-categories';
 
 const BASE = import.meta.env.BASE_URL;
@@ -99,12 +100,15 @@ export default function DisertacionesAdminPreact() {
   const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [displayPhotos, setDisplayPhotos] = useState<string[]>([]);
+  const [showInAbout, setShowInAbout] = useState(false);
+  const [featuredHome, setFeaturedHome] = useState(false);
+  const [mainPhoto, setMainPhoto] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [disertaciones, setDisertaciones] = useState<Disertacion[]>([]);
   const [opHistory, setOpHistory] = useState<OpHistoryEntry[]>([]);
 
   async function loadDisertaciones() {
-    const { data, error } = await db.from('disertaciones').select('*').order('event_date', { ascending: false });
+    const { data, error } = await db.from('disertaciones').select('*').eq('site', SITE_ID).order('event_date', { ascending: false });
     if (!error) setDisertaciones(data || []);
   }
 
@@ -113,6 +117,9 @@ export default function DisertacionesAdminPreact() {
   }, []);
 
   function nuevaDisertacion() {
+    setShowInAbout(false);
+    setFeaturedHome(false);
+    setMainPhoto('');
     setEditingId(null);
     setForm(emptyForm);
     setSelectedCategories([]);
@@ -413,7 +420,7 @@ export default function DisertacionesAdminPreact() {
   }
 
   async function uniqueSlug(base: string) {
-    const { data } = await db.from('disertaciones').select('slug');
+    const { data } = await db.from('disertaciones').select('slug').eq('site', SITE_ID);
     const existing = new Set((data || []).map((r: any) => r.slug));
     if (!existing.has(base)) return base;
     let i = 2;
@@ -436,7 +443,8 @@ export default function DisertacionesAdminPreact() {
         title: form.title,
         event_date: form.eventDate || new Date().toISOString().slice(0, 10),
         event_name: form.eventName || '',
-        author: 'Mauricio Gonzalez',
+        site: SITE_ID,
+        author: SITE_AUTHOR,
         categories: selectedCategories,
         description: form.description,
         bullets: bullets.filter((b) => b.trim()),
@@ -445,6 +453,9 @@ export default function DisertacionesAdminPreact() {
         slides_urls: slideUrls,
         gallery_urls: galleryUrls,
         display_photos: displayPhotos,
+        show_in_about: showInAbout,
+        featured_home: featuredHome,
+        main_photo: mainPhoto || null,
         draft,
       };
       if (editingId) {
@@ -458,7 +469,7 @@ export default function DisertacionesAdminPreact() {
       }
       setEditingId(null);
       await loadDisertaciones();
-      finishOp(draft ? 'Borrador guardado.' : '¡Publicada! Aparece en /disertaciones tras el próximo build (cron 12 hs o deploy manual).');
+      finishOp(draft ? 'Borrador guardado.' : '¡Publicado! Aparece en Eventos, Sobre mí e Inicio en 1 o 2 minutos (el sitio se reconstruye solo).');
       wizardOpen.value = false;
     } catch (e) {
       failOp((e as Error).message);
@@ -497,6 +508,9 @@ export default function DisertacionesAdminPreact() {
     setGalleryUrls(Array.isArray(p.gallery_urls) ? p.gallery_urls : []);
     setGalleryFiles([]);
     setDisplayPhotos(Array.isArray(p.display_photos) ? p.display_photos : []);
+    setShowInAbout(!!(p as any).show_in_about);
+    setFeaturedHome(!!(p as any).featured_home);
+    setMainPhoto((p as any).main_photo || '');
     setSelectedCoverIndex(cover ? slides.indexOf(cover) : -1);
     wizardStep.value = 3;
     wizardOpen.value = true;
@@ -505,13 +519,13 @@ export default function DisertacionesAdminPreact() {
   return (
     <div class="max-w-4xl mx-auto p-4 md:p-6">
       <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold">🎤 Disertaciones</h1>
+        <h1 class="text-2xl font-bold">🎤 Eventos</h1>
         <div class="flex items-center gap-3">
-          <a href={`${DISERT_BASE}disertaciones/`} class="text-sm text-[#5c6785] hover:text-[#082D3A]">
+          <a href={`${DISERT_BASE}es/eventos/`} class="text-sm text-[#5c6785] hover:text-[#082D3A]">
             Ver sitio →
           </a>
           <button onClick={abrirWizardNueva} class="px-4 py-2 bg-[#082D3A] hover:bg-[#0b6e7d] text-white text-sm font-bold rounded-lg">
-            + Nueva disertación
+            + Nuevo evento
           </button>
         </div>
       </div>
@@ -537,8 +551,8 @@ export default function DisertacionesAdminPreact() {
       )}
 
       <div class="bg-[#f4f6fa] rounded-xl p-5">
-        <h2 class="text-base font-bold mb-3">Disertaciones existentes</h2>
-        {!disertaciones.length && <div class="text-sm text-[#5c6785]">Sin disertaciones todavía.</div>}
+        <h2 class="text-base font-bold mb-3">Eventos existentes</h2>
+        {!disertaciones.length && <div class="text-sm text-[#5c6785]">Sin eventos todavía.</div>}
         <div class="space-y-2">
           {disertaciones.map((p) => (
             <div key={p.id} class="bg-white border border-[#d7dce5] rounded-lg p-3">
@@ -574,8 +588,8 @@ export default function DisertacionesAdminPreact() {
 
       <WizardModal
         steps={['Datos', 'PPT/Resumen', 'Certificado y portada', 'Publicar']}
-        newLabel="Nueva disertación"
-        editLabel="Editar disertación"
+        newLabel="Nuevo evento"
+        editLabel="Editar evento"
         isEditing={!!editingId}
         wizardOpen={wizardOpen}
         wizardStep={wizardStep}
@@ -585,7 +599,7 @@ export default function DisertacionesAdminPreact() {
       >
         {wizardStep.value === 1 && (
           <div class="space-y-3">
-            <h3 class="text-sm font-bold text-[#082D3A]">Datos de la disertación</h3>
+            <h3 class="text-sm font-bold text-[#082D3A]">Datos del evento</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div class="md:col-span-2">
                 <label class="block text-xs font-bold text-[#082D3A] mb-1">Título *</label>
@@ -956,6 +970,36 @@ export default function DisertacionesAdminPreact() {
                         </div>
                       );
                     })}
+                </div>
+              </div>
+            )}
+
+            {(coverUrl || certificateUrl || galleryUrls.length > 0 || slideUrls.length > 0) && (
+              <div class="border-t border-[#d7dce5] pt-4 space-y-3">
+                <label class="block text-xs font-bold text-[#082D3A]">Dónde se usan las fotos de este evento</label>
+                <p class="text-[10px] text-[#6b7490]">Subís las fotos una sola vez acá. Si las marcás, también aparecen en Sobre mí y en el Inicio.</p>
+                <label class="flex items-center gap-2 text-sm text-[#082D3A]">
+                  <input type="checkbox" checked={showInAbout} onChange={(e) => setShowInAbout((e.target as HTMLInputElement).checked)} />
+                  Aparece en Sobre mí (mosaico y trayectoria)
+                </label>
+                <label class="flex items-center gap-2 text-sm text-[#082D3A]">
+                  <input type="checkbox" checked={featuredHome} onChange={(e) => setFeaturedHome((e.target as HTMLInputElement).checked)} />
+                  Foto del Inicio (bloque de la frase destacada)
+                </label>
+                <label class="block text-xs font-bold text-[#082D3A]">Foto principal <span class="font-normal text-[#6b7490]">(si no elegís, se usa la primera foto del álbum)</span></label>
+                <div class="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
+                  {[...galleryUrls, certificateUrl, coverUrl, ...slideUrls]
+                    .filter((u, i, a) => u && a.indexOf(u) === i)
+                    .map((u) => (
+                      <div
+                        key={u}
+                        onClick={() => setMainPhoto(mainPhoto === u ? '' : u)}
+                        class={'relative overflow-hidden border cursor-pointer ' + (mainPhoto === u ? 'border-[#16B6C9] ring-2 ring-[#16B6C9]' : 'border-[#c5ccd8] hover:border-[#16B6C9]')}
+                      >
+                        <img src={u} class="w-full aspect-video object-cover" alt="" />
+                        {mainPhoto === u && <span class="absolute top-0.5 left-0.5 text-[10px] font-bold text-white bg-[#082D3A] px-1">Principal</span>}
+                      </div>
+                    ))}
                 </div>
               </div>
             )}

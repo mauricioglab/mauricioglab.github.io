@@ -36,3 +36,6 @@ body.pt-skin {
 
 /* Enlaces de lectura y acentos: turquesa oscuro legible sobre blanco */
 .pt-skin :is(.zl-widget-link, .more) { color: var(--pt-accent); }
+
+/* Esquinas rectas en todo (blog, Zona Lab, eventos, paneles): la plantilla personal es cuadrada. */
+body.pt-skin *, body.pt-skin *::before, body.pt-skin *::after { border-radius: 0 !important; }

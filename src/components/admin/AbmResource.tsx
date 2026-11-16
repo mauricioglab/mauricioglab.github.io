@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { db } from '../../lib/db';
 
-export type FieldType = 'text' | 'textarea' | 'markdown' | 'date' | 'checkbox' | 'number' | 'json' | 'tags' | 'select' | 'image';
+export type FieldType = 'text' | 'textarea' | 'markdown' | 'date' | 'checkbox' | 'number' | 'json' | 'tags' | 'select' | 'image' | 'images';
 export interface Field {
   name: string;
   label: string;
@@ -31,6 +31,7 @@ const toForm = (fields: Field[], row: Row | null, defaults: Record<string, unkno
   for (const f of fields) {
     const v = row ? row[f.name] : defaults[f.name];
     if (f.type === 'tags') out[f.name] = Array.isArray(v) ? v.join(', ') : '';
+    else if (f.type === 'images') out[f.name] = Array.isArray(v) ? v : [];
     else if (f.type === 'json') out[f.name] = v == null ? '' : JSON.stringify(v, null, 2);
     else if (f.type === 'checkbox') out[f.name] = !!v;
     else if (f.type === 'date') out[f.name] = v ? String(v).slice(0, 10) : '';
@@ -44,6 +45,7 @@ const fromForm = (fields: Field[], form: Row): Row => {
   for (const f of fields) {
     const v = form[f.name];
     if (f.type === 'tags') out[f.name] = String(v).split(',').map((s) => s.trim()).filter(Boolean);
+    else if (f.type === 'images') out[f.name] = Array.isArray(v) ? v : [];
     else if (f.type === 'json') out[f.name] = String(v).trim() ? JSON.parse(String(v)) : null;
     else if (f.type === 'number') out[f.name] = v === '' ? 0 : Number(v);
     else if (f.type === 'date') out[f.name] = v || null;
@@ -128,6 +130,19 @@ export default function AbmResource({ siteId, resource: res }: { siteId: string;
     await load();
   }
 
+  async function uploadMany(field: Field, files: FileList) {
+    const bucket = field.bucket || 'blog-images';
+    const urls: string[] = [...(form[field.name] ?? [])];
+    for (const file of Array.from(files)) {
+      const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+      const path = `${siteId}/${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
+      const { error } = await db.storage.from(bucket).upload(path, file, { upsert: true });
+      if (error) { setStatus(`No se pudo subir ${file.name}: ${error.message}`); continue; }
+      urls.push(db.storage.from(bucket).getPublicUrl(path).data.publicUrl);
+    }
+    setForm({ ...form, [field.name]: urls });
+  }
+
   async function upload(field: Field, file: File) {
     const bucket = field.bucket || 'blog-images';
     const ext = (file.name.split('.').pop() || 'png').toLowerCase();
@@ -173,6 +188,18 @@ export default function AbmResource({ siteId, resource: res }: { siteId: string;
                   <option value="">—</option>
                   {(f.options ?? []).map((o) => <option value={o}>{o}</option>)}
                 </select>
+              ) : f.type === 'images' ? (
+                <>
+                  <input type="file" accept="image/*" multiple onChange={(e) => { const fl = (e.target as HTMLInputElement).files; if (fl?.length) uploadMany(f, fl); }} />
+                  <div class="pt-admin-thumbs">
+                    {(form[f.name] as string[]).map((u) => (
+                      <figure>
+                        <img class="pt-admin-thumb" src={u} alt="" />
+                        <button class="pt-admin-link pt-admin-danger" type="button" onClick={() => setForm({ ...form, [f.name]: (form[f.name] as string[]).filter((x) => x !== u) })}>Quitar</button>
+                      </figure>
+                    ))}
+                  </div>
+                </>
               ) : f.type === 'image' ? (
                 <>
                   <input id={`f-${f.name}`} type="text" value={form[f.name]} onInput={(e) => setForm({ ...form, [f.name]: (e.target as HTMLInputElement).value })} placeholder="URL de la imagen" />

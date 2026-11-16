@@ -2,6 +2,9 @@ import { readdirSync, statSync, rmSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join, relative, extname, basename, dirname } from "node:path";
 
+// Rutas de src/pages-shared que sirve solo la variante empresa.
+const COMPANY_ONLY = ["pages-shared/[lang]/disertaciones.astro"];
+
 const ROUTE_EXTENSIONS = new Set([".astro", ".ts", ".js"]);
 
 function walk(dir, out = []) {
@@ -62,6 +65,8 @@ export default function domainRoutes(target) {
             continue;
           }
           for (const file of files) {
+            // Pantallas que existen solo en la empresa: el dominio personal las reemplaza por otras (p. ej. Disertaciones -> Eventos).
+            if (target !== "company" && COMPANY_ONLY.some((f) => file.split("\\").join("/").endsWith(f))) continue;
             const pattern = patternFromFile(absDir, file);
             injectRoute({
               pattern: pattern === "" ? "/" : pattern,

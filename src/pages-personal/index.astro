@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import BaseTailwind from '../layouts/BaseTailwind.astro';
 import { c, md } from '../utils/content';
+import { getHomePhoto } from '../utils/eventos';
 import clase from '../assets/mauricio/clase-ia.png';
 import retrato from '../assets/mauricio/retrato.png';
 import PtContactForm from '../components/shared/PtContactForm.astro';
@@ -13,6 +14,7 @@ const bannerButton = await c('home', 'banner_button');
 const introTitle = await c('home', 'intro_title');
 const intro = await Promise.all([1, 2, 3, 4].map((n) => c('home', `intro_p${n}`)));
 const quote = await c('home', 'quote');
+const homePhoto = await getHomePhoto();
 
 const resources = [
   { label: 'Zona Lab', href: '/zona-lab/' },
@@ -59,7 +61,7 @@ const resources = [
 
     <section class="pt-statement" aria-label="Mi enfoque">
       <blockquote class="pt-quote"><p>{quote}</p></blockquote>
-      <div class="pt-statement-photo"><div class="pt-ph">Foto de charla o clase pendiente</div></div>
+      <div class="pt-statement-photo">{homePhoto ? <img src={homePhoto.url} alt={homePhoto.alt} loading="lazy" /> : <div class="pt-ph">Foto de charla o clase pendiente</div>}</div>
     </section>
 
     <section class="pt-band" id="portafolio" aria-labelledby="trabajo">

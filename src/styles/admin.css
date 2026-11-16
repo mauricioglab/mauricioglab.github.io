@@ -69,3 +69,9 @@
 .markdown-preview blockquote { border-left: 3px solid #16B6C9; padding-left: 12px; color: #5c6785; font-style: italic; margin: 0.5em 0; }
 .markdown-preview a { color: #0b6e7d; text-decoration: underline; }
 .markdown-preview img { max-width: 100%; border-radius: 6px; }
+
+/* Esquinas rectas en el panel, incluidos los paneles heredados que usan clases rounded-*. */
+.pt-admin-page *, .pt-admin-page *::before, .pt-admin-page *::after { border-radius: 0 !important; }
+
+.pt-admin-thumbs { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+.pt-admin-thumbs figure { margin: 0; display: grid; gap: 4px; justify-items: start; }

@@ -24,7 +24,7 @@ const langHref = altHref ?? swapped;
 
 const menuItems = isCompanyBuild ? [] : await getNavItems();
 const settings = isCompanyBuild ? null : await getSettings();
-const isHere = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const isHere = (href: string) => (href === '/' ? path === '/' : path.startsWith(href) || (href === '/blog/' && path.startsWith('/zona-lab/')));
 
 const isCurrent = (id: string, children?: { id: string }[]) =>
   id === current || (children ?? []).some((c) => c.id === current);

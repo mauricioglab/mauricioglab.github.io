@@ -34,7 +34,7 @@ interface DashboardCard {
 
 const INITIAL_CARDS: DashboardCard[] = [
   { key: 'blog', icon: '📝', label: 'Blog', total: 0, published: 0, draft: 0 },
-  { key: 'disertaciones', icon: '🎤', label: 'Disertaciones', total: 0, published: 0, draft: 0 },
+  { key: 'disertaciones', icon: '🎤', label: 'Eventos', total: 0, published: 0, draft: 0 },
   { key: 'movimiento', icon: '🤸', label: 'Movimiento', total: 0, published: 0, draft: 0 },
   { key: 'recursos', icon: '📚', label: 'Zona Lab', total: 0, published: 0, draft: 0 },
 ];

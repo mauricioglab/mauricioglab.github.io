@@ -16,7 +16,7 @@ const GROUP_OF: Record<string, string> = { cv_documents: 'Privado' };
 const modules: AdminModule[] = [
   { id: 'resumen', group: 'Inicio', label: 'Resumen y enlaces', render: () => <ResumenPanel go={go} /> },
   { id: 'blog', group: 'Publicaciones', label: 'Blog', render: () => <BlogModule /> },
-  { id: 'disertaciones', group: 'Publicaciones', label: 'Disertaciones', render: () => <DisertacionesAdminPreact /> },
+  { id: 'disertaciones', group: 'Publicaciones', label: 'Eventos', render: () => <DisertacionesAdminPreact /> },
   { id: 'recursos', group: 'Publicaciones', label: 'Zona Lab', render: () => <RecursosAdminPreact /> },
   { id: 'movimiento', group: 'Herramientas', label: 'Movimiento', render: () => <MovimientoAdminPreact /> },
   ...RESOURCES.map((r) => ({

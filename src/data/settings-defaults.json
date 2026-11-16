@@ -5,5 +5,9 @@
     "instagram": "",
     "linkedin": "https://linkedin.com/in/mauricioglab",
     "github": "https://github.com/mauricioglab"
+  },
+  "sections": {
+    "eventos": true,
+    "recursos": true
   }
 }
