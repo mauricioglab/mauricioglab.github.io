@@ -1,6 +1,5 @@
 ---
 import BaseTailwind from '../../layouts/BaseTailwind.astro';
-import BlogTabs from '../../components/blog/BlogTabs.astro';
 import ModoBanner from '../../components/shared/ModoBanner.astro';
 import { getRecursos, formatFecha } from '../../utils/recursos';
 import { getRelacionadosPosts, getUltimosPosts } from '../../utils/relacionados';
@@ -38,7 +37,6 @@ const bannerUltimos = ultimosPosts.map((p) => ({
 ---
 
 <BaseTailwind title={`${r.title} | Zona Lab | ${SITE_NAME}`} description={r.description} lang="es" layoutType="public" current="blog">
-  <BlogTabs />
 
 
   <style>

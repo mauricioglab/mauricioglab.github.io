@@ -3,13 +3,10 @@ import BlogLayout from '../../layouts/BlogLayout.astro';
 import { getBlogPosts, normalizeBaseUrl } from '../../utils/blog';
 import { SITE_CONFIG } from '../../data/config';
 import PostCard from '../../components/blog/PostCard.astro';
-import RecursoCard from '../../components/recursos/RecursoCard.astro';
-import { getUltimosRecursos } from '../../utils/relacionados';
 
 export const prerender = true;
 
 const posts = await getBlogPosts();
-const recursos = await getUltimosRecursos(3);
 const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
 ---
 
@@ -17,7 +14,7 @@ const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
   title={`${SITE_CONFIG.blogName} | ${SITE_CONFIG.siteName}`}
   description="Artículos y reflexiones sobre inteligencia artificial, tecnología, filosofía y libros."
   blogSubtitle="Artículos y pensamientos"
-  titleAsH1
+  active="articulos"
 >
   {posts.length === 0 ? (
     <p class="text-center text-[#5c6785]">No hay posts disponibles.</p>
@@ -28,31 +25,4 @@ const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
       ))}
     </div>
   )}
-
-  <section class="mt-14 mb-4">
-    <div class="flex items-baseline justify-between gap-4 mb-3">
-      <h2 class="text-2xl font-semibold tracking-tight text-[#082D3A]">
-        Zona Lab
-      </h2>
-      <a
-        href={`${normalizedBase}zona-lab/`}
-        class="text-sm text-[#16B6C9] hover:text-[#082D3A] hover:underline whitespace-nowrap"
-      >
-        Ver todos →
-      </a>
-    </div>
-    <p class="text-sm text-[#5c6785] mb-6">
-      Recursos de estudio para alumnos: el mismo hilo, en modo estudio.
-    </p>
-
-    {recursos.length === 0 ? (
-      <p class="text-sm text-[#5c6785]">Aún no hay recursos publicados.</p>
-    ) : (
-      <div class="grid gap-6 sm:grid-cols-2">
-        {recursos.map((recurso) => (
-          <RecursoCard recurso={recurso} />
-        ))}
-      </div>
-    )}
-  </section>
 </BlogLayout>

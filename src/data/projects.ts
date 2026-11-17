@@ -13,7 +13,6 @@ export interface Project {
   links: {
     demo?: string;
     github?: string;
-    caseStudy?: string;
   };
   image?: string;
   featured: boolean;
@@ -31,9 +30,7 @@ export const projects: Project[] = [
         icon: 'fa-fingerprint'
       }
     },
-    links: {
-      caseStudy: '/proyectos/validacion-biometrica'
-    }
+    links: {}
   },
   {
     id: 'billetera-virtual',
@@ -45,9 +42,7 @@ export const projects: Project[] = [
         icon: 'fa-wallet'
       }
     },
-    links: {
-      caseStudy: '/proyectos/billetera-virtual'
-    }
+    links: {}
   },
   {
     id: 'monitoreo-agricola',
@@ -59,9 +54,7 @@ export const projects: Project[] = [
         icon: 'fa-leaf'
       }
     },
-    links: {
-      caseStudy: '/proyectos/monitoreo-agricola'
-    }
+    links: {}
   },
   {
     id: 'auditorias-datos',
@@ -73,9 +66,7 @@ export const projects: Project[] = [
         icon: 'fa-clipboard-check'
       }
     },
-    links: {
-      caseStudy: '/proyectos/auditorias-datos'
-    }
+    links: {}
   },
   {
     id: 'coca-cola-embonor',
@@ -87,9 +78,7 @@ export const projects: Project[] = [
         icon: 'fa-building'
       }
     },
-    links: {
-      caseStudy: '/proyectos/coca-cola-embonor'
-    }
+    links: {}
   },
   {
     id: 'mundial-2026',
@@ -103,8 +92,7 @@ export const projects: Project[] = [
     },
     links: {
       demo: 'https://casosstudio-fkeqyq3uwpxvhtxvkthhsc.streamlit.app/',
-      github: 'https://github.com/mauricioglab/casos_studio',
-      caseStudy: '/proyectos/mundial-2026'
+      github: 'https://github.com/mauricioglab/casos_studio'
     }
   },
   {
@@ -118,7 +106,7 @@ export const projects: Project[] = [
       }
     },
     links: {
-      demo: '/caso-arquitectura',
+      demo: '/es/portfolio/?caso=caso-arquitectura',
       github: 'https://github.com/mauricioglab/caso-estudio-arquitectura'
     }
   },
@@ -134,8 +122,7 @@ export const projects: Project[] = [
     },
     links: {
       demo: 'https://casosstudio-hktsnxogexobqypet55po6.streamlit.app/',
-      github: 'https://github.com/mauricioglab/casos_studio',
-      caseStudy: '/proyectos/abandono-estudiantil'
+      github: 'https://github.com/mauricioglab/casos_studio'
     }
   }
 ];

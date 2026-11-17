@@ -1,155 +1,39 @@
 ---
-import BaseTailwind from '../../layouts/BaseTailwind.astro';
-import BlogTabs from '../../components/blog/BlogTabs.astro';
+import BlogLayout from '../../layouts/BlogLayout.astro';
 import RecursoCard from '../../components/recursos/RecursoCard.astro';
 import { getRecursos } from '../../utils/recursos';
-import { getUltimosPosts } from '../../utils/relacionados';
 import { getSiteNav } from '../../data/site-nav';
-
-const SITE_NAME = getSiteNav().brand.name;
 
 export const prerender = true;
 
+const SITE_NAME = getSiteNav().brand.name;
 const recursos = await getRecursos();
-const ultimosPosts = await getUltimosPosts(4);
-const blogBase = import.meta.env.BASE_URL.endsWith('/')
-  ? import.meta.env.BASE_URL
-  : `${import.meta.env.BASE_URL}/`;
 ---
 
-<BaseTailwind
+<BlogLayout
   title={`Zona Lab | ${SITE_NAME}`}
   description="Recursos de estudio para alumnos: videos y reportes con su resumen."
-  lang="es"
-  layoutType="public"
-  current="blog"
+  active="zona-lab"
 >
-  <BlogTabs />
-
-
-  <style>
-    :root {
-      --accent: #16b6c9;
-      --accent-deep: #082d3a;
-      --accent-soft: #e6fafc;
-      --ink: #082d3a;
-      --muted: #5c6785;
-      --faint: #8b94ab;
-      --line: #e4e8f0;
-      --panel: #f4f6fa;
-      --font-head: 'Montserrat', system-ui, sans-serif;
-      --font-body: 'Montserrat', system-ui, sans-serif;
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--panel); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
-    h1, h2, h3, h4 { font-family: var(--font-head); line-height: 1.15; margin: 0; letter-spacing: -0.02em; font-weight: 600; }
-    p { margin: 0; }
-    a { color: inherit; text-decoration: none; }
-
-    .zl-hero {
-      position: relative; overflow: hidden;
-      padding: 88px 28px 64px; text-align: center;
-      background: linear-gradient(135deg, #082D3A 0%, #0A1E28 60%, #16B6C9 145%);
-    }
-    .zl-hero::before {
-      content: ''; position: absolute; inset: 0;
-      background-image:
-        radial-gradient(circle at 85% 15%, rgba(212, 175, 55, 0.28) 0%, transparent 45%),
-        radial-gradient(circle at 10% 90%, rgba(125, 227, 255, 0.18) 0%, transparent 40%);
-    }
-    .zl-hero .wrap { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; }
-    .zl-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-family: var(--font-head); font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
-      color: var(--vcl-cian, #7DE3FF); background: rgba(125, 227, 255, 0.12); border: 1px solid rgba(125, 227, 255, 0.3);
-      padding: 7px 16px; border-radius: 999px; margin-bottom: 22px;
-    }
-    .zl-hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 600; line-height: 1.06; color: #fff; letter-spacing: -0.03em; }
-    .zl-hero .sub { margin: 18px auto 0; max-width: 620px; color: rgba(125, 227, 255, 0.85); font-size: 1.05rem; line-height: 1.7; }
-
-    .zl-section { padding: 64px 28px; max-width: 1100px; margin: 0 auto; }
-    .zl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
-    .zl-empty { text-align: center; color: var(--muted); padding: 40px 0; font-size: .95rem; border: 1px dashed var(--line); border-radius: 14px; }
-
-    .zl-widget-title { font-family: var(--font-head); font-size: 1.25rem; font-weight: 600; color: var(--ink); letter-spacing: -.01em; }
-    .zl-widget-link { font-family: var(--font-head); font-size: .85rem; font-weight: 600; color: var(--accent-deep); }
-    .zl-widget-link:hover { text-decoration: underline; }
-    .zl-widget-sub { color: var(--muted); font-size: .9rem; margin-bottom: 22px; }
-    .zl-widget-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
-    .zl-widget-item { display: block; padding: 16px 22px; background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 12px; transition: box-shadow .15s, border-color .15s, background .15s; }
-    .zl-widget-item:hover { background: var(--accent-soft); border-color: #a6e9f1; border-left-color: var(--accent); box-shadow: 0 10px 24px -16px rgba(22,182,201,.35); }
-    .zl-widget-item-title { display: block; font-weight: 600; color: var(--ink); font-size: .98rem; line-height: 1.4; }
-    .zl-widget-item:hover .zl-widget-item-title { color: var(--accent-deep); }
-    .zl-widget-item-desc { display: block; color: var(--muted); font-size: .85rem; line-height: 1.55; margin-top: 3px; }
-
-    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
-    .reveal.is-visible { opacity: 1; transform: translateY(0); }
-
-    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
-    @media (max-width: 560px) { .zl-hero { padding: 60px 20px 48px; } }
-  </style>
-
-  <div>
-    <section class="zl-hero">
-      <div class="wrap">
-        <div class="zl-badge"><span>📚</span> Recursos para alumnos</div>
-        <h1>Zona Lab</h1>
-        <p class="sub">Material seleccionado para estudiar: videos y reportes, con un resumen de lo que hay que saber.</p>
-      </div>
-    </section>
-
-    <section class="zl-section">
-      {recursos.length === 0 ? (
-        <p class="zl-empty">Todavía no hay recursos publicados.</p>
-      ) : (
-        <div class="zl-grid">
-          {recursos.map((r) => (
-            <RecursoCard recurso={r} />
-          ))}
+  {recursos.length === 0 ? (
+    <p class="text-center text-[#5c6785]">Todavía no hay recursos publicados.</p>
+  ) : (
+    <div class="grid gap-6 sm:grid-cols-2">
+      {recursos.map((r) => (
+        <div
+          data-lab-item
+          data-text={`${r.title} ${r.description ?? ''} ${r.categories.join(' ')}`.toLowerCase()}
+          data-cats={r.categories.join('|')}
+          data-year={String(r.createdAt.getFullYear())}
+        >
+          <RecursoCard recurso={r} />
         </div>
-      )}
-    </section>
+      ))}
+    </div>
+    <p id="lab-empty" class="text-center text-[#5c6785]" style="display:none">No hay recursos que coincidan.</p>
+  )}
+</BlogLayout>
 
-    {ultimosPosts.length > 0 && (
-      <section class="zl-section" style="padding-top: 0">
-        <div class="flex items-baseline justify-between gap-4 mb-5">
-          <h2 class="zl-widget-title">💭 Últimos del Blog</h2>
-          <a href={`${blogBase}blog/`} class="zl-widget-link">Ver todos →</a>
-        </div>
-        <p class="zl-widget-sub">
-          El mismo hilo, en modo pensamiento: artículos y reflexiones.
-        </p>
-        <ul class="zl-widget-list">
-          {ultimosPosts.map((p) => (
-            <li>
-              <a
-                href={`${blogBase}blog/${p.slug}/`}
-                class="zl-widget-item"
-              >
-                <span class="zl-widget-item-title">{p.title}</span>
-                {p.description && (
-                  <span class="zl-widget-item-desc">{p.description}</span>
-                )}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    )}
-  </div>
-
-  <script is:inline>
-    (function () {
-      if (!('IntersectionObserver' in window)) {
-        document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('is-visible'); });
-        return;
-      }
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) { entry.target.classList.add('is-visible'); io.unobserve(entry.target); }
-        });
-      }, { threshold: 0.12 });
-      document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
-    })();
-  </script>
-</BaseTailwind>
+<style is:global>
+  .rc-card.reveal { opacity: 1; transform: none; }
+</style>

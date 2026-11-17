@@ -36,9 +36,9 @@ const normalizedBase = normalizeBaseUrl(import.meta.env.BASE_URL);
   blogSubtitle={`Artículos sobre ${categoryName}`}
 >
   <div>
-    <header class="text-center mb-[50px] pb-[30px] border-b border-[#e4e8f0]">
+    <header class="mb-8">
       <p class="text-xs font-semibold uppercase tracking-[0.1em] text-[#8b94ab] mb-2.5">Categoría</p>
-      <h1 class="text-4xl font-semibold text-[#082D3A] mb-2.5">{categoryName}</h1>
+      <h1 class="text-2xl font-semibold text-[#082D3A] mb-2">{categoryName}</h1>
       <p class="text-sm italic text-[#5c6785]">{posts.length} {posts.length === 1 ? 'artículo' : 'artículos'}</p>
     </header>
 

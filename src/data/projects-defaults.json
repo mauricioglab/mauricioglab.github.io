@@ -12,9 +12,7 @@
       "AWS QLDB",
       "Reconocimiento facial"
     ],
-    "links": {
-      "caseStudy": "/proyectos/validacion-biometrica"
-    },
+    "links": {},
     "featured": true,
     "position": 1,
     "title_en": "AI-Powered Biometric Validation",
@@ -34,9 +32,7 @@
       "Amazon ECS",
       "Microservicios"
     ],
-    "links": {
-      "caseStudy": "/proyectos/billetera-virtual"
-    },
+    "links": {},
     "featured": true,
     "position": 2,
     "title_en": "Core API — TotalCoin virtual wallet",
@@ -56,9 +52,7 @@
       "Node.js",
       "Angular"
     ],
-    "links": {
-      "caseStudy": "/proyectos/monitoreo-agricola"
-    },
+    "links": {},
     "featured": true,
     "position": 3,
     "title_en": "Agricultural monitoring with Machine Learning",
@@ -77,9 +71,7 @@
       "Entity Framework",
       "Reportes PDF/Excel"
     ],
-    "links": {
-      "caseStudy": "/proyectos/auditorias-datos"
-    },
+    "links": {},
     "featured": true,
     "position": 4,
     "title_en": "Audits with data analysis",
@@ -97,9 +89,7 @@
       "Entity Framework",
       "SAP API"
     ],
-    "links": {
-      "caseStudy": "/proyectos/coca-cola-embonor"
-    },
+    "links": {},
     "featured": true,
     "position": 5,
     "title_en": "Corporate expense web system",
@@ -120,8 +110,7 @@
     ],
     "links": {
       "demo": "https://casosstudio-fkeqyq3uwpxvhtxvkthhsc.streamlit.app/",
-      "github": "https://github.com/mauricioglab/casos_studio",
-      "caseStudy": "/proyectos/mundial-2026"
+      "github": "https://github.com/mauricioglab/casos_studio"
     },
     "featured": true,
     "position": 6,
@@ -142,7 +131,7 @@
       "Scrum"
     ],
     "links": {
-      "demo": "/caso-arquitectura",
+      "demo": "/es/portfolio/?caso=caso-arquitectura",
       "github": "https://github.com/mauricioglab/caso-estudio-arquitectura"
     },
     "featured": true,
@@ -165,8 +154,7 @@
     ],
     "links": {
       "demo": "https://casosstudio-hktsnxogexobqypet55po6.streamlit.app/",
-      "github": "https://github.com/mauricioglab/casos_studio",
-      "caseStudy": "/proyectos/abandono-estudiantil"
+      "github": "https://github.com/mauricioglab/casos_studio"
     },
     "featured": true,
     "position": 8,

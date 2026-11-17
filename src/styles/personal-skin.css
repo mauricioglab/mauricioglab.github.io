@@ -24,8 +24,6 @@ body.pt-skin {
 .pt-skin .zl-hero { background: var(--pt-navy); }
 .pt-skin .zl-hero::before { opacity: .25; }
 .pt-skin .zl-hero h1 { font-family: var(--pt-head); font-weight: 300; font-size: clamp(2.2rem, 7vw, 59.7px); line-height: 1.1; letter-spacing: 0; }
-.pt-skin .blog-hero { background: var(--pt-navy); }
-.pt-skin .blog-hero .site-title { font-family: var(--pt-head); font-weight: 300; letter-spacing: 0; }
 
 /* Etiquetas y tarjetas: esquinas rectas y bordes finos */
 .pt-skin :is(.dz-badge, .zl-badge) { border-radius: 0; border: 1px solid var(--pt-turq); background: transparent; color: var(--pt-accent); }

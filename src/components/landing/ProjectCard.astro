@@ -27,11 +27,6 @@ const translatedProfile = translatedProject?.profiles?.[profileId];
 const title = translatedProject?.title || project.id;
 const description = translatedProfile?.description || '';
 const highlights = translatedProfile?.highlights || [];
-
-// Build language-aware case study URL
-const caseStudyUrl = project.links.caseStudy
-  ? `/${lang}${project.links.caseStudy}`
-  : null;
 ---
 
 <div class="p-8 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
@@ -68,14 +63,6 @@ const caseStudyUrl = project.links.caseStudy
 
   <!-- Links -->
   <div class="flex flex-wrap gap-3">
-    {caseStudyUrl && (
-      <a
-        href={caseStudyUrl}
-        class="px-4 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition bg-blue-600 text-white"
-      >
-        <i class="fas fa-book-open mr-1"></i> Case Study
-      </a>
-    )}
     {project.links.demo && (
       <a
         href={project.links.demo}
