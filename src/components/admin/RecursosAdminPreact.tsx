@@ -511,7 +511,7 @@ export default function RecursosAdminPreact() {
                 </span>
               </div>
               <p class="text-xs text-[#5c6785] mt-1">
-                {p.source_type === 'youtube' ? '🎬 ' : '🌐 '}
+                {p.source_type === 'youtube' ? '🎬 ' : p.source_type === 'herramienta' ? '🛠️ ' : '🌐 '}
                 {new Date(p.created).toLocaleDateString('es-ES')}
               </p>
               <div class="flex gap-2 mt-2 text-xs">
@@ -589,14 +589,16 @@ export default function RecursosAdminPreact() {
               <div class="text-xs text-[#5c6785] bg-white border border-[#d7dce5] rounded-lg p-3 flex flex-wrap items-center gap-2">
                 <span class="font-bold text-[#082D3A]">Fuente:</span>
                 <span class="font-mono truncate max-w-full">{sourceUrl}</span>
-                <span
-                  class={
-                    'px-2 py-0.5 rounded-full text-[10px] font-bold ' +
-                    (sourceType === 'youtube' ? 'bg-[#b32d2e]/10 text-[#b32d2e]' : 'bg-[#0b6e7d]/10 text-[#0b6e7d]')
-                  }
+                <select
+                  value={sourceType}
+                  onChange={(e) => setSourceType((e.target as HTMLSelectElement).value)}
+                  class="px-2 py-0.5 border border-[#c5ccd8] bg-white text-[11px] font-bold text-[#082D3A]"
+                  aria-label="Tipo de recurso"
                 >
-                  {sourceType === 'youtube' ? 'YouTube' : 'Web'}
-                </span>
+                  <option value="web">Web (reporte)</option>
+                  <option value="youtube">YouTube (video)</option>
+                  <option value="herramienta">Herramienta (enlace interno)</option>
+                </select>
                 {!hadSource && <span class="text-[#9a6b00]">(sin transcripción — se usó solo tu frase)</span>}
               </div>
             )}

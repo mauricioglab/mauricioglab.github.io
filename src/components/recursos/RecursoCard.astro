@@ -11,6 +11,7 @@ const { recurso, baseUrl = import.meta.env.BASE_URL } = Astro.props;
 const base = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
 const url = `${base}zona-lab/${recurso.slug}/`;
 const isVideo = recurso.sourceType === 'youtube';
+const isTool = recurso.sourceType === 'herramienta';
 ---
 
 <article class="rc-card reveal">
@@ -18,10 +19,10 @@ const isVideo = recurso.sourceType === 'youtube';
     {recurso.coverUrl ? (
       <img src={recurso.coverUrl} alt={`Portada de ${recurso.title}`} loading="lazy" />
     ) : (
-      <div class="rc-fallback">{isVideo ? '🎬' : '🌐'}</div>
+      <div class="rc-fallback">{isVideo ? '🎬' : isTool ? '🛠️' : '🌐'}</div>
     )}
     <span class:list={['rc-type', isVideo ? 'rc-type--video' : 'rc-type--reporte']}>
-      {isVideo ? '🎬 Video' : '📄 Reporte'}
+      {isVideo ? '🎬 Video' : isTool ? '🛠️ Herramienta' : '📄 Reporte'}
     </span>
   </a>
   <div class="rc-body">
@@ -35,7 +36,7 @@ const isVideo = recurso.sourceType === 'youtube';
         {recurso.categories.slice(0, 3).map((c) => <span class="rc-cat">{c}</span>)}
       </div>
     )}
-    <a href={url} class="rc-link">Abrir recurso →</a>
+    <a href={url} class="rc-link">{isTool ? 'Ver herramienta →' : 'Abrir recurso →'}</a>
   </div>
 </article>
 

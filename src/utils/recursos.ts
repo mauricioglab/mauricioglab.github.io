@@ -9,7 +9,7 @@ export interface Recurso {
   slug: string;
   title: string;
   sourceUrl: string;
-  sourceType: 'youtube' | 'web';
+  sourceType: 'youtube' | 'web' | 'herramienta';
   sourceTitle: string;
   videoId?: string;
   description: string;
@@ -42,7 +42,7 @@ export async function getRecursos(): Promise<Recurso[]> {
           slug: row.slug,
           title: row.title,
           sourceUrl: row.source_url ?? '',
-          sourceType: row.source_type === 'youtube' ? 'youtube' : 'web',
+          sourceType: row.source_type === 'youtube' ? 'youtube' : row.source_type === 'herramienta' ? 'herramienta' : 'web',
           sourceTitle: row.source_title ?? '',
           videoId: row.video_id ?? undefined,
           description: row.description ?? '',

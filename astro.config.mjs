@@ -26,9 +26,6 @@ export default defineConfig({
       "/contacto": { status: 301, destination: "/es/contacto/" },
       "/es/disertaciones": { status: 301, destination: "/es/eventos/" },
       "/disertaciones": { status: 301, destination: "/es/eventos/" },
-      "/pausas-activas": "/movimiento/?modo=pausas",
-      "/movilidad": "/movimiento/?modo=movilidad",
-      "/entrenamiento": "/movimiento/?modo=entrenamiento",
       "/es/proyectos/validacion-biometrica": { status: 301, destination: "/es/portfolio/?caso=validacion-biometrica" },
       "/es/proyectos/billetera-virtual": { status: 301, destination: "/es/portfolio/?caso=billetera-virtual" },
       "/es/proyectos/monitoreo-agricola": { status: 301, destination: "/es/portfolio/?caso=monitoreo-agricola" },
@@ -44,8 +41,6 @@ export default defineConfig({
       "/en/proyectos/mundial-2026": { status: 301, destination: "/en/portfolio/?caso=mundial-2026" },
       "/en/proyectos/abandono-estudiantil": { status: 301, destination: "/en/portfolio/?caso=abandono-estudiantil" },
       "/caso-arquitectura": { status: 301, destination: "/es/portfolio/?caso=caso-arquitectura" },
-      "/es/videos": "/videos/",
-      "/en/videos": "/videos/",
     }),
   },
   server: { open: "/" },
@@ -56,7 +51,7 @@ export default defineConfig({
     sitemap({
       // Páginas privadas, documentos sin indexar y rutas técnicas fuera del sitemap.
       filter: (page) =>
-        !/\/(admin|nutricion|movimiento|vsagenda|workspace-mapper)(\/|$)/.test(page) &&
+        !/\/(admin|lab)(\/|$)/.test(page) &&
         !/\/(es|en)\/cv(\/|$)/.test(page) &&
         !/\/404(\/|$)/.test(page) &&
         // La raíz de empresa es un espejo de /es/servicios/ (su canonical).

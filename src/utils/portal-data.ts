@@ -55,7 +55,7 @@ export async function getGallery(lang: Lang = 'es'): Promise<Map<string, Gallery
 
 export interface NavLink { label: string; href: string; label_en?: string; href_en?: string }
 export interface SocialItem { key: string; url: string; show: boolean }
-export interface SiteSettings { tagline: string; tagline_en?: string; networks: SocialItem[]; sections: { eventos: boolean; recursos: boolean } }
+export interface SiteSettings { tagline: string; tagline_en?: string; networks: SocialItem[]; sections: { eventos: boolean; recursos: boolean; curiosidades: boolean } }
 
 const navCache: Partial<Record<Lang, Promise<{ label: string; href: string }[]>>> = {};
 /** Menú principal en el idioma pedido (etiqueta y enlace en inglés si existen). */

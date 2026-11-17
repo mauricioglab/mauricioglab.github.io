@@ -24,7 +24,8 @@
   ],
   "sections": {
     "eventos": true,
-    "recursos": true
+    "recursos": true,
+    "curiosidades": true
   },
   "tagline_en": "Teacher and developer · Applied AI"
 }

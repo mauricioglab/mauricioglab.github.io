@@ -3,6 +3,7 @@ import ContactModal from '../landing/ContactModal.astro';
 import { getSiteNav, type Lang } from '../../data/site-nav';
 import { isCompanyBuild, PERSONAL_ORIGIN } from '../../data/site-target';
 import '../../styles/personal-profile.css';
+import { getSettings } from '../../utils/portal-data';
 
 interface Props {
   lang?: Lang;
@@ -12,6 +13,7 @@ const { lang = 'es' } = Astro.props;
 const nav = getSiteNav(lang);
 const privacyHref = isCompanyBuild ? `${PERSONAL_ORIGIN}/blog/privacy/` : '/blog/privacy/';
 const year = new Date().getFullYear();
+const showCuriosidades = !isCompanyBuild && (await getSettings(lang)).sections.curiosidades;
 ---
 
 {isCompanyBuild ? (
@@ -26,6 +28,7 @@ const year = new Date().getFullYear();
   <footer class="pt-footer">
     <p>
       <a class="pt-footer-name" href="/">{nav.brand.name}</a>, &copy; {year}
+      {showCuriosidades && <> &middot; <a class="pt-footer-small" href="/curiosidades/">{lang === 'en' ? 'Curiosities' : 'Curiosidades'}</a></>}
     </p>
   </footer>
 )}

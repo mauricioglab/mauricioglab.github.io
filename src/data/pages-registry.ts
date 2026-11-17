@@ -32,11 +32,8 @@ export const pagesRegistry: PageEntry[] = [
   { id: 'blog', name: 'Parece que fue ayer (Blog)', url: '/blog/', category: 'public', icon: '📝' },
   { id: 'disertaciones', name: 'Disertaciones', url: '/es/disertaciones/', category: 'public', icon: '🎤' },
   { id: 'recursos', name: 'Zona Lab', url: '/zona-lab/', category: 'public', icon: '📚' },
-  { id: 'prompt', name: 'Prompts', url: '/prompt/', category: 'public', icon: '🤖' },
-  { id: 'videos', name: 'Videos', url: '/videos/', category: 'public', icon: '🎬' },
-  { id: 'extensions', name: 'Extensiones', url: '/extensions/', category: 'public', icon: '🧩' },
-  { id: 'urls', name: 'URLs Útiles', url: '/urls/', category: 'public', icon: '🔗' },
-  { id: 'main', name: 'Rincón retro', url: '/main/', category: 'public', icon: '🏠' },
+  { id: 'teleprompter', name: 'Teleprompter (Zona Lab)', url: '/lab/teleprompter/', category: 'tool', icon: '🤖' },
+  { id: 'curiosidades', name: 'Curiosidades', url: '/curiosidades/', category: 'public', icon: '🧉' },
 
   // =====================
   // LANDINGS (solo en admin, solo español)
@@ -49,24 +46,7 @@ export const pagesRegistry: PageEntry[] = [
   // =====================
   // HERRAMIENTAS (solo en admin)
   // =====================
-  { id: 'calculadora', name: 'Calculadora', url: '/calculadora/', category: 'tool', icon: '🧮' },
-  { id: 'nutricion', name: 'Nutrición', url: '/nutricion/', category: 'tool', icon: '🥗' },
-  { id: 'movimiento', name: 'Movimiento', url: '/movimiento/', category: 'tool', icon: '🤸' },
-  { id: 'workspace-mapper', name: 'Workspace Mapper', url: '/workspace-mapper/', category: 'tool', icon: '🖥️' },
-  { id: 'vsagenda', name: 'vsagenda', url: '/vsagenda/', category: 'tool', icon: '🗓️' },
   { id: 'admin-gestion', name: 'Admin Gestión', url: '/admin/gestion/', category: 'tool', icon: '🗂️' },
-
-  // =====================
-  // CASE STUDIES (solo en admin)
-  // =====================
-  { id: 'project-validacion-biometrica', name: 'Case: Validación Biométrica', url: '/es/portfolio/?caso=validacion-biometrica', category: 'project', icon: '🪪' },
-  { id: 'project-billetera-virtual', name: 'Case: Billetera Virtual', url: '/es/portfolio/?caso=billetera-virtual', category: 'project', icon: '💳' },
-  { id: 'project-monitoreo-agricola', name: 'Case: Monitoreo Agrícola', url: '/es/portfolio/?caso=monitoreo-agricola', category: 'project', icon: '🌱' },
-  { id: 'project-auditorias-datos', name: 'Case: Auditorías con Datos', url: '/es/portfolio/?caso=auditorias-datos', category: 'project', icon: '📊' },
-  { id: 'project-coca-cola-embonor', name: 'Case: Coca-Cola Embonor', url: '/es/portfolio/?caso=coca-cola-embonor', category: 'project', icon: '🥤' },
-  { id: 'project-mundial-2026', name: 'Case: Mundial 2026', url: '/es/portfolio/?caso=mundial-2026', category: 'project', icon: '⚽' },
-  { id: 'project-abandono-estudiantil', name: 'Case: Abandono Estudiantil', url: '/es/portfolio/?caso=abandono-estudiantil', category: 'project', icon: '🎓' },
-  { id: 'project-caso-arquitectura', name: 'Case: Analista de Sistemas (ArqStudio)', url: '/es/portfolio/?caso=caso-arquitectura', category: 'project', icon: '📐' },
 ];
 
 // =====================

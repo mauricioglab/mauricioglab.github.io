@@ -215,7 +215,8 @@
 /* ---------- Pie ---------- */
 .pt-footer { padding: 16px; text-align: center; font-family: var(--pt-head); font-size: 13.8889px; line-height: 1.7; color: var(--pt-muted); }
 .pt-footer a { color: var(--pt-muted); text-decoration: none; }
-.pt-footer .pt-footer-name { font-weight: 700; text-transform: uppercase; }
+.pt-footer .pt-footer-small { font-size: .9em; }
+.pt-footer-name { font-weight: 700; text-transform: uppercase; }
 .pt-footer a:hover { text-decoration: underline; text-underline-offset: .25em; }
 
 /* Texto de muestra: se usa cuando falta material confirmado y debe verse como provisorio. */
@@ -316,3 +317,24 @@
 }
 
 .pt-case-sec h4 { margin: 18px 0 8px; font-family: var(--pt-head); font-size: 1.05rem; font-weight: 700; }
+
+/* Blog: lista + barra lateral (buscar, etiqueta, año). En pantallas chicas la barra pasa arriba y se pliega. */
+.pt-blog { max-width: 1000px; margin: 0 auto; padding: 0 16px; display: flex; flex-direction: column-reverse; gap: 24px; }
+.pt-blog .pt-folio { max-width: none; margin: 0; padding: 0; }
+.pt-blog-aside { font-size: 14px; }
+.pt-blog-aside summary { font: 700 12px/1 var(--pt-body); letter-spacing: .1em; text-transform: uppercase; color: var(--pt-muted); cursor: pointer; padding-bottom: 12px; list-style: none; }
+.pt-blog-aside summary::-webkit-details-marker { display: none; }
+.pt-blog-aside input, .pt-blog-aside select { width: 100%; border: 1px solid #b9c4d6; border-radius: 0; background: #fff; padding: 9px 10px; font: 300 14px var(--pt-body); color: var(--pt-ink); }
+.pt-blog-aside input:focus, .pt-blog-aside select:focus { outline: 2px solid var(--pt-turq); outline-offset: 0; }
+.pt-blog-field, .pt-blog-years { display: block; margin-top: 18px; }
+.pt-blog-field span, .pt-blog-years span { display: block; margin-bottom: 6px; font: 700 12px/1 var(--pt-body); letter-spacing: .1em; text-transform: uppercase; color: var(--pt-muted); }
+.pt-blog-years ul { margin: 0; padding: 0; list-style: none; }
+.pt-blog-years button { width: 100%; display: flex; justify-content: space-between; padding: 6px 0; border: 0; border-bottom: 1px solid #eef1f6; background: transparent; color: var(--pt-ink); font: inherit; cursor: pointer; text-align: left; }
+.pt-blog-years button:hover, .pt-blog-years button[aria-pressed="true"] { color: var(--pt-gold); }
+.pt-blog-years small { color: #8b94ab; }
+.pt-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 900px) {
+  .pt-blog--aside { display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 48px; align-items: start; }
+  .pt-blog--aside .pt-blog-aside { position: sticky; top: 24px; }
+  .pt-blog-aside summary { pointer-events: none; }
+}

@@ -5,10 +5,7 @@ export const GET: APIRoute = ({ site }) =>
     [
       'User-agent: *',
       'Disallow: /admin/',
-      'Disallow: /nutricion/',
-      'Disallow: /movimiento/',
-      'Disallow: /vsagenda/',
-      'Disallow: /workspace-mapper/',
+      'Disallow: /lab/',
       'Disallow: /es/cv/',
       'Disallow: /en/cv/',
       '',

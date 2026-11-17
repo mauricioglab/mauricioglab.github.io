@@ -22,6 +22,7 @@ const markdownProcessor = await createMarkdownProcessor({
 });
 const { code: contentHtml } = await markdownProcessor.render(r.body);
 const isVideo = r.sourceType === 'youtube';
+const isTool = r.sourceType === 'herramienta';
 
 const relacionadosPosts = await getRelacionadosPosts(r, 3);
 const ultimosPosts = await getUltimosPosts(3, relacionadosPosts);
@@ -100,6 +101,9 @@ const bannerUltimos = ultimosPosts.map((p) => ({
     .zl-article :global(blockquote) { border-left: 3px solid var(--accent); padding-left: 16px; color: var(--muted); font-style: italic; margin: 1em 0; }
     .zl-article :global(a) { color: var(--accent-deep); text-decoration: underline; }
 
+    .zl-tool { margin-top: 28px; }
+    .zl-tool a { display: inline-block; background: var(--accent-deep); color: #fff; font-family: var(--font-head); font-weight: 600; padding: 13px 26px; text-decoration: none; }
+    .zl-tool a:hover { background: var(--accent); color: var(--accent-deep); }
     .zl-source { margin-top: 24px; font-family: var(--font-head); font-size: .88rem; font-weight: 600; }
     .zl-source a { color: var(--accent-deep); }
     .zl-source a:hover { text-decoration: underline; }
@@ -114,7 +118,7 @@ const bannerUltimos = ultimosPosts.map((p) => ({
     <div class="zl-crumbs"><a href="/zona-lab/">Zona Lab</a> <span>·</span> {r.title}</div>
 
     <div class="zl-meta">
-      <span class:list={['zl-type', !isVideo && 'zl-type--reporte']}>{isVideo ? '🎬 Video' : '📄 Reporte'}</span>
+      <span class:list={['zl-type', !isVideo && 'zl-type--reporte']}>{isVideo ? '🎬 Video' : isTool ? '🛠️ Herramienta' : '📄 Reporte'}</span>
       <time datetime={r.createdAt.toISOString()}>{formatFecha(r.createdAt)}</time>
       {r.sourceTitle && <span>{r.sourceTitle}</span>}
     </div>
@@ -139,7 +143,11 @@ const bannerUltimos = ultimosPosts.map((p) => ({
 
     <div class="zl-article" set:html={contentHtml}></div>
 
-    {r.sourceUrl && (
+    {isTool && r.sourceUrl && (
+      <p class="zl-tool"><a href={r.sourceUrl}>Abrir herramienta →</a></p>
+    )}
+
+    {!isTool && r.sourceUrl && (
       <p class="zl-source">Fuente: <a href={r.sourceUrl} target="_blank" rel="noopener noreferrer">{r.sourceUrl}</a></p>
     )}
 

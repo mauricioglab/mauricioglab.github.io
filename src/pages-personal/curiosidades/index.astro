@@ -1,14 +1,14 @@
 ---
-import BaseTailwind from "../layouts/BaseTailwind.astro";
-import CurrencyConverter from "../components/main-page/CurrencyConverter.astro";
-import WeatherWidget from "../components/main-page/WeatherWidget.astro";
-import ChuckFacts from "../components/main-page/ChuckFacts.astro";
-import RetroTranslator from "../components/main-page/RetroTranslator.astro";
-import AdsSidebar from "../components/main-page/AdsSidebar.astro";
-import PokemonBanner from "../components/main-page/PokemonBanner.astro";
-import URLShortener from "../components/main-page/URLShortener.astro";
-import WantedPoster from "../components/main-page/WantedPoster.astro";
-import { getPublicPages } from "../data/pages-registry";
+import BaseTailwind from "../../layouts/BaseTailwind.astro";
+import CurrencyConverter from "../../components/main-page/CurrencyConverter.astro";
+import WeatherWidget from "../../components/main-page/WeatherWidget.astro";
+import ChuckFacts from "../../components/main-page/ChuckFacts.astro";
+import RetroTranslator from "../../components/main-page/RetroTranslator.astro";
+import AdsSidebar from "../../components/main-page/AdsSidebar.astro";
+import PokemonBanner from "../../components/main-page/PokemonBanner.astro";
+import URLShortener from "../../components/main-page/URLShortener.astro";
+import WantedPoster from "../../components/main-page/WantedPoster.astro";
+import { getPublicPages } from "../../data/pages-registry";
 
 export const prerender = true;
 
@@ -19,9 +19,9 @@ const formattedDate = today
 const baseUrl = import.meta.env.BASE_URL;
 const b = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
 
-// Obtener páginas públicas del registry (excluyendo main para evitar link a sí mismo)
+// Obtener páginas públicas del registry (excluyendo curiosidades para evitar link a sí mismo)
 const pages = getPublicPages()
-  .filter(p => p.id !== 'main')
+  .filter(p => p.id !== 'curiosidades')
   .map(p => ({
     ...p,
     url: p.url.startsWith('/') ? `${b}${p.url.slice(1)}` : p.url
@@ -29,8 +29,9 @@ const pages = getPublicPages()
 ---
 
 <BaseTailwind 
-	title="Rincón retro | Mauricio González"
-	description="Un rincón retro del sitio: widgets, GIFs y curiosidades."
+	title="Curiosidades | Mauricio González"
+	description="Curiosidades del sitio: el juego del mate, widgets, GIFs y rarezas."
+	showMateGame={true}
 	lang="es"
 >
 	<div class="container">
@@ -65,7 +66,7 @@ const pages = getPublicPages()
 			<main class="main-content" aria-label="Contenido">
 				<header class="header">
 					<div class="header-inner">
-						<h1>Rincón retro</h1>
+						<h1>Curiosidades</h1>
 						<div class="search-container">
 							<form action="https://www.google.com/search" method="get" target="_blank" class="search-form">
 								<input
@@ -86,6 +87,8 @@ const pages = getPublicPages()
 
 				<div class="content-area">
 					<PokemonBanner />
+
+					<p class="mate-cta"><button type="button" onclick="document.getElementById('gameTabBtn')?.click()">🧉 Jugar Mate Run</button></p>
 
 					<br />
 					<div class="whats-hot-header">▼ Lo más visto</div>

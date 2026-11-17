@@ -5,7 +5,7 @@ import { getAllPages, getPagesByCategory, categoryLabels, type PageCategory } fr
 const BASE = import.meta.env.BASE_URL;
 const B = BASE.endsWith('/') ? BASE : `${BASE}/`;
 
-const CATEGORIES: PageCategory[] = ['public', 'landing', 'project', 'tool'];
+const CATEGORIES: PageCategory[] = ['public', 'landing', 'tool'];
 const PAGES_BY_CATEGORY = CATEGORIES.map((cat) => ({
   category: cat,
   label: categoryLabels[cat],
