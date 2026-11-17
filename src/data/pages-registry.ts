@@ -39,8 +39,6 @@ export const pagesRegistry: PageEntry[] = [
   // LANDINGS (solo en admin, solo español)
   // =====================
   { id: 'portfolio', name: 'Portfolio', url: '/es/portfolio/', category: 'landing', icon: '📁', active: true },
-  { id: 'servicios', name: 'Servicios', url: 'https://velocitylab.com.ar/es/servicios/', category: 'landing', icon: '🤝', active: true },
-  { id: 'velocity', name: 'Velocity', url: 'https://velocitylab.com.ar/es/velocity/', category: 'landing', icon: '🤝', active: true },
   { id: 'cv', name: 'CV', url: '/es/cv/', category: 'landing', icon: '📄', active: false },
 
   // =====================

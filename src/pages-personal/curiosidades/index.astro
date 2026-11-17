@@ -8,7 +8,6 @@ import AdsSidebar from "../../components/main-page/AdsSidebar.astro";
 import PokemonBanner from "../../components/main-page/PokemonBanner.astro";
 import URLShortener from "../../components/main-page/URLShortener.astro";
 import WantedPoster from "../../components/main-page/WantedPoster.astro";
-import { getPublicPages } from "../../data/pages-registry";
 
 export const prerender = true;
 
@@ -16,35 +15,18 @@ const today = new Date();
 const formattedDate = today
 	.toLocaleDateString("en-US", { month: "long", day: "numeric" })
 	.toUpperCase();
-const baseUrl = import.meta.env.BASE_URL;
-const b = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
-
-// Obtener páginas públicas del registry (excluyendo curiosidades para evitar link a sí mismo)
-const pages = getPublicPages()
-  .filter(p => p.id !== 'curiosidades')
-  .map(p => ({
-    ...p,
-    url: p.url.startsWith('/') ? `${b}${p.url.slice(1)}` : p.url
-  }));
 ---
 
 <BaseTailwind 
 	title="Curiosidades | Mauricio González"
 	description="Curiosidades del sitio: el juego del mate, widgets, GIFs y rarezas."
 	showMateGame={true}
+	showHeader={false}
+	showFooter={false}
 	lang="es"
 >
 	<div class="container">
-			<aside class="sidebar" aria-label="Navegación">
-				<nav class="main-menu">
-					{
-						pages.map((p) => (
-							<a href={p.url}>{p.name}</a>
-						))
-					}
-				</nav>
-				<hr />
-
+			<aside class="sidebar" aria-label="Rincón retro">
 				<div class="alf-section" aria-label="Rincón de ALF">
 					<img
 						src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWd2cTd3MXdhd2UwZnlrNTBkYXI2M2JkaWpjNDh5eXVpdDR1cjdxbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LLWteC47MmBck/giphy.gif"
