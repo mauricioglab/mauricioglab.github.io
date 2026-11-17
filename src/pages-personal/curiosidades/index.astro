@@ -25,7 +25,7 @@ const formattedDate = today
 	showFooter={false}
 	lang="es"
 >
-	<div class="container">
+	<div class="retro-container">
 			<aside class="sidebar" aria-label="Rincón retro">
 				<div class="alf-section" aria-label="Rincón de ALF">
 					<img
@@ -68,6 +68,8 @@ const formattedDate = today
 				</header>
 
 				<div class="content-area">
+					<p class="tribute">Esta página es mi humilde homenaje a lo que recuerdo como eran algunas páginas de los 90.</p>
+
 					<PokemonBanner />
 
 					<p class="mate-cta"><button type="button" onclick="document.getElementById('gameTabBtn')?.click()">🧉 Jugar Mate Run</button></p>
@@ -110,7 +112,7 @@ const formattedDate = today
 				overflow-x: hidden;
 			}
 
-			.container {
+			.retro-container {
 				display: flex;
 				width: 100%;
 				min-height: 100vh;
@@ -260,6 +262,16 @@ const formattedDate = today
 				flex: 1;
 			}
 
+			.tribute {
+				background-color: #ffffcc;
+				border: 2px dashed #990000;
+				padding: 8px 12px;
+				margin-bottom: 15px;
+				font-size: 14px;
+				font-style: italic;
+				text-align: center;
+			}
+
 			.whats-hot-header {
 				background-color: #ffcc00;
 				border: 2px solid #000;
@@ -329,7 +341,7 @@ const formattedDate = today
 			}
 
 			@media (max-width: 992px) {
-				.container {
+				.retro-container {
 					flex-direction: column;
 				}
 				.sidebar,
