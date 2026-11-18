@@ -24,7 +24,7 @@ const CATEGORY_ICON: Record<PageCategory, string> = {
 };
 
 interface DashboardCard {
-  key: 'blog' | 'disertaciones' | 'movimiento' | 'recursos';
+  key: 'blog' | 'disertaciones' | 'recursos';
   icon: string;
   label: string;
   total: number;
@@ -35,7 +35,6 @@ interface DashboardCard {
 const INITIAL_CARDS: DashboardCard[] = [
   { key: 'blog', icon: '📝', label: 'Blog', total: 0, published: 0, draft: 0 },
   { key: 'disertaciones', icon: '🎤', label: 'Eventos', total: 0, published: 0, draft: 0 },
-  { key: 'movimiento', icon: '🤸', label: 'Movimiento', total: 0, published: 0, draft: 0 },
   { key: 'recursos', icon: '📚', label: 'Zona Lab', total: 0, published: 0, draft: 0 },
 ];
 
@@ -51,16 +50,14 @@ export default function ResumenPanel({ go }: { go: (id: string) => void }) {
         const draft = rows.filter(isDraft).length;
         return { total, draft, published: total - draft };
       };
-      const [blogs, disertaciones, movimiento, recursos] = await Promise.all([
+      const [blogs, disertaciones, recursos] = await Promise.all([
         db.from('blogs').select('id, draft'),
         db.from('disertaciones').select('id, draft'),
-        db.from('movimiento_programas').select('id, data'),
         db.from('recursos').select('id, draft'),
       ]);
       const s: Record<DashboardCard['key'], { total: number; draft: number; published: number }> = {
         blog: count(blogs.data || [], (r) => !!r.draft),
         disertaciones: count(disertaciones.data || [], (r) => !!r.draft),
-        movimiento: count(movimiento.data || [], (r) => !!r.data?.draft),
         recursos: count(recursos.data || [], (r) => !!r.draft),
       };
       setDashboardCards((cards) => cards.map((c) => ({ ...c, ...s[c.key] })));
@@ -75,7 +72,7 @@ export default function ResumenPanel({ go }: { go: (id: string) => void }) {
             <div class="space-y-6">
               <div>
                 <h2 class="text-base font-bold mb-3">📊 Resumen de contenido</h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {dashboardCards.map((card) => (
                     <button key={card.key} onClick={() => go(card.key === 'recursos' ? 'recursos' : card.key)} class="text-left bg-[#f4f6fa] hover:bg-[#e2e7ef] transition rounded-xl p-4">
                       <div class="flex items-center gap-2 text-sm text-[#5c6785] mb-2">
