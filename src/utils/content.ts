@@ -34,11 +34,14 @@ export async function c(page: string, key: string, lang: Lang = 'es'): Promise<s
   return row?.en?.trim() ? row.en : D[`${id}@en`] ?? es;
 }
 
-const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+/** Solo enlaces http(s), mailto, rutas relativas y anclas: nada de javascript: ni data:. */
+const safeHref = (u: string): string => (/^(https?:\/\/|mailto:|\/|#)/i.test(u) ? u : '#');
 
 /** Markdown mínimo para párrafos: **negrita** y [texto](enlace). Todo lo demás se escapa. */
 export function md(s: string): string {
   return esc(s)
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a class="pt-link-gold" href="$2">$1</a>');
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_m, text: string, url: string) => `<a class="pt-link-gold" href="${safeHref(url)}">${text}</a>`);
 }
