@@ -1,6 +1,5 @@
 ---
 import { SITE_CONFIG } from '../../data/config';
-import { isCompanyBuild, COMPANY_ORIGIN, PERSONAL_ORIGIN } from '../../data/site-target';
 import { getSiteNav } from '../../data/site-nav';
 
 interface Props {
@@ -13,7 +12,7 @@ interface Props {
 
 const { title, description, lang, canonical, type = 'website' } = Astro.props;
 
-const origin = isCompanyBuild ? COMPANY_ORIGIN : PERSONAL_ORIGIN;
+const origin = SITE_CONFIG.siteUrl.replace(/\/$/, '');
 const siteName = getSiteNav(lang).brand.name;
 
 // Páginas bilingües (/es/… y /en/…): declarar la alternativa en el otro idioma.
@@ -23,29 +22,16 @@ const alternates = bilingual
   ? (['es', 'en'] as const).map((l) => ({ lang: l, href: `${origin}${path.replace(/^\/(es|en)\//, `/${l}/`)}` }))
   : [];
 
-// Imagen para compartir: solo la empresa tiene una (logo oficial). En el dominio personal no se
-// publica ninguna hasta tener una propia, para no mostrar la marca de la empresa como identidad.
-const ogImage = isCompanyBuild ? `${COMPANY_ORIGIN}/logo-vl-full.png` : null;
-
-const schema = isCompanyBuild
-  ? {
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: siteName,
-      url: `${COMPANY_ORIGIN}/`,
-      logo: `${COMPANY_ORIGIN}/logo-vl-icon.svg`,
-      address: { '@type': 'PostalAddress', addressLocality: 'Córdoba', addressCountry: 'AR' },
-    }
-  : {
-      '@context': 'https://schema.org',
-      '@type': 'Person',
-      name: SITE_CONFIG.author,
-      jobTitle: lang === 'es' ? 'Software Engineer · IA & Automatización' : 'Software Engineer · AI & Automation',
-      url: `${PERSONAL_ORIGIN}/`,
-      address: { '@type': 'PostalAddress', addressLocality: 'Córdoba', addressCountry: 'AR' },
-      sameAs: [SITE_CONFIG.linkedin, SITE_CONFIG.github],
-      knowsLanguage: ['es', 'en'],
-    };
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE_CONFIG.author,
+  jobTitle: lang === 'es' ? 'Software Engineer · IA & Automatización' : 'Software Engineer · AI & Automation',
+  url: `${origin}/`,
+  address: { '@type': 'PostalAddress', addressLocality: 'Córdoba', addressCountry: 'AR' },
+  sameAs: [SITE_CONFIG.linkedin, SITE_CONFIG.github],
+  knowsLanguage: ['es', 'en'],
+};
 ---
 
 <link rel="canonical" href={canonical} />
@@ -57,9 +43,7 @@ const schema = isCompanyBuild
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />
-{ogImage && <meta property="og:image" content={ogImage} />}
-<meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-{ogImage && <meta name="twitter:image" content={ogImage} />}
 <script type="application/ld+json" set:html={JSON.stringify(schema)} />

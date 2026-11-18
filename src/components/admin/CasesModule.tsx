@@ -8,6 +8,9 @@ import { db } from '../../lib/db';
 import { SITE_ID } from '../../data/site-id';
 import { localizeSections, type CaseType, type RawBlock, type RawSection } from '../../data/case-model';
 import { TEMPLATES, CASE_TYPES, BLOCK_LABELS, type BlockKind } from '../../data/case-templates';
+import { getAnalystOverview, isAnalystField } from '../../data/analyst-overview';
+import { SAMPLE_SLUG, sampleSections, sampleCard } from '../../data/analyst-sample';
+import AnalystCaseOverview from '../shared/AnalystCaseOverview';
 
 type View = 'both' | 'es' | 'en';
 interface CaseRow {
@@ -199,6 +202,7 @@ function BlockEditor({ b, set, view, upload }: EditorProps) {
 function Preview({ data, lang }: { data: CaseRow; lang: 'es' | 'en' }) {
   const pick = (es: string, en: string) => (lang === 'en' ? en || es : es || en);
   const sections = localizeSections(data.sections, lang);
+  const overview = data.type === 'analista' ? getAnalystOverview(sections, lang) : null;
   const [cur, setCur] = useState(0);
   const sec = sections[Math.min(cur, Math.max(sections.length - 1, 0))];
   return (
@@ -208,7 +212,7 @@ function Preview({ data, lang }: { data: CaseRow; lang: 'es' | 'en' }) {
         <h2>{pick(data.title, data.title_en)}</h2>
         {pick(data.description, data.description_en) && <p>{pick(data.description, data.description_en)}</p>}
       </header>
-      {sections.length === 0 ? <p class="pt-sample">Todavía no hay secciones con contenido.</p> : (
+      {overview ? <AnalystCaseOverview overview={overview} lang={lang} /> : sections.length === 0 ? <p class="pt-sample">Todavía no hay secciones con contenido.</p> : (
         <div class="pt-case-layout">
           <nav class="pt-case-nav">
             {sections.map((s, i) => <button type="button" aria-current={i === cur ? 'true' : undefined} onClick={() => setCur(i)}>{s.title}</button>)}
@@ -252,6 +256,7 @@ export default function CasesModule() {
   const setView = (v: View) => { setViewState(v); try { localStorage.setItem('pt_admin_lang_view', v); } catch { /* ignore */ } };
   const [previewLang, setPreviewLang] = useState<'es' | 'en'>('es');
   const [translating, setTranslating] = useState(false);
+  const [showLegacy, setShowLegacy] = useState(false);
 
   async function load() {
     const c = await db.from('project_cases').select('*').eq('site', SITE_ID).order('updated_at', { ascending: false });
@@ -263,13 +268,25 @@ export default function CasesModule() {
 
   const mutate = (fn: (d: CaseRow) => void) => setData((prev) => { const d = clone(prev); fn(d); return d; });
 
-  function nuevo() { setData(emptyCase()); wizardStep.value = 1; status.value = ''; wizardOpen.value = true; }
+  function nuevo() { setShowLegacy(false); setData(emptyCase()); wizardStep.value = 1; status.value = ''; wizardOpen.value = true; }
   function editar(c: CaseRow) {
     const d = clone(c);
-    // Las secciones de la plantilla que faltan se agregan vacías (no se pierde ninguna ya cargada).
-    const have = new Set(d.sections.map((s) => s.key));
-    const missing = TEMPLATES[d.type].filter((t) => !have.has(t.key)).map((t) => ({ key: t.key, title: t.title, title_en: t.title_en, blocks: [] as RawBlock[] }));
+    setShowLegacy(false);
+    if (d.type === 'analista' && sampleCard && d.project_slug === SAMPLE_SLUG && !d.sections.some((s) => isAnalystField(s.key))) {
+      const card = sampleCard;
+      d.title = card.title;
+      d.badge = 'Caso de estudio · Análisis funcional';
+      d.description = card.context;
+      d.sections = [...clone(sampleSections), ...d.sections];
+    }
+    const sectionsByKey = new Map(d.sections.map((section) => [section.key, section]));
+    const templates = TEMPLATES[d.type];
+    const missing = templates.filter((t) => !sectionsByKey.has(t.key)).map((t) => ({ key: t.key, title: t.title, title_en: t.title_en, blocks: [] as RawBlock[] }));
     d.sections = [...d.sections, ...missing];
+    if (d.type === 'analista') {
+      const positions = new Map(templates.map(({ key }, i) => [key, i]));
+      d.sections.sort((a, b) => (positions.get(a.key) ?? templates.length) - (positions.get(b.key) ?? templates.length));
+    }
     d.title_en ??= ''; d.badge ??= ''; d.badge_en ??= ''; d.description ??= ''; d.description_en ??= '';
     setData(d); wizardStep.value = 1; status.value = ''; wizardOpen.value = true;
   }
@@ -353,9 +370,13 @@ export default function CasesModule() {
   }
 
   const step = wizardStep.value;
-  const nSec = data.sections.length;
-  const secIndex = step - 2;
-  const steps = ['Datos', ...data.sections.map((s) => s.title || s.key), 'Vista previa', 'Publicar'];
+  const editorSections = data.sections
+    .map((section, index) => ({ section, index }))
+    .filter(({ section }) => data.type !== 'analista' || showLegacy || isAnalystField(section.key));
+  const nSec = editorSections.length;
+  const secIndex = editorSections[step - 2]?.index ?? -1;
+  const hasLegacy = data.type === 'analista' && data.sections.some((section) => !isAnalystField(section.key));
+  const steps = ['Datos', ...editorSections.map(({ section }) => section.title || section.key), 'Vista previa', 'Publicar'];
   const usedSlugs = new Set(cases.filter((c) => c.project_slug !== data.project_slug).map((c) => c.project_slug));
   const selectableProjects = projects.filter((p) => !usedSlugs.has(p.slug));
   const next = <div class="pt-cs-next"><button type="button" class="pt-button" onClick={() => (wizardStep.value = step + 1)}>Siguiente →</button></div>;
@@ -416,6 +437,7 @@ export default function CasesModule() {
                   {CASE_TYPES.map((t) => <button type="button" class={data.type === t.id ? 'is-on' : ''} aria-pressed={data.type === t.id} onClick={() => changeType(t.id)}>{t.label}</button>)}
                 </div>
                 <span class="pt-form-note">{CASE_TYPES.find((t) => t.id === data.type)?.hint}</span>
+                {hasLegacy && <label><input type="checkbox" checked={showLegacy} onChange={(e) => setShowLegacy(e.currentTarget.checked)} /> Mostrar secciones anteriores</label>}
               </div>
               {viewSwitch}
               <Pair label="Título" es={data.title} en={data.title_en} view={view} onEs={(v) => mutate((d) => { d.title = v; })} onEn={(v) => mutate((d) => { d.title_en = v; })} />
@@ -431,7 +453,7 @@ export default function CasesModule() {
             const setBlock = (bi: number, patch: any) => mutate((d) => { Object.assign(d.sections[secIndex].blocks![bi], patch); });
             return (
               <>
-                <h3>{sec.title || sec.key} <span class="pt-form-note">(sección {secIndex + 1} de {nSec})</span></h3>
+                <h3>{sec.title || sec.key} <span class="pt-form-note">(sección {step - 1} de {nSec})</span></h3>
                 {tpl && <p class="pt-form-note">{tpl.hint} Podés dejarla vacía: no se muestra.</p>}
                 {viewSwitch}
                 <Pair label="Título de la sección" es={sec.title ?? ''} en={sec.title_en ?? ''} view={view} onEs={(v) => mutate((d) => { d.sections[secIndex].title = v; })} onEn={(v) => mutate((d) => { d.sections[secIndex].title_en = v; })} />
@@ -450,13 +472,13 @@ export default function CasesModule() {
                 ))}
                 <div class="pt-cs-addblock">
                   <span>Agregar bloque:</span>
-                  {(Object.keys(BLOCK_LABELS) as BlockKind[]).map((k) => (
+                  {(tpl?.kinds ?? Object.keys(BLOCK_LABELS) as BlockKind[]).map((k) => (
                     <button type="button" class="pt-admin-link" onClick={() => mutate((d) => { (d.sections[secIndex].blocks ??= []).push(newBlock(k)); })}>{BLOCK_LABELS[k]}</button>
                   ))}
                 </div>
                 <div class="pt-cs-next">
                   <button type="button" class="pt-admin-link" disabled={translating} onClick={() => translateSection(secIndex)}>{translating ? 'Traduciendo…' : 'Traducir al inglés lo que falta (IA)'}</button>
-                  {secIndex === nSec - 1 && <button type="button" class="pt-admin-link" onClick={() => { const t = window.prompt('Título de la nueva sección'); if (t) mutate((d) => { d.sections.push({ key: `extra-${Date.now()}`, title: t, title_en: '', blocks: [] }); }); }}>+ Agregar sección propia</button>}
+                  {step === nSec + 1 && (data.type !== 'analista' || showLegacy) && <button type="button" class="pt-admin-link" onClick={() => { const t = window.prompt('Título de la nueva sección'); if (t) mutate((d) => { d.sections.push({ key: `extra-${Date.now()}`, title: t, title_en: '', blocks: [] }); }); }}>+ Agregar sección propia</button>}
                   <button type="button" class="pt-button" onClick={() => (wizardStep.value = step + 1)}>Siguiente →</button>
                 </div>
               </>

@@ -1,0 +1,63 @@
+---
+import BaseTailwind from '@layouts/BaseTailwind.astro';
+import { CASE_CARDS } from '@data/case-meta';
+
+const caseStudy = CASE_CARDS['caso-arquitectura'];
+const summary = 'El estudio cruzaba planillas para seguir proyectos, tareas y cobros. El proyecto definió un sistema para centralizar ese seguimiento.';
+const captions = [
+  'De la propuesta al pago de la seña.',
+  'Qué podía hacer el equipo del estudio con cada proyecto.',
+  'Cómo circulaban y dónde se guardaban los datos del estudio.',
+];
+const docs = '/downloads/mgd-arquitectura/';
+---
+
+<BaseTailwind title={caseStudy.title} description={summary} lang="es" layoutType="landing" current="portfolio" altHref="/en/portfolio/" noindex>
+  <article class="pt">
+    <h1 class="pt-page-title">{caseStudy.title}</h1>
+    <div class="pt-folio">
+      <header class="case-intro">
+        <p class="pt-folio-meta">Análisis funcional · Práctica Profesionalizante III · Cliente real</p>
+        <p>{summary}</p>
+      </header>
+
+      {caseStudy.main.map((evidence, index) => (
+        <section aria-labelledby={`evidencia-${index + 1}`}>
+          <h2 id={`evidencia-${index + 1}`}>{evidence.title}</h2>
+          <figure class="pt-case-figure case-evidence">
+            <a href={evidence.img} aria-label={`Ampliar: ${evidence.alt}`}>
+              <img src={evidence.img} alt={evidence.alt} loading={index === 0 ? 'eager' : 'lazy'} />
+            </a>
+            <figcaption>
+              {captions[index]} <a class="pt-link-gold" href={evidence.img}>Ampliar diagrama</a>
+            </figcaption>
+          </figure>
+        </section>
+      ))}
+
+      <section aria-labelledby="documentos">
+        <h2 id="documentos">Pruebas y documentos</h2>
+        <p>Los tres arquitectos probaron la creación de proyectos, la gestión de tareas y el registro de usuarios.</p>
+        <details class="case-docs">
+          <summary>Consultar documentación original</summary>
+          <ul>
+            {caseStudy.downloads.map((doc) => (
+              <li><a class="pt-link-gold" href={docs + doc.file}>{doc.label}</a> · {doc.kind}</li>
+            ))}
+          </ul>
+        </details>
+      </section>
+
+      <p class="pt-folio-end"><a class="pt-link-gold" href="/es/portfolio/#proyectos">Volver al portafolio</a></p>
+    </div>
+  </article>
+</BaseTailwind>
+
+<style>
+  .case-intro p:last-child { margin-bottom: 0; }
+  .case-evidence img { max-height: 28rem; }
+  .case-evidence figcaption { margin-top: 0.75rem; }
+  .case-evidence figcaption a { margin-inline-start: 0.25em; }
+  .case-docs { margin-top: 1rem; }
+  .case-docs summary { cursor: pointer; }
+</style>

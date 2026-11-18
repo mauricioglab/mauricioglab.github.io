@@ -1,0 +1,34 @@
+.mgd-overview { display: grid; gap: 1rem; }
+.mgd-summary, .mgd-panel { padding: clamp(.875rem, 3vw, 1.25rem); border: 1px solid var(--pt-line); }
+.mgd-summary { background: #f4f6fa; }
+.mgd-summary dl, .mgd-evidence, .mgd-analysis, .mgd-archive { margin: 0; padding: 0; }
+.mgd-summary dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem 1.25rem; }
+.mgd-summary dt { font-weight: 700; }
+.mgd-summary dd { margin: 0; }
+.mgd-archive { display: flex; flex-wrap: wrap; gap: .375rem .75rem; list-style: none; }
+.mgd-panel h3 { font: 700 1.1rem var(--pt-head); margin: 0 0 .625rem; }
+.mgd-preview img { aspect-ratio: 3 / 2; object-fit: contain; }
+.mgd-analysis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; list-style: none; }
+.mgd-analysis > li { display: flex; flex-direction: column; gap: .5rem; min-width: 0; padding: .75rem; border: 1px solid var(--pt-line); }
+.mgd-analysis h4 { font-weight: 700; margin: 0; }
+.mgd-analysis figure { margin: 0; }
+.mgd-preview { display: grid; align-items: center; aspect-ratio: 3 / 2; }
+.mgd-preview svg, .mgd-preview img { display: block; width: 100%; height: auto; max-height: 100%; overflow: hidden; }
+.mgd-analysis figcaption { margin-top: .5rem; font-size: .875rem; color: var(--pt-muted); }
+.mgd-original { align-self: start; margin-top: auto; font-size: .875rem; }
+@media (max-width: 720px) {
+  .mgd-analysis { grid-template-columns: 1fr; }
+  .mgd-preview { aspect-ratio: auto; }
+}
+.mgd-evidence { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; list-style: none; }
+.mgd-evidence a { display: grid; place-items: center; min-height: 3rem; text-align: center; padding: .375rem; background: #f4f6fa; border: 1px solid var(--pt-line); }
+.mgd-panel details { border-top: 1px solid var(--pt-line); padding: .5rem 0; }
+.mgd-panel summary { cursor: pointer; }
+.mgd-panel details ul { margin: .375rem 0 0 1.25rem; list-style: disc; }
+.mgd-archive { margin-top: .625rem; }
+@media (max-width: 600px) {
+  .mgd-summary dl { grid-template-columns: 1fr; gap: .375rem; }
+  .mgd-summary dt, .mgd-summary dd { display: inline; }
+  .mgd-summary dt::after { content: ': '; }
+  .mgd-evidence { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

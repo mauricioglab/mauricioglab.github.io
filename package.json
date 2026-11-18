@@ -5,11 +5,7 @@
   "scripts": {
     "images:optimize": "node src/utils/resize-blog-images.js",
     "dev": "npm run images:optimize && astro dev",
-    "dev:personal": "cross-env SITE_TARGET=personal npm run dev -- --port 4321",
-    "dev:company": "cross-env SITE_TARGET=company npm run dev -- --port 4322",
     "build": "npm run images:optimize && astro build",
-    "build:personal": "cross-env SITE_TARGET=personal npm run build",
-    "build:company": "cross-env SITE_TARGET=company npm run build",
     "preview": "astro preview",
     "astro": "astro"
   },

@@ -1,9 +1,0 @@
----
-import ServiciosPage from '@components/landing/ServiciosPage.astro';
-
-export const prerender = true;
-
-const canonical = new URL('/es/servicios/', Astro.site).toString();
----
-
-<ServiciosPage lang="es" canonical={canonical} />

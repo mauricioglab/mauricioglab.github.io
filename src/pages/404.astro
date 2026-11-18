@@ -1,29 +1,23 @@
 ---
 import BaseTailwind from '../layouts/BaseTailwind.astro';
-import NotFoundView from '../components/shared/NotFoundView.astro';
 import { getSiteNav } from '../data/site-nav';
-import { isCompanyBuild } from '../data/site-target';
 
 export const prerender = true;
 ---
 
 <BaseTailwind title={`Página no encontrada | ${getSiteNav().brand.name}`} description="La página que buscás no existe o cambió de lugar." layoutType="index" noindex>
-  {isCompanyBuild ? (
-    <NotFoundView />
-  ) : (
-    <div class="pt">
-      <h1 class="pt-page-title">Página no encontrada</h1>
-      <div class="pt-contact-intro">
-        <p>El contenido que buscás no está acá o cambió de lugar. Podés volver al inicio o ir a alguna de estas secciones.</p>
-        <p>
-          <a class="pt-button" href="/">Volver al inicio</a>
-        </p>
-        <p>
-          <a class="pt-link-gold" href="/es/sobre-mi/">Sobre mí</a> ·
-          <a class="pt-link-gold" href="/blog/">Blog</a> ·
-          <a class="pt-link-gold" href="/es/contacto/">Contacto</a>
-        </p>
-      </div>
+  <div class="pt">
+    <h1 class="pt-page-title">Página no encontrada</h1>
+    <div class="pt-contact-intro">
+      <p>El contenido que buscás no está acá o cambió de lugar. Podés volver al inicio o ir a alguna de estas secciones.</p>
+      <p>
+        <a class="pt-button" href="/">Volver al inicio</a>
+      </p>
+      <p>
+        <a class="pt-link-gold" href="/es/sobre-mi/">Sobre mí</a> ·
+        <a class="pt-link-gold" href="/blog/">Blog</a> ·
+        <a class="pt-link-gold" href="/es/contacto/">Contacto</a>
+      </p>
     </div>
-  )}
+  </div>
 </BaseTailwind>

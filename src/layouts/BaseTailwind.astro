@@ -6,7 +6,6 @@ import MateGame from '../components/games/MateGame.astro';
 import PromptModal from '../components/shared/PromptModal.astro';
 import type { LayoutType } from '../data/layout-features';
 import { getLayoutFeatures } from '../data/layout-features';
-import { isCompanyBuild } from '../data/site-target';
 import { getSiteNav } from '../data/site-nav';
 import '../styles/brand.css';
 import '../styles/personal-skin.css';
@@ -48,9 +47,9 @@ const {
 const features = getLayoutFeatures(layoutType);
 const showHeader = showHeaderOverride ?? features.showMainHeader;
 const showFooter = showFooterOverride ?? features.showMainFooter;
-// El laboratorio (Teleprompter) no se indexa; las herramientas privadas viven en el repo `taller`.
+// El laboratorio (Teleprompter) no se indexa.
 const isHiddenTool = /^\/(lab)(\/|$)/.test(Astro.url.pathname);
-const showMateGame = !isCompanyBuild && (showMateGameOverride ?? features.showMateGame);
+const showMateGame = showMateGameOverride ?? features.showMateGame;
 
 const baseUrl = import.meta.env.BASE_URL;
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
@@ -63,8 +62,7 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toStri
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="description" content={description} />
 		{(noindex || isHiddenTool) && <meta name="robots" content="noindex, nofollow" />}
-		<link rel="icon" type="image/svg+xml" href={`${baseUrl}${isCompanyBuild ? 'favicon.svg' : 'favicon-mauricio.svg'}`} />
-		{isCompanyBuild && <link rel="icon" href={`${baseUrl}favicon.ico`} />}
+		<link rel="icon" type="image/svg+xml" href={`${baseUrl}favicon-mauricio.svg`} />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Raleway:wght@300;700&display=swap" rel="stylesheet" />
@@ -72,7 +70,7 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toStri
 		{!(noindex || isHiddenTool) && <SeoHead title={title} description={description} lang={lang === 'en' ? 'en' : 'es'} canonical={canonicalUrl} />}
 		<slot name="head" />
 	</head>
-	<body class:list={["min-h-screen flex flex-col p-0 bg-white text-vcl-petroleo font-vclBody font-light", !isCompanyBuild && "pt-skin"]}>
+	<body class:list={["min-h-screen flex flex-col p-0 bg-white text-vcl-petroleo font-vclBody font-light", "pt-skin"]}>
 		{showHeader && <SiteHeader current={current} lang={lang === 'en' ? 'en' : 'es'} altHref={altHref} />}
 
 		<!-- Main Content -->

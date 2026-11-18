@@ -9,7 +9,7 @@ export type LayoutType = 'public' | 'landing' | 'admin' | 'tool' | 'index' | 'pr
 export interface LayoutFeatures {
   showMainHeader: boolean;    // SiteHeader del dominio
   showMainFooter: boolean;    // SiteFooter del dominio (incluye el modal de contacto)
-  showMateGame: boolean;      // Juego del mate (botón + modal): solo se activa a mano en /curiosidades/; nunca en el dominio empresa
+  showMateGame: boolean;      // Juego del mate (botón + modal): solo se activa a mano en /curiosidades/
 }
 
 const shell: LayoutFeatures = { showMainHeader: true, showMainFooter: true, showMateGame: false };

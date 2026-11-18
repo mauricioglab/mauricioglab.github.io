@@ -1,9 +1,5 @@
-import { readdirSync, statSync, rmSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { readdirSync, statSync } from "node:fs";
 import { join, relative, extname, basename, dirname } from "node:path";
-
-// Rutas de src/pages-shared que sirve solo la variante empresa.
-const COMPANY_ONLY = ["pages-shared/[lang]/disertaciones.astro"];
 
 const ROUTE_EXTENSIONS = new Set([".astro", ".ts", ".js"]);
 
@@ -33,28 +29,15 @@ function patternFromFile(root, file) {
 }
 
 /**
- * Integración local: arma las rutas del build según SITE_TARGET, leyendo
- * físicamente solo las carpetas que le corresponden a ese dominio
- * (src/pages-shared/ siempre, más src/pages-personal/ o src/pages-company/).
- * src/pages/ queda solo para lo universal (404.astro).
+ * Integración local: arma las rutas del build leyendo físicamente las carpetas
+ * src/pages-shared/ y src/pages-personal/. src/pages/ queda solo para lo universal (404.astro).
  */
-export default function domainRoutes(target) {
-  const dirs = target === "company"
-    ? ["src/pages-shared", "src/pages-company"]
-    : ["src/pages-shared", "src/pages-personal"];
+export default function domainRoutes() {
+  const dirs = ["src/pages-shared", "src/pages-personal"];
 
   return {
     name: "domain-routes",
     hooks: {
-      // El dominio de la empresa no sirve herramientas ni descargas del personal:
-      // public/ se copia entero, así que se borra lo que no le corresponde.
-      "astro:build:done": ({ dir }) => {
-        if (target !== "company") return;
-        const out = fileURLToPath(dir);
-        for (const d of ["vsagenda", "prompt", "calculadora", "extensions", "entrenamiento", "downloads", "lib", "scripts", "blog"]) {
-          rmSync(join(out, d), { recursive: true, force: true });
-        }
-      },
       "astro:config:setup": ({ injectRoute, config }) => {
         for (const dir of dirs) {
           const absDir = new URL(dir + "/", config.root).pathname.replace(/^\/([A-Za-z]:)/, "$1");
@@ -65,8 +48,6 @@ export default function domainRoutes(target) {
             continue;
           }
           for (const file of files) {
-            // Pantallas que existen solo en la empresa: el dominio personal las reemplaza por otras (p. ej. Disertaciones -> Eventos).
-            if (target !== "company" && COMPANY_ONLY.some((f) => file.split("\\").join("/").endsWith(f))) continue;
             const pattern = patternFromFile(absDir, file);
             injectRoute({
               pattern: pattern === "" ? "/" : pattern,

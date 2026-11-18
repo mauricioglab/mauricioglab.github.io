@@ -55,11 +55,10 @@ export const SITE_CONFIG = {
   defaultDescription: 'Software Engineer especializado en IA y Automatización',
   
   // =====================
-  // CV Y VELOCITY
+  // CV
   // =====================
-  // Los CV no se enlazan desde el sitio. Velocity es la página pública.
+  // Los CV no se enlazan desde el sitio.
   cv: '/es/cv/',
-  velocity: '/es/velocity/',
   
   // =====================
   // IDIOMAS

@@ -3,6 +3,10 @@
 // Recibe los casos ya resueltos al idioma (utils/cases.ts). Archivo IDÉNTICO en Mauricio y Fernanda.
 import type { CaseStudy } from '../../data/case-model';
 import CaseBlock from './CaseBlock.astro';
+import AnalystCaseOverview from './AnalystCaseOverview';
+import { getAnalystOverview } from '../../data/analyst-overview';
+import { localizeSections } from '../../data/case-model';
+import { SAMPLE_SLUG, sampleSections } from '../../data/analyst-sample';
 
 interface Props { cases: CaseStudy[]; lang?: 'es' | 'en' }
 const { cases, lang = 'es' } = Astro.props;
@@ -16,13 +20,21 @@ const L = { close: lang === 'en' ? 'Close' : 'Cerrar', index: lang === 'en' ? 'S
         <div class="pt-case-body" data-case-body></div>
       </div>
     </dialog>
-    {cases.map((c) => (
+    {cases.map((c) => {
+      const overview = process.env.CASE_FULL !== '1' && (c.type === 'analista' && getAnalystOverview(c.sections, lang)
+        || (lang === 'es' && SAMPLE_SLUG && c.slug === SAMPLE_SLUG && c.sections[0]?.key === 'resumen'
+          ? getAnalystOverview(localizeSections(sampleSections, lang), lang)
+          : null));
+      return (
       <template data-pt-case-tpl={c.slug}>
         <header class="pt-case-head">
           {c.badge && <p class="pt-case-badge">{c.badge}</p>}
           <h2>{c.title}</h2>
           {c.description && <p>{c.description}</p>}
         </header>
+        {overview ? (
+          <AnalystCaseOverview overview={overview} lang={lang} />
+        ) : (
         <div class="pt-case-layout">
           <nav class="pt-case-nav" aria-label={L.index}>
             {c.sections.map((s, i) => <button type="button" data-sec={s.key} aria-current={i === 0 ? 'true' : undefined}>{s.title}</button>)}
@@ -36,8 +48,10 @@ const L = { close: lang === 'en' ? 'Close' : 'Cerrar', index: lang === 'en' ? 'S
             ))}
           </div>
         </div>
+        )}
       </template>
-    ))}
+      );
+    })}
     <script is:inline>
       (function () {
         var dlg = document.getElementById('pt-case');
@@ -58,8 +72,18 @@ const L = { close: lang === 'en' ? 'Close' : 'Cerrar', index: lang === 'en' ? 'S
           var first = body.querySelector('.pt-case-nav button');
           var k = key && body.querySelector('section[data-sec="' + key + '"]') ? key : first && first.getAttribute('data-sec');
           if (k) show(body, k);
+          var overview = body.querySelector('[data-case-overview]');
+          dlg.toggleAttribute('data-overview-open', Boolean(overview));
           if (!dlg.open) dlg.showModal();
           dlg.scrollTop = 0;
+          if (overview) {
+            k = ['evidencias', 'documentacion'].includes(key) ? key : 'resumen';
+            if (k !== 'resumen') {
+              var anchor = overview.querySelector('[data-case-anchor="' + k + '"]');
+              if (anchor) dlg.scrollTop = anchor.getBoundingClientRect().top - dlg.getBoundingClientRect().top - 16;
+              else k = 'resumen';
+            }
+          }
           var u = new URL(location.href);
           u.searchParams.set('caso', slug);
           if (k) u.searchParams.set('s', k);
