@@ -116,3 +116,13 @@
 .pt-cs-listrow { grid-template-columns: 2fr 1.4fr 1fr 1fr 2fr; cursor: default; }
 .pt-cs-actions { display: flex; flex-wrap: wrap; gap: 12px; overflow: visible; white-space: normal; }
 .pt-cs-preview { padding: 16px; border: 1px solid var(--pt-line); font-family: var(--pt-body); }
+
+/* Asistente de casos: formato fijo (contadores, obligatorios, avisos) */
+.pt-count { float: right; font-size: .75rem; color: #6b7490; }
+.pt-count.is-over { color: #b42318; font-weight: 700; }
+.pt-req { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #b42318; margin-left: .4rem; }
+.pt-opt { font-size: .7rem; text-transform: uppercase; letter-spacing: .04em; color: #6b7490; margin-left: .4rem; }
+.pt-cs-slot.has-issues { border-left: 3px solid #b42318; }
+.pt-slot-issue { color: #b42318; font-size: .85rem; margin: .4rem 0 0; }
+.pt-cs-issues { background: #fef3f2; border: 1px solid #fecdca; padding: .75rem 1rem; margin: 1rem 0; }
+.pt-cs-issues ul { margin: .4rem 0 .4rem 1.2rem; }
