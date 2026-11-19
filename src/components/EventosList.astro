@@ -19,12 +19,12 @@ const byYear = years.map((y) => ({ year: y, items: eventos.filter((e) => (e.date
         {g.items.map((e) => {
           const photos = cardPhotos(e);
           return (
-            <article class="pt-event">
-              <div class={`pt-event-photos pt-event-photos-${Math.max(photos.length, 1)}`}>
-                {photos.length === 0
-                  ? <div class="pt-event-photo pt-event-photo-main"><div class="pt-ph">Foto pendiente</div></div>
-                  : photos.map((u, i) => <div class={i === 0 ? 'pt-event-photo pt-event-photo-main' : 'pt-event-photo'}><img src={u} alt={i === 0 ? e.title : ''} loading="lazy" /></div>)}
-              </div>
+            <article class:list={['pt-event', { 'pt-event-nophoto': photos.length === 0 }]}>
+              {photos.length > 0 && (
+                <div class={`pt-event-photos pt-event-photos-${photos.length}`}>
+                  {photos.map((u, i) => <div class={i === 0 ? 'pt-event-photo pt-event-photo-main' : 'pt-event-photo'}><img src={u} alt={i === 0 ? e.title : ''} loading="lazy" /></div>)}
+                </div>
+              )}
               <div class="pt-event-body">
                 <h3>{e.title}</h3>
                 <p class="pt-event-meta">{formatEventDate(e.date)}{e.place ? ` · ${e.place}` : ''}</p>

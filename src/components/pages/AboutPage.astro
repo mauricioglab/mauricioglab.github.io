@@ -49,17 +49,17 @@ const contactButton = await t('contact_button');
     </section>
 
     <div class="pt-mosaic" aria-label={L('Mosaico de fotos', 'Photo mosaic')}>
-      {mosaic.map((m) => (
+      {mosaic.filter((m) => m.image_url).map((m) => (
         <figure>
-          {m.image_url ? <img src={m.image_url} alt={m.alt} loading="lazy" /> : <div class="pt-ph">{L('Foto pendiente', 'Photo pending')}</div>}
+          <img src={m.image_url} alt={m.alt} loading="lazy" />
         </figure>
       ))}
     </div>
 
     <div class="pt-trail" aria-label={L('Trayectoria', 'Background')}>
-      {trail.map((tr, i) => (
+      {trail.filter((tr) => tr.image_url).map((tr, i) => (
         <figure class:list={{ 'pt-trail-wide': i >= 8 }}>
-          <div class="pt-trail-img">{tr.image_url ? <img src={tr.image_url} alt={tr.alt} loading="lazy" /> : <div class="pt-ph">{L('Foto pendiente', 'Photo pending')}</div>}</div>
+          <div class="pt-trail-img"><img src={tr.image_url} alt={tr.alt} loading="lazy" /></div>
           <figcaption>{tr.caption}</figcaption>
         </figure>
       ))}

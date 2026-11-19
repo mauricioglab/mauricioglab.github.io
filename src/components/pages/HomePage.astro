@@ -65,7 +65,7 @@ const resources = [
 
     <section class="pt-statement" aria-label={L('Mi enfoque', 'My approach')}>
       <blockquote class="pt-quote"><p>{quote}</p></blockquote>
-      <div class="pt-statement-photo">{homePhoto ? <img src={homePhoto.url} alt={homePhoto.alt} loading="lazy" /> : <div class="pt-ph">{L('Foto de charla o clase pendiente', 'Talk or class photo pending')}</div>}</div>
+      {homePhoto && <div class="pt-statement-photo"><img src={homePhoto.url} alt={homePhoto.alt} loading="lazy" /></div>}
     </section>
 
     <section class="pt-band" id="portafolio" aria-labelledby="trabajo">

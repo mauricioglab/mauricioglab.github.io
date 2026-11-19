@@ -252,6 +252,7 @@
 .pt-events-year + .pt-events-year { margin-top: 48px; }
 .pt-events-year > h2 { margin-bottom: 24px; padding-bottom: 8px; border-bottom: 1px solid var(--pt-line); }
 .pt-event { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 40px; }
+.pt-event.pt-event-nophoto { grid-template-columns: 1fr; }
 .pt-event-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; align-content: start; }
 .pt-event-photo { aspect-ratio: 1 / 1; overflow: hidden; }
 .pt-event-photo-main { grid-column: 1 / -1; aspect-ratio: 4 / 3; }
