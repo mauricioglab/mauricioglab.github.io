@@ -126,3 +126,29 @@
 .pt-slot-issue { color: #b42318; font-size: .85rem; margin: .4rem 0 0; }
 .pt-cs-issues { background: #fef3f2; border: 1px solid #fecdca; padding: .75rem 1rem; margin: 1rem 0; }
 .pt-cs-issues ul { margin: .4rem 0 .4rem 1.2rem; }
+
+/* Sección «Imágenes» */
+.pt-img-tabs { display: flex; gap: .25rem; border-bottom: 1px solid var(--pt-line); margin: 1rem 0; }
+.pt-img-tabs button { background: none; border: 0; padding: .5rem 1rem; cursor: pointer; font: inherit; color: #6b7490; border-bottom: 2px solid transparent; }
+.pt-img-tabs button.is-on { color: inherit; font-weight: 700; border-bottom-color: var(--pt-gold, #b8860b); }
+.pt-img-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+.pt-img-card { border: 1px solid var(--pt-line); padding: .75rem; display: grid; gap: .5rem; align-content: start; background: #fff; }
+.pt-img-card header { display: flex; justify-content: space-between; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.pt-img-thumb { aspect-ratio: 4 / 3; background: #f3f1ec; display: grid; place-items: center; overflow: hidden; color: #6b7490; font-size: .8rem; text-align: center; padding: .5rem; }
+.pt-img-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.pt-img-caption { font-size: .85rem; margin: 0; }
+.pt-img-actions { display: flex; flex-wrap: wrap; gap: .25rem .75rem; }
+.pt-img-file { cursor: pointer; }
+.pt-img-edit { display: grid; gap: .5rem; }
+.pt-img-edit label { display: grid; gap: .15rem; font-size: .8rem; }
+.pt-img-badge { font-size: .7rem; text-transform: uppercase; letter-spacing: .04em; padding: .1rem .4rem; border: 1px solid var(--pt-line); }
+.pt-img-badge.is-manual { background: #ecfdf3; border-color: #abefc6; }
+.pt-img-badge.is-evento, .pt-img-badge.is-evento-sin-foto { background: #eff4ff; border-color: #b2ccff; }
+.pt-img-badge.is-vacio { background: #f9fafb; }
+.pt-img-list { list-style: none; margin: 0 0 1.5rem; padding: 0; display: grid; gap: .5rem; }
+.pt-img-list li { display: flex; align-items: center; gap: .75rem; border: 1px solid var(--pt-line); padding: .5rem; background: #fff; flex-wrap: wrap; }
+.pt-img-mini { width: 72px; height: 54px; flex: none; background: #f3f1ec; display: grid; place-items: center; overflow: hidden; font-size: .65rem; color: #6b7490; text-align: center; }
+.pt-img-mini img { width: 100%; height: 100%; object-fit: cover; }
+.pt-img-title { flex: 1 1 200px; min-width: 0; overflow-wrap: anywhere; }
+.pt-img-path { font-family: ui-monospace, monospace; font-size: .8rem; }
+.pt-img-bar { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; margin-bottom: .5rem; }

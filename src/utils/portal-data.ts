@@ -3,18 +3,14 @@
 import { db } from '../lib/db';
 import { SITE_ID } from '../data/site-id';
 import { getAboutItems } from './eventos';
+import { resolveSlots, type GalleryItem } from '../data/gallery-slots';
 import galleryDefaults from '../data/gallery-defaults.json';
 import navDefaults from '../data/nav-defaults.json';
 import settingsDefaults from '../data/settings-defaults.json';
 import projectsDefaults from '../data/projects-defaults.json';
 
 export type Lang = 'es' | 'en';
-export interface GalleryItem { slot: string; image_url: string; alt: string; caption: string; alt_en?: string; caption_en?: string }
-
-const SLOTS = [
-  'mosaico-1', 'mosaico-2', 'mosaico-3',
-  ...Array.from({ length: 10 }, (_, i) => `trayectoria-${i + 1}`),
-];
+export type { GalleryItem };
 
 /**
  * Galería de Sobre mí (13 espacios). Prioridad por espacio:
@@ -24,29 +20,15 @@ const SLOTS = [
  * Devuelve alt y epígrafe en el idioma pedido (inglés si existe, si no español).
  */
 export async function getGallery(lang: Lang = 'es'): Promise<Map<string, GalleryItem>> {
-  const map = new Map<string, GalleryItem>((galleryDefaults as GalleryItem[]).map((g) => [g.slot, g]));
+  let rows: GalleryItem[] = [];
   try {
     const { data, error } = await db.from('gallery_items').select('slot, image_url, alt, caption, alt_en, caption_en').eq('site', SITE_ID).eq('published', true);
     if (error) throw error;
-    for (const r of (data ?? []) as GalleryItem[]) {
-      const base = map.get(r.slot);
-      map.set(r.slot, { slot: r.slot, image_url: r.image_url ?? '', alt: r.alt ?? '', caption: r.caption ?? base?.caption ?? '', alt_en: r.alt_en ?? '', caption_en: r.caption_en ?? base?.caption_en ?? '' });
-    }
+    rows = (data ?? []) as GalleryItem[];
   } catch (e) {
     console.warn('No se pudo cargar gallery_items; se usan los valores por defecto:', (e as Error).message ?? e);
   }
-  const auto = await getAboutItems(lang);
-  const withPhoto = auto.filter((a) => a.image_url);
-  const withoutPhoto = auto.filter((a) => !a.image_url);
-  const empty = SLOTS.filter((s) => !map.get(s)?.image_url);
-  empty.slice(0, withPhoto.length).forEach((slot, i) => {
-    const a = withPhoto[i];
-    map.set(slot, { slot, image_url: a.image_url, alt: a.alt, caption: a.caption, alt_en: a.alt, caption_en: a.caption });
-  });
-  empty.slice(withPhoto.length).filter((s) => s.startsWith('trayectoria-')).slice(0, withoutPhoto.length).forEach((slot, i) => {
-    const a = withoutPhoto[i];
-    map.set(slot, { slot, image_url: '', alt: a.alt, caption: a.caption, alt_en: a.alt, caption_en: a.caption });
-  });
+  const map: Map<string, GalleryItem> = resolveSlots(galleryDefaults as GalleryItem[], rows, await getAboutItems(lang));
   if (lang === 'en') {
     for (const [k, v] of map) map.set(k, { ...v, alt: v.alt_en || v.alt, caption: v.caption_en || v.caption });
   }

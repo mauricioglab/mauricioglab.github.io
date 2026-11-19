@@ -8,6 +8,8 @@ import BlogModule from './BlogModule';
 import CasesModule from './CasesModule';
 import DisertacionesAdminPreact from './DisertacionesAdminPreact';
 import RecursosAdminPreact from './RecursosAdminPreact';
+import ImagesModule from './ImagesModule';
+import { getAboutItems } from '../../utils/eventos';
 import { RESOURCES } from '../../data/admin-resources';
 import { SITE_CONFIG } from '../../data/config';
 
@@ -21,6 +23,7 @@ const modules: AdminModule[] = [
   { id: 'casos', group: 'Publicaciones', label: 'Casos de estudio', render: () => <CasesModule /> },
   { id: 'disertaciones', group: 'Publicaciones', label: 'Eventos', render: () => <DisertacionesAdminPreact /> },
   { id: 'recursos', group: 'Publicaciones', label: 'Zona Lab', render: () => <RecursosAdminPreact /> },
+  { id: 'imagenes', group: 'Contenido del sitio', label: 'Imágenes', render: () => <ImagesModule siteId={SITE_CONFIG.siteId} go={go} links={{ eventos: 'disertaciones', blog: 'blog', recursos: 'recursos' }} loadAbout={getAboutItems} /> },
   { id: 'secciones', group: 'Contenido del sitio', label: 'Secciones', render: () => <SectionsEditor siteId={SITE_CONFIG.siteId} items={[{ key: 'eventos', label: 'Eventos' }, { key: 'recursos', label: 'Zona Lab' }, { key: 'curiosidades', label: 'Curiosidades', hint: 'Enlace en el pie hacia el juego del mate y el rincón retro.' }]} /> },
   { id: 'redes', group: 'Contenido del sitio', label: 'Redes sociales', render: () => <SocialsEditor siteId={SITE_CONFIG.siteId} /> },
   ...RESOURCES.map((r) => ({

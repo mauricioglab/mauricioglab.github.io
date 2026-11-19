@@ -30,18 +30,6 @@ export const RESOURCES: Resource[] = [
     ],
   },
   {
-    table: 'gallery_items', label: 'Galería', orderBy: { column: 'position' },
-    listColumns: ['slot', 'caption', 'published'], defaults: { published: true },
-    fields: [
-      { name: 'slot', label: 'Espacio', type: 'text', required: true, help: 'Ej.: mosaico-1, trayectoria-1 … trayectoria-10.' },
-      { name: 'image_url', label: 'Imagen', type: 'image', bucket: 'blog-images' },
-      { name: 'alt', nameEn: 'alt_en', label: 'Texto alternativo', type: 'text-i18n' },
-      { name: 'caption', nameEn: 'caption_en', label: 'Epígrafe (tema · institución · fecha)', type: 'text-i18n' },
-      { name: 'position', label: 'Orden', type: 'number' },
-      { name: 'published', label: 'Publicado', type: 'checkbox' },
-    ],
-  },
-  {
     table: 'skills', label: 'Habilidades', orderBy: { column: 'position' },
     listColumns: ['group_name', 'name', 'published'], defaults: { published: true },
     fields: [
